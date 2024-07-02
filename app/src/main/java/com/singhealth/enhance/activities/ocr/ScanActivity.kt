@@ -23,6 +23,7 @@ import com.google.firebase.ml.vision.FirebaseVision
 import com.google.firebase.ml.vision.common.FirebaseVisionImage
 import com.google.firebase.ml.vision.document.FirebaseVisionDocumentText
 import com.singhealth.enhance.R
+import com.singhealth.enhance.activities.DashboardActivity
 import com.singhealth.enhance.activities.MainActivity
 import com.singhealth.enhance.activities.history.HistoryActivity
 import com.singhealth.enhance.activities.patient.ProfileActivity
@@ -105,10 +106,13 @@ class ScanActivity : AppCompatActivity() {
                     finish()
                     false
                 }
-
-                else -> {
+                R.id.item_dashboard -> {
+                    startActivity(Intent(this, DashboardActivity::class.java))
+                    finish()
                     false
                 }
+
+                else -> false
             }
         }
 
