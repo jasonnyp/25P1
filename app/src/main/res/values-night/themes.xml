@@ -1,0 +1,23 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <style name="Theme.ENHANCe" parent="Theme.Material3.Dark">
+        <!-- Primary brand colour -->
+        <item name="colorPrimary">@color/theme_primary</item>
+        <item name="colorPrimaryVariant">@color/theme_primary_variant</item>
+        <item name="colorOnPrimary">@color/white</item>
+
+        <!-- Secondary brand colour -->
+        <item name="colorSecondary">@color/theme_secondary</item>
+        <item name="colorSecondaryVariant">@color/theme_secondary_variant</item>
+        <item name="colorOnSecondary">@color/white</item>
+
+        <!-- Status bar colour -->
+        <item name="android:statusBarColor">@color/theme_status_bar</item>
+    </style>
+
+    <!-- Remove action bar from Activity -->
+    <style name="Theme.ENHANCe.NoActionBar" parent="Theme.ENHANCe">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+</resources>

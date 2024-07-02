@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- Example Guide Section -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:text="Patient registration &amp; search"
+            android:textColor="@color/theme_secondary"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:background="@color/theme_secondary_variant" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="8dp"
+            android:text="Register a new patient along with their profile picture, NRIC number, legal name, gender, date of birth, address, height, and weight.\n\nFor registered patients, simply search for them using his/her NRIC and legal name."
+            android:textSize="16sp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:text="Scan records"
+            android:textColor="@color/theme_secondary"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:background="@color/theme_secondary_variant" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="8dp"
+            android:text="Scan blood pressure (BP) records using the device camera, or select an image from gallery.\n\nThereafter, you can choose to either retake/reselect the image.\n\nIMPORTANT: To ensure accurate handwriting/text recognition for the next part, you MUST crop the image such that only the blood pressure values are seen (EXCLUDE any headers)."
+            android:textSize="16sp" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:text="Verify Scan - Check"
+            android:textColor="@color/theme_secondary"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:background="@color/theme_secondary_variant" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="8dp"
+            android:text="Checks by the algorithm confirms for the presence of more than 12 records. Otherwise, it will prompt you to either scan again or proceed with the analysis.\n\nThe algorithm will also prompt you to rescan the current record should it exceed six errors the system."
+            android:textSize="16sp" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:text="Verify Scan - Edit values"
+            android:textColor="@color/theme_secondary"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:background="@color/theme_secondary_variant" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="8dp"
+            android:text="You will be alerted of any BP values which are deemed to be abnormal/incorrect by the algorithm (reasons provided).\n\nYou are also required to enter the home BP target and clinic BP target.\n\nYou can also edit the BP values should you find any errors.\n\nSimply press on the red circular minus icon to remove that respective row, or add a new row by pressing on the 'Add New Row' button.\n\nNOTE: Should you decide to scan the current records again, your current progress EXCEPT your previous progress will be deleted.\nOnce all the blood pressure values have been checked, click on calculate average to continue."
+            android:textSize="16sp" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:text="History"
+            android:textColor="@color/theme_secondary"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:background="@color/theme_secondary_variant" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="8dp"
+            android:text="You can view the previously recorded average blood pressure values, home BP target and clinic BP target of the selected patient."
+            android:textSize="16sp" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:text="Frequently Asked Questions"
+            android:textColor="@color/theme_secondary"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:background="@color/theme_secondary_variant" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="8dp"
+            android:text="Q. How to access the scan record page?\n\nANS: You need to search for the patient before you can select the 'Scan Record' at the bottom navigation bar.\n\nQ. What part of the image should one keep for maximum handwriting/text detection accuracy?\n\nANS: Align your camera such that is fills up the top and bottom of the screen. Try to only crop the image HORIZONTALLY and leave only the systolic and diastolic BP values in the cropped image (EXCLUDE the header; only numbers)."
+            android:textSize="16sp" />
+
+    </LinearLayout>
+</ScrollView>

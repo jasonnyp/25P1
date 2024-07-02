@@ -1,0 +1,7 @@
+<resources>
+    <!-- Your existing styles go here -->
+
+    <style name="SpinnerItemText" parent="android:Widget.TextView.SpinnerItem">
+        <item name="android:textSize">20sp</item> <!-- Adjust the text size as needed -->
+    </style>
+</resources>

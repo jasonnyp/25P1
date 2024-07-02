@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- To check if app is connected to the Internet -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <!-- To access the Internet -->
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <!-- To access the camera -->
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
+
+    <!-- To read/write images from the gallery (Legacy Android versions) -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="32" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="28"/>
+
+    <!-- To read/write images from the gallery (Newer Android versions) -->
+    <uses-permission android:name="android.permission.READ_MEDIA_VISUAL_USER_SELECTED" android:minSdkVersion="33"/>
+
+    <application
+        android:allowBackup="false"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
+        android:usesCleartextTraffic="true"
+        android:hardwareAccelerated="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:screenOrientation="portrait"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.ENHANCe"
+        tools:targetApi="31"
+        tools:ignore="DiscouragedApi">
+
+
+        <!-- authentication -->
+        <activity
+            android:name=".activities.authentication.AuthenticationActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:exported="false"
+            android:theme="@style/Theme.ENHANCe.NoActionBar"
+            android:windowSoftInputMode="adjustResize" />
+
+        <activity
+            android:name=".activities.authentication.LoginActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:exported="false"
+            android:theme="@style/Theme.ENHANCe.NoActionBar"
+            android:windowSoftInputMode="adjustResize" />
+
+        <!-- history -->
+        <activity
+            android:name=".activities.history.HistoryActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:exported="false"
+            android:label="@string/history_title" />
+
+        <!-- ocr -->
+        <activity
+            android:name=".activities.ocr.ScanActivity"
+            android:configChanges="orientation|screenSize"
+            android:exported="false"
+            android:label="@string/scan_title">
+            <meta-data
+                android:name="com.google.firebase.ml.vision.DEPENDENCIES"
+                android:value="ocr" />
+        </activity>
+        <activity
+            android:name="com.canhub.cropper.CropImageActivity"
+            android:theme="@style/Base.Theme.AppCompat" />
+        <activity
+            android:name=".activities.ocr.VerifyScanActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:exported="false"
+            android:label="Verify scan results"
+            android:parentActivityName=".activities.ocr.ScanActivity"
+            android:windowSoftInputMode="adjustResize" />
+
+        <!-- patient -->
+        <activity
+            android:name=".activities.patient.ProfileActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:exported="false"
+            android:label="@string/profile_title" />
+        <activity
+            android:name=".activities.patient.RegistrationActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:exported="false"
+            android:label="@string/patient_registration_title"
+            android:windowSoftInputMode="adjustResize" />
+
+        <!-- result -->
+        <activity
+            android:name=".activities.result.RecommendationActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:exported="false"
+            android:label="Outcome and recommendation"
+            android:parentActivityName=".activities.history.HistoryActivity" />
+
+        <!-- settings -->
+        <activity
+            android:name=".activities.settings.AboutAppActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:exported="false"
+            android:label="@string/about_enhance_title"
+            android:parentActivityName=".activities.settings.SettingsActivity" />
+        <activity
+            android:name=".activities.settings.guide.UserGuideActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:exported="false"
+            android:label="@string/user_guide_title"
+            android:parentActivityName=".activities.settings.SettingsActivity" />
+        <activity
+            android:name=".activities.settings.PrivacyStatementActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:exported="false"
+            android:label="@string/privacy_statement_title"
+            android:parentActivityName=".activities.settings.SettingsActivity" />
+        <activity
+            android:name=".activities.settings.SettingsActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:exported="false"
+            android:label="@string/settings_title" />
+        <activity
+            android:name=".activities.settings.TermsOfUseActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:exported="false"
+            android:label="@string/terms_of_use_title"
+            android:parentActivityName=".activities.settings.SettingsActivity" />
+
+        <!-- MainActivity and SplashScreenActivity -->
+        <activity
+            android:name=".activities.MainActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:exported="true"
+            android:label="@string/home_title"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".activities.SplashScreenActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:exported="true"
+            android:theme="@style/Theme.ENHANCe.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!-- Dashboard -->
+        <activity
+            android:name=".activities.DashboardActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:exported="false"
+            android:label="Dashboard"
+            >
+        </activity>
+
+    </application>
+</manifest>

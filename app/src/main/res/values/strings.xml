@@ -1,0 +1,54 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="app_name" tools:ignore="Typos">ENHANCe1</string>
+    <string name="title_activity_enhance_screen">EnhanceScreen</string>
+
+    <!-- AuthenticationActivity strings -->
+    <string name="resend_verification_code">Tap to resend verification code.</string>
+
+    <!-- LoginActivity strings -->
+    <string name="good_morning">Good Morning!</string>
+    <string name="good_afternoon">Good Afternoon!</string>
+    <string name="good_evening">Good Evening!</string>
+
+    <!-- Navigation drawer strings -->
+    <string name="home_title">Home</string>
+    <string name="patient_registration_title">Patient registration</string>
+
+    <string name="settings_title">Settings</string>
+
+    <!-- Navigation bar strings -->
+    <string name="profile_title">Profile</string>
+    <string name="scan_title">Scan</string>
+    <string name="history_title">History</string>
+    <string name="dashboard_title">Dashboard</string>
+    <!-- Settings strings -->
+    <string name="section_account_title">Account</string>
+    <string name="logout_title">Logout</string>
+
+    <string name="section_help_support_title">Help &amp; support</string>
+    <string name="user_guide_title">User guide</string>
+    <string name="contact_helpdesk_title">Contact Helpdesk</string>
+
+    <string name="about_enhance_title">About ENHANCe</string>
+    <string name="terms_of_use_title">Terms of use</string>
+    <string name="privacy_statement_title">Privacy statement</string>
+    <string name="report_vulnerability_title">Report vulnerability</string>
+
+    <!-- Dialog strings -->
+    <string name="ok_dialog">OK</string>
+    <string name="yes_dialog">Yes</string>
+    <string name="no_dialog">No</string>
+    <string name="cancel_dialog">Cancel</string>
+    <string name="try_again_dialog">Try again</string>
+
+    <string name="dialog_positive_ok">OK</string>
+    <string name="bp_stage">BP Stage</string>
+    <string name="medical">Medical:</string>
+    <string name="lifestyle">Lifestyle:</string>
+    <string name="diet">Diet:</string>
+    <string name="recommendation"> Recommendation:</string>
+    <string name="control_status"> Control Status:</string>
+    <string name="bpDivider">/</string>
+    <string name="average_home_bp"> Average Home BP:</string>
+    <string name="reload">Reload</string>
+</resources>

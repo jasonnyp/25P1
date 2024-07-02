@@ -1,0 +1,15 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-indsinghealthenhance-dev-135045-authRole",
+      "UnauthRoleArn": "arn:aws:iam::274805328863:role/amplify-indsinghealthenhance-dev-135045-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::274805328863:role/amplify-indsinghealthenhance-dev-135045-authRole",
+      "Region": "ap-southeast-1",
+      "DeploymentBucketName": "amplify-indsinghealthenhance-dev-135045-deployment",
+      "UnauthRoleName": "amplify-indsinghealthenhance-dev-135045-unauthRole",
+      "StackName": "amplify-indsinghealthenhance-dev-135045",
+      "StackId": "arn:aws:cloudformation:ap-southeast-1:274805328863:stack/amplify-indsinghealthenhance-dev-135045/bc132911-9a44-11ee-a570-0abc96bce958",
+      "AmplifyAppId": "d1dnw6okxf6ghw"
+    }
+  }
+}
