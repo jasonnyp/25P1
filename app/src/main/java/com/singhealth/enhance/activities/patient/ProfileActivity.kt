@@ -12,14 +12,12 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.SetOptions
-import com.google.firebase.firestore.firestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
-import com.singhealth.enhance.activities.DashboardActivity
 import com.singhealth.enhance.R
+import com.singhealth.enhance.activities.DashboardActivity
 import com.singhealth.enhance.activities.MainActivity
-import com.singhealth.enhance.activities.diagnosis.Diag
 import com.singhealth.enhance.activities.diagnosis.diagnosePatient
 import com.singhealth.enhance.activities.diagnosis.sortPatientVisits
 import com.singhealth.enhance.activities.history.HistoryActivity
@@ -28,8 +26,6 @@ import com.singhealth.enhance.activities.settings.SettingsActivity
 import com.singhealth.enhance.databinding.ActivityProfileBinding
 import com.singhealth.enhance.security.AESEncryption
 import com.singhealth.enhance.security.SecureSharedPreferences
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 
 class ProfileActivity : AppCompatActivity() {
     private lateinit var binding: ActivityProfileBinding
@@ -281,7 +277,18 @@ class ProfileActivity : AppCompatActivity() {
         }
 
         //binding.legalNameTV.text = document.getString("legalName").toString()
-        binding.legalNameTV.text = AESEncryption().decrypt(document.getString("legalName").toString())
+        val legalName = document.getString("legalName")
+        if (legalName != null) {
+            val decryptedLegalName = AESEncryption().decrypt(legalName)
+            binding.legalNameTV.text = decryptedLegalName
+
+            // Store the decrypted legalName in SecureSharedPreferences
+            SecureSharedPreferences.getSharedPreferences(applicationContext)
+                .edit()
+                .putString("legalName", decryptedLegalName)
+                .apply()
+            }
+
 
         binding.nricTV.text = AESEncryption().decrypt(patientID)
 

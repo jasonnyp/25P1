@@ -8,6 +8,7 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.view.MenuItem
+import android.view.View
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.ActionBarDrawerToggle
@@ -30,8 +31,10 @@ import com.singhealth.enhance.activities.patient.ProfileActivity
 import com.singhealth.enhance.activities.patient.RegistrationActivity
 import com.singhealth.enhance.activities.settings.SettingsActivity
 import com.singhealth.enhance.databinding.ActivityScanBinding
+import com.singhealth.enhance.security.AESEncryption
 import com.singhealth.enhance.security.SecureSharedPreferences
 import kotlin.math.abs
+
 class ScanActivity : AppCompatActivity() {
     private lateinit var binding: ActivityScanBinding
 
@@ -43,6 +46,8 @@ class ScanActivity : AppCompatActivity() {
     private lateinit var progressDialog: ProgressDialog
 
     private lateinit var outputUri: Uri
+
+    private lateinit var patientID: String
 
 
 
@@ -116,17 +121,20 @@ class ScanActivity : AppCompatActivity() {
             }
         }
 
+        // Check if patient information is available in the current session
         val patientSharedPreferences = SecureSharedPreferences.getSharedPreferences(applicationContext)
         if (patientSharedPreferences.getString("patientID", null).isNullOrEmpty()) {
             val mainIntent = Intent(this, MainActivity::class.java)
-            Toast.makeText(
-                this,
-                "Patient information could not be found in current session. Please try again.",
-                Toast.LENGTH_LONG
-            ).show()
+            Toast.makeText(this, "Patient information could not be found in current session. Please try again.", Toast.LENGTH_LONG).show()
             startActivity(mainIntent)
             finish()
+        }else {
+            patientID = patientSharedPreferences.getString("patientID", null).toString()
+            binding.patientIdValueTextView.text = AESEncryption().decrypt(patientID)
+            println("Legal name: ${patientSharedPreferences.getString("legalName", null)}")
+            binding.patientNameValueTextView.text =patientSharedPreferences.getString("legalName", null).toString()
         }
+        binding.ocrInstructionsTextViewValue.text = "Please ensure that only the blood pressure values are seen and exclude all headers when cropping."
 
         cameraPermissions =
             arrayOf(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE)
@@ -186,6 +194,7 @@ class ScanActivity : AppCompatActivity() {
     private fun handleCropImageResult(uri: String) {
             outputUri = Uri.parse(uri.replace("file:", "")).also { parsedUri ->
                 binding.cropIV.setImageUriAsync(parsedUri)
+                binding.ocrInstructionsTextViewValue.visibility = View.GONE
             }
 
             if (outputUri != null) {
