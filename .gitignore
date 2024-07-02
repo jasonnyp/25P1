@@ -1,3 +1,6 @@
+.*
+!/.gitignore
+
 # Gradle files
 .gradle/
 build/
