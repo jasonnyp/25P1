@@ -20,64 +20,12 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"/>
 
-        <!--
-        <TextView
-            android:id="@+id/syschartTitle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:textAlignment="center"
-            android:text="Systolic Comparison Chart"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
-
-        <com.github.mikephil.charting.charts.LineChart
-            android:id="@+id/syslineChart"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight = "0.5"
-            android:layout_marginTop="8dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            app:layout_constraintTop_toBottomOf="@id/syschartTitle"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
-        <TextView
-            android:id="@+id/diastolicChartTitle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:textAlignment="center"
-            android:text="Diastolic Comparison Chart"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            app:layout_constraintTop_toBottomOf="@id/syslineChart"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
-        -->
-        <!-- Diastolic Line Chart -->
-        <!--
-        <com.github.mikephil.charting.charts.LineChart
-            android:id="@+id/diastolicLineChart"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight = "0.5"
-            android:layout_marginTop="8dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            app:layout_constraintTop_toBottomOf="@id/diastolicChartTitle"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
-
-        -->
-
 
         <Button
             android:id="@+id/reloadBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/reload" />
+            android:text="@string/enhance_dashboard_reload" />
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/bottomNavigationView"

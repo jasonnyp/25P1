@@ -221,6 +221,7 @@ class VerifyScanActivity : AppCompatActivity() {
 
                         bundle.putInt("avgSysBP", avgSysBP)
                         bundle.putInt("avgDiaBP", avgDiaBP)
+                        bundle.putString("Source", "Scan")
 
                         val recommendationIntent = Intent(this, RecommendationActivity::class.java)
 
@@ -485,7 +486,6 @@ class VerifyScanActivity : AppCompatActivity() {
 
     private fun validateFields(): Boolean {
         var valid = true
-        println("HI")
 
         // TODO: Add back verification for the BP targets once algorithm has it
 //        if (binding.homeSysBPTargetTIET.text.isNullOrEmpty()) {

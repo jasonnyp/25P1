@@ -107,19 +107,19 @@
             android:name=".activities.settings.AboutAppActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:exported="false"
-            android:label="@string/about_enhance_title"
+            android:label="@string/enhance_settings_about"
             android:parentActivityName=".activities.settings.SettingsActivity" />
         <activity
             android:name=".activities.settings.guide.UserGuideActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:exported="false"
-            android:label="@string/user_guide_title"
+            android:label="@string/enhance_settings_user_guide"
             android:parentActivityName=".activities.settings.SettingsActivity" />
         <activity
             android:name=".activities.settings.PrivacyStatementActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:exported="false"
-            android:label="@string/privacy_statement_title"
+            android:label="@string/enhance_settings_privacy_statement"
             android:parentActivityName=".activities.settings.SettingsActivity" />
         <activity
             android:name=".activities.settings.SettingsActivity"
@@ -130,7 +130,7 @@
             android:name=".activities.settings.TermsOfUseActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:exported="false"
-            android:label="@string/terms_of_use_title"
+            android:label="@string/enhance_settings_terms_of_use"
             android:parentActivityName=".activities.settings.SettingsActivity" />
 
         <!-- MainActivity and SplashScreenActivity -->

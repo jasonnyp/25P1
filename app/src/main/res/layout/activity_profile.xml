@@ -53,7 +53,7 @@
                             <TextView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:text="Legal Name"
+                                android:text="@string/enhance_profile_legal_name"
                                 android:textAllCaps="true" />
 
                             <TextView
@@ -67,7 +67,7 @@
                             <TextView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:text="Patient ID"
+                                android:text="@string/enhance_profile_patient_id"
                                 android:textAllCaps="true" />
 
                             <TextView
@@ -81,7 +81,7 @@
                             <TextView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:text="Date of Birth"
+                                android:text="@string/enhance_profile_dob"
                                 android:textAllCaps="true" />
 
                             <TextView
@@ -95,7 +95,7 @@
                             <TextView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:text="Gender"
+                                android:text="@string/enhance_profile_gender"
                                 android:textAllCaps="true" />
 
                             <TextView
@@ -109,7 +109,7 @@
                             <TextView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:text="Address"
+                                android:text="@string/enhance_profile_address"
                                 android:textAllCaps="true" />
 
                             <TextView
@@ -123,7 +123,7 @@
                             <TextView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:text="Weight"
+                                android:text="@string/enhance_profile_weight"
                                 android:textAllCaps="true" />
 
                             <TextView
@@ -137,7 +137,7 @@
                             <TextView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:text="Height"
+                                android:text="@string/enhance_profile_height"
                                 android:textAllCaps="true" />
 
                             <TextView

@@ -16,7 +16,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="No past records found."
+            android:text="@string/enhance_history_past"
             android:textAlignment="center"
             android:visibility="gone"
             tools:ignore="MissingConstraints" />

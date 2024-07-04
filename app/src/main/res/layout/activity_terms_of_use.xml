@@ -16,7 +16,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:text="This is the Terms of Use activity."
+            android:text="@string/enhance_terms_header"
             android:textAlignment="center" />
     </RelativeLayout>
 </ScrollView>

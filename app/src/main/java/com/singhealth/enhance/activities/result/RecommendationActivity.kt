@@ -126,6 +126,7 @@ class RecommendationActivity : AppCompatActivity() {
                     collectionRef.get()
                         .addOnSuccessListener { documents ->
                             // Display BP Stage and correct Control Status based on the Source Activity
+                            println(avgBPBundle.getString("Source"))
                             if (avgBPBundle.getString("Source") == "History") {
                                 val date = avgBPBundle.getString("date").toString()
                                 binding.bpStage.text = "(${bpStage})"

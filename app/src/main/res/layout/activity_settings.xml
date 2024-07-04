@@ -38,7 +38,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
-                        android:text="@string/about_enhance_title" />
+                        android:text="@string/enhance_settings_about" />
 
                     <ImageView
                         android:layout_width="wrap_content"
@@ -86,7 +86,7 @@
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
                         android:layout_toEndOf="@+id/supportIV"
-                        android:text="@string/section_help_support_title"
+                        android:text="@string/enhance_settings_help_support"
                         android:textSize="18sp"
                         android:textStyle="bold" />
                 </RelativeLayout>
@@ -111,7 +111,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
-                        android:text="@string/user_guide_title" />
+                        android:text="@string/enhance_settings_user_guide" />
 
                     <ImageView
                         android:layout_width="wrap_content"
@@ -141,7 +141,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
-                        android:text="@string/contact_helpdesk_title"
+                        android:text="@string/enhance_settings_contact_helpdesk"
                         android:textColor="@color/theme_secondary"
                         android:textStyle="bold" />
 
@@ -179,7 +179,7 @@
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
                         android:layout_toEndOf="@+id/accountIV"
-                        android:text="@string/section_account_title"
+                        android:text="@string/enhance_settings_account"
                         android:textSize="18sp"
                         android:textStyle="bold" />
                 </RelativeLayout>
@@ -204,7 +204,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
-                        android:text="@string/logout_title" />
+                        android:text="@string/enhance_settings_logout" />
 
                     <ImageView
                         android:layout_width="wrap_content"

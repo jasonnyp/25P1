@@ -134,7 +134,7 @@ class ScanActivity : AppCompatActivity() {
             println("Legal name: ${patientSharedPreferences.getString("legalName", null)}")
             binding.patientNameValueTextView.text =patientSharedPreferences.getString("legalName", null).toString()
         }
-        binding.ocrInstructionsTextViewValue.text = "Please ensure that only the blood pressure values are seen and exclude all headers when cropping."
+        binding.ocrInstructionsTextViewValue.text = getString(R.string.ocr_instructions)
 
         cameraPermissions =
             arrayOf(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE)
@@ -192,16 +192,16 @@ class ScanActivity : AppCompatActivity() {
 //        }
 //    }
     private fun handleCropImageResult(uri: String) {
-            outputUri = Uri.parse(uri.replace("file:", "")).also { parsedUri ->
-                binding.cropIV.setImageUriAsync(parsedUri)
-                binding.ocrInstructionsTextViewValue.visibility = View.GONE
-            }
+        outputUri = Uri.parse(uri.replace("file:", "")).also { parsedUri ->
+            binding.cropIV.setImageUriAsync(parsedUri)
+            binding.ocrInstructionsTextViewValue.visibility = View.GONE
+        }
 
-            if (outputUri != null) {
-                processDocumentImage()
-            } else {
-                Toast.makeText(this, "ERROR: No image to process.", Toast.LENGTH_SHORT).show()
-            }
+        if (outputUri.toString().isNotEmpty()) {
+            processDocumentImage()
+        } else {
+            Toast.makeText(this, "ERROR: No image to process.", Toast.LENGTH_SHORT).show()
+        }
         }
 
     private val requestPermissionLauncher =

@@ -29,7 +29,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="4dp"
-                    android:text="Patient's ID:"
+                    android:text="@string/enhance_verify_patient_id"
                     android:textAppearance="?attr/textAppearanceBodyMedium" />
 
                 <TextView
@@ -48,7 +48,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="4dp"
-                    android:text="Home BP Target:"
+                    android:text="@string/enhance_verify_home_bp"
                     android:textAppearance="?attr/textAppearanceBodyMedium" />
 
                 <LinearLayout
@@ -72,7 +72,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="6dp"
-                        android:text="/"
+                        android:text="@string/enhance_verify_home_divider"
                         android:textAppearance="?attr/textAppearanceBodyLarge" />
 
                     <com.google.android.material.textfield.TextInputLayout
@@ -92,7 +92,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="4dp"
-                    android:text="Clinic BP Target:"
+                    android:text="@string/enhance_verify_clinic_bp"
                     android:textAppearance="?attr/textAppearanceBodyMedium" />
 
                 <LinearLayout
@@ -116,7 +116,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="6dp"
-                        android:text="/"
+                        android:text="@string/enhance_verify_clinic_divider"
                         android:textAppearance="?attr/textAppearanceBodyLarge" />
 
                     <com.google.android.material.textfield.TextInputLayout
@@ -162,14 +162,14 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="8dp"
-                    android:text="Add Row" />
+                    android:text="@string/enhance_verify_add_row" />
 
                 <Button
                     android:id="@+id/moreOptionsBtn"
                     style="@style/Widget.Material3.Button.ElevatedButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="More Options" />
+                    android:text="@string/enhance_verify_more_options" />
             </LinearLayout>
 
             <com.google.android.material.divider.MaterialDivider
@@ -181,14 +181,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="6dp"
-                android:text="Disclaimer: The scanner is not perfect and may yield erroneous results at times. The onus is on you to ensure the accuracy of these results before calculating the average blood pressure for this patient."
+                android:text="@string/enhance_verify_disclaimer"
                 android:textStyle="bold" />
 
             <Button
                 android:id="@+id/calculateAvgBPBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Calculate Average BP"
+                android:text="@string/enhance_verify_calculate_bp"
                 android:textAllCaps="true" />
         </LinearLayout>
     </LinearLayout>

@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- AuthenticationActivity strings -->
+    <string name="resend_verification_code">点击重新发送验证码</string>
+
+    <!-- LoginActivity strings -->
+    <string name="good_morning">早上好！</string>
+    <string name="good_afternoon">下午好！</string>
+    <string name="good_evening">晚上好！</string>
+
+    <!-- ScanActivity strings -->
+    <string name="ocr_instructions">请确保仅显示血压值，裁剪时排除所有标题。</string>
+
+    <!-- ProfileActivity strings -->
+    <string name="profile_gender_male">男</string>
+    <string name="profile_gender_female">女</string>
+
+    <!-- RegistrationActivity strings -->
+    <string name="profile_picture_info">要选择其他照片，请点击当前照片打开图库。</string>
+
+    <!-- Navigation drawer strings -->
+    <string name="home_title">首页</string>
+    <string name="patient_registration_title">患者注册</string>
+    <string name="settings_title">设置</string>
+
+    <!-- Navigation bar strings -->
+    <string name="profile_title">个人资料</string>
+    <string name="scan_title">扫描</string>
+    <string name="history_title">历史记录</string>
+    <string name="dashboard_title">仪表板</string>
+
+    <!-- Dialog strings -->
+    <string name="ok_dialog">确定</string>
+    <string name="yes_dialog">是</string>
+    <string name="no_dialog">否</string>
+    <string name="cancel_dialog">取消</string>
+    <string name="try_again_dialog">重试</string>
+
+    <string name="dialog_positive_ok">确定</string>
+    <string name="bp_stage">血压阶段</string>
+    <string name="medical">医疗：</string>
+    <string name="lifestyle">生活方式：</string>
+    <string name="diet">饮食：</string>
+    <string name="recommendation">建议：</string>
+    <string name="control_status">控制状态：</string>
+    <string name="average_home_bp">平均家庭血压：</string>
+
+    <!-- activity_about.xml -->
+    <string name="enhance_about_collab">合作单位：</string>
+    <string name="enhance_about_app_ver">应用版本：</string>
+    <string name="enhance_about_info">ENHANCe 是一个数字临床决策支持工具，用于从纸质和数字日记中捕捉高血压记录，并支持初级保健医生在管理家庭血压监测患者时的临床决策。</string>
+    <string name="enhance_about_purpose">该工具结合了光学字符识别技术，可以识别大多数手写的血压值，并自动计算平均血压。这样就取代了手动读取和计算血压的繁琐过程，从而减少了工作量和人为错误。</string>
+
+    <!-- activity_authentication.xml -->
+    <string name="enhance_auth_2fa">双因素认证</string>
+    <string name="enhance_auth_2fa_body">输入通过短信发送到您注册号码的代码。</string>
+    <string name="enhance_auth_code">代码</string>
+    <string name="enhance_auth_verify">验证</string>
+
+    <!-- activity_history.xml -->
+    <string name="enhance_history_past">未找到过往记录。</string>
+
+    <!-- activity_login.xml -->
+    <string name="enhance_login_staff_id">员工身份证明</string>
+    <string name="enhance_login_password">密码</string>
+    <string name="enhance_login_login">登录</string>
+
+    <!-- activity_main.xml -->
+    <string name="enhance_main_welcome_message">欢迎使用 ENHANCe！</string>
+    <string name="enhance_main_register_patient">注册患者</string>
+    <string name="enhance_main_existing_patient">搜索现有患者：</string>
+    <string name="enhance_main_patient_id">患者识别码</string>
+    <string name="enhance_main_search_record">搜索记录</string>
+
+    <!-- activity_privacy_statement.xml -->
+    <string name="activity_privacy_statement">这是隐私声明页面。</string>
+
+    <!-- activity_profile.xml -->
+    <string name="enhance_profile_legal_name">法定姓名</string>
+    <string name="enhance_profile_patient_id">患者识别码</string>
+    <string name="enhance_profile_dob">出生日期</string>
+    <string name="enhance_profile_gender">性别</string>
+    <string name="enhance_profile_address">地址</string>
+    <string name="enhance_profile_weight">体重</string>
+    <string name="enhance_profile_height">身高</string>
+
+    <!-- activity_recommendation.xml -->
+    <string name="enhance_recco_heaeder">以下是基于扫描的血压记录的建议：</string>
+
+    <!-- activity_registration.xml -->
+    <string name="enhance_register_photo">照片</string>
+    <string name="enhance_register_upload_photo">点击文件上传图标以从您的图库选择照片。</string>
+    <string name="enhance_register_particulars">个人详情</string>
+    <string name="enhance_register_legal_name">法定姓名</string>
+    <string name="enhance_register_patient_id">患者身份证号</string>
+    <string name="enhance_register_dob">出生日期</string>
+    <string name="enhance_register_gender">性别</string>
+    <string name="enhance_register_address">地址</string>
+    <string name="enhance_register_health_info">健康信息</string>
+    <string name="enhance_register_weight">体重</string>
+    <string name="enhance_register_height">身高</string>
+    <string name="enhance_register_button">注册</string>
+
+    <!-- activity_scan.xml -->
+    <string name="enhance_scan_patient_id">患者身份证号：</string>
+    <string name="enhance_scan_name">姓名：</string>
+    <string name="enhance_scan_source">选择来源</string>
+
+    <!-- activity_settings.xml -->
+    <string name="enhance_settings_account">账户</string>
+    <string name="enhance_settings_logout">登出</string>
+    <string name="enhance_settings_help_support">帮助与支持</string>
+    <string name="enhance_settings_user_guide">用户指南</string>
+    <string name="enhance_settings_contact_helpdesk">联系帮助台</string>
+    <string name="enhance_settings_about">关于ENHANCe</string>
+    <string name="enhance_settings_terms_of_use">使用条款</string>
+    <string name="enhance_settings_privacy_statement">隐私声明</string>
+    <string name="enhance_settings_report_vulnerability">报告漏洞</string>
+
+    <!-- activity_terms_of_use.xml -->
+    <string name="enhance_terms_header">这是使用条款页面。</string>
+
+    <!-- activity_user_guide.xml -->
+    <string name="enhance_user_patient"><![CDATA[患者注册与搜索]]></string>
+    <string name="enhance_user_patient_body">注册新患者，包括他们的头像、NRIC 号码、法定姓名、性别、出生日期、地址、身高和体重。\n\n对于已注册的患者，只需使用其 NRIC 和法定姓名进行搜索。</string>
+    <string name="enhance_user_scan">扫描记录</string>
+    <string name="enhance_user_scan_body">使用设备相机扫描血压（BP）记录，或从图库中选择一张图片。\n\n之后，您可以选择重新拍摄/重新选择图片。\n\n重要提示：为了确保下一步的手写/文本识别准确，您必须裁剪图片，使其只显示血压值（排除任何标题）。</string>
+    <string name="enhance_user_verify_scan">验证扫描 - 检查</string>
+    <string name="enhance_user_verify_scan_body">算法检查确认存在超过 12 条记录。否则，它会提示您重新扫描或继续分析。\n\n如果当前记录超过六个错误，系统也会提示您重新扫描。</string>
+    <string name="enhance_user_edit">验证扫描 - 编辑值</string>
+    <string name="enhance_user_edit_body">如果算法认为任何血压值异常/不正确，您会收到警报（提供原因）。\n\n您还需要输入家庭血压目标和诊所血压目标。\n\n如果发现任何错误，您也可以编辑血压值。\n\n只需按下红色圆形减号图标即可删除相应的行，或按下“添加新行”按钮添加新行。\n\n注意：如果决定再次扫描当前记录，除之前的进度外，当前进度将被删除。\n一旦所有血压值检查完毕，点击计算平均值继续。</string>
+    <string name="enhance_user_history">历史记录</string>
+    <string name="enhance_user_history_body">您可以查看所选患者先前记录的平均血压值、家庭血压目标和诊所血压目标。</string>
+    <string name="enhance_user_faq">常见问题</string>
+    <string name="enhance_user_faq_body">问：如何访问扫描记录页面？\n\n答：您需要先搜索患者，然后才能在底部导航栏选择“扫描记录”。\n\n问：为了最大限度地提高手写/文本检测准确性，图像的哪部分应保留？\n\n答：调整相机，使其填满屏幕的顶部和底部。尝试仅水平裁剪图像，并在裁剪的图像中仅保留收缩压和舒张压值（排除标题；仅保留数字）。</string>
+
+    <!-- activity_verify_scan.xml -->
+    <string name="enhance_verify_patient_id">患者ID：</string>
+    <string name="enhance_verify_home_bp">家庭血压目标：</string>
+    <string name="enhance_verify_clinic_bp">诊所血压目标：</string>
+    <string name="enhance_verify_add_row">添加行</string>
+    <string name="enhance_verify_more_options">更多选项</string>
+    <string name="enhance_verify_disclaimer">免责声明：扫描仪并非完美，有时可能产生错误结果。在计算此患者的平均血压之前，请确保这些结果的准确性由您负责。</string>
+    <string name="enhance_verify_calculate_bp">计算平均血压</string>
+
+    <!-- bottom_sheet_verify_scan.xml -->
+    <string name="enhance_verify_bottom_option">选择一个选项：</string>
+    <string name="enhance_verify_bottom_continue_scan">继续扫描</string>
+    <string name="enhance_verify_bottom_rescan">重新扫描当前记录</string>
+    <string name="enhance_verify_bottom_discard">放弃所有进度</string>
+
+    <!-- dashboard.xml -->
+    <string name="enhance_dashboard_reload">重新加载</string>
+
+    <!-- divider_old_new_record.xml -->
+    <string name="enhance_divider_old_new_current_scan_results">当前扫描结果：</string>
+
+    <!-- history_item.xml -->
+    <string name="enhance_history_item_date">dd日/MM月/yyyy年 HH:mm:ss</string>
+    <string name="enhance_history_item_avgbp">平均血压：</string>
+    <string name="enhance_history_item_homebp">家庭血压目标：</string>
+    <string name="enhance_history_item_clinicbp">诊所血压目标：</string>
+
+
+</resources>

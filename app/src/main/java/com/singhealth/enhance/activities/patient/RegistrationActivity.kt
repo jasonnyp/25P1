@@ -1,17 +1,11 @@
 package com.singhealth.enhance.activities.patient
 
-import android.Manifest
 import android.app.DatePickerDialog
 import android.app.ProgressDialog
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.graphics.ImageDecoder
-import android.net.Uri
-import android.os.Build
 import android.os.Bundle
-import android.provider.MediaStore
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.MenuItem
@@ -21,12 +15,7 @@ import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
-import com.canhub.cropper.CropImage
-import com.canhub.cropper.CropImageContract
-import com.canhub.cropper.CropImageContractOptions
-import com.canhub.cropper.CropImageOptions
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -38,7 +27,6 @@ import com.singhealth.enhance.databinding.ActivityRegistrationBinding
 import com.singhealth.enhance.security.AESEncryption
 import com.singhealth.enhance.security.SecureSharedPreferences
 import java.io.ByteArrayOutputStream
-import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -239,8 +227,7 @@ class RegistrationActivity : AppCompatActivity() {
                         photoBA = stream.toByteArray()
                         binding.photoIV.setImageBitmap(squareBitmap)
 
-                        binding.photoTV.text =
-                            "To select another photo, tap on the current photo to open your gallery."
+                        binding.photoTV.text = getString(R.string.profile_picture_info)
                     }
                 } catch (e: Exception) {
                     Toast.makeText(this, e.message.toString(), Toast.LENGTH_LONG).show()

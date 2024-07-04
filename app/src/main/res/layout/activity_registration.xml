@@ -35,7 +35,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="8dp"
-                        android:text="Photo"
+                        android:text="@string/enhance_register_photo"
                         android:textAllCaps="true"
                         android:textSize="18dp"
                         android:textStyle="bold" />
@@ -61,7 +61,7 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
                             android:layout_weight="7"
-                            android:text="Tap on the file upload icon to select a photo from your gallery." />
+                            android:text="@string/enhance_register_upload_photo" />
                     </LinearLayout>
 
                     <com.google.android.material.divider.MaterialDivider
@@ -73,7 +73,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="8dp"
-                        android:text="Personal Particulars"
+                        android:text="@string/enhance_register_particulars"
                         android:textAllCaps="true"
                         android:textSize="18dp"
                         android:textStyle="bold" />
@@ -82,7 +82,7 @@
                         android:id="@+id/legalNameTIL"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Legal Name"
+                        android:hint="@string/enhance_register_legal_name"
                         app:errorEnabled="true">
 
                         <com.google.android.material.textfield.TextInputEditText
@@ -95,7 +95,7 @@
                         android:id="@+id/idTIL"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Patient ID No."
+                        android:hint="@string/enhance_register_patient_id"
                         app:errorEnabled="true">
 
                         <com.google.android.material.textfield.TextInputEditText
@@ -108,7 +108,7 @@
                         android:id="@+id/dateOfBirthTIL"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Date of Birth"
+                        android:hint="@string/enhance_register_dob"
                         app:errorEnabled="true">
 
                         <com.google.android.material.textfield.TextInputEditText
@@ -125,7 +125,7 @@
                         style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Gender"
+                        android:hint="@string/enhance_register_gender"
                         app:errorEnabled="true">
 
                         <AutoCompleteTextView
@@ -139,7 +139,7 @@
                         android:id="@+id/addressTIL"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Address"
+                        android:hint="@string/enhance_register_address"
                         app:errorEnabled="true">
 
                         <com.google.android.material.textfield.TextInputEditText
@@ -157,7 +157,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="8dp"
-                        android:text="Health Information"
+                        android:text="@string/enhance_register_health_info"
                         android:textAllCaps="true"
                         android:textSize="18dp"
                         android:textStyle="bold" />
@@ -166,7 +166,7 @@
                         android:id="@+id/weightTIL"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Weight"
+                        android:hint="@string/enhance_register_weight"
                         app:errorEnabled="true"
                         app:suffixText="kg">
 
@@ -181,7 +181,7 @@
                         android:id="@+id/heightTIL"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Height"
+                        android:hint="@string/enhance_register_height"
                         app:errorEnabled="true"
                         app:suffixText="cm">
 
@@ -197,7 +197,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:paddingVertical="12dp"
-                        android:text="Register"
+                        android:text="@string/enhance_register_button"
                         android:textAllCaps="true"
                         android:textSize="18sp"
                         android:textStyle="bold" />

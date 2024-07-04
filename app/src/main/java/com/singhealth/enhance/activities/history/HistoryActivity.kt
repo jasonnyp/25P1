@@ -11,19 +11,17 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.singhealth.enhance.R
+import com.singhealth.enhance.activities.DashboardActivity
 import com.singhealth.enhance.activities.MainActivity
 import com.singhealth.enhance.activities.ocr.ScanActivity
 import com.singhealth.enhance.activities.patient.ProfileActivity
 import com.singhealth.enhance.activities.patient.RegistrationActivity
+import com.singhealth.enhance.activities.result.RecommendationActivity
 import com.singhealth.enhance.activities.settings.SettingsActivity
 import com.singhealth.enhance.databinding.ActivityHistoryBinding
 import com.singhealth.enhance.security.SecureSharedPreferences
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
-import com.github.mikephil.charting.charts.LineChart
-import java.util.*
-import com.singhealth.enhance.activities.DashboardActivity
-import com.singhealth.enhance.activities.result.RecommendationActivity
 
 class HistoryActivity : AppCompatActivity(), HistoryAdapter.OnItemClickListener {
     private lateinit var binding: ActivityHistoryBinding
@@ -36,9 +34,6 @@ class HistoryActivity : AppCompatActivity(), HistoryAdapter.OnItemClickListener 
 
     private val db = Firebase.firestore
     private val history = ArrayList<HistoryData>()
-
-    private lateinit var lineChart: LineChart
-    private lateinit var diastolicLineChart: LineChart
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -134,7 +129,7 @@ class HistoryActivity : AppCompatActivity(), HistoryAdapter.OnItemClickListener 
                     binding.noRecordsTV.visibility = View.GONE
 
                     val inputDateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")
-                    val outputDateFormatter = DateTimeFormatter.ofPattern("dd MMM yyyy, HH:mm:ss")
+                    val outputDateFormatter = DateTimeFormatter.ofPattern(getString(R.string.enhance_history_item_date))
 
                     for (document in documents) {
                         val dateTimeString = document.get("date") as? String
@@ -161,7 +156,7 @@ class HistoryActivity : AppCompatActivity(), HistoryAdapter.OnItemClickListener 
                     }
 
                     sortedHistory = history.sortedByDescending { it.date }
-                    println("Sorted History" + sortedHistory)
+                    println("Sorted History$sortedHistory")
                     println("Sorted History 1st" + sortedHistory[0])
                     println("Sorted History 1st SYS DATA" + sortedHistory[0].avgSysBP)
 
@@ -169,115 +164,13 @@ class HistoryActivity : AppCompatActivity(), HistoryAdapter.OnItemClickListener 
 
                     binding.recyclerView.adapter = adapter
                     binding.recyclerView.layoutManager = LinearLayoutManager(this)
-                    // This code was found in the amazon build with no inherent purpose
-//                    lineChart = findViewById(R.id.syslineChart)
-//                    setupLineChart()
-//                    diastolicLineChart = findViewById(R.id.diastolicLineChart)
-//                    setupDiastolicLineChart()
                 }
             }
             .addOnFailureListener { e ->
                 println("Error getting documents: $e")
             }
     }
-//    This code was found in the amazon build with no inherent purpose
-//    private fun setupLineChart() {
-//        val systolicEntries = ArrayList<Entry>()
-//        val systolicTargetEntries = ArrayList<Entry>()
-//        val inputDateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault())
-//
-//        sortedHistory.forEach { historyData ->
-//            val systolicValue = historyData.avgSysBP?.toFloat() ?: 0f
-//            val systolicTargetValue = historyData.homeSysBPTarget?.toFloat() ?: 0f
-//
-//            val dateString = historyData.date // Assuming this is a String
-//            val date = inputDateFormat.parse(dateString) // Parse the date string
-//            val dateFloat = date.time.toFloat() // Convert date to float for the x-axis
-//
-//            systolicEntries.add(Entry(dateFloat, systolicValue))
-//            systolicTargetEntries.add(Entry(dateFloat, systolicTargetValue))
-//        }
-//        Collections.sort(systolicEntries, EntryXComparator())
-//        Collections.sort(systolicTargetEntries, EntryXComparator())
-//
-//        // Create data sets for systolic and diastolic values
-//        val systolicDataSet = LineDataSet(systolicEntries, "Systolic BP")
-//        val systolicTargetDataSet = LineDataSet(systolicTargetEntries, "Systolic Target BP")
-//
-//        // Customize the data sets appearance (Optional)
-//        systolicDataSet.color = Color.BLUE
-//        systolicTargetDataSet.color = Color.RED
-//
-//        // Create LineData with the data sets
-//        val lineData = LineData(systolicDataSet, systolicTargetDataSet)
-//
-//        // Set the custom ValueFormatter for x-axis
-//        lineChart.xAxis.valueFormatter = object : ValueFormatter() {
-//            private val outputDateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
-//
-//            override fun getAxisLabel(value: Float, axis: AxisBase?): String {
-//                return outputDateFormat.format(Date(value.toLong()))
-//            }
-//        }
-//
-//        // Set the data on the chart
-//        lineChart.data = lineData
-//
-//        // Refresh the chart
-//        lineChart.invalidate()
-//    }
-//
-//    private fun setupDiastolicLineChart() {
-//        // Similar code as setupSystolicLineChart() but for diastolic data
-//        // Use diastolicLineChart for this setup
-//
-//        val diastolicTargetEntries = ArrayList<Entry>()
-//        val diastolicEntries = ArrayList<Entry>()
-//        val inputDateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault())
-//
-//        sortedHistory.forEach { historyData ->
-//            val diastolicTargetValue = historyData.homeDiaBPTarget?.toFloat() ?: 0f
-//            val diastolicValue = historyData.avgDiaBP?.toFloat() ?: 0f
-//
-//            val dateString = historyData.date // Assuming this is a String
-//            val date = inputDateFormat.parse(dateString) // Parse the date string
-//            val dateFloat = date.time.toFloat() // Convert date to float for the x-axis
-//
-//
-//            println("Target" + diastolicTargetValue)
-//            diastolicEntries.add(Entry(dateFloat, diastolicValue))
-//            diastolicTargetEntries.add(Entry(dateFloat, diastolicTargetValue))
-//        }
-//
-//        Collections.sort(diastolicEntries, EntryXComparator())
-//        Collections.sort(diastolicTargetEntries, EntryXComparator())
-//
-//        // Create data sets for systolic and diastolic values
-//        val diastolicTargetDataSet = LineDataSet(diastolicTargetEntries, "Diastolic Target BP")
-//        val diastolicDataSet = LineDataSet(diastolicEntries, "Diastolic BP")
-//
-//        // Customize the data sets appearance (Optional)
-//        diastolicTargetDataSet.color = Color.RED
-//        diastolicDataSet.color = Color.BLUE
-//
-//        // Create LineData with the data sets
-//        val lineData = LineData(diastolicTargetDataSet, diastolicDataSet)
-//
-//        // Set the custom ValueFormatter for x-axis
-//        diastolicLineChart.xAxis.valueFormatter = object : ValueFormatter() {
-//            private val outputDateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
-//
-//            override fun getAxisLabel(value: Float, axis: AxisBase?): String {
-//                return outputDateFormat.format(Date(value.toLong()))
-//            }
-//        }
-//
-//        // Set the data on the chart
-//        diastolicLineChart.data = lineData
-//
-//        // Refresh the chart
-//        diastolicLineChart.invalidate()
-//    }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return if (actionBarDrawerToggle.onOptionsItemSelected(item)) {
             true

@@ -21,11 +21,9 @@ class HistoryAdapter(
         val currentItem = historyList[position]
 
         holder.dateTV.text = currentItem.dateFormatted.toString()
-        holder.avgBPTV.text = "${currentItem.avgSysBP} / ${currentItem.avgDiaBP}"
-        holder.homeBPTargetTV.text =
-            "${currentItem.homeSysBPTarget} / ${currentItem.homeDiaBPTarget}"
-        holder.clinicBPTargetTV.text =
-            "${currentItem.clinicSysBPTarget} / ${currentItem.clinicDiaBPTarget}"
+        holder.avgBPTV.text = String.format("%s / %s", currentItem.avgSysBP, currentItem.avgDiaBP)
+        holder.homeBPTargetTV.text = String.format("%s / %s", currentItem.homeSysBPTarget, currentItem.homeDiaBPTarget)
+        holder.clinicBPTargetTV.text = String.format("%s / %s", currentItem.clinicSysBPTarget, currentItem.clinicDiaBPTarget)
     }
 
     override fun getItemCount() = historyList.size
@@ -42,7 +40,7 @@ class HistoryAdapter(
         }
 
         override fun onClick(v: View?) {
-            val position = adapterPosition
+            val position = bindingAdapterPosition // adapterPosition
             if (position != RecyclerView.NO_POSITION) {
                 listener.onItemClick(position)
             }

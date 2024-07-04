@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
-        android:text="Select an option:"
+        android:text="@string/enhance_verify_bottom_option"
         android:textAppearance="?attr/textAppearanceTitleLarge"
         android:textStyle="bold" />
 
@@ -33,7 +33,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="Continue scanning" />
+            android:text="@string/enhance_verify_bottom_continue_scan" />
     </LinearLayout>
 
     <LinearLayout
@@ -53,7 +53,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="Rescan current records" />
+            android:text="@string/enhance_verify_bottom_rescan" />
     </LinearLayout>
 
     <LinearLayout
@@ -73,6 +73,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="Discard all progress" />
+            android:text="@string/enhance_verify_bottom_discard" />
     </LinearLayout>
 </LinearLayout>

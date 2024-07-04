@@ -1,5 +1,6 @@
 package com.singhealth.enhance.activities.patient
-// TODO: Add in imports after adding in the relevant files (Diagnosis and Dashboard)
+
+import android.annotation.SuppressLint
 import android.app.ProgressDialog
 import android.content.Intent
 import android.graphics.BitmapFactory
@@ -238,15 +239,15 @@ class ProfileActivity : AppCompatActivity() {
                                 val recentDia = sortedArr[0].avgDiaBP as Long
                                 val recentDate = sortedArr[0].date as String
                                 // Determine BP Stage based on most recent readings
-                                var BPStage = diagnosePatient(recentSys, recentDia, recentDate)
+                                var bpStage = diagnosePatient(recentSys, recentDia, recentDate)
 
                                 // Set UI BP Stage
-                                binding.bpStage.text = BPStage
+                                binding.bpStage.text = bpStage
 
                                 // If current BP stage is not the same as stored BP stage, update db
                                 if (binding.bpStage.text != document.getString("bpStage")){
                                     // Update db to store recent BP Stage
-                                    val data = hashMapOf("bpStage" to BPStage)
+                                    val data = hashMapOf("bpStage" to bpStage)
                                     docRef.set(data, SetOptions.merge())
                                 }
                             }
@@ -270,6 +271,7 @@ class ProfileActivity : AppCompatActivity() {
             }
     }
 
+    @SuppressLint("SetTextI18n")
     private fun updateUIWithPatientData(document: DocumentSnapshot, patientID: String) {
         val imageUrl = document.getString("photoUrl")
         if (imageUrl != null) {
@@ -297,8 +299,8 @@ class ProfileActivity : AppCompatActivity() {
 
         // Comment out when database info is decrypted
         when (document.getLong("gender")?.toInt()) {
-            1 -> binding.genderTV.text = "MALE"
-            2 -> binding.genderTV.text = "FEMALE"
+            1 -> binding.genderTV.text = getString(R.string.profile_gender_male)
+            2 -> binding.genderTV.text = getString(R.string.profile_gender_female)
         }
 
         // Comment out when database info is encrypted

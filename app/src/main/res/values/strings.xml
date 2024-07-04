@@ -1,6 +1,5 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="app_name" tools:ignore="Typos">ENHANCe1</string>
-    <string name="title_activity_enhance_screen">EnhanceScreen</string>
+    <string name="app_name" tools:ignore="Typos" translatable="false">ENHANCe1</string>
 
     <!-- AuthenticationActivity strings -->
     <string name="resend_verification_code">Tap to resend verification code.</string>
@@ -10,10 +9,22 @@
     <string name="good_afternoon">Good Afternoon!</string>
     <string name="good_evening">Good Evening!</string>
 
+    <!-- ScanActivity strings -->
+    <string name="ocr_instructions">Please ensure that only the blood pressure values are seen and exclude all headers when cropping.</string>
+
+    <!-- ProfileActivity strings -->
+    <string name="profile_gender_male">MALE</string>
+    <string name="profile_gender_female">FEMALE</string>
+
+    <!-- RegistrationActivity strings -->
+    <string name="profile_picture_info">To select another photo, tap on the current photo to open your gallery.</string>
+
+    <!-- DiagnosePatient.kt -->
+
+
     <!-- Navigation drawer strings -->
     <string name="home_title">Home</string>
     <string name="patient_registration_title">Patient registration</string>
-
     <string name="settings_title">Settings</string>
 
     <!-- Navigation bar strings -->
@@ -21,18 +32,6 @@
     <string name="scan_title">Scan</string>
     <string name="history_title">History</string>
     <string name="dashboard_title">Dashboard</string>
-    <!-- Settings strings -->
-    <string name="section_account_title">Account</string>
-    <string name="logout_title">Logout</string>
-
-    <string name="section_help_support_title">Help &amp; support</string>
-    <string name="user_guide_title">User guide</string>
-    <string name="contact_helpdesk_title">Contact Helpdesk</string>
-
-    <string name="about_enhance_title">About ENHANCe</string>
-    <string name="terms_of_use_title">Terms of use</string>
-    <string name="privacy_statement_title">Privacy statement</string>
-    <string name="report_vulnerability_title">Report vulnerability</string>
 
     <!-- Dialog strings -->
     <string name="ok_dialog">OK</string>
@@ -48,7 +47,131 @@
     <string name="diet">Diet:</string>
     <string name="recommendation"> Recommendation:</string>
     <string name="control_status"> Control Status:</string>
-    <string name="bpDivider">/</string>
+    <string name="bpDivider" translatable="false">/</string>
     <string name="average_home_bp"> Average Home BP:</string>
-    <string name="reload">Reload</string>
+
+
+    <!-- activity_about.xml -->
+    <string name="enhance_about_info">ENHANCe is a digital clinical decision support tool for capturing high blood pressure records from paper and digital diary and supports primary care physicians’ clinical decision-making when managing patients on home blood pressure monitoring.</string>
+    <string name="enhance_about_purpose">The tool incorporates optical character recognition technology to recognise most handwritten blood pressure values, and automatically calculates the average blood pressure. This replaces the laborious process of reading and calculating blood pressure manually, ultimately reducing workload and human error.</string>
+    <string name="enhance_about_collab">In collaboration with:</string>
+    <string name="enhance_about_app_ver">App version:</string>
+    <string name="enhance_about_app_cur_ver" translatable="false">1.0</string>
+
+    <!-- activity_authentication.xml -->
+    <string name="enhance_auth_2fa">Two-Factor Authentication</string>
+    <string name="enhance_auth_2fa_body">Enter the code sent to your registered number via SMS.</string>
+    <string name="enhance_auth_code">Code</string>
+    <string name="enhance_auth_verify">Verify</string>
+
+    <!-- activity_history.xml -->
+    <string name="enhance_history_past">No past records found.</string>
+
+    <!-- activity_login.xml -->
+    <string name="enhance_login_staff_id">Staff ID</string>
+    <string name="enhance_login_password">Password</string>
+    <string name="enhance_login_login">Login</string>
+
+    <!-- activity_main.xml -->
+    <string name="enhance_main_welcome_message">Welcome to ENHANCe!</string>
+    <string name="enhance_main_register_patient">Register Patient</string>
+    <string name="enhance_main_existing_patient">Search for an existing patient:</string>
+    <string name="enhance_main_patient_id">Patient ID</string>
+    <string name="enhance_main_search_record">Search Record</string>
+
+    <!-- activity_privacy_statement.xml -->
+    <string name="activity_privacy_statement">This is the Privacy Statement activity.</string>
+
+    <!-- activity_profile.xml -->
+    <string name="enhance_profile_legal_name">Legal Name</string>
+    <string name="enhance_profile_patient_id">Patient ID</string>
+    <string name="enhance_profile_dob">Date of Birth</string>
+    <string name="enhance_profile_gender">Gender</string>
+    <string name="enhance_profile_address">Address</string>
+    <string name="enhance_profile_weight">Weight</string>
+    <string name="enhance_profile_height">Height</string>
+
+    <!-- activity_recommendation -->
+    <string name="enhance_recco_heaeder">The following are the recommendations based on the scanned BP records:</string>
+
+    <!-- activity_registration.xml -->
+    <string name="enhance_register_photo">Photo</string>
+    <string name="enhance_register_upload_photo">Tap on the file upload icon to select a photo from your gallery.</string>
+    <string name="enhance_register_particulars">Personal Particulars</string>
+    <string name="enhance_register_legal_name">Legal Name</string>
+    <string name="enhance_register_patient_id">Patient ID No.</string>
+    <string name="enhance_register_dob">Date of Birth</string>
+    <string name="enhance_register_gender">Gender</string>
+    <string name="enhance_register_address">Address</string>
+    <string name="enhance_register_health_info">Health Information</string>
+    <string name="enhance_register_weight">Weight</string>
+    <string name="enhance_register_height">Height</string>
+    <string name="enhance_register_button">Register</string>
+
+    <!-- activity_scan.xml -->
+    <string name="enhance_scan_patient_id">Patient ID:</string>
+    <string name="enhance_scan_name">Name:</string>
+    <string name="enhance_scan_source">Select Source</string>
+
+    <!-- activity_settings.xml -->
+    <string name="enhance_settings_account">Account</string>
+    <string name="enhance_settings_logout">Logout</string>
+    <string name="enhance_settings_help_support">Help &amp; support</string>
+    <string name="enhance_settings_user_guide">User guide</string>
+    <string name="enhance_settings_contact_helpdesk">Contact Helpdesk</string>
+    <string name="enhance_settings_about">About ENHANCe</string>
+    <string name="enhance_settings_terms_of_use">Terms of use</string>
+    <string name="enhance_settings_privacy_statement">Privacy statement</string>
+    <string name="enhance_settings_report_vulnerability">Report vulnerability</string>
+
+    <!-- activity_terms_of_use.xml -->
+    <string name="enhance_terms_header">This is the Terms of Use activity.</string>
+
+    <!-- activity_user_guide.xml -->
+    <string name="enhance_user_patient"><![CDATA[Patient registration & search]]></string>
+    <string name="enhance_user_patient_body">Register a new patient along with their profile picture, NRIC number, legal name, gender, date of birth, address, height, and weight.\n\nFor registered patients, simply search for them using his/her NRIC and legal name.</string>
+    <string name="enhance_user_scan">Scan records</string>
+    <string name="enhance_user_scan_body">Scan blood pressure (BP) records using the device camera, or select an image from gallery.\n\nThereafter, you can choose to either retake/reselect the image.\n\nIMPORTANT: To ensure accurate handwriting/text recognition for the next part, you MUST crop the image such that only the blood pressure values are seen (EXCLUDE any headers).</string>
+    <string name="enhance_user_verify_scan">Verify Scan - Check</string>
+    <string name="enhance_user_verify_scan_body">Checks by the algorithm confirms for the presence of more than 12 records. Otherwise, it will prompt you to either scan again or proceed with the analysis.\n\nThe algorithm will also prompt you to rescan the current record should it exceed six errors the system.</string>
+    <string name="enhance_user_edit">Verify Scan - Edit values</string>
+    <string name="enhance_user_edit_body">You will be alerted of any BP values which are deemed to be abnormal/incorrect by the algorithm (reasons provided).\n\nYou are also required to enter the home BP target and clinic BP target.\n\nYou can also edit the BP values should you find any errors.\n\nSimply press on the red circular minus icon to remove that respective row, or add a new row by pressing on the \'Add New Row\' button.\n\nNOTE: Should you decide to scan the current records again, your current progress EXCEPT your previous progress will be deleted.\nOnce all the blood pressure values have been checked, click on calculate average to continue.</string>
+    <string name="enhance_user_history">History</string>
+    <string name="enhance_user_history_body">You can view the previously recorded average blood pressure values, home BP target and clinic BP target of the selected patient.</string>
+    <string name="enhance_user_faq">Frequently Asked Questions</string>
+    <string name="enhance_user_faq_body">Q. How to access the scan record page?\n\nANS: You need to search for the patient before you can select the \'Scan Record\' at the bottom navigation bar.\n\nQ. What part of the image should one keep for maximum handwriting/text detection accuracy?\n\nANS: Align your camera such that is fills up the top and bottom of the screen. Try to only crop the image HORIZONTALLY and leave only the systolic and diastolic BP values in the cropped image (EXCLUDE the header; only numbers).</string>
+
+    <!-- activity_verify_scan.xml -->
+    <string name="enhance_verify_patient_id">Patient\'s ID:</string>
+    <string name="enhance_verify_home_bp">Home BP Target:</string>
+    <string name="enhance_verify_home_divider" translatable="false">/</string>
+    <string name="enhance_verify_clinic_bp">Clinic BP Target:</string>
+    <string name="enhance_verify_clinic_divider" translatable="false">/</string>
+    <string name="enhance_verify_add_row">Add Row</string>
+    <string name="enhance_verify_more_options">More Options</string>
+    <string name="enhance_verify_disclaimer">Disclaimer: The scanner is not perfect and may yield erroneous results at times. The onus is on you to ensure the accuracy of these results before calculating the average blood pressure for this patient.</string>
+    <string name="enhance_verify_calculate_bp">Calculate Average BP</string>
+
+    <!-- bottom_sheet_verify_scan.xml -->
+    <string name="enhance_verify_bottom_option">Select an option:</string>
+    <string name="enhance_verify_bottom_continue_scan">Continue scanning</string>
+    <string name="enhance_verify_bottom_rescan">Rescan current records</string>
+    <string name="enhance_verify_bottom_discard">Discard all progress</string>
+
+    <!-- dashboard.xml -->
+    <string name="enhance_dashboard_reload">Reload</string>
+
+    <!-- divider_old_new_record.xml -->
+    <string name="enhance_divider_old_new_current_scan_results">Current scan results:</string>
+
+    <!-- history_item.xml -->
+    <string name="enhance_history_item_date">dd/MM/yyyy HH:mm:ss</string>
+    <string name="enhance_history_item_avgbp">Average BP:</string>
+    <string name="enhance_history_item_homebp">Home BP Target:</string>
+    <string name="enhance_history_item_clinicbp">Clinic BP Target:</string>
+
+    <!-- row_bp_record.xml -->
+    <string name="enhance_row_bp_divider" translatable="false">/</string>
+
+
 </resources>

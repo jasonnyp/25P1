@@ -30,7 +30,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="20dp"
-                    android:text="Two-Factor Authentication"
+                    android:text="@string/enhance_auth_2fa"
                     android:textAlignment="center"
                     android:textSize="24sp"
                     android:textStyle="bold" />
@@ -39,14 +39,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="12dp"
-                    android:text="Enter the code sent to your registered number via SMS."
+                    android:text="@string/enhance_auth_2fa_body"
                     android:textAlignment="center" />
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/codeTIL"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Code"
+                    android:hint="@string/enhance_auth_code"
                     app:errorEnabled="true"
                     app:errorIconDrawable="@drawable/ic_error">
 
@@ -64,7 +64,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginVertical="20dp"
                     android:paddingVertical="12dp"
-                    android:text="Verify"
+                    android:text="@string/enhance_auth_verify"
                     android:textAllCaps="true"
                     android:textSize="18sp"
                     android:textStyle="bold" />

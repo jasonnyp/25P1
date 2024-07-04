@@ -1,6 +1,5 @@
 package com.singhealth.enhance.activities.diagnosis
 
-import android.annotation.SuppressLint
 import com.google.firebase.firestore.QuerySnapshot
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -21,7 +20,6 @@ fun diagnosePatient(recentSys: Long, recentDia: Long, recentDate: String): Strin
         recentSys > 180 || recentDia > 120 -> "Hypertensive Crisis"
         else -> "N/A"
     }
-
     return bpStage
 }
 
@@ -63,6 +61,7 @@ fun sortPatientVisits(documents: QuerySnapshot) : List<Diag> {
             )
         )
     }
+
     // Sort array by date in descending order
     val sortedArr = arr.sortedByDescending { it.date }
 
@@ -135,7 +134,6 @@ fun showControlStatus(documents: QuerySnapshot, patientAge: Int, date : String?)
     }
 }
 
-@SuppressLint("SetTextI18n")
 fun showRecommendation(bpStage: String) : ArrayList<String>{
     // P1 2024 Version
     // Provide categories of recommendation based on the patient's current BP Stage

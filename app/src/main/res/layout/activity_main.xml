@@ -41,7 +41,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginVertical="12dp"
-                        android:text="Welcome to ENHANCe!"
+                        android:text="@string/enhance_main_welcome_message"
                         android:textAlignment="center"
                         android:textSize="22sp"
                         android:textStyle="bold" />
@@ -52,7 +52,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
                         android:paddingVertical="16dp"
-                        android:text="Register Patient"
+                        android:text="@string/enhance_main_register_patient"
                         android:textAllCaps="true"
                         android:textSize="18sp"
                         android:textStyle="bold" />
@@ -66,14 +66,14 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="8dp"
-                        android:text="Search for an existing patient:"
+                        android:text="@string/enhance_main_existing_patient"
                         android:textAlignment="center" />
 
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/idTIL"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Patient ID"
+                        android:hint="@string/enhance_main_patient_id"
                         app:errorEnabled="true"
                         app:errorIconDrawable="@drawable/ic_error">
 
@@ -91,7 +91,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
-                        android:text="Search Record"
+                        android:text="@string/enhance_main_search_record"
                         android:textAllCaps="true" />
                 </LinearLayout>
             </ScrollView>

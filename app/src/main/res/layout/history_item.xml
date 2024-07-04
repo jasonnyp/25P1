@@ -19,7 +19,8 @@
             android:padding="12dp"
             android:textColor="@color/white"
             android:textSize="20sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:text="@string/enhance_history_item_date" />/>
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -31,7 +32,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:text="Average BP:" />
+                android:text="@string/enhance_history_item_avgbp" />
 
             <TextView
                 android:id="@+id/avgBPTV"
@@ -53,7 +54,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:text="Home BP Target:" />
+                android:text="@string/enhance_history_item_homebp" />
 
             <TextView
                 android:id="@+id/homeBPTargetTV"
@@ -75,7 +76,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:text="Clinic BP Target:" />
+                android:text="@string/enhance_history_item_clinicbp" />
 
             <TextView
                 android:id="@+id/clinicBPTargetTV"

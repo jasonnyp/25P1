@@ -17,6 +17,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
-        android:text="Current scan results:"
+        android:text="@string/enhance_divider_old_new_current_scan_results"
         android:textStyle="italic" />
 </LinearLayout>
