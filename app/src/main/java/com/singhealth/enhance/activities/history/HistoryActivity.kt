@@ -129,7 +129,7 @@ class HistoryActivity : AppCompatActivity(), HistoryAdapter.OnItemClickListener 
                     binding.noRecordsTV.visibility = View.GONE
 
                     val inputDateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")
-                    val outputDateFormatter = DateTimeFormatter.ofPattern(getString(R.string.enhance_history_item_date))
+                    val outputDateFormatter = DateTimeFormatter.ofPattern(getString(R.string.date_format))
 
                     for (document in documents) {
                         val dateTimeString = document.get("date") as? String

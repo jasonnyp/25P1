@@ -19,6 +19,42 @@
     <!-- RegistrationActivity strings -->
     <string name="profile_picture_info">要选择其他照片，请点击当前照片打开图库。</string>
 
+    <!-- DiagnosePatient.kt -->
+    <string name="controlled_bp">您的血压目前处于控制状态。继续保持良好的工作！</string>
+    <string name="uncontrolled_bp">您的血压在升高。请考虑一些建议来降低您的血压。</string>
+
+    <string name="white_coat_uncontrolled_hypertension">白大衣性未受控高血压</string>
+    <string name="masked_hypertension">隐匿性高血压</string>
+    <string name="uncontrolled_hypertension">未受控高血压</string>
+    <string name="well_controlled_hypertension">良好控制的高血压</string>
+
+    <!-- RecommendationActivity.kt -->
+    <string name="no_recommendations">没有建议。</string>
+
+    <string name="well_controlled_bp_recommendation_diet">- 继续保持健康饮食。\n</string>
+    <string name="well_controlled_bp_recommendation_lifestyle">- 继续保持健康的生活方式。\n</string>
+    <string name="well_controlled_bp_recommendation_medical">- 遵循医生指定的药物治疗方案（如果有）。\n</string>
+    <string name="suboptimum_bp_recommendation_diet">
+    - 尝试更健康的饮食，多吃蔬菜。\n
+    - 减少钠的摄入量（&lt; 1.5g / 天）。\n
+    - 限制咖啡因的使用。\n
+</string>
+    <string name="suboptimum_bp_recommendation_lifestyle">
+    - 管理你的压力水平。\n
+    - 增加身体活动（每周2.5 - 5小时）。\n
+    - 保持健康的体重（BMI &lt; 22.9）。\n
+    - 戒烟和/或戒酒。\n
+    - 保证充足的睡眠（&lt; 7小时 / 夜）。\n
+</string>
+    <string name="suboptimum_bp_recommendation_medical">
+    - 增加抗高血压药物的剂量。\n
+</string>
+
+    <!-- MainActivity.kt -->
+    <string name="main_activity_patient_header">未找到病人。</string>
+    <string name="main_activity_patient_body">确保病人的信息输入正确。否则，请确认这是否是病人的首次就诊并继续注册其信息。</string>
+    <string name="main_activity_patient_validation">ID不能为空</string>
+
     <!-- Navigation drawer strings -->
     <string name="home_title">首页</string>
     <string name="patient_registration_title">患者注册</string>
@@ -37,6 +73,13 @@
     <string name="cancel_dialog">取消</string>
     <string name="try_again_dialog">重试</string>
 
+    <!-- Firestore error settings -->
+    <string name="firebase_error_header">访问 Firestore 数据库时出错</string>
+    <string name="firebase_error_body">应用程序在与 Firestore 数据库通信时遇到问题。\n\n如果问题仍然存在，请联系 IT 支持并提供以下错误代码：%1$s</string>
+
+    <!-- Patient error strings -->
+    <string name="patient_info_not_found">当前会话中未找到病人信息。请重试。</string>
+
     <string name="dialog_positive_ok">确定</string>
     <string name="bp_stage">血压阶段</string>
     <string name="medical">医疗：</string>
@@ -45,6 +88,7 @@
     <string name="recommendation">建议：</string>
     <string name="control_status">控制状态：</string>
     <string name="average_home_bp">平均家庭血压：</string>
+    <string name="date_format">dd日MM月yyyy年 HH:mm:ss</string>
 
     <!-- activity_about.xml -->
     <string name="enhance_about_collab">合作单位：</string>
@@ -157,7 +201,6 @@
     <string name="enhance_divider_old_new_current_scan_results">当前扫描结果：</string>
 
     <!-- history_item.xml -->
-    <string name="enhance_history_item_date">dd日/MM月/yyyy年 HH:mm:ss</string>
     <string name="enhance_history_item_avgbp">平均血压：</string>
     <string name="enhance_history_item_homebp">家庭血压目标：</string>
     <string name="enhance_history_item_clinicbp">诊所血压目标：</string>

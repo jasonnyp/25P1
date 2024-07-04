@@ -14,7 +14,9 @@ import com.google.firebase.ktx.Firebase
 import com.singhealth.enhance.R
 import com.singhealth.enhance.activities.DashboardActivity
 import com.singhealth.enhance.activities.MainActivity
+import com.singhealth.enhance.activities.diagnosis.bpControlStatus
 import com.singhealth.enhance.activities.diagnosis.diagnosePatient
+import com.singhealth.enhance.activities.diagnosis.hypertensionStatus
 import com.singhealth.enhance.activities.diagnosis.showControlStatus
 import com.singhealth.enhance.activities.diagnosis.showRecommendation
 import com.singhealth.enhance.activities.history.HistoryActivity
@@ -57,7 +59,7 @@ class RecommendationActivity : AppCompatActivity() {
         val patientSharedPreferences = SecureSharedPreferences.getSharedPreferences(applicationContext)
         if (patientSharedPreferences.getString("patientID", null).isNullOrEmpty()) {
             val mainIntent = Intent(this, MainActivity::class.java)
-            Toast.makeText(this, "An error occurred. Please try again.", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, getString(R.string.patient_info_not_found), Toast.LENGTH_LONG).show()
             startActivity(mainIntent)
             finish()
         } else {
@@ -101,7 +103,7 @@ class RecommendationActivity : AppCompatActivity() {
         avgDiaBP = avgBPBundle.getInt("avgDiaBP").toLong()
 
         // Determine BP Stage
-        val bpStage = diagnosePatient(avgSysBP, avgDiaBP)
+        val bpStage = diagnosePatient(this, avgSysBP, avgDiaBP)
 
         // Display average BP
         binding.avgHomeSysBPTV.text = avgSysBP.toString()
@@ -129,28 +131,27 @@ class RecommendationActivity : AppCompatActivity() {
                             println(avgBPBundle.getString("Source"))
                             if (avgBPBundle.getString("Source") == "History") {
                                 val date = avgBPBundle.getString("date").toString()
-                                binding.bpStage.text = "(${bpStage})"
+                                binding.bpStage.text = bpControlStatus(this, avgSysBP, avgDiaBP, 0, 0)
                                 binding.controlStatusTV.text = showControlStatus(documents, patientAge, date)
+                                // "(${bpStage})"
                             }
                             else if (avgBPBundle.getString("Source") == "Scan") {
                                 // Display BP Stage
-                                binding.bpStage.text = "(${bpStage})"
+                                binding.bpStage.text = bpControlStatus(this, avgSysBP, avgDiaBP, 0, 0)
                                 binding.controlStatusTV.text = showControlStatus(documents, patientAge, null)
                             }
-                            val recoList = showRecommendation(bpStage)
+                            val recoList = showRecommendation(this, hypertensionStatus(this, avgSysBP, avgDiaBP))
                             binding.dietTV.text = recoList[0]
                             binding.lifestyleTV.text = recoList[1]
                             binding.medTV.text = recoList[2]
 
                             // If / When Statement for setting image
                             //binding.IV.setImageResource(R.drawable.ic_error) //Change to Image id
-                            val imageResource = when (bpStage) {
-                                "Low BP" -> R.drawable.excellent
-                                "Normal BP" -> R.drawable.excellent
-                                "Elevated BP" -> R.drawable.good
-                                "Hypertension Stage 1" -> R.drawable.neutral
-                                "Hypertension Stage 2" -> R.drawable.poor
-                                "Hypertensive Crisis" -> R.drawable.poor
+                            val imageResource = when (hypertensionStatus(this, avgSysBP, avgDiaBP)) {
+                                getString(R.string.well_controlled_hypertension) -> R.drawable.excellent
+                                getString(R.string.white_coat_uncontrolled_hypertension) -> R.drawable.good // Not Used for now
+                                getString(R.string.masked_hypertension) -> R.drawable.neutral // Not Used for now
+                                getString(R.string.uncontrolled_hypertension) -> R.drawable.poor
                                 else -> R.drawable.ic_error // Default image if the stage is not recognized
                             }
                             binding.statusIV.setImageResource(imageResource)
@@ -162,8 +163,8 @@ class RecommendationActivity : AppCompatActivity() {
             .addOnFailureListener { e ->
                 MaterialAlertDialogBuilder(this)
                     .setIcon(R.drawable.ic_error)
-                    .setTitle("Firestore Database connection error")
-                    .setMessage("The app is currently experiencing difficulties establishing a connection with the Firestore Database.\n\nIf this issue persists, please reach out to your IT helpdesk and provide them with the following error code for further assistance:\n\n$e")
+                    .setTitle(getString(R.string.firebase_error_header))
+                    .setMessage(getString(R.string.firebase_error_body, e))
                     .setPositiveButton(resources.getString(R.string.ok_dialog)) { dialog, _ -> dialog.dismiss() }
                     .show()
             }

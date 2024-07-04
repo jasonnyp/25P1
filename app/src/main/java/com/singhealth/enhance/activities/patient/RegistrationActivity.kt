@@ -111,7 +111,7 @@ class RegistrationActivity : AppCompatActivity() {
         }
 
         // Gender
-        val genderItems = listOf("Female", "Male")
+        val genderItems = listOf(getString(R.string.register_gender_male), getString(R.string.register_gender_female))
         val genderAdapter = ArrayAdapter(this, R.layout.list_gender_item, genderItems)
         binding.genderACTV.setAdapter(genderAdapter)
 
@@ -189,7 +189,7 @@ class RegistrationActivity : AppCompatActivity() {
             } else {
                 Toast.makeText(
                     this,
-                    "Please correct all errors before proceeding.",
+                    getString(R.string.register_field_verification),
                     Toast.LENGTH_SHORT
                 ).show()
             }
@@ -256,58 +256,58 @@ class RegistrationActivity : AppCompatActivity() {
             valid = false
             MaterialAlertDialogBuilder(this)
                 .setIcon(R.drawable.ic_error)
-                .setTitle("No photo uploaded")
-                .setMessage("Please upload patient's photo before continuing.")
-                .setPositiveButton("OK") { dialog, _ -> dialog.dismiss() }
+                .setTitle(getString(R.string.register_image_verification_header))
+                .setMessage(getString(R.string.register_image_verification_body))
+                .setPositiveButton(getString(R.string.ok_dialog)) { dialog, _ -> dialog.dismiss() }
                 .show()
         }
 
         if (binding.legalNameTIET.text.isNullOrEmpty()) {
             valid = false
-            binding.legalNameTIL.error = "Field cannot be empty"
+            binding.legalNameTIL.error = getString(R.string.register_empty_field_verification)
         }
 
         if (binding.idTIET.text.isNullOrEmpty()) {
             valid = false
-            binding.idTIL.error = "Field cannot be empty"
+            binding.idTIL.error = getString(R.string.register_empty_field_verification)
         }
 
         if (binding.dateOfBirthTIET.text.isNullOrEmpty()) {
             valid = false
-            binding.dateOfBirthTIL.error = "Field cannot be empty"
+            binding.dateOfBirthTIL.error = getString(R.string.register_empty_field_verification)
         }
 
         if (binding.genderACTV.text.isNullOrEmpty()) {
             valid = false
-            binding.genderTIL.error = "Field cannot be empty"
+            binding.genderTIL.error = getString(R.string.register_empty_field_verification)
         }
 
         if (binding.addressTIET.text.isNullOrEmpty()) {
             valid = false
-            binding.addressTIL.error = "Field cannot be empty"
+            binding.addressTIL.error = getString(R.string.register_empty_field_verification)
         }
 
         if (binding.weightTIET.text.isNullOrEmpty()) {
             valid = false
-            binding.weightTIL.error = "Field cannot be empty"
+            binding.weightTIL.error = getString(R.string.register_empty_field_verification)
         } else if (binding.weightTIET.text.toString().toFloatOrNull() == null) {
             valid = false
-            binding.weightTIL.error = "Invalid value"
+            binding.weightTIL.error = getString(R.string.register_invalid_value_verification)
         }
 
         if (binding.heightTIET.text.isNullOrEmpty()) {
             valid = false
-            binding.heightTIL.error = "Field cannot be empty"
+            binding.heightTIL.error = getString(R.string.register_empty_field_verification)
         } else if (binding.heightTIET.text.toString().toFloatOrNull() == null) {
             valid = false
-            binding.heightTIL.error = "Invalid value"
+            binding.heightTIL.error = getString(R.string.register_invalid_value_verification)
         }
 
         return valid
     }
 
     private fun registerPatient() {
-        progressDialog.setMessage("Please wait while the patient is being registered.")
+        progressDialog.setMessage(getString(R.string.register_loading_dialog))
         progressDialog.show()
 
         val photo = photoBA
@@ -337,13 +337,13 @@ class RegistrationActivity : AppCompatActivity() {
             if (documentSnapshot.exists()) {
                 MaterialAlertDialogBuilder(this)
                     .setIcon(R.drawable.ic_error)
-                    .setTitle("Patient already registered")
-                    .setMessage("Would you like to search the patient instead?")
-                    .setNegativeButton("Cancel") { dialog, _ ->
+                    .setTitle(getString(R.string.register_exist_error_header))
+                    .setMessage(R.string.register_exist_error_body)
+                    .setNegativeButton(getString(R.string.cancel_dialog)) { dialog, _ ->
                         dialog.dismiss()
                         progressDialog.dismiss()
                     }
-                    .setPositiveButton("OK") { _, _ ->
+                    .setPositiveButton(getString(R.string.ok_dialog)) { _, _ ->
                         startActivity(Intent(this, MainActivity::class.java))
                         finish()
                     }
@@ -362,7 +362,7 @@ class RegistrationActivity : AppCompatActivity() {
 
                                 Toast.makeText(
                                     this,
-                                    "Successfully registered '${AESEncryption().decrypt(id)}' into the system.",
+                                    getString(R.string.register_successful, AESEncryption().decrypt(id)),
                                     Toast.LENGTH_SHORT
                                 ).show()
 
@@ -382,13 +382,13 @@ class RegistrationActivity : AppCompatActivity() {
                                 progressDialog.dismiss()
 
                                 MaterialAlertDialogBuilder(this)
-                                    .setTitle("Error accessing Firestore Database")
-                                    .setMessage("The app is having trouble communicating with the Firestore Database.\n\nContact IT support with the following error code if issue persists: $e")
-                                    .setNeutralButton("Back to Main") { _, _ ->
+                                    .setTitle(getString(R.string.firebase_error_header))
+                                    .setMessage(getString(R.string.firebase_error_body, e))
+                                    .setNeutralButton(getString(R.string.firebase_error_return_to_main)) { _, _ ->
                                         startActivity(Intent(this, MainActivity::class.java))
                                         finish()
                                     }
-                                    .setPositiveButton("Retry") { dialog, _ ->
+                                    .setPositiveButton(getString(R.string.try_again_dialog)) { dialog, _ ->
                                         registerPatient()
                                         dialog.dismiss()
                                     }
@@ -399,9 +399,9 @@ class RegistrationActivity : AppCompatActivity() {
                     progressDialog.dismiss()
 
                     MaterialAlertDialogBuilder(this)
-                        .setTitle("Error accessing Firebase Storage")
-                        .setMessage("The app is having trouble communicating with the Firebase Storage.\n\nContact IT support with the following error code if issue persists: $e")
-                        .setPositiveButton("OK") { dialog, _ -> dialog.dismiss() }
+                        .setTitle(getString(R.string.firebase_error_header))
+                        .setMessage(getString(R.string.firebase_error_body, e))
+                        .setPositiveButton(getString(R.string.ok_dialog)) { dialog, _ -> dialog.dismiss() }
                         .show()
                 }
             }

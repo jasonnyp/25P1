@@ -126,17 +126,17 @@ class MainActivity : AppCompatActivity() {
                 } else {
                     MaterialAlertDialogBuilder(this)
                         .setIcon(R.drawable.ic_error)
-                        .setTitle("Patient is not found")
-                        .setMessage("Ensure patient's information is entered correctly. Otherwise, kindly confirm if this is the patient's first visit and proceed to register their information.")
-                        .setPositiveButton("OK") { dialog, _ -> dialog.dismiss() }
+                        .setTitle(getString(R.string.main_activity_patient_header))
+                        .setMessage(getString(R.string.main_activity_patient_header))
+                        .setPositiveButton(getString(R.string.ok_dialog)) { dialog, _ -> dialog.dismiss() }
                         .show()
                 }
             }
             .addOnFailureListener { e ->
                 MaterialAlertDialogBuilder(this)
-                    .setTitle("Error accessing Firestore Database")
-                    .setMessage("The app is having trouble communicating with the Firestore Database.\n\nIf issue persists, contact IT support with the following error code: $e")
-                    .setPositiveButton("OK") { dialog, _ -> dialog.dismiss() }
+                    .setTitle(getString(R.string.firebase_error_header))
+                    .setMessage(getString(R.string.firebase_error_body, e))
+                    .setPositiveButton(getString(R.string.ok_dialog)) { dialog, _ -> dialog.dismiss() }
                     .show()
             }
     }
@@ -152,7 +152,7 @@ class MainActivity : AppCompatActivity() {
         var valid = true
 
         if (binding.idTIET.editableText.isNullOrEmpty()) {
-            binding.idTIL.error = "ID cannot be empty"
+            binding.idTIL.error = getString(R.string.main_activity_patient_validation)
             valid = false
         }
 

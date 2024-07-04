@@ -1,40 +1,50 @@
 package com.singhealth.enhance.activities.diagnosis
 
+import android.content.Context
 import com.google.firebase.firestore.QuerySnapshot
+import com.singhealth.enhance.R
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 // Determine patient's BP Stage based on the given Systolic and Diastolic values. Set recentDate to null if not necessary
 // recentDate param is just for confirmation that the data is most recent (for profile updates)
-fun diagnosePatient(recentSys: Long, recentDia: Long, recentDate: String): String {
+object ResourcesHelper {
+    fun getString(context: Context, resId: Int): String {
+        return context.getString(resId)
+    }
+}
+
+fun diagnosePatient(context: Context, recentSys: Long, recentDia: Long, recentDate: String): String {
     // Log recent date, sys and dia data in Logcat
     println("Date: $recentDate, Most Recent Sys: $recentSys, Most Recent Dia: $recentDia")
 
+    val defaultTargetSys: Long = 135
+    val defaultTargetDia: Long = 85
+
     // Determine patient BP Stage
     val bpStage: String = when {
-        recentSys < 90 || recentDia < 60 -> "Low BP"
-        recentSys in 90..119 && recentDia in 60..79 -> "Normal BP"
-        recentSys in 120..129 && recentDia < 80 -> "Elevated BP"
-        recentSys in 130..139 || recentDia in 80..89 -> "Hypertension Stage 1"
-        recentSys in 140..179 || recentDia in 90..119 -> "Hypertension Stage 2"
-        recentSys > 180 || recentDia > 120 -> "Hypertensive Crisis"
+        recentSys < defaultTargetSys && recentDia < defaultTargetDia -> ResourcesHelper.getString(context, R.string.well_controlled_hypertension)
+        recentSys > defaultTargetSys && recentDia < defaultTargetDia -> ResourcesHelper.getString(context, R.string.white_coat_uncontrolled_hypertension)
+        recentSys < defaultTargetSys && recentDia > defaultTargetDia -> ResourcesHelper.getString(context, R.string.masked_hypertension)
+        recentSys > defaultTargetSys && recentDia > defaultTargetDia -> ResourcesHelper.getString(context, R.string.uncontrolled_hypertension)
         else -> "N/A"
     }
     return bpStage
 }
 
-fun diagnosePatient(recentSys: Long, recentDia: Long): String {
+fun diagnosePatient(context: Context, recentSys: Long, recentDia: Long): String {
     // Log recent date, sys and dia data in Logcat
     println("Most Recent Sys: $recentSys, Most Recent Dia: $recentDia")
 
+    val defaultTargetSys: Long = 135
+    val defaultTargetDia: Long = 85
+
     // Determine patient BP Stage
     val bpStage: String = when {
-        recentSys < 90 || recentDia < 60 -> "Low BP"
-        recentSys in 90..119 && recentDia in 60..79 -> "Normal BP"
-        recentSys in 120..129 && recentDia < 80 -> "Elevated BP"
-        recentSys in 130..139 || recentDia in 80..89 -> "Hypertension Stage 1"
-        recentSys in 140..179 || recentDia in 90..119 -> "Hypertension Stage 2"
-        recentSys > 180 || recentDia > 120 -> "Hypertensive Crisis"
+        recentSys < defaultTargetSys && recentDia < defaultTargetDia -> ResourcesHelper.getString(context, R.string.well_controlled_hypertension)
+        recentSys > defaultTargetSys && recentDia < defaultTargetDia -> ResourcesHelper.getString(context, R.string.white_coat_uncontrolled_hypertension)
+        recentSys < defaultTargetSys && recentDia > defaultTargetDia -> ResourcesHelper.getString(context, R.string.masked_hypertension)
+        recentSys > defaultTargetSys && recentDia > defaultTargetDia -> ResourcesHelper.getString(context, R.string.uncontrolled_hypertension)
         else -> "N/A"
     }
 
@@ -134,59 +144,37 @@ fun showControlStatus(documents: QuerySnapshot, patientAge: Int, date : String?)
     }
 }
 
-fun showRecommendation(bpStage: String) : ArrayList<String>{
-    // P1 2024 Version
-    // Provide categories of recommendation based on the patient's current BP Stage
-    var dietText = "No Recommendations\n"
-    var lifestyleText = "No Recommendations\n"
-    var medicalText = "No Recommendations\n"
+fun showRecommendation(context: Context, bpStage: String) : ArrayList<String>{
+    var dietText = ResourcesHelper.getString(context, R.string.no_recommendations)
+    var lifestyleText = ResourcesHelper.getString(context, R.string.no_recommendations)
+    var medicalText = ResourcesHelper.getString(context, R.string.no_recommendations)
     val ouputList = ArrayList <String>()
+    println(bpStage)
+    println(ResourcesHelper.getString(context, R.string.well_controlled_hypertension))
+    println(ResourcesHelper.getString(context, R.string.masked_hypertension))
+    println(ResourcesHelper.getString(context, R.string.white_coat_uncontrolled_hypertension))
+    println(ResourcesHelper.getString(context, R.string.uncontrolled_hypertension))
     when (bpStage) {
+        ResourcesHelper.getString(context, R.string.well_controlled_hypertension) ->
+            { dietText = ResourcesHelper.getString(context, R.string.well_controlled_bp_recommendation_diet)
+            lifestyleText = ResourcesHelper.getString(context, R.string.well_controlled_bp_recommendation_lifestyle)
+            medicalText = ResourcesHelper.getString(context, R.string.well_controlled_bp_recommendation_medical) }
 
-        "Low BP" -> { dietText = "Continue maintaining healthy lifestyle.\n"
-            lifestyleText = "Continue maintaining healthy lifestyle.\n"
-            medicalText = "Continue maintaining healthy lifestyle.\n" }
+        ResourcesHelper.getString(context, R.string.masked_hypertension) ->
+        { dietText = ResourcesHelper.getString(context, R.string.well_controlled_bp_recommendation_diet)
+            lifestyleText = ResourcesHelper.getString(context, R.string.well_controlled_bp_recommendation_lifestyle)
+            medicalText = ResourcesHelper.getString(context, R.string.well_controlled_bp_recommendation_medical) }
 
-        "Normal BP" -> { dietText = "Continue maintaining healthy lifestyle.\n"
-                       lifestyleText = "Continue maintaining healthy lifestyle.\n"
-                       medicalText = "Continue maintaining healthy lifestyle.\n" }
+        ResourcesHelper.getString(context, R.string.white_coat_uncontrolled_hypertension) ->
+        { dietText = ResourcesHelper.getString(context, R.string.suboptimum_bp_recommendation_diet)
+            lifestyleText = ResourcesHelper.getString(context, R.string.suboptimum_bp_recommendation_lifestyle)
+            medicalText = ResourcesHelper.getString(context, R.string.suboptimum_bp_recommendation_medical) }
 
-        "Elevated BP" -> {
-            dietText= "- Lower sodium intake (< 3.6g / day)\n"
-            lifestyleText = "- Increase physical activity (2.5 - 5 hours / week)\n" +
-                    "- Maintain healthy weight (BMI < 22.9)\n" +
-                    "- Need sufficient sleep (>7 hours / night)\n"}
+        ResourcesHelper.getString(context, R.string.uncontrolled_hypertension) ->
+        { dietText = ResourcesHelper.getString(context, R.string.suboptimum_bp_recommendation_diet)
+            lifestyleText = ResourcesHelper.getString(context, R.string.suboptimum_bp_recommendation_lifestyle)
+            medicalText = ResourcesHelper.getString(context, R.string.suboptimum_bp_recommendation_medical) }
 
-        "Hypertension Stage 1" -> {
-            dietText = "-Have a healthy diet\n" +
-                "- Lower sodium intake (< 2g / day)\n" +
-                "- Limit caffeine\n\n"
-            lifestyleText = "- Manage stress\n" +
-                "- Increase physical activity (2.5 - 5 hours / week)\n" +
-                "- Maintain healthy weight (BMI < 22.9)\n" +
-                "- Stop smoking and/or drinking\n" +
-                "- Need sufficient sleep (>7 hours / night)\n\n"
-             medicalText = "-Go for checkup regularly\n"
-        }
-
-        "Hypertension Stage 2" -> {
-            dietText = "- Healthy diet\n" +
-                "- Lower sodium intake (< 1.5g / day)\n" +
-                "- Limit caffeine\n"
-            lifestyleText = "- Manage stress\n" +
-                "- Increase physical activity (2.5 - 5 hours / week)\n" +
-                "- Maintain healthy weight (BMI < 22.9)\n" +
-                "- Stop smoking and/or drinking\n" +
-                "- Need sufficient sleep (>7 hours / night)\n"
-            medicalText="- Take prescribed medications\n" +
-                "- Go for check up regularly\n"
-        }
-
-        "Hypertensive Crisis" -> {
-            dietText = "GO HOSPITAL NOW\n"
-            lifestyleText = "GO HOSPITAL NOW\n"
-            medicalText="GO HOSPITAL NOW\n"
-        }
     }
     ouputList.add(dietText)
     ouputList.add(lifestyleText)
@@ -228,4 +216,57 @@ fun controlStatusOutput(len: Int, avgSys: Long, avgDia: Long):String {
         }
     }
     return "Patient is too young to be relevant for the analysis. $controlStat"
+}
+
+fun bpControlStatus(context: Context, recentSys: Long, recentDia: Long, targetSys: Long, targetDia: Long): String {
+    val defaultTargetSys: Long = when {
+        targetSys != 0.toLong() -> targetSys
+        else -> 135
+    }
+    val defaultTargetDia: Long = when {
+        targetDia != 0.toLong() -> targetDia
+        else -> 85
+    }
+
+    val bpStage: String = when {
+        recentSys < defaultTargetSys && recentDia < defaultTargetDia -> ResourcesHelper.getString(context, R.string.controlled_bp)
+        else -> ResourcesHelper.getString(context, R.string.uncontrolled_bp)
+    }
+    return bpStage
+}
+
+fun hypertensionStatus(context: Context, avgHomeSys: Long, avgHomeDia: Long):String {
+    val targetHomeSys = 135
+    val targetHomeDia = 85
+
+    val hypertensionStatus: String = when {
+        avgHomeSys < targetHomeSys && avgHomeDia < targetHomeDia -> ResourcesHelper.getString(context, R.string.well_controlled_hypertension)
+        else -> ResourcesHelper.getString(context, R.string.uncontrolled_hypertension)
+    }
+
+    return hypertensionStatus
+}
+
+fun hypertensionStatus(
+    context: Context,
+    avgHomeSys: Long, avgHomeDia: Long,
+    officeSys: Long, officeDia: Long,
+    targetHomeSys: Long, targetHomeDia: Long
+):String {
+    val targetOfficeSys = targetHomeSys + 5
+    val targetOfficeDia = targetHomeDia + 5
+
+    val controlledHomeBP: Boolean = (avgHomeSys < targetHomeSys && avgHomeDia < targetHomeDia)
+    val controlledOfficeBP: Boolean = (officeSys < targetOfficeSys && officeDia < targetOfficeDia)
+    val uncontrolledHomeBP: Boolean = (avgHomeSys > targetHomeSys || avgHomeDia > targetHomeDia)
+    val uncontrolledOfficeBP: Boolean = (officeSys > targetOfficeSys || officeDia > targetOfficeDia)
+
+    val hypertensionStatus: String = when {
+        controlledHomeBP && controlledOfficeBP -> ResourcesHelper.getString(context, R.string.well_controlled_hypertension)
+        controlledHomeBP && uncontrolledOfficeBP -> ResourcesHelper.getString(context, R.string.white_coat_uncontrolled_hypertension)
+        uncontrolledHomeBP && controlledOfficeBP -> ResourcesHelper.getString(context, R.string.masked_hypertension)
+        uncontrolledHomeBP && uncontrolledOfficeBP -> ResourcesHelper.getString(context, R.string.uncontrolled_hypertension)
+        else -> "N/A"
+    }
+    return hypertensionStatus
 }

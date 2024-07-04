@@ -20,7 +20,7 @@
             android:textColor="@color/white"
             android:textSize="20sp"
             android:textStyle="bold"
-            android:text="@string/enhance_history_item_date" />/>
+            android:text="@string/date_format" />/>
 
         <RelativeLayout
             android:layout_width="match_parent"

@@ -17,10 +17,55 @@
     <string name="profile_gender_female">FEMALE</string>
 
     <!-- RegistrationActivity strings -->
+    <string name="register_gender_male">Male</string>
+    <string name="register_gender_female">Female</string>
+    <string name="register_field_verification">Please correct all errors before proceeding.</string>
     <string name="profile_picture_info">To select another photo, tap on the current photo to open your gallery.</string>
+    <string name="register_image_verification_header">No photo uploaded</string>
+    <string name="register_image_verification_body">Please upload patient\\\'s photo before continuing.</string>
+    <string name="register_empty_field_verification">Field cannot be empty</string>
+    <string name="register_invalid_value_verification">Invalid value</string>
+    <string name="register_loading_dialog">Please wait while the patient is being registered.</string>
+    <string name="register_exist_error_header">Patient already registered</string>
+    <string name="register_exist_error_body">Would you like to search the patient instead?</string>
+    <string name="register_successful">Successfully registered %1$s into the system.</string>
+
 
     <!-- DiagnosePatient.kt -->
+    <string name="controlled_bp">Your BP is currently under control. Keep up the good work!</string>
+    <string name="uncontrolled_bp">Your BP is seeing an increase. Consider some of the recommendations to lower your BP.</string>
 
+    <string name="white_coat_uncontrolled_hypertension">White Coat Uncontrolled Hypertension</string>
+    <string name="masked_hypertension">Masked Hypertension</string>
+    <string name="uncontrolled_hypertension">Uncontrolled Hypertension</string>
+    <string name="well_controlled_hypertension">Well Controlled Hypertension</string>
+
+    <!-- RecommendationActivity.kt -->
+    <string name="no_recommendations">No Recomendations.</string>
+
+    <string name="well_controlled_bp_recommendation_diet">- Continue maintaining a healthy diet.\n</string>
+    <string name="well_controlled_bp_recommendation_lifestyle">- Continue maintaining a healthy lifestyle. \n</string>
+    <string name="well_controlled_bp_recommendation_medical">- Adhere to medications assigned by doctor, if any.\n</string>
+    <string name="suboptimum_bp_recommendation_diet">
+        - Try a healthier diet with more vegetables. \n
+        - Lower sodium intake (&lt; 1.5g / day). \n
+        - Limit caffeine usage. \n
+    </string>
+    <string name="suboptimum_bp_recommendation_lifestyle">
+        - Manage your stress levels \n
+        - Increase your physical activities (2.5 - 5 hours / week) \n
+        - Maintain a healthy weight (BMI &lt; 22.9) \n
+        - Stop smoking and/or drinking \n
+        - Need sufficient sleep (&lt;7 hours / night) \n
+    </string>
+    <string name="suboptimum_bp_recommendation_medical">
+        - Increase titration of antihypertensive medications.\n
+    </string>
+
+    <!-- MainActivity.kt -->
+    <string name="main_activity_patient_header">Patient not found.</string>
+    <string name="main_activity_patient_body">Ensure patient\\\'s information is entered correctly. Otherwise, kindly confirm if this is the patient\\\'s first visit and proceed to register their information.</string>
+    <string name="main_activity_patient_validation">ID cannot be empty</string>
 
     <!-- Navigation drawer strings -->
     <string name="home_title">Home</string>
@@ -40,6 +85,14 @@
     <string name="cancel_dialog">Cancel</string>
     <string name="try_again_dialog">Try again</string>
 
+    <!-- Firebase error strings -->
+    <string name="firebase_error_header">Error accessing Firestore Database</string>
+    <string name="firebase_error_body">The app is having trouble communicating with the Firestore Database.\n\nIf issue persists, contact IT support with the following error code: %1$s</string>
+    <string name="firebase_error_return_to_main">Back to Main</string>
+
+    <!-- Patient error strings -->
+    <string name="patient_info_not_found">Patient information could not be found in current session. Please try again.</string>
+
     <string name="dialog_positive_ok">OK</string>
     <string name="bp_stage">BP Stage</string>
     <string name="medical">Medical:</string>
@@ -49,7 +102,7 @@
     <string name="control_status"> Control Status:</string>
     <string name="bpDivider" translatable="false">/</string>
     <string name="average_home_bp"> Average Home BP:</string>
-
+    <string name="date_format">dd/MM/yyyy HH:mm:ss</string>
 
     <!-- activity_about.xml -->
     <string name="enhance_about_info">ENHANCe is a digital clinical decision support tool for capturing high blood pressure records from paper and digital diary and supports primary care physicians’ clinical decision-making when managing patients on home blood pressure monitoring.</string>
@@ -165,7 +218,6 @@
     <string name="enhance_divider_old_new_current_scan_results">Current scan results:</string>
 
     <!-- history_item.xml -->
-    <string name="enhance_history_item_date">dd/MM/yyyy HH:mm:ss</string>
     <string name="enhance_history_item_avgbp">Average BP:</string>
     <string name="enhance_history_item_homebp">Home BP Target:</string>
     <string name="enhance_history_item_clinicbp">Clinic BP Target:</string>

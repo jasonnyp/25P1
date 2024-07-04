@@ -239,7 +239,7 @@ class ProfileActivity : AppCompatActivity() {
                                 val recentDia = sortedArr[0].avgDiaBP as Long
                                 val recentDate = sortedArr[0].date as String
                                 // Determine BP Stage based on most recent readings
-                                var bpStage = diagnosePatient(recentSys, recentDia, recentDate)
+                                var bpStage = diagnosePatient(this, recentSys, recentDia, recentDate)
 
                                 // Set UI BP Stage
                                 binding.bpStage.text = bpStage

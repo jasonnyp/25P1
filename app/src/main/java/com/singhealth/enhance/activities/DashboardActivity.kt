@@ -34,7 +34,6 @@ import com.singhealth.enhance.security.SecureSharedPreferences
 import java.text.SimpleDateFormat
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
-import java.util.ArrayList
 import java.util.Collections
 import java.util.Locale
 
@@ -139,7 +138,7 @@ class DashboardActivity : AppCompatActivity() {
         if (patientSharedPreferences.getString("patientID", null).isNullOrEmpty()) {
             Toast.makeText(
                 this,
-                "Patient information could not be found in current session. Please try again.",
+                getString(R.string.patient_info_not_found),
                 Toast.LENGTH_LONG
             ).show()
             startActivity(Intent(this, MainActivity::class.java))
@@ -156,7 +155,7 @@ class DashboardActivity : AppCompatActivity() {
 
 
                     val inputDateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")
-                    val outputDateFormatter = DateTimeFormatter.ofPattern("dd MMM yyyy, HH:mm:ss")
+                    val outputDateFormatter = DateTimeFormatter.ofPattern(getString(R.string.date_format))
 
                     for (document in documents) {
                                 val dateTimeString = document.get("date") as? String
@@ -183,7 +182,7 @@ class DashboardActivity : AppCompatActivity() {
                     }
 
                     sortedHistory = history.sortedByDescending { it.date }
-                    println("Sorted History" + sortedHistory)
+                    println("Sorted History$sortedHistory")
                     println("Sorted History 1st" + sortedHistory[0])
                     println("Sorted History 1st SYS DATA" + sortedHistory[0].avgSysBP)
 
