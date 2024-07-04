@@ -17,7 +17,19 @@
     <string name="profile_gender_female">女</string>
 
     <!-- RegistrationActivity strings -->
-    <string name="profile_picture_info">要选择其他照片，请点击当前照片打开图库。</string>
+    <string name="register_gender_male">男性</string>
+    <string name="register_gender_female">女性</string>
+    <string name="register_field_verification">请在继续之前纠正所有错误。</string>
+    <string name="profile_picture_info">要选择另一张照片，请点击当前照片以打开您的相册。</string>
+    <string name="register_image_verification_header">未上传照片</string>
+    <string name="register_image_verification_body">请在继续之前上传病人的照片。</string>
+    <string name="register_empty_field_verification">字段不能为空</string>
+    <string name="register_invalid_value_verification">无效的值</string>
+    <string name="register_loading_dialog">正在注册病人，请稍候。</string>
+    <string name="register_exist_error_header">病人已经注册</string>
+    <string name="register_exist_error_body">您想要搜索该病人吗？</string>
+    <string name="register_successful">成功将 %1$s 注册到系统中。</string>
+
 
     <!-- DiagnosePatient.kt -->
     <string name="controlled_bp">您的血压目前处于控制状态。继续保持良好的工作！</string>
@@ -76,6 +88,7 @@
     <!-- Firestore error settings -->
     <string name="firebase_error_header">访问 Firestore 数据库时出错</string>
     <string name="firebase_error_body">应用程序在与 Firestore 数据库通信时遇到问题。\n\n如果问题仍然存在，请联系 IT 支持并提供以下错误代码：%1$s</string>
+    <string name="firebase_error_return_to_main">返回主页</string>
 
     <!-- Patient error strings -->
     <string name="patient_info_not_found">当前会话中未找到病人信息。请重试。</string>
