@@ -9,7 +9,6 @@ import android.webkit.WebChromeClient
 import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import com.github.mikephil.charting.charts.LineChart
@@ -23,6 +22,7 @@ import com.github.mikephil.charting.utils.EntryXComparator
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.singhealth.enhance.R
+import com.singhealth.enhance.activities.error.patientNotFoundInSessionErrorDialog
 import com.singhealth.enhance.activities.history.HistoryActivity
 import com.singhealth.enhance.activities.history.HistoryData
 import com.singhealth.enhance.activities.ocr.ScanActivity
@@ -136,13 +136,7 @@ class DashboardActivity : AppCompatActivity() {
         // Check if patient information exist in session
         val patientSharedPreferences = SecureSharedPreferences.getSharedPreferences(applicationContext)
         if (patientSharedPreferences.getString("patientID", null).isNullOrEmpty()) {
-            Toast.makeText(
-                this,
-                getString(R.string.patient_info_not_found),
-                Toast.LENGTH_LONG
-            ).show()
-            startActivity(Intent(this, MainActivity::class.java))
-            finish()
+            patientNotFoundInSessionErrorDialog(this)
         } else {
             patientID = patientSharedPreferences.getString("patientID", null).toString()
         }

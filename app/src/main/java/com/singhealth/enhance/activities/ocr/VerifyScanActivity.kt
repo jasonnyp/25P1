@@ -1,5 +1,6 @@
 package com.singhealth.enhance.activities.ocr
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,6 +11,7 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
+import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.text.isDigitsOnly
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -19,6 +21,7 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.singhealth.enhance.R
 import com.singhealth.enhance.activities.MainActivity
+import com.singhealth.enhance.activities.error.ocrInadequateReadingErrorDialog
 import com.singhealth.enhance.activities.result.RecommendationActivity
 import com.singhealth.enhance.databinding.ActivityVerifyScanBinding
 import com.singhealth.enhance.security.AESEncryption
@@ -26,6 +29,17 @@ import com.singhealth.enhance.security.SecureSharedPreferences
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import kotlin.math.roundToInt
+
+object ResourcesHelper {
+    // Retrieves the string from the res/values/strings.xml file, the same as getString() on activity files
+    fun getString(context: Context, resId: Int): String {
+        return context.getString(resId)
+    }
+    // Same as above, but includes a single string input for string values that depend on an input
+    fun getString(context: Context, @StringRes resId: Int, int1: Int, int2: Int): String {
+        return context.getString(resId, int1, int2)
+    }
+}
 
 class VerifyScanActivity : AppCompatActivity() {
     private lateinit var binding: ActivityVerifyScanBinding
@@ -143,43 +157,34 @@ class VerifyScanActivity : AppCompatActivity() {
         // Display toast for current number of records detected
         if (currentRows > 1 && totalRows <= 1) {
             MaterialAlertDialogBuilder(this)
-                .setMessage("$currentRows records have been detected.\n\n(total record: $totalRows)")
-                .setPositiveButton("OK") { dialog, _ -> dialog.dismiss() }
+                .setMessage(ResourcesHelper.getString(this, R.string.verify_scan_rows, currentRows, totalRows))
+                .setPositiveButton(ResourcesHelper.getString(this, R.string.ok_dialog)) { dialog, _ -> dialog.dismiss() }
                 .show()
         } else if (currentRows > 1 && totalRows > 1) {
             MaterialAlertDialogBuilder(this)
-                .setMessage("$currentRows records have been detected.\n\n(total records: $totalRows)")
-                .setPositiveButton("OK") { dialog, _ -> dialog.dismiss() }
+                .setMessage(ResourcesHelper.getString(this, R.string.verify_scan_rows, currentRows, totalRows))
+                .setPositiveButton(ResourcesHelper.getString(this, R.string.ok_dialog)) { dialog, _ -> dialog.dismiss() }
                 .show()
         } else if (currentRows == 1 && totalRows <= 1) {
             MaterialAlertDialogBuilder(this)
-                .setMessage("$currentRows record has been detected.\n\n(total record: $totalRows)")
-                .setPositiveButton("OK") { dialog, _ -> dialog.dismiss() }
+                .setMessage(ResourcesHelper.getString(this, R.string.verify_scan_rows, currentRows, totalRows))
+                .setPositiveButton(ResourcesHelper.getString(this, R.string.ok_dialog)) { dialog, _ -> dialog.dismiss() }
                 .show()
         } else if (currentRows == 1 && totalRows > 1) {
             MaterialAlertDialogBuilder(this)
-                .setMessage("$currentRows record has been detected.\n\n(total records: $totalRows)")
-                .setPositiveButton("OK") { dialog, _ -> dialog.dismiss() }
+                .setMessage(ResourcesHelper.getString(this, R.string.verify_scan_rows, currentRows, totalRows))
+                .setPositiveButton(ResourcesHelper.getString(this, R.string.ok_dialog)) { dialog, _ -> dialog.dismiss() }
                 .show()
         } else {
             MaterialAlertDialogBuilder(this)
-                .setMessage("No records detected. Rescan or manually insert them by adding a new row.")
-                .setPositiveButton("OK") { dialog, _ -> dialog.dismiss() }
+                .setMessage(ResourcesHelper.getString(this, R.string.verify_scan_no_records))
+                .setPositiveButton(ResourcesHelper.getString(this, R.string.ok_dialog)) { dialog, _ -> dialog.dismiss() }
                 .show()
         }
 
         // Prompt user if total records captured is less than 12
         if (totalRows < 12) {
-            MaterialAlertDialogBuilder(this)
-                .setIcon(R.drawable.ic_error)
-                .setTitle("Inadequate number of readings")
-                .setMessage("Do you want to proceed with the analysis?")
-                .setNegativeButton("No") { _, _ ->
-                    startActivity(Intent(this, ScanActivity::class.java))
-                    finish()
-                }
-                .setPositiveButton("Yes") { dialog, _ -> dialog.dismiss() }
-                .show()
+            ocrInadequateReadingErrorDialog(this)
         }
 
         // Check BP records for errors

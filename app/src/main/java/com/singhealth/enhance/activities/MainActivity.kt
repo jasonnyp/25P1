@@ -8,10 +8,12 @@ import android.view.MenuItem
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.singhealth.enhance.R
+import com.singhealth.enhance.activities.error.firebaseErrorDialog
+import com.singhealth.enhance.activities.error.internetConnectionCheck
+import com.singhealth.enhance.activities.error.patientNotFoundErrorDialog
 import com.singhealth.enhance.activities.patient.ProfileActivity
 import com.singhealth.enhance.activities.patient.RegistrationActivity
 import com.singhealth.enhance.activities.settings.SettingsActivity
@@ -31,6 +33,8 @@ class MainActivity : AppCompatActivity() {
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        internetConnectionCheck(this)
 
         // Navigation drawer
         actionBarDrawerToggle = ActionBarDrawerToggle(this, binding.drawerLayout, 0, 0)
@@ -124,20 +128,11 @@ class MainActivity : AppCompatActivity() {
                     savePatientData(patientID)
                     startActivity(Intent(this, ProfileActivity::class.java))
                 } else {
-                    MaterialAlertDialogBuilder(this)
-                        .setIcon(R.drawable.ic_error)
-                        .setTitle(getString(R.string.main_activity_patient_header))
-                        .setMessage(getString(R.string.main_activity_patient_header))
-                        .setPositiveButton(getString(R.string.ok_dialog)) { dialog, _ -> dialog.dismiss() }
-                        .show()
+                    patientNotFoundErrorDialog(this)
                 }
             }
             .addOnFailureListener { e ->
-                MaterialAlertDialogBuilder(this)
-                    .setTitle(getString(R.string.firebase_error_header))
-                    .setMessage(getString(R.string.firebase_error_body, e))
-                    .setPositiveButton(getString(R.string.ok_dialog)) { dialog, _ -> dialog.dismiss() }
-                    .show()
+                firebaseErrorDialog(this, e, ::getPatientData, patientID)
             }
     }
 

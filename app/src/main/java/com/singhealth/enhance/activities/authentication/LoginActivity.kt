@@ -6,11 +6,12 @@ import android.text.Editable
 import android.text.TextWatcher
 import androidx.appcompat.app.AppCompatActivity
 import at.favre.lib.crypto.bcrypt.BCrypt
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.singhealth.enhance.R
 import com.singhealth.enhance.activities.MainActivity
+import com.singhealth.enhance.activities.error.firebaseErrorDialog
+import com.singhealth.enhance.activities.error.loginFailedErrorDialog
 import com.singhealth.enhance.databinding.ActivityLoginBinding
 import com.singhealth.enhance.security.AESEncryption
 import java.util.Calendar
@@ -76,22 +77,12 @@ class LoginActivity : AppCompatActivity() {
                                 startActivity(authenticationIntent)
                                 finish()
                             } else {
-                                MaterialAlertDialogBuilder(this)
-                                    .setIcon(R.drawable.ic_error)
-                                    .setTitle("Authentication failure")
-                                    .setMessage("The credentials associated with the Staff ID or password you have provided do not match our records.\n\n(Note: If you have forgotten your login credentials, please contact IT helpdesk for further assistance.)")
-                                    .setPositiveButton(resources.getString(R.string.ok_dialog)) { dialog, _ -> dialog.dismiss() }
-                                    .show()
+                                loginFailedErrorDialog(this)
                             }
                         }
                     }
                     .addOnFailureListener { e ->
-                        MaterialAlertDialogBuilder(this)
-                            .setIcon(R.drawable.ic_error)
-                            .setTitle("Firestore Database connection error")
-                            .setMessage("The app is currently experiencing difficulties establishing a connection with the Firestore Database.\n\nIf this issue persists, please reach out to your IT helpdesk and provide them with the following error code for further assistance:\n\n$e")
-                            .setPositiveButton(resources.getString(R.string.ok_dialog)) { dialog, _ -> dialog.dismiss() }
-                            .show()
+                        firebaseErrorDialog(this, e, docRef)
                     }
             }
         }
@@ -123,12 +114,7 @@ class LoginActivity : AppCompatActivity() {
                 }
             }
             .addOnFailureListener { e ->
-                MaterialAlertDialogBuilder(this)
-                    .setIcon(R.drawable.ic_error)
-                    .setTitle("Firestore Database connection error")
-                    .setMessage("The app is currently experiencing difficulties establishing a connection with the Firestore Database.\n\nIf this issue persists, please reach out to your IT helpdesk and provide them with the following error code for further assistance:\n\n$e")
-                    .setPositiveButton(resources.getString(R.string.ok_dialog)) { dialog, _ -> dialog.dismiss() }
-                    .show()
+                firebaseErrorDialog(this, e, docRef)
             }
     }
 
@@ -136,11 +122,11 @@ class LoginActivity : AppCompatActivity() {
         var valid = true
 
         if (binding.staffIDTIET.editableText.isNullOrEmpty()) {
-            binding.staffIDTIL.error = "Staff ID cannot be empty"
+            binding.staffIDTIL.error = getString(R.string.login_validate_staff)
             valid = false
         }
         if (binding.passwordTIET.editableText.isNullOrEmpty()) {
-            binding.passwordTIL.error = "Password cannot be empty"
+            binding.passwordTIL.error = getString(R.string.login_validate_password)
             valid = false
         }
 

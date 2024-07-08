@@ -8,9 +8,23 @@
     <string name="good_morning">Good Morning!</string>
     <string name="good_afternoon">Good Afternoon!</string>
     <string name="good_evening">Good Evening!</string>
+    <string name="login_validate_staff">Staff ID cannot be empty!</string>
+    <string name="login_validate_password">Password cannot be empty!</string>
 
     <!-- ScanActivity strings -->
     <string name="ocr_instructions">Please ensure that only the blood pressure values are seen and exclude all headers when cropping.</string>
+    <string name="ocr_app_permissions_header">Enable app permissions</string>
+    <string name="ocr_app_permissions_body">To use the OCR functionality, you need to allow access to your camera, gallery and external storage.</string>
+    <string name="ocr_image_error_header">Error processing image</string>
+    <string name="ocr_image_error_body">The image cannot be processed due to an error.\n\nContact IT support with the following error code if issue persists: %1$s</string>
+    <string name="ocr_text_error_header">Nothing to process</string>
+    <string name="ocr_text_error_body">We couldn\\\'t find any handwriting or text to process.\n\nTip: Ensure the image is clear and cropped to only the values, and exclude any headers (such as \'Systolic\' and \'Diastolic\').</string>
+
+    <!-- VerifyScanActivity.kt -->
+    <string name="verify_scan_rows">%1$d records have been detected.\n\nTotal records: %2$d</string>
+    <string name="verify_scan_no_records">No records detected. Rescan or manually insert them by adding a new row.</string>
+    <string name="verify_scan_inadequate_reading_header">Inadequate number of readings</string>
+    <string name="verify_scan_inadequate_reading_body">Do you want to proceed with the analysis?</string>
 
     <!-- ProfileActivity strings -->
     <string name="profile_gender_male">MALE</string>
@@ -85,10 +99,23 @@
     <string name="cancel_dialog">Cancel</string>
     <string name="try_again_dialog">Try again</string>
 
-    <!-- Firebase error strings -->
-    <string name="firebase_error_header">Error accessing Firestore Database</string>
-    <string name="firebase_error_body">The app is having trouble communicating with the Firestore Database.\n\nIf issue persists, contact IT support with the following error code: %1$s</string>
+    <!-- ErrorHandling.kt strings -->
+    <string name="firebase_error_header">Firebase Connection Error</string>
+    <string name="firebase_error_body">The app is having trouble communicating with the Firestore Database.\n\nIf the issue persists, contact IT support with the following error code: %1$s</string>
     <string name="firebase_error_return_to_main">Back to Main</string>
+
+    <string name="reconnect_dialog_button" translatable="false">RECONNECT</string>
+    <string name="reconnect_error_header">No Internet Connection</string>
+    <string name="reconnect_error_body">You are not connected to the internet. Many app functions depend on internet connections, and your progress may not be saved. \n\nIf the issue persists, contact IT helpdesk for further assistance.</string>
+
+    <string name="login_error_header">Authentication Failure</string>
+    <string name="login_error_body">The credentials associated with the Staff ID or password you have provided do not match our records.\n\n(Note: If you have forgotten your login credentials, please contact IT helpdesk for further assistance.)</string>
+
+    <string name="patient_info_session_error_header">Patient ID Not Found</string>
+    <string name="patient_info_session_error_body">The associated Patient ID is not within the current session.\n\nPlease contact IT helpdesk for further assistance.</string>
+
+    <string name="patient_history_not_found_error_header">Patient History Not Found</string>
+    <string name="patient_history_not_found_error_body">The associated Patient History could not be displayed.\n\nIf the issue persists, contact IT support with the following error code: %1$s</string>
 
     <!-- Patient error strings -->
     <string name="patient_info_not_found">Patient information could not be found in current session. Please try again.</string>

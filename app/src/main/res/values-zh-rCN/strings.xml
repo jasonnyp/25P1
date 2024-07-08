@@ -8,9 +8,23 @@
     <string name="good_morning">早上好！</string>
     <string name="good_afternoon">下午好！</string>
     <string name="good_evening">晚上好！</string>
+    <string name="login_validate_staff">工作人员识别码不能为空！</string>
+    <string name="login_validate_password">密码不能为空！</string>
 
     <!-- ScanActivity strings -->
     <string name="ocr_instructions">请确保仅显示血压值，裁剪时排除所有标题。</string>
+    <string name="ocr_app_permissions_header">启用应用权限</string>
+    <string name="ocr_app_permissions_body">要使用 OCR 功能，您需要允许访问您的相机、图库和外部存储。</string>
+    <string name="ocr_image_error_header">处理图像时出错</string>
+    <string name="ocr_image_error_body">由于错误，无法处理图像。\n\n如果问题仍然存在，请联系 IT 支持并提供以下错误代码：%1$s</string>
+    <string name="ocr_text_error_header">没有可处理的内容</string>
+    <string name="ocr_text_error_body">我们找不到任何手写或文本可以处理。\n\n提示：确保图像清晰并且仅裁剪到数值部分，排除任何标题（例如“收缩压”和“舒张压”）。</string>
+
+    <!-- VerifyScanActivity.kt -->
+    <string name="verify_scan_rows">已检测到 %1$d 条记录。\n\n总记录数：%2$d</string>
+    <string name="verify_scan_no_records">未检测到记录。请重新扫描或通过添加新行手动插入记录。</string>
+    <string name="verify_scan_inadequate_reading_header">读数数量不足</string>
+    <string name="verify_scan_inadequate_reading_body">您想继续进行分析吗？</string>
 
     <!-- ProfileActivity strings -->
     <string name="profile_gender_male">男</string>
@@ -85,10 +99,22 @@
     <string name="cancel_dialog">取消</string>
     <string name="try_again_dialog">重试</string>
 
-    <!-- Firestore error settings -->
+    <!-- ErrorHandling.kt settings -->
     <string name="firebase_error_header">访问 Firestore 数据库时出错</string>
     <string name="firebase_error_body">应用程序在与 Firestore 数据库通信时遇到问题。\n\n如果问题仍然存在，请联系 IT 支持并提供以下错误代码：%1$s</string>
     <string name="firebase_error_return_to_main">返回主页</string>
+
+    <string name="reconnect_error_header">没有网络连接</string>
+    <string name="reconnect_error_body">您未连接到互联网。许多应用功能依赖于互联网连接，您的进度可能不会保存。\n\n如果问题仍然存在，请联系 IT 帮助台寻求进一步帮助。</string>
+
+    <string name="login_error_header">身份验证失败</string>
+    <string name="login_error_body">您提供的工作人员识别码或密码与我们的记录不匹配。\n\n（注意：如果您忘记了登录凭证，请联系 IT 帮助台寻求进一步帮助。）</string>
+
+    <string name="patient_info_session_error_header">找不到病人识别码</string>
+    <string name="patient_info_session_error_body">相关的病人识别码不在当前会话中。\n\n请联系 IT 帮助台寻求进一步帮助。</string>
+
+    <string name="patient_history_not_found_error_header">找不到病历</string>
+    <string name="patient_history_not_found_error_body">无法显示相关的病历。\n\n如果问题仍然存在，请联系 IT 支持并提供以下错误代码：%1$s</string>
 
     <!-- Patient error strings -->
     <string name="patient_info_not_found">当前会话中未找到病人信息。请重试。</string>

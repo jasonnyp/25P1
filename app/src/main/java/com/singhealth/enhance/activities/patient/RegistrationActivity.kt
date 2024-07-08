@@ -16,12 +16,15 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 import com.singhealth.enhance.R
 import com.singhealth.enhance.activities.MainActivity
+import com.singhealth.enhance.activities.error.firebaseErrorDialog
+import com.singhealth.enhance.activities.error.internetConnectionCheck
+import com.singhealth.enhance.activities.error.noPatientPhotoErrorDialog
+import com.singhealth.enhance.activities.error.patientExistsErrorDialog
 import com.singhealth.enhance.activities.settings.SettingsActivity
 import com.singhealth.enhance.databinding.ActivityRegistrationBinding
 import com.singhealth.enhance.security.AESEncryption
@@ -47,6 +50,8 @@ class RegistrationActivity : AppCompatActivity() {
 
         binding = ActivityRegistrationBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        internetConnectionCheck(this)
 
         // Navigation drawer
         actionBarDrawerToggle = ActionBarDrawerToggle(this, binding.drawerLayout, 0, 0)
@@ -254,12 +259,7 @@ class RegistrationActivity : AppCompatActivity() {
 
         if (!::photoBA.isInitialized) {
             valid = false
-            MaterialAlertDialogBuilder(this)
-                .setIcon(R.drawable.ic_error)
-                .setTitle(getString(R.string.register_image_verification_header))
-                .setMessage(getString(R.string.register_image_verification_body))
-                .setPositiveButton(getString(R.string.ok_dialog)) { dialog, _ -> dialog.dismiss() }
-                .show()
+            noPatientPhotoErrorDialog(this)
         }
 
         if (binding.legalNameTIET.text.isNullOrEmpty()) {
@@ -335,19 +335,7 @@ class RegistrationActivity : AppCompatActivity() {
         val docRef = db.collection("patients").document(id)
         docRef.get().addOnSuccessListener { documentSnapshot ->
             if (documentSnapshot.exists()) {
-                MaterialAlertDialogBuilder(this)
-                    .setIcon(R.drawable.ic_error)
-                    .setTitle(getString(R.string.register_exist_error_header))
-                    .setMessage(R.string.register_exist_error_body)
-                    .setNegativeButton(getString(R.string.cancel_dialog)) { dialog, _ ->
-                        dialog.dismiss()
-                        progressDialog.dismiss()
-                    }
-                    .setPositiveButton(getString(R.string.ok_dialog)) { _, _ ->
-                        startActivity(Intent(this, MainActivity::class.java))
-                        finish()
-                    }
-                    .show()
+                patientExistsErrorDialog(this, progressDialog)
             } else {
                 val nricDecrypted = AESEncryption().decrypt(id)
                 val storageRef = storage.reference.child("images/$nricDecrypted.jpg")
@@ -380,29 +368,14 @@ class RegistrationActivity : AppCompatActivity() {
                             }
                             .addOnFailureListener { e ->
                                 progressDialog.dismiss()
+                                firebaseErrorDialog(this, e, docRef)
 
-                                MaterialAlertDialogBuilder(this)
-                                    .setTitle(getString(R.string.firebase_error_header))
-                                    .setMessage(getString(R.string.firebase_error_body, e))
-                                    .setNeutralButton(getString(R.string.firebase_error_return_to_main)) { _, _ ->
-                                        startActivity(Intent(this, MainActivity::class.java))
-                                        finish()
-                                    }
-                                    .setPositiveButton(getString(R.string.try_again_dialog)) { dialog, _ ->
-                                        registerPatient()
-                                        dialog.dismiss()
-                                    }
-                                    .show()
                             }
                     }
                 }.addOnFailureListener { e ->
                     progressDialog.dismiss()
 
-                    MaterialAlertDialogBuilder(this)
-                        .setTitle(getString(R.string.firebase_error_header))
-                        .setMessage(getString(R.string.firebase_error_body, e))
-                        .setPositiveButton(getString(R.string.ok_dialog)) { dialog, _ -> dialog.dismiss() }
-                        .show()
+                    firebaseErrorDialog(this, e, storageRef, photo)
                 }
             }
         }

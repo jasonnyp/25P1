@@ -4,7 +4,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
-import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -13,6 +12,9 @@ import com.google.firebase.ktx.Firebase
 import com.singhealth.enhance.R
 import com.singhealth.enhance.activities.DashboardActivity
 import com.singhealth.enhance.activities.MainActivity
+import com.singhealth.enhance.activities.error.internetConnectionCheck
+import com.singhealth.enhance.activities.error.patientHistoryNotFoundErrorDialog
+import com.singhealth.enhance.activities.error.patientNotFoundInSessionErrorDialog
 import com.singhealth.enhance.activities.ocr.ScanActivity
 import com.singhealth.enhance.activities.patient.ProfileActivity
 import com.singhealth.enhance.activities.patient.RegistrationActivity
@@ -40,6 +42,8 @@ class HistoryActivity : AppCompatActivity(), HistoryAdapter.OnItemClickListener 
 
         binding = ActivityHistoryBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        internetConnectionCheck(this)
 
         // Navigation drawer
         actionBarDrawerToggle = ActionBarDrawerToggle(this, binding.drawerLayout, 0, 0)
@@ -110,13 +114,7 @@ class HistoryActivity : AppCompatActivity(), HistoryAdapter.OnItemClickListener 
         // Check if patient information exist in session
         val patientSharedPreferences = SecureSharedPreferences.getSharedPreferences(applicationContext)
         if (patientSharedPreferences.getString("patientID", null).isNullOrEmpty()) {
-            Toast.makeText(
-                this,
-                "Patient information could not be found in current session. Please try again.",
-                Toast.LENGTH_LONG
-            ).show()
-            startActivity(Intent(this, MainActivity::class.java))
-            finish()
+            patientNotFoundInSessionErrorDialog(this)
         } else {
             patientID = patientSharedPreferences.getString("patientID", null).toString()
         }
@@ -167,7 +165,7 @@ class HistoryActivity : AppCompatActivity(), HistoryAdapter.OnItemClickListener 
                 }
             }
             .addOnFailureListener { e ->
-                println("Error getting documents: $e")
+                patientHistoryNotFoundErrorDialog(this, e)
             }
     }
 

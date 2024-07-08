@@ -26,6 +26,10 @@ import com.google.firebase.ml.vision.document.FirebaseVisionDocumentText
 import com.singhealth.enhance.R
 import com.singhealth.enhance.activities.DashboardActivity
 import com.singhealth.enhance.activities.MainActivity
+import com.singhealth.enhance.activities.error.internetConnectionCheck
+import com.singhealth.enhance.activities.error.ocrImageErrorDialog
+import com.singhealth.enhance.activities.error.ocrTextErrorDialog
+import com.singhealth.enhance.activities.error.patientNotFoundInSessionErrorDialog
 import com.singhealth.enhance.activities.history.HistoryActivity
 import com.singhealth.enhance.activities.patient.ProfileActivity
 import com.singhealth.enhance.activities.patient.RegistrationActivity
@@ -57,6 +61,8 @@ class ScanActivity : AppCompatActivity() {
 
         binding = ActivityScanBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        internetConnectionCheck(this)
 
         // Navigation drawer
         actionBarDrawerToggle = ActionBarDrawerToggle(this, binding.drawerLayout, 0, 0)
@@ -124,10 +130,7 @@ class ScanActivity : AppCompatActivity() {
         // Check if patient information is available in the current session
         val patientSharedPreferences = SecureSharedPreferences.getSharedPreferences(applicationContext)
         if (patientSharedPreferences.getString("patientID", null).isNullOrEmpty()) {
-            val mainIntent = Intent(this, MainActivity::class.java)
-            Toast.makeText(this, "Patient information could not be found in current session. Please try again.", Toast.LENGTH_LONG).show()
-            startActivity(mainIntent)
-            finish()
+            patientNotFoundInSessionErrorDialog(this)
         }else {
             patientID = patientSharedPreferences.getString("patientID", null).toString()
             binding.patientIdValueTextView.text = AESEncryption().decrypt(patientID)
@@ -209,9 +212,9 @@ class ScanActivity : AppCompatActivity() {
             if (!isGranted) {
                 MaterialAlertDialogBuilder(this)
                     .setIcon(R.drawable.ic_error)
-                    .setTitle("Enable app permissions")
-                    .setMessage("To use the OCR functionality, you need to allow access to your camera, gallery and external storage.")
-                    .setPositiveButton("OK") { dialog, _ -> dialog.dismiss() }
+                    .setTitle(getString(R.string.ocr_app_permissions_header))
+                    .setMessage(getString(R.string.ocr_app_permissions_body))
+                    .setPositiveButton(getString(R.string.ok_dialog)) { dialog, _ -> dialog.dismiss() }
                     .show()
             }
         }
@@ -279,12 +282,7 @@ class ScanActivity : AppCompatActivity() {
             .addOnFailureListener { e ->
                 progressDialog.dismiss()
 
-                MaterialAlertDialogBuilder(this)
-                    .setIcon(R.drawable.ic_error)
-                    .setTitle("Error processing image")
-                    .setMessage("The image cannot be processed due to an error.\n\nContact IT support with the following error code if issue persists: ${e.message}")
-                    .setPositiveButton("OK") { dialog, _ -> dialog.dismiss() }
-                    .show()
+                ocrImageErrorDialog(this, e)
             }
     }
 
@@ -299,12 +297,7 @@ class ScanActivity : AppCompatActivity() {
         if (blocks.isEmpty()) {
             progressDialog.dismiss()
 
-            MaterialAlertDialogBuilder(this)
-                .setIcon(R.drawable.ic_error)
-                .setTitle("Nothing to process")
-                .setMessage("We couldn't find any handwriting or text to process.\n\nTip: Ensure the image is clear and cropped to only the values, and exclude any headers (such as 'Systolic' and 'Diastolic').")
-                .setPositiveButton(R.string.dialog_positive_ok) { dialog, _ -> dialog.dismiss() }
-                .show()
+            ocrTextErrorDialog(this)
         } else {
             val words = mutableListOf<FirebaseVisionDocumentText.Word>()
 

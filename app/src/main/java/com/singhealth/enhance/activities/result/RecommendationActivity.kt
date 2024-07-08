@@ -1,14 +1,12 @@
 package com.singhealth.enhance.activities.result
 
 
-import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.singhealth.enhance.R
@@ -19,6 +17,7 @@ import com.singhealth.enhance.activities.diagnosis.diagnosePatient
 import com.singhealth.enhance.activities.diagnosis.hypertensionStatus
 import com.singhealth.enhance.activities.diagnosis.showControlStatus
 import com.singhealth.enhance.activities.diagnosis.showRecommendation
+import com.singhealth.enhance.activities.error.firebaseErrorDialog
 import com.singhealth.enhance.activities.history.HistoryActivity
 import com.singhealth.enhance.activities.ocr.ScanActivity
 import com.singhealth.enhance.activities.patient.ProfileActivity
@@ -39,7 +38,6 @@ class RecommendationActivity : AppCompatActivity() {
     private var patientAge: Int = 0
 
     private val db = Firebase.firestore
-    @SuppressLint("SetTextI18n")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -161,12 +159,7 @@ class RecommendationActivity : AppCompatActivity() {
 
             }
             .addOnFailureListener { e ->
-                MaterialAlertDialogBuilder(this)
-                    .setIcon(R.drawable.ic_error)
-                    .setTitle(getString(R.string.firebase_error_header))
-                    .setMessage(getString(R.string.firebase_error_body, e))
-                    .setPositiveButton(resources.getString(R.string.ok_dialog)) { dialog, _ -> dialog.dismiss() }
-                    .show()
+                firebaseErrorDialog(this, e, docRef)
             }
     }
 
