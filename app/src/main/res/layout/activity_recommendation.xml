@@ -21,7 +21,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/enhance_recco_heaeder"
+            android:text="@string/enhance_recco_header"
             android:textSize="25sp"
             android:paddingTop="16dp"
             android:paddingStart="16dp"
@@ -40,7 +40,103 @@
             android:textColor="@color/white"
             android:textSize="22sp"
             android:padding="8dp"
-            android:text="@string/average_home_bp" />
+            android:text="@string/enhance_recco_target_home_bp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="16dp"
+            android:layout_marginBottom="10dp"
+            >
+
+            <TextView
+                android:id="@+id/targetHomeSysBPTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="8dp"
+                android:text="@string/bpDivider"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/targetHomeDiaBPTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/targetHomebpStage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20sp"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="6dp"
+            android:background="@color/black"
+            android:textColor="@color/white"
+            android:textSize="22sp"
+            android:padding="8dp"
+            android:text="@string/enhance_recco_target_office_bp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="16dp"
+            android:layout_marginBottom="10dp"
+            >
+
+            <TextView
+                android:id="@+id/targetOfficeSysBPTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="8dp"
+                android:text="@string/bpDivider"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/targetOfficeDiaBPTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/targetOfficebpStage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20sp"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="6dp"
+            android:background="@color/black"
+            android:textColor="@color/white"
+            android:textSize="22sp"
+            android:padding="8dp"
+            android:text="@string/enhance_recco_average_home_bp" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -72,10 +168,10 @@
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/bpStage"
+                android:id="@+id/recco_inadequate_home"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="20sp"
+                android:layout_marginStart="20sp"
                 android:textSize="18sp"
                 android:textStyle="bold" />
         </LinearLayout>
@@ -88,13 +184,118 @@
             android:textColor="@color/white"
             android:textSize="22sp"
             android:padding="8dp"
+            android:text="@string/enhance_recco_office_bp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="16dp"
+            android:layout_marginBottom="10dp"
+            >
+
+            <TextView
+                android:id="@+id/officeSysBPTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="8dp"
+                android:text="@string/bpDivider"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/officeDiaBPTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/officebpStage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20sp"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="6dp"
+            android:background="@color/black"
+            android:textColor="@color/white"
+            android:textSize="22sp"
+            android:padding="8dp"
+            android:text="@string/enhance_recco_hypertension_status" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp"
+            android:layout_marginBottom="10dp"
+            >
+
+            <TextView
+                android:id="@+id/recommendation_bp_phenotype"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:text="White Coat Uncontrolled Hypertension"/>
+
+            <TextView
+                android:id="@+id/recommendation_bp_control"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15sp"
+                android:text="(Suboptimum)"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="6dp"
+            android:background="@color/black"
+            android:textColor="@color/white"
+            android:textSize="22sp"
+            android:padding="8dp"
             android:text="@string/recommendation" />
 
-        <ImageView
-            android:id="@+id/statusIV"
+        <TextView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:padding="15sp"/>
+            android:layout_height="wrap_content"
+            android:background="@drawable/medical_upper_bg"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:text="@string/medical"
+            android:padding="10sp"
+            android:layout_marginTop="20sp"
+            android:layout_marginStart="16sp"
+            android:layout_marginEnd="16sp"
+            />
+        <TextView
+            android:id="@+id/medTV"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/medical_lower_bg"
+            android:textSize="20sp"
+            android:textColor="@color/black"
+            android:padding="10sp"
+            android:layout_marginStart="16sp"
+            android:layout_marginEnd="16sp"
+            android:layout_marginBottom="16dp"/>
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -115,76 +316,8 @@
             android:padding="10sp"
             android:layout_marginStart="16sp"
             android:layout_marginEnd="16sp"
-            android:layout_marginBottom="6dp"
+            android:layout_marginBottom="20dp"
             android:background="@drawable/diet_lower_bg"/>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:textColor="@color/black"
-            android:text="@string/lifestyle"
-            android:padding="10sp"
-            android:layout_marginStart="16sp"
-            android:layout_marginEnd="16sp"
-            android:background="@drawable/lifestyle_upper_bg"
-            />
-        <TextView
-            android:id="@+id/lifestyleTV"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="20sp"
-            android:textColor="@color/black"
-            android:padding="10sp"
-            android:layout_marginStart="16sp"
-            android:layout_marginEnd="16sp"
-            android:layout_marginBottom="6dp"
-            android:background="@drawable/lifestyle_lower_bg"
-            />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/medical_upper_bg"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:textColor="@color/black"
-            android:text="@string/medical"
-            android:padding="10sp"
-            android:layout_marginStart="16sp"
-            android:layout_marginEnd="16sp"
-            />
-        <TextView
-            android:id="@+id/medTV"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/medical_lower_bg"
-            android:textSize="20sp"
-            android:textColor="@color/black"
-            android:padding="10sp"
-            android:layout_marginStart="16sp"
-            android:layout_marginEnd="16sp"
-            android:layout_marginBottom="20dp"/>
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="6dp"
-            android:background="@color/black"
-            android:textColor="@color/white"
-            android:textSize="22sp"
-            android:text="@string/control_status"
-            android:padding="8dp"
-             />
-
-        <TextView
-            android:id="@+id/controlStatusTV"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="32dp"
-            android:textSize="20sp"
-            android:padding="16dp"
-            android:textStyle="bold" />
 
     </LinearLayout>
 
