@@ -20,8 +20,8 @@ import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.singhealth.enhance.R
-import com.singhealth.enhance.activities.MainActivity
 import com.singhealth.enhance.activities.error.errorDialogBuilder
+import com.singhealth.enhance.activities.error.patientNotFoundInSessionErrorDialog
 import com.singhealth.enhance.activities.result.RecommendationActivity
 import com.singhealth.enhance.databinding.ActivityVerifyScanBinding
 import com.singhealth.enhance.security.AESEncryption
@@ -87,9 +87,7 @@ class VerifyScanActivity : AppCompatActivity() {
 
         val patientSharedPreferences = SecureSharedPreferences.getSharedPreferences(applicationContext)
         if (patientSharedPreferences.getString("patientID", null).isNullOrEmpty()) {
-            Toast.makeText(this, "An error occurred. Please try again.", Toast.LENGTH_LONG).show()
-            startActivity(Intent(this, MainActivity::class.java))
-            finish()
+            patientNotFoundInSessionErrorDialog(this)
         } else {
             patientID = patientSharedPreferences.getString("patientID", null).toString()
             binding.patientIDTV.text = AESEncryption().decrypt(patientID)

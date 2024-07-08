@@ -67,7 +67,6 @@
     <string name="register_exist_error_body">您想要搜索该病人吗？</string>
     <string name="register_successful">成功将 %1$s 注册到系统中。</string>
 
-
     <!-- DiagnosePatient.kt -->
     <string name="controlled_bp">您的血压目前处于控制状态。继续保持良好的工作！</string>
     <string name="uncontrolled_bp">您的血压在升高。请考虑一些建议来降低您的血压。</string>
@@ -144,12 +143,7 @@
 
     <string name="dialog_positive_ok">确定</string>
     <string name="bp_stage">血压阶段</string>
-    <string name="medical">医疗：</string>
-    <string name="lifestyle">生活方式：</string>
-    <string name="diet">饮食：</string>
-    <string name="recommendation">建议：</string>
-    <string name="control_status">控制状态：</string>
-    <string name="average_home_bp">平均家庭血压：</string>
+
     <string name="date_format">dd日MM月yyyy年 HH:mm:ss</string>
 
     <!-- activity_about.xml -->
@@ -192,7 +186,18 @@
     <string name="enhance_profile_height">身高</string>
 
     <!-- activity_recommendation.xml -->
-    <string name="enhance_recco_heaeder">以下是基于扫描的血压记录的建议：</string>
+    <string name="enhance_recco_header">以下是基于扫描的血压记录的建议：</string>
+    <string name="enhance_recco_padding_desc">间隔</string>
+    <string name="medical">医学：</string>
+    <string name="lifestyle">生活方式：</string>
+    <string name="diet">饮食：</string>
+    <string name="recommendation"> 建议</string>
+    <string name="enhance_recco_doctor_reccomendation"> 医生建议（如有</string>
+    <string name="enhance_recco_target_home_bp"> 目标家庭血压</string>
+    <string name="enhance_recco_target_office_bp"> 目标办公室血压</string>
+    <string name="enhance_recco_average_home_bp"> 平均家庭血压</string>
+    <string name="enhance_recco_office_bp"> 办公室血压</string>
+    <string name="enhance_recco_hypertension_status"> 高血压状态</string>
 
     <!-- activity_registration.xml -->
     <string name="enhance_register_photo">照片</string>

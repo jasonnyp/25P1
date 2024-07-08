@@ -15,7 +15,6 @@ import com.singhealth.enhance.activities.MainActivity
 import com.singhealth.enhance.activities.diagnosis.bpControlStatus
 import com.singhealth.enhance.activities.diagnosis.diagnosePatient
 import com.singhealth.enhance.activities.diagnosis.hypertensionStatus
-import com.singhealth.enhance.activities.diagnosis.showControlStatus
 import com.singhealth.enhance.activities.diagnosis.showRecommendation
 import com.singhealth.enhance.activities.error.firebaseErrorDialog
 import com.singhealth.enhance.activities.history.HistoryActivity
@@ -129,18 +128,13 @@ class RecommendationActivity : AppCompatActivity() {
                             println(avgBPBundle.getString("Source"))
                             if (avgBPBundle.getString("Source") == "History") {
                                 val date = avgBPBundle.getString("date").toString()
-                                binding.bpStage.text = bpControlStatus(this, avgSysBP, avgDiaBP, 0, 0)
-                                binding.controlStatusTV.text = showControlStatus(documents, patientAge, date)
-                                // "(${bpStage})"
+                                binding.reccoInadequateHome.text = bpControlStatus(this, avgSysBP, avgDiaBP, 0, 0)
                             }
                             else if (avgBPBundle.getString("Source") == "Scan") {
                                 // Display BP Stage
-                                binding.bpStage.text = bpControlStatus(this, avgSysBP, avgDiaBP, 0, 0)
-                                binding.controlStatusTV.text = showControlStatus(documents, patientAge, null)
+                                binding.reccoInadequateHome.text = bpControlStatus(this, avgSysBP, avgDiaBP, 0, 0)
                             }
                             val recoList = showRecommendation(this, hypertensionStatus(this, avgSysBP, avgDiaBP))
-                            binding.dietTV.text = recoList[0]
-                            binding.lifestyleTV.text = recoList[1]
                             binding.medTV.text = recoList[2]
 
                             // If / When Statement for setting image
@@ -152,7 +146,6 @@ class RecommendationActivity : AppCompatActivity() {
                                 getString(R.string.uncontrolled_hypertension) -> R.drawable.poor
                                 else -> R.drawable.ic_error // Default image if the stage is not recognized
                             }
-                            binding.statusIV.setImageResource(imageResource)
                         }
                 }
 
