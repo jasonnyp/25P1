@@ -1,16 +1,13 @@
 package com.singhealth.enhance.activities.patient
 
-import android.annotation.SuppressLint
 import android.app.ProgressDialog
 import android.content.Intent
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
-import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.SetOptions
 import com.google.firebase.firestore.ktx.firestore
@@ -21,6 +18,9 @@ import com.singhealth.enhance.activities.DashboardActivity
 import com.singhealth.enhance.activities.MainActivity
 import com.singhealth.enhance.activities.diagnosis.diagnosePatient
 import com.singhealth.enhance.activities.diagnosis.sortPatientVisits
+import com.singhealth.enhance.activities.error.errorDialogBuilder
+import com.singhealth.enhance.activities.error.firebaseErrorDialog
+import com.singhealth.enhance.activities.error.patientNotFoundInSessionErrorDialog
 import com.singhealth.enhance.activities.history.HistoryActivity
 import com.singhealth.enhance.activities.ocr.ScanActivity
 import com.singhealth.enhance.activities.settings.SettingsActivity
@@ -122,13 +122,7 @@ class ProfileActivity : AppCompatActivity() {
             null
         )
         if (patientID.isNullOrEmpty()) {
-            Toast.makeText(
-                this,
-                "Patient information could not be found in current session. Please try again.",
-                Toast.LENGTH_LONG
-            ).show()
-            startActivity(Intent(this, MainActivity::class.java))
-            finish()
+            patientNotFoundInSessionErrorDialog(this)
         } else {
             retrievePatient(patientID)
         }
@@ -212,8 +206,8 @@ class ProfileActivity : AppCompatActivity() {
 //    }
 
     private fun retrievePatient(patientID: String) {
-        progressDialog.setTitle("Retrieving patient data")
-        progressDialog.setMessage("Please wait a moment...")
+        progressDialog.setTitle(getString(R.string.profile_retrieve_data))
+        progressDialog.setMessage(getString(R.string.profile_retrieve_data_caption))
         progressDialog.show()
 
         val docRef = db.collection("patients").document(patientID)
@@ -253,8 +247,9 @@ class ProfileActivity : AppCompatActivity() {
                             }
 
                         }
-                        .addOnFailureListener{
-                                e -> println("Error getting documents: $e")
+                        .addOnFailureListener{ e ->
+                            errorDialogBuilder(this, getString(R.string.profile_document_error_header), getString(R.string.profile_document_error_body, e))
+                            println("Error getting documents: $e")
                         }
 
                     binding.profileLL.visibility = View.VISIBLE
@@ -263,15 +258,10 @@ class ProfileActivity : AppCompatActivity() {
             }
             .addOnFailureListener { e ->
                 progressDialog.dismiss()
-                showErrorDialog(
-                    "Error accessing Firestore Database",
-                    "The app is having trouble communicating with the Firestore Database.",
-                    e.message.toString()
-                )
+                firebaseErrorDialog(this, e, docRef)
             }
     }
 
-    @SuppressLint("SetTextI18n")
     private fun updateUIWithPatientData(document: DocumentSnapshot, patientID: String) {
         val imageUrl = document.getString("photoUrl")
         if (imageUrl != null) {
@@ -310,10 +300,16 @@ class ProfileActivity : AppCompatActivity() {
         binding.addressTV.text = AESEncryption().decrypt(document.getString("address").toString())
 
         //binding.weightTV.text = "${document.getString("weight").toString()} kg"
-        binding.weightTV.text = "${AESEncryption().decrypt(document.getString("weight").toString())} kg"
+        binding.weightTV.text = getString(
+            R.string.profile_patient_weight,
+            AESEncryption().decrypt(document.getString("weight").toString())
+        )
 
         //binding.heightTV.text = "${document.getString("height").toString()} cm"
-        binding.heightTV.text = "${AESEncryption().decrypt(document.getString("height").toString())} cm"
+        binding.heightTV.text = getString(
+            R.string.profile_patient_height,
+            AESEncryption().decrypt(document.getString("height").toString())
+        )
     }
 
     private fun loadImageFromUrl(imageUrl: String) {
@@ -325,20 +321,7 @@ class ProfileActivity : AppCompatActivity() {
                 binding.photoIV.setImageBitmap(bitmap)
             }
             .addOnFailureListener { e ->
-                showErrorDialog(
-                    "Error accessing Firebase Storage",
-                    "The app is having trouble communicating with the Firebase Storage.",
-                    e.message.toString()
-                )
+                firebaseErrorDialog(this, e, ::loadImageFromUrl, imageUrl)
             }
-    }
-
-    private fun showErrorDialog(title: String, message: String, error: String) {
-        MaterialAlertDialogBuilder(this)
-            .setIcon(R.drawable.ic_error)
-            .setTitle(title)
-            .setMessage("$message\n\nContact IT support with the following error code if issue persists: $error")
-            .setPositiveButton("OK") { dialog, _ -> dialog.dismiss() }
-            .show()
     }
 }

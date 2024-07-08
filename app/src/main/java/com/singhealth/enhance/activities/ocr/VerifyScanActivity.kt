@@ -21,7 +21,7 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.singhealth.enhance.R
 import com.singhealth.enhance.activities.MainActivity
-import com.singhealth.enhance.activities.error.ocrInadequateReadingErrorDialog
+import com.singhealth.enhance.activities.error.errorDialogBuilder
 import com.singhealth.enhance.activities.result.RecommendationActivity
 import com.singhealth.enhance.databinding.ActivityVerifyScanBinding
 import com.singhealth.enhance.security.AESEncryption
@@ -35,7 +35,11 @@ object ResourcesHelper {
     fun getString(context: Context, resId: Int): String {
         return context.getString(resId)
     }
-    // Same as above, but includes a single string input for string values that depend on an input
+    // Same as above, but includes a single input of any type
+    fun getString(context: Context, @StringRes resId: Int, vararg formatArgs: Any): String {
+        return context.getString(resId, *formatArgs)
+    }
+    // Same as above, but includes 2 integer values
     fun getString(context: Context, @StringRes resId: Int, int1: Int, int2: Int): String {
         return context.getString(resId, int1, int2)
     }
@@ -184,7 +188,7 @@ class VerifyScanActivity : AppCompatActivity() {
 
         // Prompt user if total records captured is less than 12
         if (totalRows < 12) {
-            ocrInadequateReadingErrorDialog(this)
+            errorDialogBuilder(this, getString(R.string.verify_scan_inadequate_reading_header), getString(R.string.verify_scan_inadequate_reading_body), ScanActivity::class.java)
         }
 
         // Check BP records for errors
@@ -219,7 +223,7 @@ class VerifyScanActivity : AppCompatActivity() {
 
                 db.collection("patients").document(patientID).collection("visits").add(visit)
                     .addOnSuccessListener {
-                        Toast.makeText(this, "Calculation saved successfully.", Toast.LENGTH_SHORT)
+                        Toast.makeText(this, ResourcesHelper.getString(this, R.string.verify_scan_calculation_successful), Toast.LENGTH_SHORT)
                             .show()
 
                         val bundle = Bundle()
@@ -235,19 +239,10 @@ class VerifyScanActivity : AppCompatActivity() {
                         startActivity(recommendationIntent)
                     }
                     .addOnFailureListener { e ->
-                        MaterialAlertDialogBuilder(this)
-                            .setIcon(R.drawable.ic_error)
-                            .setTitle("Error saving record")
-                            .setMessage("The app wasn't able to save the current record.\n\nIf issue persists, contact IT support with the following error code: $e")
-                            .setPositiveButton("OK") { dialog, _ -> dialog.dismiss() }
-                            .show()
+                        errorDialogBuilder(this, ResourcesHelper.getString(this, R.string.verify_scan_saving_header), ResourcesHelper.getString(this, R.string.verify_scan_saving_body, e))
                     }
             } else {
-                MaterialAlertDialogBuilder(this)
-                    .setIcon(R.drawable.ic_error)
-                    .setTitle("Error(s) detected")
-                    .setMessage("Correct all errors before continuing.")
-                    .setPositiveButton("OK") { dialog, _ -> dialog.dismiss() }
+                errorDialogBuilder(this, ResourcesHelper.getString(this, R.string.verify_scan_error_header), ResourcesHelper.getString(this, R.string.verify_scan_error_body))
             }
         }
     }
@@ -303,10 +298,10 @@ class VerifyScanActivity : AppCompatActivity() {
 
     fun rescanRecords() {
         MaterialAlertDialogBuilder(this)
-            .setTitle("Rescan current records")
-            .setMessage("Do you want to rescan the current records?\n\n(note: your previously scanned records will be saved)")
-            .setNegativeButton("Cancel") { dialog, _ -> dialog.dismiss() }
-            .setPositiveButton("OK") { _, _ ->
+            .setTitle(ResourcesHelper.getString(this, R.string.verify_scan_rescan_header))
+            .setMessage(ResourcesHelper.getString(this, R.string.verify_scan_rescan_body))
+            .setNegativeButton(ResourcesHelper.getString(this, R.string.no_dialog)) { dialog, _ -> dialog.dismiss() }
+            .setPositiveButton(ResourcesHelper.getString(this, R.string.yes_dialog)) { _, _ ->
                 val scanIntent = Intent(this, ScanActivity::class.java)
 
                 binding.homeSysBPTargetTIET?.let {
@@ -354,16 +349,8 @@ class VerifyScanActivity : AppCompatActivity() {
     }
 
     fun discardProgress() {
-        MaterialAlertDialogBuilder(this)
-            .setIcon(R.drawable.ic_delete)
-            .setTitle("Discard progress")
-            .setMessage("Do you want to discard all progress and start over?")
-            .setNegativeButton("No") { dialog, _ -> dialog.dismiss() }
-            .setPositiveButton("Yes") { _, _ ->
-                startActivity(Intent(this, ScanActivity::class.java))
-                finish()
-            }
-            .show()
+        errorDialogBuilder(this, ResourcesHelper.getString(this, R.string.verify_scan_discard_header),
+            ResourcesHelper.getString(this, R.string.verify_scan_discard_body), ScanActivity::class.java, R.drawable.ic_delete)
     }
 
     private fun postScanValidation() {
@@ -375,16 +362,16 @@ class VerifyScanActivity : AppCompatActivity() {
 
             if (sysBPFields[i].text.isNullOrEmpty()) {
                 errorCount += 1
-                sysBPFields[i].error = "Field is empty."
+                sysBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_empty_field)
             } else if (!sysBPFields[i].text!!.isDigitsOnly()) {
                 errorCount += 1
-                sysBPFields[i].error = "Field must only contain whole number."
+                sysBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_whole_number)
             } else if (currentValueLength !in 2..3) {
                 errorCount += 1
-                sysBPFields[i].error = "Invalid value."
+                sysBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_invalid_value)
             } else if (sysBPFields[i].text.toString().toInt() !in 90..150) {
                 errorCount += 1
-                sysBPFields[i].error = "Abnormal value."
+                sysBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_abnormal_value)
             }
         }
 
@@ -393,16 +380,16 @@ class VerifyScanActivity : AppCompatActivity() {
 
             if (diaBPFields[i].text.isNullOrEmpty()) {
                 errorCount += 1
-                diaBPFields[i].error = "Field is empty."
+                diaBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_empty_field)
             } else if (!diaBPFields[i].text!!.isDigitsOnly()) {
                 errorCount += 1
-                diaBPFields[i].error = "Field must only contain whole number."
+                diaBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_whole_number)
             } else if (currentValueLength !in 2..3) {
                 errorCount += 1
-                diaBPFields[i].error = "Invalid value."
+                diaBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_invalid_value)
             } else if (diaBPFields[i].text.toString().toInt() !in 60..110) {
                 errorCount += 1
-                diaBPFields[i].error = "Abnormal value."
+                diaBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_abnormal_value)
             }
         }
 
@@ -411,13 +398,13 @@ class VerifyScanActivity : AppCompatActivity() {
             val currentValueLength = sysBPFields[i].text.toString().length
 
             if (sysBPFields[i].text.isNullOrEmpty()) {
-                sysBPFields[i].error = "Field is empty."
+                sysBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_empty_field)
             } else if (!sysBPFields[i].text!!.isDigitsOnly()) {
-                sysBPFields[i].error = "Field must only contain whole number."
+                sysBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_whole_number)
             } else if (currentValueLength !in 2..3) {
-                sysBPFields[i].error = "Invalid value."
+                sysBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_invalid_value)
             } else if (sysBPFields[i].text.toString().toInt() !in 90..150) {
-                sysBPFields[i].error = "Abnormal value."
+                sysBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_abnormal_value)
             }
         }
 
@@ -425,23 +412,23 @@ class VerifyScanActivity : AppCompatActivity() {
             val currentValueLength = diaBPFields[i].text.toString().length
 
             if (diaBPFields[i].text.isNullOrEmpty()) {
-                diaBPFields[i].error = "Field is empty."
+                diaBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_empty_field)
             } else if (!diaBPFields[i].text!!.isDigitsOnly()) {
-                diaBPFields[i].error = "Field must only contain whole number."
+                diaBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_whole_number)
             } else if (currentValueLength !in 2..3) {
-                diaBPFields[i].error = "Invalid value."
+                diaBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_invalid_value)
             } else if (diaBPFields[i].text.toString().toInt() !in 60..110) {
-                diaBPFields[i].error = "Abnormal value."
+                diaBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_abnormal_value)
             }
         }
 
         if (errorCount > 6) {
             MaterialAlertDialogBuilder(this)
                 .setIcon(R.drawable.ic_error)
-                .setTitle("Too many erroneous results")
-                .setMessage("Do you want to rescan the current records to achieve a better accuracy?\n\n(note: your previously scanned records will be saved)")
-                .setNegativeButton("No") { dialog, _ -> dialog.dismiss() }
-                .setPositiveButton("Yes") { _, _ ->
+                .setTitle(ResourcesHelper.getString(this, R.string.verify_scan_erroneous_header))
+                .setMessage(ResourcesHelper.getString(this, R.string.verify_scan_erroneous_body))
+                .setNegativeButton(ResourcesHelper.getString(this, R.string.no_dialog)) { dialog, _ -> dialog.dismiss() }
+                .setPositiveButton(ResourcesHelper.getString(this, R.string.yes_dialog)) { _, _ ->
                     val scanIntent = Intent(this, ScanActivity::class.java)
 
                     binding.homeSysBPTargetTIET?.let {
@@ -492,35 +479,34 @@ class VerifyScanActivity : AppCompatActivity() {
     private fun validateFields(): Boolean {
         var valid = true
 
-        // TODO: Add back verification for the BP targets once algorithm has it
-//        if (binding.homeSysBPTargetTIET.text.isNullOrEmpty()) {
-//            valid = false
-//            binding.homeSysBPTargetTIET.error = "Field cannot be empty."
-//        } else if (!binding.homeSysBPTargetTIET.text!!.isDigitsOnly()) {
-//            valid = false
-//            binding.homeSysBPTargetTIET.error = "Field can only contain whole number."
-//        }
-//        if (binding.homeDiaBPTargetTIET.text.isNullOrEmpty()) {
-//            valid = false
-//            binding.homeDiaBPTargetTIET.error = "Field cannot be empty."
-//        } else if (!binding.homeDiaBPTargetTIET.text!!.isDigitsOnly()) {
-//            valid = false
-//            binding.homeDiaBPTargetTIET.error = "Field can only contain whole number."
-//        }
-//        if (binding.clinicSysBPTargetTIET.text.isNullOrEmpty()) {
-//            valid = false
-//            binding.clinicSysBPTargetTIET.error = "Field cannot be empty."
-//        } else if (!binding.clinicSysBPTargetTIET.text!!.isDigitsOnly()) {
-//            valid = false
-//            binding.clinicSysBPTargetTIET.error = "Field can only contain whole number."
-//        }
-//        if (binding.clinicDiaBPTargetTIET.text.isNullOrEmpty()) {
-//            valid = false
-//            binding.clinicDiaBPTargetTIET.error = "Field cannot be empty."
-//        } else if (!binding.clinicDiaBPTargetTIET.text!!.isDigitsOnly()) {
-//            valid = false
-//            binding.clinicDiaBPTargetTIET.error = "Field can only contain whole number."
-//        }
+        if (binding.homeSysBPTargetTIET.text.isNullOrEmpty()) {
+            valid = false
+            binding.homeSysBPTargetTIET.error = "Field cannot be empty."
+        } else if (!binding.homeSysBPTargetTIET.text!!.isDigitsOnly()) {
+            valid = false
+            binding.homeSysBPTargetTIET.error = "Field can only contain whole number."
+        }
+        if (binding.homeDiaBPTargetTIET.text.isNullOrEmpty()) {
+            valid = false
+            binding.homeDiaBPTargetTIET.error = "Field cannot be empty."
+        } else if (!binding.homeDiaBPTargetTIET.text!!.isDigitsOnly()) {
+            valid = false
+            binding.homeDiaBPTargetTIET.error = "Field can only contain whole number."
+        }
+        if (binding.clinicSysBPTargetTIET.text.isNullOrEmpty()) {
+            valid = false
+            binding.clinicSysBPTargetTIET.error = "Field cannot be empty."
+        } else if (!binding.clinicSysBPTargetTIET.text!!.isDigitsOnly()) {
+            valid = false
+            binding.clinicSysBPTargetTIET.error = "Field can only contain whole number."
+        }
+        if (binding.clinicDiaBPTargetTIET.text.isNullOrEmpty()) {
+            valid = false
+            binding.clinicDiaBPTargetTIET.error = "Field cannot be empty."
+        } else if (!binding.clinicDiaBPTargetTIET.text!!.isDigitsOnly()) {
+            valid = false
+            binding.clinicDiaBPTargetTIET.error = "Field can only contain whole number."
+        }
 
         for (sysField in sysBPFields) {
             if (sysField.text.isNullOrEmpty()) {
@@ -546,25 +532,25 @@ class VerifyScanActivity : AppCompatActivity() {
     }
 
     private fun getBPTarget() {
-        homeSysBPTarget = if (binding.homeSysBPTargetTIET.text.toString().isNullOrEmpty()) {
+        homeSysBPTarget = if (binding.homeSysBPTargetTIET.text.toString().isEmpty()) {
             0
         } else {
             binding.homeSysBPTargetTIET.text.toString().toInt()
         }
 
-        homeDiaBPTarget = if (binding.homeDiaBPTargetTIET.text.toString().isNullOrEmpty()) {
+        homeDiaBPTarget = if (binding.homeDiaBPTargetTIET.text.toString().isEmpty()) {
             0
         } else {
             binding.homeDiaBPTargetTIET.text.toString().toInt()
         }
 
-        clinicSysBPTarget = if (binding.clinicSysBPTargetTIET.text.toString().isNullOrEmpty()) {
+        clinicSysBPTarget = if (binding.clinicSysBPTargetTIET.text.toString().isEmpty()) {
             0
         } else {
             binding.clinicSysBPTargetTIET.text.toString().toInt()
         }
 
-        clinicDiaBPTarget = if (binding.clinicDiaBPTargetTIET.text.toString().isNullOrEmpty()) {
+        clinicDiaBPTarget = if (binding.clinicDiaBPTargetTIET.text.toString().isEmpty()) {
             0
         } else {
             binding.clinicDiaBPTargetTIET.text.toString().toInt()
@@ -610,10 +596,10 @@ class VerifyScanActivity : AppCompatActivity() {
         removeRowIV.setOnClickListener {
             MaterialAlertDialogBuilder(this)
                 .setIcon(R.drawable.ic_remove_circle)
-                .setTitle("Remove row")
-                .setMessage("Do you want to remove the selected row?")
-                .setNegativeButton("Cancel") { dialog, _ -> dialog.dismiss() }
-                .setPositiveButton("OK") { dialog, _ ->
+                .setTitle(ResourcesHelper.getString(this, R.string.verify_scan_remove_row_header))
+                .setMessage(ResourcesHelper.getString(this, R.string.verify_scan_remove_row_body))
+                .setNegativeButton(ResourcesHelper.getString(this, R.string.cancel_dialog)) { dialog, _ -> dialog.dismiss() }
+                .setPositiveButton(ResourcesHelper.getString(this, R.string.ok_dialog)) { dialog, _ ->
                     sysBPFields.remove(sysBPTIET)
                     diaBPFields.remove(diaBPTIET)
                     binding.rowBPRecordLL.removeView(rowBPRecordLayout)

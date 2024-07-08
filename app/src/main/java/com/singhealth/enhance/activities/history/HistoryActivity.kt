@@ -12,8 +12,8 @@ import com.google.firebase.ktx.Firebase
 import com.singhealth.enhance.R
 import com.singhealth.enhance.activities.DashboardActivity
 import com.singhealth.enhance.activities.MainActivity
+import com.singhealth.enhance.activities.error.errorDialogBuilder
 import com.singhealth.enhance.activities.error.internetConnectionCheck
-import com.singhealth.enhance.activities.error.patientHistoryNotFoundErrorDialog
 import com.singhealth.enhance.activities.error.patientNotFoundInSessionErrorDialog
 import com.singhealth.enhance.activities.ocr.ScanActivity
 import com.singhealth.enhance.activities.patient.ProfileActivity
@@ -165,7 +165,7 @@ class HistoryActivity : AppCompatActivity(), HistoryAdapter.OnItemClickListener 
                 }
             }
             .addOnFailureListener { e ->
-                patientHistoryNotFoundErrorDialog(this, e)
+                errorDialogBuilder(this, getString(R.string.patient_history_not_found_error_header), getString(R.string.patient_history_not_found_error_body, e))
             }
     }
 

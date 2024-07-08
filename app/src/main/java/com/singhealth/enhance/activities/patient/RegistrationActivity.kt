@@ -21,10 +21,9 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 import com.singhealth.enhance.R
 import com.singhealth.enhance.activities.MainActivity
+import com.singhealth.enhance.activities.error.errorDialogBuilder
 import com.singhealth.enhance.activities.error.firebaseErrorDialog
 import com.singhealth.enhance.activities.error.internetConnectionCheck
-import com.singhealth.enhance.activities.error.noPatientPhotoErrorDialog
-import com.singhealth.enhance.activities.error.patientExistsErrorDialog
 import com.singhealth.enhance.activities.settings.SettingsActivity
 import com.singhealth.enhance.databinding.ActivityRegistrationBinding
 import com.singhealth.enhance.security.AESEncryption
@@ -259,7 +258,7 @@ class RegistrationActivity : AppCompatActivity() {
 
         if (!::photoBA.isInitialized) {
             valid = false
-            noPatientPhotoErrorDialog(this)
+            errorDialogBuilder(this, getString(R.string.register_image_verification_header), getString(R.string.register_image_verification_body))
         }
 
         if (binding.legalNameTIET.text.isNullOrEmpty()) {
@@ -335,7 +334,8 @@ class RegistrationActivity : AppCompatActivity() {
         val docRef = db.collection("patients").document(id)
         docRef.get().addOnSuccessListener { documentSnapshot ->
             if (documentSnapshot.exists()) {
-                patientExistsErrorDialog(this, progressDialog)
+                progressDialog.dismiss()
+                errorDialogBuilder(this, getString(R.string.register_exist_error_header), getString(R.string.register_exist_error_body),MainActivity::class.java)
             } else {
                 val nricDecrypted = AESEncryption().decrypt(id)
                 val storageRef = storage.reference.child("images/$nricDecrypted.jpg")

@@ -10,8 +10,8 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.singhealth.enhance.R
 import com.singhealth.enhance.activities.MainActivity
+import com.singhealth.enhance.activities.error.errorDialogBuilder
 import com.singhealth.enhance.activities.error.firebaseErrorDialog
-import com.singhealth.enhance.activities.error.loginFailedErrorDialog
 import com.singhealth.enhance.databinding.ActivityLoginBinding
 import com.singhealth.enhance.security.AESEncryption
 import java.util.Calendar
@@ -77,7 +77,7 @@ class LoginActivity : AppCompatActivity() {
                                 startActivity(authenticationIntent)
                                 finish()
                             } else {
-                                loginFailedErrorDialog(this)
+                                errorDialogBuilder(this, getString(R.string.login_error_header), getString(R.string.login_error_body))
                             }
                         }
                     }

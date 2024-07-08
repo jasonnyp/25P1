@@ -26,9 +26,8 @@ import com.google.firebase.ml.vision.document.FirebaseVisionDocumentText
 import com.singhealth.enhance.R
 import com.singhealth.enhance.activities.DashboardActivity
 import com.singhealth.enhance.activities.MainActivity
+import com.singhealth.enhance.activities.error.errorDialogBuilder
 import com.singhealth.enhance.activities.error.internetConnectionCheck
-import com.singhealth.enhance.activities.error.ocrImageErrorDialog
-import com.singhealth.enhance.activities.error.ocrTextErrorDialog
 import com.singhealth.enhance.activities.error.patientNotFoundInSessionErrorDialog
 import com.singhealth.enhance.activities.history.HistoryActivity
 import com.singhealth.enhance.activities.patient.ProfileActivity
@@ -282,7 +281,7 @@ class ScanActivity : AppCompatActivity() {
             .addOnFailureListener { e ->
                 progressDialog.dismiss()
 
-                ocrImageErrorDialog(this, e)
+                errorDialogBuilder(this, getString(R.string.ocr_image_error_header), getString(R.string.ocr_image_error_body, e))
             }
     }
 
@@ -297,8 +296,7 @@ class ScanActivity : AppCompatActivity() {
 
         if (blocks.isEmpty()) {
             progressDialog.dismiss()
-
-            ocrTextErrorDialog(this)
+            errorDialogBuilder(this, getString(R.string.ocr_text_error_header), getString(R.string.ocr_text_error_body))
         } else {
             val words = mutableListOf<FirebaseVisionDocumentText.Word>()
 

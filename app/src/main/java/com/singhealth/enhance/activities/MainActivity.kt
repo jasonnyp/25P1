@@ -11,9 +11,9 @@ import androidx.core.view.GravityCompat
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.singhealth.enhance.R
+import com.singhealth.enhance.activities.error.errorDialogBuilder
 import com.singhealth.enhance.activities.error.firebaseErrorDialog
 import com.singhealth.enhance.activities.error.internetConnectionCheck
-import com.singhealth.enhance.activities.error.patientNotFoundErrorDialog
 import com.singhealth.enhance.activities.patient.ProfileActivity
 import com.singhealth.enhance.activities.patient.RegistrationActivity
 import com.singhealth.enhance.activities.settings.SettingsActivity
@@ -128,7 +128,7 @@ class MainActivity : AppCompatActivity() {
                     savePatientData(patientID)
                     startActivity(Intent(this, ProfileActivity::class.java))
                 } else {
-                    patientNotFoundErrorDialog(this)
+                    errorDialogBuilder(this, getString(R.string.main_activity_patient_header), getString(R.string.main_activity_patient_header))
                 }
             }
             .addOnFailureListener { e ->

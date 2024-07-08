@@ -25,10 +25,33 @@
     <string name="verify_scan_no_records">未检测到记录。请重新扫描或通过添加新行手动插入记录。</string>
     <string name="verify_scan_inadequate_reading_header">读数数量不足</string>
     <string name="verify_scan_inadequate_reading_body">您想继续进行分析吗？</string>
+    <string name="verify_scan_calculation_successful">计算保存成功。</string>
+    <string name="verify_scan_saving_header">保存记录时出错</string>
+    <string name="verify_scan_saving_body">应用无法保存当前记录。\n\n如果问题仍然存在，请联系 IT 支持并提供以下错误代码：%1$s</string>
+    <string name="verify_scan_error_header">检测到错误</string>
+    <string name="verify_scan_error_body">请在继续之前纠正所有错误。</string>
+    <string name="verify_scan_rescan_header">重新扫描当前记录</string>
+    <string name="verify_scan_rescan_body">您要重新扫描当前记录吗？\n\n（注意：您之前扫描的记录将会被保存）</string>
+    <string name="verify_scan_discard_header">放弃进度</string>
+    <string name="verify_scan_discard_body">您要放弃所有进度并重新开始吗？</string>
+    <string name="verify_scan_empty_field">字段为空。</string>
+    <string name="verify_scan_whole_number">字段必须只包含整数。</string>
+    <string name="verify_scan_invalid_value">无效值。</string>
+    <string name="verify_scan_abnormal_value">异常值。</string>
+    <string name="verify_scan_erroneous_header">错误结果太多</string>
+    <string name="verify_scan_erroneous_body">您要重新扫描当前记录以获得更高的准确性吗？\n\n（注意：您之前扫描的记录将会被保存）</string>
+    <string name="verify_scan_remove_row_header">移除行</string>
+    <string name="verify_scan_remove_row_body">您要移除选中的行吗？</string>
 
     <!-- ProfileActivity strings -->
     <string name="profile_gender_male">男</string>
     <string name="profile_gender_female">女</string>
+    <string name="profile_retrieve_data">正在检索患者数据</string>
+    <string name="profile_retrieve_data_caption">请稍等片刻…</string>
+    <string name="profile_document_error_header">获取患者记录时出错</string>
+    <string name="profile_document_error_body">获取患者信息时出错。\n\n如果问题仍然存在，请联系 IT 支持并提供以下错误代码：%1$s</string>
+    <string name="profile_patient_weight">%1$s 公斤</string>
+    <string name="profile_patient_height">%1$s 厘米</string>
 
     <!-- RegistrationActivity strings -->
     <string name="register_gender_male">男性</string>
