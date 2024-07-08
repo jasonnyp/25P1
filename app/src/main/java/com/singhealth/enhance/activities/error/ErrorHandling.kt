@@ -6,7 +6,6 @@ import android.content.Intent
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import androidx.annotation.StringRes
-import com.google.android.gms.tasks.Task
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.storage.StorageReference
@@ -85,18 +84,6 @@ fun firebaseErrorDialog(context: Context, e: Exception, storage: StorageReferenc
         .setNeutralButton(ResourcesHelper.getString(context, R.string.reconnect_dialog_button)) { dialog, _ ->
             dialog.dismiss()
             storage.putBytes(photo)
-        }
-        .show()
-}
-
-fun firebaseErrorDialog(context: Context, e: Exception, task: Task<ByteArray>) {
-    MaterialAlertDialogBuilder(context)
-        .setTitle(ResourcesHelper.getString(context, R.string.firebase_error_header))
-        .setMessage(ResourcesHelper.getString(context, R.string.firebase_error_body, e))
-        .setPositiveButton(ResourcesHelper.getString(context, R.string.ok_dialog)) { dialog, _ -> dialog.dismiss() }
-        .setNeutralButton(ResourcesHelper.getString(context, R.string.reconnect_dialog_button)) { dialog, _ ->
-            dialog.dismiss()
-            task
         }
         .show()
 }
