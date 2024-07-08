@@ -291,6 +291,7 @@ class ScanActivity : AppCompatActivity() {
     private fun processDocumentTextBlock(result: FirebaseVisionDocumentText) {
         var sysBPList = mutableListOf<String>()
         var diaBPList = mutableListOf<String>()
+        var help_me = 0
 
         val blocks = result.blocks
 
