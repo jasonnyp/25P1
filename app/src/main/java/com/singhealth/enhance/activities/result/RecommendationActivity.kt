@@ -103,8 +103,15 @@ class RecommendationActivity : AppCompatActivity() {
         val bpStage = diagnosePatient(this, avgSysBP, avgDiaBP)
 
         // Display average BP
+        binding.targetHomeSysBPTV.text = 135.toString()
+        binding.targetHomeDiaBPTV.text = 85.toString()
+        binding.targetOfficeSysBPTV.text = 140.toString()
+        binding.targetOfficeDiaBPTV.text = 90.toString()
+
         binding.avgHomeSysBPTV.text = avgSysBP.toString()
         binding.avgHomeDiaBPTV.text = avgDiaBP.toString()
+        binding.officeSysBPTV.text = 0.toString()
+        binding.officeDiaBPTV.text = 0.toString()
 
         // Calculate patient's age
         val docRef = db.collection("patients").document(patientID.toString())
@@ -128,11 +135,13 @@ class RecommendationActivity : AppCompatActivity() {
                             println(avgBPBundle.getString("Source"))
                             if (avgBPBundle.getString("Source") == "History") {
                                 val date = avgBPBundle.getString("date").toString()
-                                binding.reccoInadequateHome.text = bpControlStatus(this, avgSysBP, avgDiaBP, 0, 0)
+                                binding.avgHomeBPControl.text = bpControlStatus(this, avgSysBP, avgDiaBP, 135, 85)
+                                binding.officeBPControl.text = bpControlStatus(this, 0, 0, 140, 90)
                             }
                             else if (avgBPBundle.getString("Source") == "Scan") {
                                 // Display BP Stage
-                                binding.reccoInadequateHome.text = bpControlStatus(this, avgSysBP, avgDiaBP, 0, 0)
+                                binding.avgHomeBPControl.text = bpControlStatus(this, avgSysBP, avgDiaBP, 135, 85)
+                                binding.officeBPControl.text = bpControlStatus(this, 0, 0, 140, 90)
                             }
                             val recoList = showRecommendation(this, hypertensionStatus(this, avgSysBP, avgDiaBP))
                             binding.medTV.text = recoList[2]

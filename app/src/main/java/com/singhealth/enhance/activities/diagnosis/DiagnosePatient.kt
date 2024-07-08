@@ -120,19 +120,11 @@ fun showRecommendation(context: Context, bpStage: String) : ArrayList<String>{
 fun bpControlStatus(
     context: Context,
     recentSys: Long, recentDia: Long,
-    targetHomeSys: Long, targetHomeDia: Long
+    targetSys: Long, targetDia: Long
 ): String {
-    val defaultTargetSys: Long = when {
-        targetHomeSys != 0.toLong() -> targetHomeSys
-        else -> 135
-    }
-    val defaultTargetDia: Long = when {
-        targetHomeDia != 0.toLong() -> targetHomeDia
-        else -> 85
-    }
 
     val bpStage: String = when {
-        recentSys < defaultTargetSys && recentDia < defaultTargetDia -> ResourcesHelper.getString(context, R.string.controlled_bp)
+        recentSys < targetSys && recentDia < targetDia -> ResourcesHelper.getString(context, R.string.controlled_bp)
         else -> ResourcesHelper.getString(context, R.string.uncontrolled_bp)
     }
     return bpStage

@@ -187,17 +187,15 @@
 
     <!-- activity_recommendation.xml -->
     <string name="enhance_recco_header">以下是基于扫描的血压记录的建议：</string>
-    <string name="enhance_recco_padding_desc">间隔</string>
-    <string name="medical">医学：</string>
-    <string name="lifestyle">生活方式：</string>
-    <string name="diet">饮食：</string>
+    <string name="enhance_recco_do">医学：</string>
+    <string name="enhance_recco_dont">饮食：</string>
     <string name="recommendation"> 建议</string>
-    <string name="enhance_recco_doctor_reccomendation"> 医生建议（如有</string>
     <string name="enhance_recco_target_home_bp"> 目标家庭血压</string>
     <string name="enhance_recco_target_office_bp"> 目标办公室血压</string>
     <string name="enhance_recco_average_home_bp"> 平均家庭血压</string>
     <string name="enhance_recco_office_bp"> 办公室血压</string>
     <string name="enhance_recco_hypertension_status"> 高血压状态</string>
+    <string name="enhance_recco_recommendation">建议</string>
 
     <!-- activity_registration.xml -->
     <string name="enhance_register_photo">照片</string>

@@ -168,7 +168,7 @@
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/recco_inadequate_home"
+                android:id="@+id/avgHomeBPControl"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20sp"
@@ -216,7 +216,7 @@
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/officebpStage"
+                android:id="@+id/officeBPControl"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20sp"
@@ -269,7 +269,7 @@
             android:textColor="@color/white"
             android:textSize="22sp"
             android:padding="8dp"
-            android:text="@string/recommendation" />
+            android:text="@string/enhance_recco_recommendation" />
 
         <TextView
             android:layout_width="match_parent"
@@ -278,7 +278,7 @@
             android:textSize="20sp"
             android:textStyle="bold"
             android:textColor="@color/black"
-            android:text="@string/medical"
+            android:text="@string/enhance_recco_do"
             android:padding="10sp"
             android:layout_marginTop="20sp"
             android:layout_marginStart="16sp"
@@ -302,7 +302,7 @@
             android:textSize="20sp"
             android:textStyle="bold"
             android:textColor="@color/black"
-            android:text="@string/diet"
+            android:text="@string/enhance_recco_dont"
             android:padding="10sp"
             android:layout_marginStart="16sp"
             android:layout_marginEnd="16sp"

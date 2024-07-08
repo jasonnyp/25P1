@@ -69,8 +69,8 @@
 
 
     <!-- DiagnosePatient.kt -->
-    <string name="controlled_bp">Your BP is currently under control. Keep up the good work!</string>
-    <string name="uncontrolled_bp">Your BP is seeing an increase. Consider some of the recommendations to lower your BP.</string>
+    <string name="controlled_bp">(Controlled BP)</string>
+    <string name="uncontrolled_bp">(Uncontrolled BP)</string>
 
     <string name="white_coat_uncontrolled_hypertension">White Coat Uncontrolled Hypertension</string>
     <string name="masked_hypertension">Masked Hypertension</string>
@@ -190,18 +190,15 @@
 
     <!-- activity_recommendation -->
     <string name="enhance_recco_header">The following are the recommendations based on the scanned BP records:</string>
-    <string name="enhance_recco_padding_desc">Padding</string>
-    <string name="medical">Do\\\'s:</string>
-    <string name="lifestyle">Lifestyle:</string>
-    <string name="diet">Don\\\'ts:</string>
-    <string name="recommendation"> Recommendations</string>
-    <string name="enhance_recco_doctor_reccomendation"> Doctor Recommendations (If Any)</string>
+    <string name="enhance_recco_do">Do:</string>
+    <string name="enhance_recco_dont">Don\'t:</string>
     <string name="bpDivider" translatable="false">/</string>
     <string name="enhance_recco_target_home_bp"> Target HBP</string>
     <string name="enhance_recco_target_office_bp"> Target OBP</string>
     <string name="enhance_recco_average_home_bp"> Average Home BP</string>
     <string name="enhance_recco_office_bp"> Office BP</string>
     <string name="enhance_recco_hypertension_status"> Hypertension Status</string>
+    <string name="enhance_recco_recommendation">Recommendations</string>
 
     <!-- activity_registration.xml -->
     <string name="enhance_register_photo">Photo</string>
