@@ -23,9 +23,6 @@ import com.singhealth.enhance.activities.patient.ProfileActivity
 import com.singhealth.enhance.databinding.ActivityRecommendationBinding
 import com.singhealth.enhance.security.AESEncryption
 import com.singhealth.enhance.security.SecureSharedPreferences
-import java.time.LocalDate
-import java.time.Period
-import java.time.format.DateTimeFormatter
 
 class RecommendationActivity : AppCompatActivity() {
     private lateinit var binding: ActivityRecommendationBinding
@@ -34,7 +31,6 @@ class RecommendationActivity : AppCompatActivity() {
 
     private var avgSysBP: Long = 0
     private var avgDiaBP: Long = 0
-    private var patientAge: Int = 0
 
     private val db = Firebase.firestore
 
@@ -99,49 +95,65 @@ class RecommendationActivity : AppCompatActivity() {
         avgSysBP = avgBPBundle!!.getInt("avgSysBP").toLong()
         avgDiaBP = avgBPBundle.getInt("avgDiaBP").toLong()
 
-        // Determine BP Stage
+        // TODO: Change patientDocRef to docRef after the code is reorganised
         val bpStage = diagnosePatient(this, avgSysBP, avgDiaBP)
+        val patientDocRef = db.collection("patients").document(patientID.toString())
+        var patientTargetSys: Long = 0
+        var patientTargetDia: Long = 0
+        var clinicSys: Long = 0
+        var clinicDia: Long = 0
+        var hypertension: String
 
-        // Display average BP
-        binding.targetHomeSysBPTV.text = 135.toString()
-        binding.targetHomeDiaBPTV.text = 85.toString()
-        binding.targetOfficeSysBPTV.text = 140.toString()
-        binding.targetOfficeDiaBPTV.text = 90.toString()
+        patientDocRef.get()
+            .addOnSuccessListener { document ->
+                if(document.exists()) {
+                    if (AESEncryption().decrypt(document.getString("targetSys").toString()) == "" || AESEncryption().decrypt(document.getString("targetDia").toString()) == "") {
+                        patientTargetSys = 0
+                        patientTargetDia = 0
+                        clinicSys = 0
+                        clinicDia = 0
+                    } else {
+                        patientTargetSys = AESEncryption().decrypt(document.getString("targetSys").toString()).toLong()
+                        patientTargetDia = AESEncryption().decrypt(document.getString("targetDia").toString()).toLong()
+                        clinicSys = patientTargetSys + 5
+                        clinicDia = patientTargetDia + 5
+                    }
+                }
+                binding.targetHomeSysBPTV.text = patientTargetSys.toString()
+                binding.targetHomeDiaBPTV.text = patientTargetDia.toString()
+                binding.targetOfficeSysBPTV.text = clinicSys.toString()
+                binding.targetOfficeDiaBPTV.text = clinicDia.toString()
+                // function testing
+                hypertension = hypertensionStatus(this, avgSysBP, avgDiaBP, 0, 0, patientTargetSys, patientTargetDia)
+                binding.recommendationBpPhenotype.text = hypertension
+                binding.recommendationBpControl.text = bpControlStatus(this, hypertension)
+            }
+            .addOnFailureListener { e ->
+                firebaseErrorDialog(this, e, patientDocRef)
+            }
 
         binding.avgHomeSysBPTV.text = avgSysBP.toString()
         binding.avgHomeDiaBPTV.text = avgDiaBP.toString()
         binding.officeSysBPTV.text = 0.toString()
         binding.officeDiaBPTV.text = 0.toString()
 
-        // Calculate patient's age
         val docRef = db.collection("patients").document(patientID.toString())
         docRef.get()
             .addOnSuccessListener { document ->
                 if (document.exists()) {
-                    val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
-                    val birthDate = LocalDate.parse(
-                        AESEncryption().decrypt(
-                            document.getString("dateOfBirth").toString()
-                        ), formatter
-                    )
-                    val currentDate = LocalDate.now()
-                    val period = Period.between(birthDate, currentDate)
-                    patientAge = period.years
-
                     val collectionRef = docRef.collection("visits")
                     collectionRef.get()
                         .addOnSuccessListener { documents ->
                             // Display BP Stage and correct Control Status based on the Source Activity
                             println(avgBPBundle.getString("Source"))
                             if (avgBPBundle.getString("Source") == "History") {
-                                val date = avgBPBundle.getString("date").toString()
-                                binding.avgHomeBPControl.text = bpControlStatus(this, avgSysBP, avgDiaBP, 135, 85)
-                                binding.officeBPControl.text = bpControlStatus(this, 0, 0, 140, 90)
+                                binding.avgHomeBPControl.text = bpControlStatus(this, avgSysBP, avgDiaBP, patientTargetSys.toLong(), patientTargetDia.toLong())
+                                binding.officeBPControl.text = bpControlStatus(this, 0, 0, patientTargetSys.toLong(), patientTargetDia.toLong())
                             }
                             else if (avgBPBundle.getString("Source") == "Scan") {
                                 // Display BP Stage
-                                binding.avgHomeBPControl.text = bpControlStatus(this, avgSysBP, avgDiaBP, 135, 85)
-                                binding.officeBPControl.text = bpControlStatus(this, 0, 0, 140, 90)
+                                binding.avgHomeBPControl.text = bpControlStatus(this, avgSysBP, avgDiaBP, patientTargetSys.toLong(), patientTargetDia.toLong())
+                                binding.officeBPControl.text = bpControlStatus(this, 0, 0, patientTargetSys.toLong(), patientTargetDia.toLong())
                             }
                             val recoList = showRecommendation(this, hypertensionStatus(this, avgSysBP, avgDiaBP))
                             binding.medTV.text = recoList[2]

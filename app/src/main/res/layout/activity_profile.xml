@@ -106,19 +106,6 @@
                                 android:textSize="18sp"
                                 android:textStyle="bold" />
 
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:text="@string/enhance_profile_address"
-                                android:textAllCaps="true" />
-
-                            <TextView
-                                android:id="@+id/addressTV"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginBottom="12dp"
-                                android:textSize="18sp"
-                                android:textStyle="bold" />
 
                             <TextView
                                 android:layout_width="match_parent"
@@ -142,6 +129,20 @@
 
                             <TextView
                                 android:id="@+id/heightTV"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:textSize="18sp"
+                                android:layout_marginBottom="12dp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@string/enhance_profile_target_bp"
+                                android:textAllCaps="true" />
+
+                            <TextView
+                                android:id="@+id/profileTargetBP"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:textSize="18sp"

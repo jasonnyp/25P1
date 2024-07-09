@@ -130,6 +130,26 @@ fun bpControlStatus(
     return bpStage
 }
 
+fun bpControlStatus(context: Context, hypertensionLevel: String):String {
+    return when (hypertensionLevel) {
+        ResourcesHelper.getString(context, R.string.well_controlled_hypertension) -> {
+            ResourcesHelper.getString(context, R.string.well_controlled)
+        }
+        ResourcesHelper.getString(context, R.string.white_coat_uncontrolled_hypertension) -> {
+            ResourcesHelper.getString(context, R.string.well_controlled)
+        }
+        ResourcesHelper.getString(context, R.string.masked_hypertension) -> {
+            ResourcesHelper.getString(context, R.string.suboptimum)
+        }
+        ResourcesHelper.getString(context, R.string.uncontrolled_hypertension) -> {
+            ResourcesHelper.getString(context, R.string.suboptimum)
+        }
+        else -> {
+            ResourcesHelper.getString(context, R.string.unknown_hypertension_status)
+        }
+    }
+}
+
 fun hypertensionStatus(context: Context, avgHomeSys: Long, avgHomeDia: Long):String {
     val targetHomeSys = 135
     val targetHomeDia = 85
@@ -140,10 +160,6 @@ fun hypertensionStatus(context: Context, avgHomeSys: Long, avgHomeDia: Long):Str
     }
 
     return hypertensionStatus
-}
-
-fun bpStatus() {
-
 }
 
 fun hypertensionStatus(

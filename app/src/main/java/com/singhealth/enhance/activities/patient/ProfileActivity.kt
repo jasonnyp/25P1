@@ -1,11 +1,13 @@
 package com.singhealth.enhance.activities.patient
 
 import android.app.ProgressDialog
+import android.content.Context
 import android.content.Intent
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
+import androidx.annotation.StringRes
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.firestore.DocumentSnapshot
@@ -27,6 +29,12 @@ import com.singhealth.enhance.activities.settings.SettingsActivity
 import com.singhealth.enhance.databinding.ActivityProfileBinding
 import com.singhealth.enhance.security.AESEncryption
 import com.singhealth.enhance.security.SecureSharedPreferences
+
+object ResourcesHelper {
+    fun getString(context: Context, @StringRes resId: Int, string1: String, string2: String): String {
+        return context.getString(resId, string1, string2)
+    }
+}
 
 class ProfileActivity : AppCompatActivity() {
     private lateinit var binding: ActivityProfileBinding
@@ -296,9 +304,6 @@ class ProfileActivity : AppCompatActivity() {
         // Comment out when database info is encrypted
         //binding.genderTV.text = document.getString("gender")
 
-        //binding.addressTV.text = document.getString("address").toString()
-        binding.addressTV.text = AESEncryption().decrypt(document.getString("address").toString())
-
         //binding.weightTV.text = "${document.getString("weight").toString()} kg"
         binding.weightTV.text = getString(
             R.string.profile_patient_weight,
@@ -310,6 +315,12 @@ class ProfileActivity : AppCompatActivity() {
             R.string.profile_patient_height,
             AESEncryption().decrypt(document.getString("height").toString())
         )
+
+        if (AESEncryption().decrypt(document.getString("targetSys").toString()) == "" || AESEncryption().decrypt(document.getString("targetDia").toString()) == "") {
+            binding.profileTargetBP.text = ResourcesHelper.getString(this, R.string.profile_patient_target_bp, 0.toString(), 0.toString())
+        } else {
+            binding.profileTargetBP.text = ResourcesHelper.getString(this, R.string.profile_patient_target_bp, AESEncryption().decrypt(document.getString("targetSys").toString()), AESEncryption().decrypt(document.getString("targetDia").toString()))
+        }
     }
 
     private fun loadImageFromUrl(imageUrl: String) {

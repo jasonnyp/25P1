@@ -56,17 +56,14 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
 
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:layout_width="80dp"
+                    <TextView
+                        android:id="@+id/verifyHomeSys"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        app:errorEnabled="true">
-
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/homeSysBPTargetTIET"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:inputType="number" />
-                    </com.google.android.material.textfield.TextInputLayout>
+                        android:textSize="18sp"
+                        android:layout_marginBottom="12dp"
+                        android:textStyle="bold"
+                        />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -75,17 +72,14 @@
                         android:text="@string/enhance_verify_home_divider"
                         android:textAppearance="?attr/textAppearanceBodyLarge" />
 
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:layout_width="80dp"
+                    <TextView
+                        android:id="@+id/verifyHomeDia"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        app:errorEnabled="true">
-
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/homeDiaBPTargetTIET"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:inputType="number" />
-                    </com.google.android.material.textfield.TextInputLayout>
+                        android:textSize="18sp"
+                        android:layout_marginBottom="12dp"
+                        android:textStyle="bold"
+                        />
                 </LinearLayout>
 
                 <TextView
@@ -100,17 +94,14 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
 
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:layout_width="80dp"
+                    <TextView
+                        android:id="@+id/verifyClinicSys"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        app:errorEnabled="true">
-
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/clinicSysBPTargetTIET"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:inputType="number" />
-                    </com.google.android.material.textfield.TextInputLayout>
+                        android:textSize="18sp"
+                        android:layout_marginBottom="12dp"
+                        android:textStyle="bold"
+                        />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -119,17 +110,14 @@
                         android:text="@string/enhance_verify_clinic_divider"
                         android:textAppearance="?attr/textAppearanceBodyLarge" />
 
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:layout_width="80dp"
+                    <TextView
+                        android:id="@+id/verifyClinicDia"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        app:errorEnabled="true">
-
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/clinicDiaBPTargetTIET"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:inputType="number" />
-                    </com.google.android.material.textfield.TextInputLayout>
+                        android:textSize="18sp"
+                        android:layout_marginBottom="12dp"
+                        android:textStyle="bold"
+                        />
                 </LinearLayout>
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>

@@ -18,7 +18,7 @@
     <string name="ocr_image_error_header">Error processing image</string>
     <string name="ocr_image_error_body">The image cannot be processed due to an error.\n\nContact IT support with the following error code if issue persists: %1$s</string>
     <string name="ocr_text_error_header">Nothing to process</string>
-    <string name="ocr_text_error_body">We couldn\\\'t find any handwriting or text to process.\n\nTip: Ensure the image is clear and cropped to only the values, and exclude any headers (such as \'Systolic\' and \'Diastolic\').</string>
+    <string name="ocr_text_error_body">We couldn\'t find any handwriting or text to process.\n\nTip: Ensure the image is clear and cropped to only the values, and exclude any headers (such as \'Systolic\' and \'Diastolic\').</string>
 
     <!-- VerifyScanActivity.kt -->
     <string name="verify_scan_rows">%1$d records have been detected.\n\nTotal records: %2$d</string>
@@ -27,7 +27,7 @@
     <string name="verify_scan_inadequate_reading_body">Would you like to rescan for more records?</string>
     <string name="verify_scan_calculation_successful">Calculation saved successfully.</string>
     <string name="verify_scan_saving_header">Error saving record</string>
-    <string name="verify_scan_saving_body">The app wasn\\\'t able to save the current record.\n\nIf the issue persists, contact IT support with the following error code: %1$s</string>
+    <string name="verify_scan_saving_body">The app wasn\'t able to save the current record.\n\nIf the issue persists, contact IT support with the following error code: %1$s</string>
     <string name="verify_scan_error_header">Error(s) detected</string>
     <string name="verify_scan_error_body">Correct all errors before continuing.</string>
     <string name="verify_scan_rescan_header">Rescan current records</string>
@@ -52,6 +52,7 @@
     <string name="profile_document_error_body">Something went wrong in getting the patient information. \n\nIf the issue persists, contact IT support with the following error code: %1$s</string>
     <string name="profile_patient_weight">%1$s kg</string>
     <string name="profile_patient_height">%1$s cm</string>
+    <string name="profile_patient_target_bp" translatable="false">%1$s / %2$s</string>
 
     <!-- RegistrationActivity strings -->
     <string name="register_gender_male">Male</string>
@@ -59,8 +60,9 @@
     <string name="register_field_verification">Please correct all errors before proceeding.</string>
     <string name="profile_picture_info">To select another photo, tap on the current photo to open your gallery.</string>
     <string name="register_image_verification_header">No photo uploaded</string>
-    <string name="register_image_verification_body">Please upload patient\\\'s photo before continuing.</string>
+    <string name="register_image_verification_body">Please upload patient\'s photo before continuing.</string>
     <string name="register_empty_field_verification">Field cannot be empty</string>
+    <string name="register_empty_bp_verification">Field cannot be empty. If you desire a default value, enter %1$d</string>
     <string name="register_invalid_value_verification">Invalid value</string>
     <string name="register_loading_dialog">Please wait while the patient is being registered.</string>
     <string name="register_exist_error_header">Patient already registered</string>
@@ -76,6 +78,10 @@
     <string name="masked_hypertension">Masked Hypertension</string>
     <string name="uncontrolled_hypertension">Uncontrolled Hypertension</string>
     <string name="well_controlled_hypertension">Well Controlled Hypertension</string>
+
+    <string name="suboptimum">(Supobtimum)</string>
+    <string name="well_controlled">(Well Controlled)</string>
+    <string name="unknown_hypertension_status">(Unknown)</string>
 
     <!-- RecommendationActivity.kt -->
     <string name="no_recommendations">No Recomendations.</string>
@@ -101,7 +107,7 @@
 
     <!-- MainActivity.kt -->
     <string name="main_activity_patient_header">Patient not found.</string>
-    <string name="main_activity_patient_body">Ensure patient\\\'s information is entered correctly. Otherwise, kindly confirm if this is the patient\\\'s first visit and proceed to register their information.</string>
+    <string name="main_activity_patient_body">Ensure patient\'s information is entered correctly. Otherwise, kindly confirm if this is the patient\'s first visit and proceed to register their information.</string>
     <string name="main_activity_patient_validation">ID cannot be empty</string>
 
     <!-- Navigation drawer strings -->
@@ -184,9 +190,9 @@
     <string name="enhance_profile_patient_id">Patient ID</string>
     <string name="enhance_profile_dob">Date of Birth</string>
     <string name="enhance_profile_gender">Gender</string>
-    <string name="enhance_profile_address">Address</string>
     <string name="enhance_profile_weight">Weight</string>
     <string name="enhance_profile_height">Height</string>
+    <string name="enhance_profile_target_bp">Target BP</string>
 
     <!-- activity_recommendation -->
     <string name="enhance_recco_header">The following are the recommendations based on the scanned BP records:</string>
@@ -208,7 +214,8 @@
     <string name="enhance_register_patient_id">Patient ID No.</string>
     <string name="enhance_register_dob">Date of Birth</string>
     <string name="enhance_register_gender">Gender</string>
-    <string name="enhance_register_address">Address</string>
+    <string name="enhance_register_target_sys">Target Systolic</string>
+    <string name="enhance_register_target_dia">Target Diastolic</string>
     <string name="enhance_register_health_info">Health Information</string>
     <string name="enhance_register_weight">Weight</string>
     <string name="enhance_register_height">Height</string>

@@ -247,15 +247,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="20sp"
-                android:textStyle="bold"
-                android:text="White Coat Uncontrolled Hypertension"/>
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/recommendation_bp_control"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15sp"
-                android:text="(Suboptimum)"
                 android:textSize="20sp"
                 android:textStyle="bold" />
 

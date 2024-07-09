@@ -61,6 +61,7 @@
     <string name="register_image_verification_header">未上传照片</string>
     <string name="register_image_verification_body">请在继续之前上传病人的照片。</string>
     <string name="register_empty_field_verification">字段不能为空</string>
+    <string name="register_empty_bp_verification">字段不能为空。如果您需要默认值，请输入 %1$d</string>
     <string name="register_invalid_value_verification">无效的值</string>
     <string name="register_loading_dialog">正在注册病人，请稍候。</string>
     <string name="register_exist_error_header">病人已经注册</string>
@@ -75,6 +76,10 @@
     <string name="masked_hypertension">隐匿性高血压</string>
     <string name="uncontrolled_hypertension">未受控高血压</string>
     <string name="well_controlled_hypertension">良好控制的高血压</string>
+
+    <string name="suboptimum">（亚最佳）</string>
+    <string name="well_controlled">（控制良好）</string>
+    <string name="unknown_hypertension_status">（未知）</string>
 
     <!-- RecommendationActivity.kt -->
     <string name="no_recommendations">没有建议。</string>
@@ -181,15 +186,14 @@
     <string name="enhance_profile_patient_id">患者识别码</string>
     <string name="enhance_profile_dob">出生日期</string>
     <string name="enhance_profile_gender">性别</string>
-    <string name="enhance_profile_address">地址</string>
     <string name="enhance_profile_weight">体重</string>
     <string name="enhance_profile_height">身高</string>
+    <string name="enhance_profile_target_bp">目标血压</string>
 
     <!-- activity_recommendation.xml -->
     <string name="enhance_recco_header">以下是基于扫描的血压记录的建议：</string>
     <string name="enhance_recco_do">医学：</string>
     <string name="enhance_recco_dont">饮食：</string>
-    <string name="recommendation"> 建议</string>
     <string name="enhance_recco_target_home_bp"> 目标家庭血压</string>
     <string name="enhance_recco_target_office_bp"> 目标办公室血压</string>
     <string name="enhance_recco_average_home_bp"> 平均家庭血压</string>
@@ -205,7 +209,8 @@
     <string name="enhance_register_patient_id">患者身份证号</string>
     <string name="enhance_register_dob">出生日期</string>
     <string name="enhance_register_gender">性别</string>
-    <string name="enhance_register_address">地址</string>
+    <string name="enhance_register_target_sys">目标收缩压</string>
+    <string name="enhance_register_target_dia">目标舒张压</string>
     <string name="enhance_register_health_info">健康信息</string>
     <string name="enhance_register_weight">体重</string>
     <string name="enhance_register_height">身高</string>
