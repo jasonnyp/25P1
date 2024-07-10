@@ -139,6 +139,8 @@ class HistoryActivity : AppCompatActivity(), HistoryAdapter.OnItemClickListener 
                         val homeDiaBPTarget = document.get("homeDiaBPTarget") as? Long
                         val clinicSysBPTarget = document.get("clinicSysBPTarget") as? Long
                         val clinicDiaBPTarget = document.get("clinicDiaBPTarget") as? Long
+                        val clinicSysBP = document.get("clinicSysBP") as? Long
+                        val clinicDiaBP = document.get("clinicDiaBP") as? Long
                         history.add(
                             HistoryData(
                                 dateTime.toString(),
@@ -148,7 +150,9 @@ class HistoryActivity : AppCompatActivity(), HistoryAdapter.OnItemClickListener 
                                 homeSysBPTarget,
                                 homeDiaBPTarget,
                                 clinicSysBPTarget,
-                                clinicDiaBPTarget
+                                clinicDiaBPTarget,
+                                clinicSysBP,
+                                clinicDiaBP,
                             )
                         )
                     }
@@ -179,12 +183,16 @@ class HistoryActivity : AppCompatActivity(), HistoryAdapter.OnItemClickListener 
         val clickedItem = sortedHistory[position]
         val avgSysBP = clickedItem.avgSysBP.toString()
         val avgDiaBP = clickedItem.avgDiaBP.toString()
+        val clinicSysBP = clickedItem.clinicSysBP.toString()
+        val clinicDiaBP = clickedItem.clinicDiaBP.toString()
         val date = clickedItem.date.toString()
 
         val bundle = Bundle()
 
         bundle.putInt("avgSysBP", avgSysBP.toInt())
         bundle.putInt("avgDiaBP", avgDiaBP.toInt())
+        bundle.putInt("clinicSysBP", clinicSysBP.toInt())
+        bundle.putInt("clinicDiaBP", clinicDiaBP.toInt())
         bundle.putString("date", date)
         bundle.putString("Source", "History")
 

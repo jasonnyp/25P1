@@ -152,26 +152,30 @@ class DashboardActivity : AppCompatActivity() {
                     val outputDateFormatter = DateTimeFormatter.ofPattern(getString(R.string.date_format))
 
                     for (document in documents) {
-                                val dateTimeString = document.get("date") as? String
-                                val dateTime = LocalDateTime.parse(dateTimeString, inputDateFormatter)
-                                val dateTimeFormatted = dateTime.format(outputDateFormatter)
-                                val avgSysBP = document.get("averageSysBP") as? Long
-                                val avgDiaBP = document.get("averageDiaBP") as? Long
-                                val homeSysBPTarget = document.get("homeSysBPTarget") as? Long
-                                val homeDiaBPTarget = document.get("homeDiaBPTarget") as? Long
-                                val clinicSysBPTarget = document.get("clinicSysBPTarget") as? Long
-                                val clinicDiaBPTarget = document.get("clinicDiaBPTarget") as? Long
-                                history.add(
-                                    HistoryData(
-                                        dateTime.toString(),
-                                        dateTimeFormatted,
-                                        avgSysBP,
-                                        avgDiaBP,
-                                        homeSysBPTarget,
-                                        homeDiaBPTarget,
-                                        clinicSysBPTarget,
-                                        clinicDiaBPTarget
-                                    )
+                        val dateTimeString = document.get("date") as? String
+                        val dateTime = LocalDateTime.parse(dateTimeString, inputDateFormatter)
+                        val dateTimeFormatted = dateTime.format(outputDateFormatter)
+                        val avgSysBP = document.get("averageSysBP") as? Long
+                        val avgDiaBP = document.get("averageDiaBP") as? Long
+                        val homeSysBPTarget = document.get("homeSysBPTarget") as? Long
+                        val homeDiaBPTarget = document.get("homeDiaBPTarget") as? Long
+                        val clinicSysBPTarget = document.get("clinicSysBPTarget") as? Long
+                        val clinicDiaBPTarget = document.get("clinicDiaBPTarget") as? Long
+                        val clinicSysBP = document.get("clinicSysBP") as? Long
+                        val clinicDiaBP = document.get("clinicDiaBP") as? Long
+                        history.add(
+                            HistoryData(
+                                dateTime.toString(),
+                                dateTimeFormatted,
+                                avgSysBP,
+                                avgDiaBP,
+                                homeSysBPTarget,
+                                homeDiaBPTarget,
+                                clinicSysBPTarget,
+                                clinicDiaBPTarget,
+                                clinicSysBP,
+                                clinicDiaBP
+                            )
                         )
                     }
 

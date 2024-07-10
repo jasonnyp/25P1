@@ -36,6 +36,7 @@
     <string name="verify_scan_discard_body">您要放弃所有进度并重新开始吗？</string>
     <string name="verify_scan_empty_field">字段为空。</string>
     <string name="verify_scan_whole_number">字段必须只包含整数。</string>
+    <string name="verify_scan_valid_value">值不能超过200或低于0。</string>
     <string name="verify_scan_invalid_value">无效值。</string>
     <string name="verify_scan_abnormal_value">异常值。</string>
     <string name="verify_scan_erroneous_header">错误结果太多</string>
@@ -63,6 +64,7 @@
     <string name="register_empty_field_verification">字段不能为空</string>
     <string name="register_empty_bp_verification">字段不能为空。如果您需要默认值，请输入 %1$d</string>
     <string name="register_invalid_value_verification">无效的值</string>
+    <string name="register_invalid_number_verification">数字太高或太低</string>
     <string name="register_loading_dialog">正在注册病人，请稍候。</string>
     <string name="register_exist_error_header">病人已经注册</string>
     <string name="register_exist_error_body">您想要搜索该病人吗？</string>
@@ -252,7 +254,8 @@
     <!-- activity_verify_scan.xml -->
     <string name="enhance_verify_patient_id">患者ID：</string>
     <string name="enhance_verify_home_bp">家庭血压目标：</string>
-    <string name="enhance_verify_clinic_bp">诊所血压目标：</string>
+    <string name="enhance_verify_clinic_target_bp">诊所血压目标：</string>
+    <string name="enhance_verify_clinic_bp">诊所血压</string>
     <string name="enhance_verify_add_row">添加行</string>
     <string name="enhance_verify_more_options">更多选项</string>
     <string name="enhance_verify_disclaimer">免责声明：扫描仪并非完美，有时可能产生错误结果。在计算此患者的平均血压之前，请确保这些结果的准确性由您负责。</string>

@@ -36,6 +36,7 @@
     <string name="verify_scan_discard_body">Do you want to discard all progress and start over?</string>
     <string name="verify_scan_empty_field">Field is empty.</string>
     <string name="verify_scan_whole_number">Field must only contain whole number.</string>
+    <string name="verify_scan_valid_value">Value cannot be more than 200 or below 0.</string>
     <string name="verify_scan_invalid_value">Invalid value.</string>
     <string name="verify_scan_abnormal_value">Abnormal value.</string>
     <string name="verify_scan_erroneous_header">Too many erroneous results</string>
@@ -64,6 +65,7 @@
     <string name="register_empty_field_verification">Field cannot be empty</string>
     <string name="register_empty_bp_verification">Field cannot be empty. If you desire a default value, enter %1$d</string>
     <string name="register_invalid_value_verification">Invalid value</string>
+    <string name="register_invalid_number_verification">Number too high or low</string>
     <string name="register_loading_dialog">Please wait while the patient is being registered.</string>
     <string name="register_exist_error_header">Patient already registered</string>
     <string name="register_exist_error_body">Would you like to search the patient instead?</string>
@@ -258,8 +260,9 @@
     <string name="enhance_verify_patient_id">Patient\'s ID:</string>
     <string name="enhance_verify_home_bp">Home BP Target:</string>
     <string name="enhance_verify_home_divider" translatable="false">/</string>
-    <string name="enhance_verify_clinic_bp">Clinic BP Target:</string>
+    <string name="enhance_verify_clinic_target_bp">Clinic BP Target:</string>
     <string name="enhance_verify_clinic_divider" translatable="false">/</string>
+    <string name="enhance_verify_clinic_bp">Clinic BP:</string>
     <string name="enhance_verify_add_row">Add Row</string>
     <string name="enhance_verify_more_options">More Options</string>
     <string name="enhance_verify_disclaimer">Disclaimer: The scanner is not perfect and may yield erroneous results at times. The onus is on you to ensure the accuracy of these results before calculating the average blood pressure for this patient.</string>

@@ -83,23 +83,18 @@ fun showRecommendation(context: Context, bpStage: String) : ArrayList<String>{
     var lifestyleText = ResourcesHelper.getString(context, R.string.no_recommendations)
     var medicalText = ResourcesHelper.getString(context, R.string.no_recommendations)
     val ouputList = ArrayList <String>()
-    println(bpStage)
-    println(ResourcesHelper.getString(context, R.string.well_controlled_hypertension))
-    println(ResourcesHelper.getString(context, R.string.masked_hypertension))
-    println(ResourcesHelper.getString(context, R.string.white_coat_uncontrolled_hypertension))
-    println(ResourcesHelper.getString(context, R.string.uncontrolled_hypertension))
     when (bpStage) {
         ResourcesHelper.getString(context, R.string.well_controlled_hypertension) ->
             { dietText = ResourcesHelper.getString(context, R.string.well_controlled_bp_recommendation_diet)
             lifestyleText = ResourcesHelper.getString(context, R.string.well_controlled_bp_recommendation_lifestyle)
             medicalText = ResourcesHelper.getString(context, R.string.well_controlled_bp_recommendation_medical) }
 
-        ResourcesHelper.getString(context, R.string.masked_hypertension) ->
+        ResourcesHelper.getString(context, R.string.white_coat_uncontrolled_hypertension) ->
         { dietText = ResourcesHelper.getString(context, R.string.well_controlled_bp_recommendation_diet)
             lifestyleText = ResourcesHelper.getString(context, R.string.well_controlled_bp_recommendation_lifestyle)
             medicalText = ResourcesHelper.getString(context, R.string.well_controlled_bp_recommendation_medical) }
 
-        ResourcesHelper.getString(context, R.string.white_coat_uncontrolled_hypertension) ->
+        ResourcesHelper.getString(context, R.string.masked_hypertension) ->
         { dietText = ResourcesHelper.getString(context, R.string.suboptimum_bp_recommendation_diet)
             lifestyleText = ResourcesHelper.getString(context, R.string.suboptimum_bp_recommendation_lifestyle)
             medicalText = ResourcesHelper.getString(context, R.string.suboptimum_bp_recommendation_medical) }
@@ -150,10 +145,11 @@ fun bpControlStatus(context: Context, hypertensionLevel: String):String {
     }
 }
 
-fun hypertensionStatus(context: Context, avgHomeSys: Long, avgHomeDia: Long):String {
-    val targetHomeSys = 135
-    val targetHomeDia = 85
-
+fun hypertensionStatus(
+    context: Context,
+    avgHomeSys: Long, avgHomeDia: Long,
+    targetHomeSys: Long, targetHomeDia: Long)
+:String {
     val hypertensionStatus: String = when {
         avgHomeSys < targetHomeSys && avgHomeDia < targetHomeDia -> ResourcesHelper.getString(context, R.string.well_controlled_hypertension)
         else -> ResourcesHelper.getString(context, R.string.uncontrolled_hypertension)
@@ -166,7 +162,7 @@ fun hypertensionStatus(
     context: Context,
     avgHomeSys: Long, avgHomeDia: Long,
     officeSys: Long, officeDia: Long,
-    targetHomeSys: Long, targetHomeDia: Long
+    targetHomeSys: Long, targetHomeDia: Long,
 ):String {
     val targetOfficeSys = targetHomeSys + 5
     val targetOfficeDia = targetHomeDia + 5

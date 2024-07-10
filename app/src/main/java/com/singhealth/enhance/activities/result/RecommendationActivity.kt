@@ -13,7 +13,6 @@ import com.singhealth.enhance.R
 import com.singhealth.enhance.activities.DashboardActivity
 import com.singhealth.enhance.activities.MainActivity
 import com.singhealth.enhance.activities.diagnosis.bpControlStatus
-import com.singhealth.enhance.activities.diagnosis.diagnosePatient
 import com.singhealth.enhance.activities.diagnosis.hypertensionStatus
 import com.singhealth.enhance.activities.diagnosis.showRecommendation
 import com.singhealth.enhance.activities.error.firebaseErrorDialog
@@ -31,6 +30,8 @@ class RecommendationActivity : AppCompatActivity() {
 
     private var avgSysBP: Long = 0
     private var avgDiaBP: Long = 0
+    private var clinicSysBP: Long = 0
+    private var clinicDiaBP: Long = 0
 
     private val db = Firebase.firestore
 
@@ -94,86 +95,54 @@ class RecommendationActivity : AppCompatActivity() {
         val avgBPBundle = intent.extras
         avgSysBP = avgBPBundle!!.getInt("avgSysBP").toLong()
         avgDiaBP = avgBPBundle.getInt("avgDiaBP").toLong()
+        clinicSysBP = avgBPBundle.getInt("clinicSysBP").toLong()
+        clinicDiaBP = avgBPBundle.getInt("clinicDiaBP").toLong()
 
         // TODO: Change patientDocRef to docRef after the code is reorganised
-        val bpStage = diagnosePatient(this, avgSysBP, avgDiaBP)
         val patientDocRef = db.collection("patients").document(patientID.toString())
-        var patientTargetSys: Long = 0
-        var patientTargetDia: Long = 0
-        var clinicSys: Long = 0
-        var clinicDia: Long = 0
+        var patientTargetSys: Long
+        var patientTargetDia: Long
+        var clinicTargetSys: Long
+        var clinicTargetDia: Long
         var hypertension: String
 
         patientDocRef.get()
             .addOnSuccessListener { document ->
-                if(document.exists()) {
-                    if (AESEncryption().decrypt(document.getString("targetSys").toString()) == "" || AESEncryption().decrypt(document.getString("targetDia").toString()) == "") {
-                        patientTargetSys = 0
-                        patientTargetDia = 0
-                        clinicSys = 0
-                        clinicDia = 0
-                    } else {
-                        patientTargetSys = AESEncryption().decrypt(document.getString("targetSys").toString()).toLong()
-                        patientTargetDia = AESEncryption().decrypt(document.getString("targetDia").toString()).toLong()
-                        clinicSys = patientTargetSys + 5
-                        clinicDia = patientTargetDia + 5
-                    }
+                patientDocRef.collection("visits").get()
+                if (AESEncryption().decrypt(document.getString("targetSys").toString()) == "" || AESEncryption().decrypt(document.getString("targetDia").toString()) == "") {
+                    patientTargetSys = 0
+                    patientTargetDia = 0
+                    clinicTargetSys = 0
+                    clinicTargetDia = 0
+                } else {
+                    patientTargetSys = AESEncryption().decrypt(document.getString("targetSys").toString()).toLong()
+                    patientTargetDia = AESEncryption().decrypt(document.getString("targetDia").toString()).toLong()
+                    clinicTargetSys = patientTargetSys + 5
+                    clinicTargetDia = patientTargetDia + 5
                 }
+
                 binding.targetHomeSysBPTV.text = patientTargetSys.toString()
                 binding.targetHomeDiaBPTV.text = patientTargetDia.toString()
-                binding.targetOfficeSysBPTV.text = clinicSys.toString()
-                binding.targetOfficeDiaBPTV.text = clinicDia.toString()
+                binding.targetOfficeSysBPTV.text = clinicTargetSys.toString()
+                binding.targetOfficeDiaBPTV.text = clinicTargetDia.toString()
+
+                binding.avgHomeSysBPTV.text = avgSysBP.toString()
+                binding.avgHomeDiaBPTV.text = avgDiaBP.toString()
+                binding.avgHomeBPControl.text = bpControlStatus(this, avgSysBP, avgDiaBP, patientTargetSys, patientTargetDia)
+
+                binding.officeSysBPTV.text = clinicSysBP.toString()
+                binding.officeDiaBPTV.text = clinicDiaBP.toString()
+                binding.officeBPControl.text = bpControlStatus(this, clinicSysBP, clinicDiaBP, clinicTargetSys, clinicTargetDia)
                 // function testing
-                hypertension = hypertensionStatus(this, avgSysBP, avgDiaBP, 0, 0, patientTargetSys, patientTargetDia)
+                hypertension = hypertensionStatus(this, avgSysBP, avgDiaBP, clinicSysBP, clinicDiaBP, patientTargetSys, patientTargetDia)
                 binding.recommendationBpPhenotype.text = hypertension
                 binding.recommendationBpControl.text = bpControlStatus(this, hypertension)
+
+                val recoList = showRecommendation(this, hypertensionStatus(this, patientTargetSys, patientTargetDia, avgSysBP, avgDiaBP))
+                binding.medTV.text = recoList[2]
             }
             .addOnFailureListener { e ->
                 firebaseErrorDialog(this, e, patientDocRef)
-            }
-
-        binding.avgHomeSysBPTV.text = avgSysBP.toString()
-        binding.avgHomeDiaBPTV.text = avgDiaBP.toString()
-        binding.officeSysBPTV.text = 0.toString()
-        binding.officeDiaBPTV.text = 0.toString()
-
-        val docRef = db.collection("patients").document(patientID.toString())
-        docRef.get()
-            .addOnSuccessListener { document ->
-                if (document.exists()) {
-                    val collectionRef = docRef.collection("visits")
-                    collectionRef.get()
-                        .addOnSuccessListener { documents ->
-                            // Display BP Stage and correct Control Status based on the Source Activity
-                            println(avgBPBundle.getString("Source"))
-                            if (avgBPBundle.getString("Source") == "History") {
-                                binding.avgHomeBPControl.text = bpControlStatus(this, avgSysBP, avgDiaBP, patientTargetSys.toLong(), patientTargetDia.toLong())
-                                binding.officeBPControl.text = bpControlStatus(this, 0, 0, patientTargetSys.toLong(), patientTargetDia.toLong())
-                            }
-                            else if (avgBPBundle.getString("Source") == "Scan") {
-                                // Display BP Stage
-                                binding.avgHomeBPControl.text = bpControlStatus(this, avgSysBP, avgDiaBP, patientTargetSys.toLong(), patientTargetDia.toLong())
-                                binding.officeBPControl.text = bpControlStatus(this, 0, 0, patientTargetSys.toLong(), patientTargetDia.toLong())
-                            }
-                            val recoList = showRecommendation(this, hypertensionStatus(this, avgSysBP, avgDiaBP))
-                            binding.medTV.text = recoList[2]
-
-                            // If / When Statement for setting image
-                            //binding.IV.setImageResource(R.drawable.ic_error) //Change to Image id
-                            val imageResource = when (hypertensionStatus(this, avgSysBP, avgDiaBP)) {
-                                getString(R.string.well_controlled_hypertension) -> R.drawable.excellent
-                                getString(R.string.white_coat_uncontrolled_hypertension) -> R.drawable.good // Not Used for now
-                                getString(R.string.masked_hypertension) -> R.drawable.neutral // Not Used for now
-                                getString(R.string.uncontrolled_hypertension) -> R.drawable.poor
-                                else -> R.drawable.ic_error // Default image if the stage is not recognized
-                            }
-                        }
-                }
-
-
-            }
-            .addOnFailureListener { e ->
-                firebaseErrorDialog(this, e, docRef)
             }
     }
 

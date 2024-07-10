@@ -55,6 +55,8 @@ class VerifyScanActivity : AppCompatActivity() {
     private var homeDiaBPTarget = 0
     private var clinicSysBPTarget = 0
     private var clinicDiaBPTarget = 0
+    private var clinicSysBP = 0
+    private var clinicDiaBP = 0
 
     private var sysBPList: MutableList<String> = mutableListOf()
     private var diaBPList: MutableList<String> = mutableListOf()
@@ -125,8 +127,8 @@ class VerifyScanActivity : AppCompatActivity() {
 
                     binding.verifyHomeSys.text = homeSysBPTarget.toString()
                     binding.verifyHomeDia.text = homeDiaBPTarget.toString()
-                    binding.verifyClinicSys.text = clinicSysBPTarget.toString()
-                    binding.verifyClinicDia.text = clinicDiaBPTarget.toString()
+                    binding.verifyClinicTargetSys.text = clinicSysBPTarget.toString()
+                    binding.verifyClinicTargetDia.text = clinicDiaBPTarget.toString()
                 }
             }
             .addOnFailureListener { e ->
@@ -142,10 +144,10 @@ class VerifyScanActivity : AppCompatActivity() {
                 binding.verifyHomeDia.text = scanBundle.getString("homeDiaBPTarget")
             }
             if (scanBundle.containsKey("clinicSysBPTarget")) {
-                binding.verifyClinicSys.text = scanBundle.getString("clinicSysBPTarget")
+                binding.verifyClinicTargetSys.text = scanBundle.getString("clinicSysBPTarget")
             }
             if (scanBundle.containsKey("clinicDiaBPTarget")) {
-                binding.verifyClinicDia.text = scanBundle.getString("clinicDiaBPTarget")
+                binding.verifyClinicTargetDia.text = scanBundle.getString("clinicDiaBPTarget")
             }
 
             if (scanBundle.containsKey("sysBPListHistory") && scanBundle.containsKey("diaBPListHistory")) {
@@ -241,6 +243,8 @@ class VerifyScanActivity : AppCompatActivity() {
             if (validateFields()) {
                 getBPTarget()
                 calcAvgBP()
+                clinicSysBP = binding.verifyClinicSys.text.toString().toInt()
+                clinicDiaBP = binding.verifyClinicDia.text.toString().toInt()
 
                 // TODO: Save record into database
                 val visit = hashMapOf(
@@ -251,7 +255,9 @@ class VerifyScanActivity : AppCompatActivity() {
                     "clinicSysBPTarget" to clinicSysBPTarget,
                     "clinicDiaBPTarget" to clinicDiaBPTarget,
                     "averageSysBP" to avgSysBP,
-                    "averageDiaBP" to avgDiaBP
+                    "averageDiaBP" to avgDiaBP,
+                    "clinicSysBP" to clinicSysBP,
+                    "clinicDiaBP" to clinicDiaBP
                 )
 
                 db.collection("patients").document(patientID).collection("visits").add(visit)
@@ -263,6 +269,8 @@ class VerifyScanActivity : AppCompatActivity() {
 
                         bundle.putInt("avgSysBP", avgSysBP)
                         bundle.putInt("avgDiaBP", avgDiaBP)
+                        bundle.putInt("clinicSysBP", clinicSysBP)
+                        bundle.putInt("clinicDiaBP", clinicDiaBP)
                         bundle.putString("Source", "Scan")
 
                         val recommendationIntent = Intent(this, RecommendationActivity::class.java)
@@ -311,12 +319,19 @@ class VerifyScanActivity : AppCompatActivity() {
         binding.verifyHomeDia.let {
             scanIntent.putExtra("homeDiaBPTarget", binding.verifyHomeDia.text.toString())
         }
+        binding.verifyClinicTargetSys?.let {
+            scanIntent.putExtra("clinicSysBPTarget", binding.verifyClinicTargetSys.text.toString())
+        }
+        binding.verifyClinicTargetDia?.let {
+            scanIntent.putExtra("clinicDiaBPTarget", binding.verifyClinicDia.text.toString())
+        }
         binding.verifyClinicSys?.let {
             scanIntent.putExtra("clinicSysBPTarget", binding.verifyClinicSys.text.toString())
         }
         binding.verifyClinicDia?.let {
             scanIntent.putExtra("clinicDiaBPTarget", binding.verifyClinicDia.text.toString())
         }
+
 
         if (!sysBPListHistory.isNullOrEmpty()) {
             scanIntent.putStringArrayListExtra("sysBPListHistory", ArrayList(sysBPListHistory))
@@ -349,15 +364,27 @@ class VerifyScanActivity : AppCompatActivity() {
                         binding.verifyHomeDia.text.toString()
                     )
                 }
-                binding.verifyClinicSys?.let {
+                binding.verifyClinicTargetSys?.let {
                     scanIntent.putExtra(
                         "clinicSysBPTarget",
+                        binding.verifyClinicTargetSys.text.toString()
+                    )
+                }
+                binding.verifyClinicTargetDia?.let {
+                    scanIntent.putExtra(
+                        "clinicDiaBPTarget",
+                        binding.verifyClinicTargetDia.text.toString()
+                    )
+                }
+                binding.verifyClinicSys?.let {
+                    scanIntent.putExtra(
+                        "clinicSysBP",
                         binding.verifyClinicSys.text.toString()
                     )
                 }
                 binding.verifyClinicDia?.let {
                     scanIntent.putExtra(
-                        "clinicDiaBPTarget",
+                        "clinicDiaBP",
                         binding.verifyClinicDia.text.toString()
                     )
                 }
@@ -476,15 +503,27 @@ class VerifyScanActivity : AppCompatActivity() {
                             binding.verifyHomeDia.text.toString()
                         )
                     }
-                    binding.verifyClinicSys?.let {
+                    binding.verifyClinicTargetSys?.let {
                         scanIntent.putExtra(
                             "clinicSysBPTarget",
+                            binding.verifyClinicTargetSys.text.toString()
+                        )
+                    }
+                    binding.verifyClinicTargetDia?.let {
+                        scanIntent.putExtra(
+                            "clinicDiaBPTarget",
+                            binding.verifyClinicTargetDia.text.toString()
+                        )
+                    }
+                    binding.verifyClinicSys?.let {
+                        scanIntent.putExtra(
+                            "clinicSysBP",
                             binding.verifyClinicSys.text.toString()
                         )
                     }
                     binding.verifyClinicDia?.let {
                         scanIntent.putExtra(
-                            "clinicDiaBPTarget",
+                            "clinicDiaBP",
                             binding.verifyClinicDia.text.toString()
                         )
                     }
@@ -512,52 +551,47 @@ class VerifyScanActivity : AppCompatActivity() {
     private fun validateFields(): Boolean {
         var valid = true
 
-        if (binding.verifyHomeSys.text.isNullOrEmpty()) {
-            valid = false
-            binding.verifyHomeSys.error = "Field cannot be empty."
-        } else if (!binding.verifyHomeSys.text!!.isDigitsOnly()) {
-            valid = false
-            binding.verifyHomeSys.error = "Field can only contain whole number."
-        }
-        if (binding.verifyHomeDia.text.isNullOrEmpty()) {
-            valid = false
-            binding.verifyHomeDia.error = "Field cannot be empty."
-        } else if (!binding.verifyHomeDia.text!!.isDigitsOnly()) {
-            valid = false
-            binding.verifyHomeDia.error = "Field can only contain whole number."
-        }
         if (binding.verifyClinicSys.text.isNullOrEmpty()) {
             valid = false
-            binding.verifyClinicSys.error = "Field cannot be empty."
+            binding.verifyClinicSysBox.error = ResourcesHelper.getString(this, R.string.verify_scan_empty_field)
         } else if (!binding.verifyClinicSys.text!!.isDigitsOnly()) {
             valid = false
-            binding.verifyClinicSys.error = "Field can only contain whole number."
+            binding.verifyClinicSysBox.error = ResourcesHelper.getString(this, R.string.verify_scan_whole_number)
         }
+//        else if (binding.verifyClinicSys.text.toString().toInt() > 200 || binding.verifyClinicSys.text.toString().toInt() < 0) {
+//            valid = false
+//            binding.verifyClinicSysBox.error = ResourcesHelper.getString(this, R.string.verify_scan_valid_value)
+//        }
+
         if (binding.verifyClinicDia.text.isNullOrEmpty()) {
             valid = false
-            binding.verifyClinicDia.error = "Field cannot be empty."
+            binding.verifyClinicDiaBox.error = ResourcesHelper.getString(this, R.string.verify_scan_empty_field)
         } else if (!binding.verifyClinicDia.text!!.isDigitsOnly()) {
             valid = false
-            binding.verifyClinicDia.error = "Field can only contain whole number."
+            binding.verifyClinicDiaBox.error = ResourcesHelper.getString(this, R.string.verify_scan_whole_number)
         }
+//        else if (binding.verifyClinicDia.text.toString().toInt() > 200 || binding.verifyClinicDia.text.toString().toInt() < 0) {
+//            valid = false
+//            binding.verifyClinicDiaBox.error = ResourcesHelper.getString(this, R.string.verify_scan_valid_value)
+//        }
 
         for (sysField in sysBPFields) {
             if (sysField.text.isNullOrEmpty()) {
                 valid = false
-                sysField.error = "Field cannot be empty."
+                sysField.error = ResourcesHelper.getString(this, R.string.verify_scan_empty_field)
             } else if (!sysField.text!!.isDigitsOnly()) {
                 valid = false
-                sysField.error = "Field can only contain whole number."
+                sysField.error = ResourcesHelper.getString(this, R.string.verify_scan_whole_number)
             }
         }
 
         for (diaField in diaBPFields) {
             if (diaField.text.isNullOrEmpty()) {
                 valid = false
-                diaField.error = "Field cannot be empty."
+                diaField.error = ResourcesHelper.getString(this, R.string.verify_scan_empty_field)
             } else if (!diaField.text!!.isDigitsOnly()) {
                 valid = false
-                diaField.error = "Field can only contain whole number."
+                diaField.error = ResourcesHelper.getString(this, R.string.verify_scan_whole_number)
             }
         }
 
@@ -577,16 +611,16 @@ class VerifyScanActivity : AppCompatActivity() {
             binding.verifyHomeDia.text.toString().toInt()
         }
 
-        clinicSysBPTarget = if (binding.verifyClinicSys.text.toString().isEmpty()) {
+        clinicSysBPTarget = if (binding.verifyClinicTargetSys.text.toString().isEmpty()) {
             0
         } else {
-            binding.verifyClinicSys.text.toString().toInt()
+            binding.verifyClinicTargetSys.text.toString().toInt()
         }
 
-        clinicDiaBPTarget = if (binding.verifyClinicDia.text.toString().isEmpty()) {
+        clinicDiaBPTarget = if (binding.verifyClinicTargetDia.text.toString().isEmpty()) {
             0
         } else {
-            binding.verifyClinicDia.text.toString().toInt()
+            binding.verifyClinicTargetDia.text.toString().toInt()
         }
     }
 

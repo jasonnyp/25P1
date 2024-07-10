@@ -312,6 +312,9 @@ class RegistrationActivity : AppCompatActivity() {
         } else if (binding.registerHomeSysInput.text.toString().toFloatOrNull() == null) {
             valid = false
             binding.registerHomeSys.error = getString(R.string.register_invalid_value_verification)
+        } else if (binding.registerHomeSysInput.text.toString().toInt() > 200 || binding.registerHomeSysInput.text.toString().toInt() < 0) {
+            valid = false
+            binding.registerHomeSys.error = getString(R.string.register_invalid_number_verification)
         }
 
         if (binding.registerHomeDiaInput.text.isNullOrEmpty()) {
@@ -320,6 +323,9 @@ class RegistrationActivity : AppCompatActivity() {
         } else if (binding.registerHomeDiaInput.text.toString().toFloatOrNull() == null) {
             valid = false
             binding.registerHomeDia.error = getString(R.string.register_invalid_value_verification)
+        } else if (binding.registerHomeDiaInput.text.toString().toInt() > 200 || binding.registerHomeDiaInput.text.toString().toInt() < 0) {
+            valid = false
+            binding.registerHomeDia.error = getString(R.string.register_invalid_number_verification)
         }
 
         return valid
