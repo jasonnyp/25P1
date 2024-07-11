@@ -74,36 +74,21 @@
     <string name="controlled_bp">您的血压目前处于控制状态。继续保持良好的工作！</string>
     <string name="uncontrolled_bp">您的血压在升高。请考虑一些建议来降低您的血压。</string>
 
+    <string name="well_controlled_hypertension">良好控制的高血压</string>
     <string name="white_coat_uncontrolled_hypertension">白大衣性未受控高血压</string>
     <string name="masked_hypertension">隐匿性高血压</string>
     <string name="uncontrolled_hypertension">未受控高血压</string>
-    <string name="well_controlled_hypertension">良好控制的高血压</string>
 
     <string name="suboptimum">（亚最佳）</string>
     <string name="well_controlled">（控制良好）</string>
     <string name="unknown_hypertension_status">（未知）</string>
 
     <!-- RecommendationActivity.kt -->
-    <string name="no_recommendations">没有建议。</string>
-
-    <string name="well_controlled_bp_recommendation_diet">- 继续保持健康饮食。\n</string>
-    <string name="well_controlled_bp_recommendation_lifestyle">- 继续保持健康的生活方式。\n</string>
+    <string name="no_recommendations">没有建议。\n</string>
     <string name="well_controlled_bp_recommendation_medical">- 遵循医生指定的药物治疗方案（如果有）。\n</string>
-    <string name="suboptimum_bp_recommendation_diet">
-    - 尝试更健康的饮食，多吃蔬菜。\n
-    - 减少钠的摄入量（&lt; 1.5g / 天）。\n
-    - 限制咖啡因的使用。\n
-</string>
-    <string name="suboptimum_bp_recommendation_lifestyle">
-    - 管理你的压力水平。\n
-    - 增加身体活动（每周2.5 - 5小时）。\n
-    - 保持健康的体重（BMI &lt; 22.9）。\n
-    - 戒烟和/或戒酒。\n
-    - 保证充足的睡眠（&lt; 7小时 / 夜）。\n
-</string>
     <string name="suboptimum_bp_recommendation_medical">
     - 增加抗高血压药物的剂量。\n
-</string>
+    </string>
 
     <!-- MainActivity.kt -->
     <string name="main_activity_patient_header">未找到病人。</string>

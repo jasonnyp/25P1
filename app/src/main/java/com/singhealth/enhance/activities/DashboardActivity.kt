@@ -146,8 +146,6 @@ class DashboardActivity : AppCompatActivity() {
                 if (documents.isEmpty) {
                     println("Empty Collection: 'visits'")
                 } else {
-
-
                     val inputDateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")
                     val outputDateFormatter = DateTimeFormatter.ofPattern(getString(R.string.date_format))
 
@@ -217,6 +215,7 @@ class DashboardActivity : AppCompatActivity() {
             true
         } else super.onOptionsItemSelected(item)
     }
+
     private fun setupLineChart() {
         val systolicEntries = ArrayList<Entry>()
         val systolicTargetEntries = ArrayList<Entry>()
@@ -225,7 +224,7 @@ class DashboardActivity : AppCompatActivity() {
         val correctlySortedHistory = sortedHistory.sortedBy { historyData ->
             inputDateFormat.parse(historyData.date)
         }
-// Initialize a map to hold date strings to indices
+        // Initialize a map to hold date strings to indices
         val dateToIndexMap = correctlySortedHistory.map { it.date }.distinct().withIndex().associate { it.value to it.index.toFloat() }
 
         sortedHistory.forEach { historyData ->

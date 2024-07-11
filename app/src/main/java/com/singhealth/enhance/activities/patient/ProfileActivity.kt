@@ -18,7 +18,7 @@ import com.google.firebase.storage.ktx.storage
 import com.singhealth.enhance.R
 import com.singhealth.enhance.activities.DashboardActivity
 import com.singhealth.enhance.activities.MainActivity
-import com.singhealth.enhance.activities.diagnosis.diagnosePatient
+import com.singhealth.enhance.activities.diagnosis.hypertensionStatus
 import com.singhealth.enhance.activities.diagnosis.sortPatientVisits
 import com.singhealth.enhance.activities.error.errorDialogBuilder
 import com.singhealth.enhance.activities.error.firebaseErrorDialog
@@ -235,13 +235,17 @@ class ProfileActivity : AppCompatActivity() {
                             }
                             else {
                                 // Call sorting function to sort previous visits
-                                var sortedArr = sortPatientVisits(documents)
+                                val sortedArr = sortPatientVisits(documents)
                                 // Get the first item in the array (most recent reading)
                                 val recentSys = sortedArr[0].avgSysBP as Long
                                 val recentDia = sortedArr[0].avgDiaBP as Long
+                                val recentClinicSys = sortedArr[0].clinicSys as Long
+                                val recentClinicDia = sortedArr[0].clinicDia as Long
+                                val targetHomeSys = sortedArr[0].targetHomeSys as Long
+                                val targetHomeDia = sortedArr[0].targetHomeDia as Long
                                 val recentDate = sortedArr[0].date as String
                                 // Determine BP Stage based on most recent readings
-                                var bpStage = diagnosePatient(this, recentSys, recentDia, recentDate)
+                                val bpStage = hypertensionStatus(this, recentSys, recentDia, recentClinicSys, recentClinicDia, targetHomeSys, targetHomeDia)
 
                                 // Set UI BP Stage
                                 binding.bpStage.text = bpStage

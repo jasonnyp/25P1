@@ -76,33 +76,18 @@
     <string name="controlled_bp">(Controlled BP)</string>
     <string name="uncontrolled_bp">(Uncontrolled BP)</string>
 
+    <string name="well_controlled_hypertension">Well Controlled Hypertension</string>
     <string name="white_coat_uncontrolled_hypertension">White Coat Uncontrolled Hypertension</string>
     <string name="masked_hypertension">Masked Hypertension</string>
     <string name="uncontrolled_hypertension">Uncontrolled Hypertension</string>
-    <string name="well_controlled_hypertension">Well Controlled Hypertension</string>
 
     <string name="suboptimum">(Supobtimum)</string>
     <string name="well_controlled">(Well Controlled)</string>
     <string name="unknown_hypertension_status">(Unknown)</string>
 
     <!-- RecommendationActivity.kt -->
-    <string name="no_recommendations">No Recomendations.</string>
-
-    <string name="well_controlled_bp_recommendation_diet">- Continue maintaining a healthy diet.\n</string>
-    <string name="well_controlled_bp_recommendation_lifestyle">- Continue maintaining a healthy lifestyle. \n</string>
+    <string name="no_recommendations">No Recomendations.\n</string>
     <string name="well_controlled_bp_recommendation_medical">- Adhere to medications assigned by doctor, if any.\n</string>
-    <string name="suboptimum_bp_recommendation_diet">
-        - Try a healthier diet with more vegetables. \n
-        - Lower sodium intake (&lt; 1.5g / day). \n
-        - Limit caffeine usage. \n
-    </string>
-    <string name="suboptimum_bp_recommendation_lifestyle">
-        - Manage your stress levels \n
-        - Increase your physical activities (2.5 - 5 hours / week) \n
-        - Maintain a healthy weight (BMI &lt; 22.9) \n
-        - Stop smoking and/or drinking \n
-        - Need sufficient sleep (&lt;7 hours / night) \n
-    </string>
     <string name="suboptimum_bp_recommendation_medical">
         - Increase titration of antihypertensive medications.\n
     </string>

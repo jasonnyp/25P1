@@ -13,6 +13,7 @@ import com.singhealth.enhance.R
 import com.singhealth.enhance.activities.DashboardActivity
 import com.singhealth.enhance.activities.MainActivity
 import com.singhealth.enhance.activities.diagnosis.bpControlStatus
+import com.singhealth.enhance.activities.diagnosis.colourSet
 import com.singhealth.enhance.activities.diagnosis.hypertensionStatus
 import com.singhealth.enhance.activities.diagnosis.showRecommendation
 import com.singhealth.enhance.activities.error.firebaseErrorDialog
@@ -98,17 +99,16 @@ class RecommendationActivity : AppCompatActivity() {
         clinicSysBP = avgBPBundle.getInt("clinicSysBP").toLong()
         clinicDiaBP = avgBPBundle.getInt("clinicDiaBP").toLong()
 
-        // TODO: Change patientDocRef to docRef after the code is reorganised
-        val patientDocRef = db.collection("patients").document(patientID.toString())
+        val docRef = db.collection("patients").document(patientID.toString())
         var patientTargetSys: Long
         var patientTargetDia: Long
         var clinicTargetSys: Long
         var clinicTargetDia: Long
         var hypertension: String
 
-        patientDocRef.get()
+        docRef.get()
             .addOnSuccessListener { document ->
-                patientDocRef.collection("visits").get()
+                docRef.collection("visits").get()
                 if (AESEncryption().decrypt(document.getString("targetSys").toString()) == "" || AESEncryption().decrypt(document.getString("targetDia").toString()) == "") {
                     patientTargetSys = 0
                     patientTargetDia = 0
@@ -128,21 +128,23 @@ class RecommendationActivity : AppCompatActivity() {
 
                 binding.avgHomeSysBPTV.text = avgSysBP.toString()
                 binding.avgHomeDiaBPTV.text = avgDiaBP.toString()
+                binding.avgHomeSysBPTV.setTextColor(colourSet(this, avgSysBP, patientTargetSys))
+                binding.avgHomeDiaBPTV.setTextColor(colourSet(this, avgDiaBP, patientTargetDia))
                 binding.avgHomeBPControl.text = bpControlStatus(this, avgSysBP, avgDiaBP, patientTargetSys, patientTargetDia)
 
                 binding.officeSysBPTV.text = clinicSysBP.toString()
                 binding.officeDiaBPTV.text = clinicDiaBP.toString()
+                binding.officeSysBPTV.setTextColor(colourSet(this, clinicSysBP, clinicTargetSys))
+                binding.officeDiaBPTV.setTextColor(colourSet(this, clinicDiaBP, clinicTargetDia))
                 binding.officeBPControl.text = bpControlStatus(this, clinicSysBP, clinicDiaBP, clinicTargetSys, clinicTargetDia)
-                // function testing
+
                 hypertension = hypertensionStatus(this, avgSysBP, avgDiaBP, clinicSysBP, clinicDiaBP, patientTargetSys, patientTargetDia)
                 binding.recommendationBpPhenotype.text = hypertension
                 binding.recommendationBpControl.text = bpControlStatus(this, hypertension)
-
-                val recoList = showRecommendation(this, hypertensionStatus(this, patientTargetSys, patientTargetDia, avgSysBP, avgDiaBP))
-                binding.medTV.text = recoList[2]
+                binding.recommendationDo.text = showRecommendation(this, bpControlStatus(this, hypertension))
             }
             .addOnFailureListener { e ->
-                firebaseErrorDialog(this, e, patientDocRef)
+                firebaseErrorDialog(this, e, docRef)
             }
     }
 

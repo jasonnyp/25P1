@@ -3,6 +3,8 @@ package com.singhealth.enhance.activities.ocr
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
@@ -286,6 +288,24 @@ class VerifyScanActivity : AppCompatActivity() {
                 errorDialogBuilder(this, ResourcesHelper.getString(this, R.string.verify_scan_error_header), ResourcesHelper.getString(this, R.string.verify_scan_error_body))
             }
         }
+
+        binding.verifyClinicSys.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                binding.verifyClinicSysBox.error = null
+            }
+
+            override fun afterTextChanged(s: Editable?) {}
+        })
+
+        binding.verifyClinicDia.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                binding.verifyClinicDiaBox.error = null
+            }
+
+            override fun afterTextChanged(s: Editable?) {}
+        })
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -558,10 +578,6 @@ class VerifyScanActivity : AppCompatActivity() {
             valid = false
             binding.verifyClinicSysBox.error = ResourcesHelper.getString(this, R.string.verify_scan_whole_number)
         }
-//        else if (binding.verifyClinicSys.text.toString().toInt() > 200 || binding.verifyClinicSys.text.toString().toInt() < 0) {
-//            valid = false
-//            binding.verifyClinicSysBox.error = ResourcesHelper.getString(this, R.string.verify_scan_valid_value)
-//        }
 
         if (binding.verifyClinicDia.text.isNullOrEmpty()) {
             valid = false
@@ -570,10 +586,6 @@ class VerifyScanActivity : AppCompatActivity() {
             valid = false
             binding.verifyClinicDiaBox.error = ResourcesHelper.getString(this, R.string.verify_scan_whole_number)
         }
-//        else if (binding.verifyClinicDia.text.toString().toInt() > 200 || binding.verifyClinicDia.text.toString().toInt() < 0) {
-//            valid = false
-//            binding.verifyClinicDiaBox.error = ResourcesHelper.getString(this, R.string.verify_scan_valid_value)
-//        }
 
         for (sysField in sysBPFields) {
             if (sysField.text.isNullOrEmpty()) {

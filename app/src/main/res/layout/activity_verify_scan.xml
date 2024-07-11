@@ -138,7 +138,7 @@
 
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/verifyClinicSysBox"
-                        android:layout_width="80dp"
+                        android:layout_width="100dp"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="4dp">
 
@@ -161,7 +161,7 @@
 
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/verifyClinicDiaBox"
-                        android:layout_width="80dp"
+                        android:layout_width="100dp"
                         android:layout_height="match_parent"
                         android:layout_marginBottom="4dp">
 
