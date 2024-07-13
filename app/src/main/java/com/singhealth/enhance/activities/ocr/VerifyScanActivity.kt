@@ -300,7 +300,7 @@ class VerifyScanActivity : AppCompatActivity() {
                     setError(binding.verifyClinicSysBox, null)
                 } else {
                     // Invalid range, set an error message and icon
-                    setError(binding.verifyClinicSysBox, "Please enter a value between 90 and 210")
+                    setError(binding.verifyClinicSysBox, ResourcesHelper.getString(this@VerifyScanActivity, R.string.verify_scan_valid_value, 91, 209))
                 }
             }
 
@@ -317,7 +317,7 @@ class VerifyScanActivity : AppCompatActivity() {
                     setError(binding.verifyClinicDiaBox, null)
                 } else {
                     // Invalid range, set an error message and icon
-                    setError(binding.verifyClinicDiaBox, "Please enter a value between 60 and 120")
+                    setError(binding.verifyClinicDiaBox, ResourcesHelper.getString(this@VerifyScanActivity, R.string.verify_scan_valid_value, 61, 119))
                 }
             }
 
