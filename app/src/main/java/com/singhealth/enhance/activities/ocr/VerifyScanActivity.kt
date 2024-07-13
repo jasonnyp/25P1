@@ -19,6 +19,7 @@ import androidx.core.text.isDigitsOnly
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.singhealth.enhance.R
@@ -291,8 +292,16 @@ class VerifyScanActivity : AppCompatActivity() {
 
         binding.verifyClinicSys.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                binding.verifyClinicSysBox.error = null
+                val input = s?.toString()?.toIntOrNull()
+                if (input != null && input in 91..209) {
+                    // Valid range for verifyClinicSys (91 to 209)
+                    setError(binding.verifyClinicSysBox, null)
+                } else {
+                    // Invalid range, set an error message and icon
+                    setError(binding.verifyClinicSysBox, "Please enter a value between 90 and 210")
+                }
             }
 
             override fun afterTextChanged(s: Editable?) {}
@@ -300,12 +309,23 @@ class VerifyScanActivity : AppCompatActivity() {
 
         binding.verifyClinicDia.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                binding.verifyClinicDiaBox.error = null
+                val input = s?.toString()?.toIntOrNull()
+                if (input != null && input in 61..119) {
+                    // Valid range for verifyClinicDia (61 to 119)
+                    setError(binding.verifyClinicDiaBox, null)
+                } else {
+                    // Invalid range, set an error message and icon
+                    setError(binding.verifyClinicDiaBox, "Please enter a value between 60 and 120")
+                }
             }
 
             override fun afterTextChanged(s: Editable?) {}
         })
+
+
+
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -343,7 +363,7 @@ class VerifyScanActivity : AppCompatActivity() {
             scanIntent.putExtra("clinicSysBPTarget", binding.verifyClinicTargetSys.text.toString())
         }
         binding.verifyClinicTargetDia?.let {
-            scanIntent.putExtra("clinicDiaBPTarget", binding.verifyClinicDia.text.toString())
+            scanIntent.putExtra("clinicDiaBPTarget", binding.verifyClinicTargetDia.text.toString())
         }
         binding.verifyClinicSys?.let {
             scanIntent.putExtra("clinicSysBPTarget", binding.verifyClinicSys.text.toString())
@@ -351,7 +371,6 @@ class VerifyScanActivity : AppCompatActivity() {
         binding.verifyClinicDia?.let {
             scanIntent.putExtra("clinicDiaBPTarget", binding.verifyClinicDia.text.toString())
         }
-
 
         if (!sysBPListHistory.isNullOrEmpty()) {
             scanIntent.putStringArrayListExtra("sysBPListHistory", ArrayList(sysBPListHistory))
@@ -442,16 +461,16 @@ class VerifyScanActivity : AppCompatActivity() {
 
             if (sysBPFields[i].text.isNullOrEmpty()) {
                 errorCount += 1
-                sysBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_empty_field)
+                setError(sysBPFields[i].parent.parent as TextInputLayout, ResourcesHelper.getString(this, R.string.verify_scan_empty_field))
             } else if (!sysBPFields[i].text!!.isDigitsOnly()) {
                 errorCount += 1
-                sysBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_whole_number)
+                setError(sysBPFields[i].parent.parent as TextInputLayout, ResourcesHelper.getString(this, R.string.verify_scan_whole_number))
             } else if (currentValueLength !in 2..3) {
                 errorCount += 1
-                sysBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_invalid_value)
+                setError(sysBPFields[i].parent.parent as TextInputLayout, ResourcesHelper.getString(this, R.string.verify_scan_invalid_value))
             } else if (sysBPFields[i].text.toString().toInt() !in 90..150) {
                 errorCount += 1
-                sysBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_abnormal_value)
+                setError(sysBPFields[i].parent.parent as TextInputLayout, ResourcesHelper.getString(this, R.string.verify_scan_abnormal_value))
             }
         }
 
@@ -460,16 +479,16 @@ class VerifyScanActivity : AppCompatActivity() {
 
             if (diaBPFields[i].text.isNullOrEmpty()) {
                 errorCount += 1
-                diaBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_empty_field)
+                setError(diaBPFields[i].parent.parent as TextInputLayout, ResourcesHelper.getString(this, R.string.verify_scan_empty_field))
             } else if (!diaBPFields[i].text!!.isDigitsOnly()) {
                 errorCount += 1
-                diaBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_whole_number)
+                setError(diaBPFields[i].parent.parent as TextInputLayout, ResourcesHelper.getString(this, R.string.verify_scan_whole_number))
             } else if (currentValueLength !in 2..3) {
                 errorCount += 1
-                diaBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_invalid_value)
+                setError(diaBPFields[i].parent.parent as TextInputLayout, ResourcesHelper.getString(this, R.string.verify_scan_invalid_value))
             } else if (diaBPFields[i].text.toString().toInt() !in 60..110) {
                 errorCount += 1
-                diaBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_abnormal_value)
+                setError(diaBPFields[i].parent.parent as TextInputLayout, ResourcesHelper.getString(this, R.string.verify_scan_abnormal_value))
             }
         }
 
@@ -478,13 +497,13 @@ class VerifyScanActivity : AppCompatActivity() {
             val currentValueLength = sysBPFields[i].text.toString().length
 
             if (sysBPFields[i].text.isNullOrEmpty()) {
-                sysBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_empty_field)
+                setError(sysBPFields[i].parent.parent as TextInputLayout, ResourcesHelper.getString(this, R.string.verify_scan_empty_field))
             } else if (!sysBPFields[i].text!!.isDigitsOnly()) {
-                sysBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_whole_number)
+                setError(sysBPFields[i].parent.parent as TextInputLayout, ResourcesHelper.getString(this, R.string.verify_scan_whole_number))
             } else if (currentValueLength !in 2..3) {
-                sysBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_invalid_value)
+                setError(sysBPFields[i].parent.parent as TextInputLayout, ResourcesHelper.getString(this, R.string.verify_scan_invalid_value))
             } else if (sysBPFields[i].text.toString().toInt() !in 90..150) {
-                sysBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_abnormal_value)
+                setError(sysBPFields[i].parent.parent as TextInputLayout, ResourcesHelper.getString(this, R.string.verify_scan_abnormal_value))
             }
         }
 
@@ -492,13 +511,13 @@ class VerifyScanActivity : AppCompatActivity() {
             val currentValueLength = diaBPFields[i].text.toString().length
 
             if (diaBPFields[i].text.isNullOrEmpty()) {
-                diaBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_empty_field)
+                setError(diaBPFields[i].parent.parent as TextInputLayout, ResourcesHelper.getString(this, R.string.verify_scan_empty_field))
             } else if (!diaBPFields[i].text!!.isDigitsOnly()) {
-                diaBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_whole_number)
+                setError(diaBPFields[i].parent.parent as TextInputLayout, ResourcesHelper.getString(this, R.string.verify_scan_whole_number))
             } else if (currentValueLength !in 2..3) {
-                diaBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_invalid_value)
+                setError(diaBPFields[i].parent.parent as TextInputLayout, ResourcesHelper.getString(this, R.string.verify_scan_invalid_value))
             } else if (diaBPFields[i].text.toString().toInt() !in 60..110) {
-                diaBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_abnormal_value)
+                setError(diaBPFields[i].parent.parent as TextInputLayout, ResourcesHelper.getString(this, R.string.verify_scan_abnormal_value))
             }
         }
 
@@ -568,47 +587,59 @@ class VerifyScanActivity : AppCompatActivity() {
         }
     }
 
+    private fun setError(inputLayout: TextInputLayout, message: String?) {
+        if (message != null) {
+            inputLayout.error = message
+            inputLayout.isErrorEnabled = true
+        } else {
+            inputLayout.error = null
+            inputLayout.isErrorEnabled = false
+        }
+    }
+
+
     private fun validateFields(): Boolean {
         var valid = true
 
         if (binding.verifyClinicSys.text.isNullOrEmpty()) {
             valid = false
-            binding.verifyClinicSysBox.error = ResourcesHelper.getString(this, R.string.verify_scan_empty_field)
+            setError(binding.verifyClinicSys.parent.parent as TextInputLayout, ResourcesHelper.getString(this, R.string.verify_scan_empty_field))
         } else if (!binding.verifyClinicSys.text!!.isDigitsOnly()) {
             valid = false
-            binding.verifyClinicSysBox.error = ResourcesHelper.getString(this, R.string.verify_scan_whole_number)
+            setError(binding.verifyClinicSys.parent.parent as TextInputLayout, ResourcesHelper.getString(this, R.string.verify_scan_whole_number))
         }
 
         if (binding.verifyClinicDia.text.isNullOrEmpty()) {
             valid = false
-            binding.verifyClinicDiaBox.error = ResourcesHelper.getString(this, R.string.verify_scan_empty_field)
+            setError(binding.verifyClinicDia.parent.parent as TextInputLayout, ResourcesHelper.getString(this, R.string.verify_scan_empty_field))
         } else if (!binding.verifyClinicDia.text!!.isDigitsOnly()) {
             valid = false
-            binding.verifyClinicDiaBox.error = ResourcesHelper.getString(this, R.string.verify_scan_whole_number)
+            setError(binding.verifyClinicDia.parent.parent as TextInputLayout, ResourcesHelper.getString(this, R.string.verify_scan_whole_number))
         }
 
         for (sysField in sysBPFields) {
             if (sysField.text.isNullOrEmpty()) {
                 valid = false
-                sysField.error = ResourcesHelper.getString(this, R.string.verify_scan_empty_field)
+                setError(sysField.parent.parent as TextInputLayout, ResourcesHelper.getString(this, R.string.verify_scan_empty_field))
             } else if (!sysField.text!!.isDigitsOnly()) {
                 valid = false
-                sysField.error = ResourcesHelper.getString(this, R.string.verify_scan_whole_number)
+                setError(sysField.parent.parent as TextInputLayout, ResourcesHelper.getString(this, R.string.verify_scan_whole_number))
             }
         }
 
         for (diaField in diaBPFields) {
             if (diaField.text.isNullOrEmpty()) {
                 valid = false
-                diaField.error = ResourcesHelper.getString(this, R.string.verify_scan_empty_field)
+                setError(diaField.parent.parent as TextInputLayout, ResourcesHelper.getString(this, R.string.verify_scan_empty_field))
             } else if (!diaField.text!!.isDigitsOnly()) {
                 valid = false
-                diaField.error = ResourcesHelper.getString(this, R.string.verify_scan_whole_number)
+                setError(diaField.parent.parent as TextInputLayout, ResourcesHelper.getString(this, R.string.verify_scan_whole_number))
             }
         }
 
         return valid
     }
+
 
     private fun getBPTarget() {
         homeSysBPTarget = if (binding.verifyHomeSys.text.toString().isEmpty()) {
