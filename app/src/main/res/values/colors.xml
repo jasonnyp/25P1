@@ -12,6 +12,8 @@
     <color name="black">#000</color>
     <color name="light_grey">#d9d9d6</color>
     <color name="white">#FFF</color>
+    <color name="yellow">#d6d318</color>
+
     <color name="diet">#df5844</color>
     <color name="lifestyle">#31ce6a</color>
     <color name="medical">#1ecbe1</color>

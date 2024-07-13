@@ -146,32 +146,34 @@ class DashboardActivity : AppCompatActivity() {
                 if (documents.isEmpty) {
                     println("Empty Collection: 'visits'")
                 } else {
-
-
                     val inputDateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")
                     val outputDateFormatter = DateTimeFormatter.ofPattern(getString(R.string.date_format))
 
                     for (document in documents) {
-                                val dateTimeString = document.get("date") as? String
-                                val dateTime = LocalDateTime.parse(dateTimeString, inputDateFormatter)
-                                val dateTimeFormatted = dateTime.format(outputDateFormatter)
-                                val avgSysBP = document.get("averageSysBP") as? Long
-                                val avgDiaBP = document.get("averageDiaBP") as? Long
-                                val homeSysBPTarget = document.get("homeSysBPTarget") as? Long
-                                val homeDiaBPTarget = document.get("homeDiaBPTarget") as? Long
-                                val clinicSysBPTarget = document.get("clinicSysBPTarget") as? Long
-                                val clinicDiaBPTarget = document.get("clinicDiaBPTarget") as? Long
-                                history.add(
-                                    HistoryData(
-                                        dateTime.toString(),
-                                        dateTimeFormatted,
-                                        avgSysBP,
-                                        avgDiaBP,
-                                        homeSysBPTarget,
-                                        homeDiaBPTarget,
-                                        clinicSysBPTarget,
-                                        clinicDiaBPTarget
-                                    )
+                        val dateTimeString = document.get("date") as? String
+                        val dateTime = LocalDateTime.parse(dateTimeString, inputDateFormatter)
+                        val dateTimeFormatted = dateTime.format(outputDateFormatter)
+                        val avgSysBP = document.get("averageSysBP") as? Long
+                        val avgDiaBP = document.get("averageDiaBP") as? Long
+                        val homeSysBPTarget = document.get("homeSysBPTarget") as? Long
+                        val homeDiaBPTarget = document.get("homeDiaBPTarget") as? Long
+                        val clinicSysBPTarget = document.get("clinicSysBPTarget") as? Long
+                        val clinicDiaBPTarget = document.get("clinicDiaBPTarget") as? Long
+                        val clinicSysBP = document.get("clinicSysBP") as? Long
+                        val clinicDiaBP = document.get("clinicDiaBP") as? Long
+                        history.add(
+                            HistoryData(
+                                dateTime.toString(),
+                                dateTimeFormatted,
+                                avgSysBP,
+                                avgDiaBP,
+                                homeSysBPTarget,
+                                homeDiaBPTarget,
+                                clinicSysBPTarget,
+                                clinicDiaBPTarget,
+                                clinicSysBP,
+                                clinicDiaBP
+                            )
                         )
                     }
 
@@ -213,6 +215,7 @@ class DashboardActivity : AppCompatActivity() {
             true
         } else super.onOptionsItemSelected(item)
     }
+
     private fun setupLineChart() {
         val systolicEntries = ArrayList<Entry>()
         val systolicTargetEntries = ArrayList<Entry>()
@@ -221,7 +224,7 @@ class DashboardActivity : AppCompatActivity() {
         val correctlySortedHistory = sortedHistory.sortedBy { historyData ->
             inputDateFormat.parse(historyData.date)
         }
-// Initialize a map to hold date strings to indices
+        // Initialize a map to hold date strings to indices
         val dateToIndexMap = correctlySortedHistory.map { it.date }.distinct().withIndex().associate { it.value to it.index.toFloat() }
 
         sortedHistory.forEach { historyData ->

@@ -8,5 +8,7 @@ data class HistoryData(
     val homeSysBPTarget: Long?,
     val homeDiaBPTarget: Long?,
     val clinicSysBPTarget: Long?,
-    val clinicDiaBPTarget: Long?
+    val clinicDiaBPTarget: Long?,
+    val clinicSysBP: Long?,
+    val clinicDiaBP: Long?
 )

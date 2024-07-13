@@ -156,15 +156,6 @@ class RegistrationActivity : AppCompatActivity() {
             override fun afterTextChanged(s: Editable?) {}
         })
 
-        binding.addressTIET.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                binding.addressTIL.error = null
-            }
-
-            override fun afterTextChanged(s: Editable?) {}
-        })
-
         binding.weightTIET.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
@@ -178,6 +169,24 @@ class RegistrationActivity : AppCompatActivity() {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 binding.heightTIL.error = null
+            }
+
+            override fun afterTextChanged(s: Editable?) {}
+        })
+
+        binding.registerHomeSysInput.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                binding.registerHomeSys.error = null
+            }
+
+            override fun afterTextChanged(s: Editable?) {}
+        })
+
+        binding.registerHomeDiaInput.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                binding.registerHomeDia.error = null
             }
 
             override fun afterTextChanged(s: Editable?) {}
@@ -281,11 +290,6 @@ class RegistrationActivity : AppCompatActivity() {
             binding.genderTIL.error = getString(R.string.register_empty_field_verification)
         }
 
-        if (binding.addressTIET.text.isNullOrEmpty()) {
-            valid = false
-            binding.addressTIL.error = getString(R.string.register_empty_field_verification)
-        }
-
         if (binding.weightTIET.text.isNullOrEmpty()) {
             valid = false
             binding.weightTIL.error = getString(R.string.register_empty_field_verification)
@@ -300,6 +304,28 @@ class RegistrationActivity : AppCompatActivity() {
         } else if (binding.heightTIET.text.toString().toFloatOrNull() == null) {
             valid = false
             binding.heightTIL.error = getString(R.string.register_invalid_value_verification)
+        }
+
+        if (binding.registerHomeSysInput.text.isNullOrEmpty()) {
+            valid = false
+            binding.registerHomeSys.error = getString(R.string.register_empty_bp_verification, 135)
+        } else if (binding.registerHomeSysInput.text.toString().toFloatOrNull() == null) {
+            valid = false
+            binding.registerHomeSys.error = getString(R.string.register_invalid_value_verification)
+        } else if (binding.registerHomeSysInput.text.toString().toInt() > 200 || binding.registerHomeSysInput.text.toString().toInt() < 0) {
+            valid = false
+            binding.registerHomeSys.error = getString(R.string.register_invalid_number_verification)
+        }
+
+        if (binding.registerHomeDiaInput.text.isNullOrEmpty()) {
+            valid = false
+            binding.registerHomeDia.error = getString(R.string.register_empty_bp_verification, 85)
+        } else if (binding.registerHomeDiaInput.text.toString().toFloatOrNull() == null) {
+            valid = false
+            binding.registerHomeDia.error = getString(R.string.register_invalid_value_verification)
+        } else if (binding.registerHomeDiaInput.text.toString().toInt() > 200 || binding.registerHomeDiaInput.text.toString().toInt() < 0) {
+            valid = false
+            binding.registerHomeDia.error = getString(R.string.register_invalid_number_verification)
         }
 
         return valid
@@ -325,9 +351,12 @@ class RegistrationActivity : AppCompatActivity() {
             ),
             "dateOfBirth" to AESEncryption().encrypt(binding.dateOfBirthTIET.text.toString()),
             "gender" to gender,
-            "address" to AESEncryption().encrypt(binding.addressTIET.text.toString().uppercase()),
+
             "weight" to AESEncryption().encrypt(binding.weightTIET.text.toString()),
             "height" to AESEncryption().encrypt(binding.heightTIET.text.toString()),
+            "targetSys" to AESEncryption().encrypt(binding.registerHomeSysInput.text.toString()),
+            "targetDia" to AESEncryption().encrypt(binding.registerHomeDiaInput.text.toString()),
+
             "bpStage" to "N/A"
         )
 
