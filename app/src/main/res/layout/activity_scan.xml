@@ -74,9 +74,6 @@
 
         </LinearLayout>
 
-
-
-
         <!-- OCR Instructions -->
         <TextView
             android:id="@+id/ocrInstructionsTextViewValue"
@@ -94,21 +91,42 @@
             android:id="@+id/cropIV"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_above="@+id/selectSourceBtn"
+            android:layout_above="@+id/buttonsContainer"
             android:layout_marginStart="32dp"
             android:layout_marginTop="96dp"
             android:layout_marginEnd="32dp"
             android:layout_marginBottom="32dp" />
 
-        <Button
-            android:id="@+id/selectSourceBtn"
-            android:layout_width="wrap_content"
+        <!-- Buttons Container -->
+        <LinearLayout
+            android:id="@+id/buttonsContainer"
+            android:layout_above="@id/bottomNavigationView"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_above="@+id/bottomNavigationView"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="12dp"
-            android:text="@string/enhance_scan_source"
-            android:textAllCaps="true" />
+            android:orientation="horizontal"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:gravity="center">
+
+            <Button
+                android:id="@+id/generalSourceBtn"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:text="@string/enhance_general_scan"
+                android:textAllCaps="true" />
+
+            <Button
+                android:id="@+id/sevenDaySourceBtn"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:text="@string/enhance_7_day_scan"
+                android:textAllCaps="true" />
+
+        </LinearLayout>
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/bottomNavigationView"

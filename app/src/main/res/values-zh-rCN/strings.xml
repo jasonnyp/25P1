@@ -206,9 +206,10 @@
     <!-- activity_scan.xml -->
     <string name="enhance_scan_patient_id">患者身份证号：</string>
     <string name="enhance_scan_name">姓名：</string>
-    <string name="enhance_scan_source">选择来源</string>
+    <string name="enhance_general_scan">常规扫描</string>
 
     <!-- activity_settings.xml -->
+    <string name="enhance_7_day_scan">七天扫描</string>
     <string name="enhance_settings_account">账户</string>
     <string name="enhance_settings_logout">登出</string>
     <string name="enhance_settings_help_support">帮助与支持</string>
