@@ -17,4 +17,7 @@
     <color name="diet">#df5844</color>
     <color name="lifestyle">#31ce6a</color>
     <color name="medical">#1ecbe1</color>
+
+    <color name="red">#ff0000</color>
+    <color name="green">#008000</color>
 </resources>

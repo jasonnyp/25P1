@@ -36,7 +36,7 @@
     <string name="verify_scan_discard_body">Do you want to discard all progress and start over?</string>
     <string name="verify_scan_empty_field">Field is empty.</string>
     <string name="verify_scan_whole_number">Field must only contain whole number.</string>
-    <string name="verify_scan_valid_value">Value cannot be below $%1d or above $%2d.</string>
+    <string name="verify_scan_valid_value">Value cannot be below %1d or above %2d.</string>
     <string name="verify_scan_invalid_value">Invalid value.</string>
     <string name="verify_scan_abnormal_value">Abnormal value.</string>
     <string name="verify_scan_erroneous_header">Too many erroneous results</string>

@@ -140,3 +140,22 @@ fun patientNotFoundInSessionErrorDialog(context: Context) {
         }
         .show()
 }
+
+fun ocrImageErrorDialog(context: Context, e: Exception) {
+    MaterialAlertDialogBuilder(context)
+        .setIcon(R.drawable.ic_error)
+        .setTitle(ResourcesHelper.getString(context, R.string.ocr_image_error_header))
+        .setMessage(ResourcesHelper.getString(context, R.string.ocr_image_error_body, e))
+        .setPositiveButton(ResourcesHelper.getString(context, R.string.ok_dialog)) { dialog, _ -> dialog.dismiss() }
+        .show()
+}
+
+fun ocrTextErrorDialog(context: Context) {
+    MaterialAlertDialogBuilder(context)
+        .setIcon(R.drawable.ic_error)
+        .setTitle(ResourcesHelper.getString(context, R.string.ocr_text_error_header))
+        .setMessage(ResourcesHelper.getString(context, R.string.ocr_text_error_body))
+        .setPositiveButton(ResourcesHelper.getString(context, R.string.dialog_positive_ok)) { dialog, _ -> dialog.dismiss() }
+        .show()
+}
+

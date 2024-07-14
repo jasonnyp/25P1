@@ -280,52 +280,59 @@ class ProfileActivity : AppCompatActivity() {
             loadImageFromUrl(imageUrl)
         }
 
-        //binding.legalNameTV.text = document.getString("legalName").toString()
         val legalName = document.getString("legalName")
         if (legalName != null) {
             val decryptedLegalName = AESEncryption().decrypt(legalName)
             binding.legalNameTV.text = decryptedLegalName
 
-            // Store the decrypted legalName in SecureSharedPreferences
             SecureSharedPreferences.getSharedPreferences(applicationContext)
                 .edit()
                 .putString("legalName", decryptedLegalName)
                 .apply()
-            }
-
+        }
 
         binding.nricTV.text = AESEncryption().decrypt(patientID)
 
-        //binding.dobTV.text = document.getString("dateOfBirth").toString()
         binding.dobTV.text = AESEncryption().decrypt(document.getString("dateOfBirth").toString())
 
-        // Comment out when database info is decrypted
         when (document.getLong("gender")?.toInt()) {
             1 -> binding.genderTV.text = getString(R.string.profile_gender_male)
             2 -> binding.genderTV.text = getString(R.string.profile_gender_female)
         }
 
-        // Comment out when database info is encrypted
-        //binding.genderTV.text = document.getString("gender")
-
-        //binding.weightTV.text = "${document.getString("weight").toString()} kg"
         binding.weightTV.text = getString(
             R.string.profile_patient_weight,
             AESEncryption().decrypt(document.getString("weight").toString())
         )
 
-        //binding.heightTV.text = "${document.getString("height").toString()} cm"
         binding.heightTV.text = getString(
             R.string.profile_patient_height,
             AESEncryption().decrypt(document.getString("height").toString())
         )
 
-        if (AESEncryption().decrypt(document.getString("targetSys").toString()) == "" || AESEncryption().decrypt(document.getString("targetDia").toString()) == "") {
-            binding.profileTargetBP.text = ResourcesHelper.getString(this, R.string.profile_patient_target_bp, 0.toString(), 0.toString())
-        } else {
-            binding.profileTargetBP.text = ResourcesHelper.getString(this, R.string.profile_patient_target_bp, AESEncryption().decrypt(document.getString("targetSys").toString()), AESEncryption().decrypt(document.getString("targetDia").toString()))
-        }
+        // Decrypt targetSys and targetDia, and handle empty values
+        val targetSys = document.getString("targetSys")?.let {
+            AESEncryption().decrypt(it)
+        } ?: "0"
+
+        val targetDia = document.getString("targetDia")?.let {
+            AESEncryption().decrypt(it)
+        } ?: "0"
+
+        SecureSharedPreferences.getSharedPreferences(applicationContext)
+            .edit()
+            .putString("targetSysBP", targetSys)
+            .putString("targetDiaBP", targetDia)
+            .apply()
+
+        binding.profileTargetBP.text = ResourcesHelper.getString(
+            this,
+            R.string.profile_patient_target_bp,
+            targetSys,
+            targetDia
+        )
     }
+
 
     private fun loadImageFromUrl(imageUrl: String) {
         val imageRef = storage.getReferenceFromUrl(imageUrl)

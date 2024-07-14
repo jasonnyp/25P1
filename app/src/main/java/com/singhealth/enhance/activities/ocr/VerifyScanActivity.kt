@@ -60,6 +60,9 @@ class VerifyScanActivity : AppCompatActivity() {
     private var clinicDiaBPTarget = 0
     private var clinicSysBP = 0
     private var clinicDiaBP = 0
+    private lateinit var targetSysBP: String
+    private lateinit var targetDiaBP: String
+    private var sevenDay: Boolean = false
 
     private var sysBPList: MutableList<String> = mutableListOf()
     private var diaBPList: MutableList<String> = mutableListOf()
@@ -100,6 +103,11 @@ class VerifyScanActivity : AppCompatActivity() {
         }
 
         val scanBundle = intent.extras
+
+        targetSysBP = patientSharedPreferences.getString("targetSysBP", null).toString()
+        targetDiaBP = patientSharedPreferences.getString("targetDiaBP", null).toString()
+
+        sevenDay = scanBundle?.getBoolean("sevenDay", false)!!
 
         sysBPList = scanBundle?.getStringArrayList("sysBPList")?.toMutableList()!!
         diaBPList = scanBundle?.getStringArrayList("diaBPList")?.toMutableList()!!
@@ -170,6 +178,11 @@ class VerifyScanActivity : AppCompatActivity() {
             }
         }
 
+        if (sevenDay){
+            sevenDayCheck()
+        } else{
+            println("Not seven day check")
+
         // Add newly scanned records
         if (scanBundle != null) {
             if (scanBundle.containsKey("sysBPList") && scanBundle.containsKey("diaBPList")) {
@@ -180,15 +193,9 @@ class VerifyScanActivity : AppCompatActivity() {
                     addRow(sysBPList[i], diaBPList[i])
                 }
             }
-        }
+        }}
         println("sysBPList after adding new scans: $sysBPList")
         println("diaBPList after adding new scans: $diaBPList")
-
-/*        var removal = ((sysBPList).count()/2)-1
-        sysBPList = sysBPList.drop(removal).toMutableList()
-        diaBPList = diaBPList.drop(removal).toMutableList()
-        println("sysBPList after removal: $sysBPList")
-        println("diaBPList after removal: $diaBPList")*/
 
         // Calculate total rows (inclusive of currently detected rows)
         var totalRows = maxOf(sysBPList.size, diaBPList.size)
@@ -330,9 +337,70 @@ class VerifyScanActivity : AppCompatActivity() {
             override fun afterTextChanged(s: Editable?) {}
         })
 
+    }
 
+    private fun sevenDayCheck() {
+        sysBPList = intent.extras?.getStringArrayList("sysBPList")?.toMutableList() ?: mutableListOf()
+        diaBPList = intent.extras?.getStringArrayList("diaBPList")?.toMutableList() ?: mutableListOf()
+
+        // Discard the readings of day 1
+        val latestSysBPList = sysBPList.takeLast(28).drop(4)
+        val latestDiaBPList = diaBPList.takeLast(28).drop(4)
+
+        println("latestSysBPList: $latestSysBPList")
+        println("latestDiaBPList: $latestDiaBPList")
+
+        var validReadings = 0
+        var totalReadings = 0
+        val finalSysBPList = mutableListOf<String>()
+        val finalDiaBPList = mutableListOf<String>()
+
+        for (i in latestSysBPList.indices step 4) {
+            if (i + 3 < latestSysBPList.size) {
+                val morningSysBP1 = latestSysBPList[i].toInt()
+                val morningDiaBP1 = latestDiaBPList[i].toInt()
+                val morningSysBP2 = latestSysBPList[i + 1].toInt()
+                val morningDiaBP2 = latestDiaBPList[i + 1].toInt()
+
+                val eveningSysBP1 = latestSysBPList[i + 2].toInt()
+                val eveningDiaBP1 = latestDiaBPList[i + 2].toInt()
+                val eveningSysBP2 = latestSysBPList[i + 3].toInt()
+                val eveningDiaBP2 = latestDiaBPList[i + 3].toInt()
+
+                if (morningSysBP1 >= targetSysBP.toInt() || morningDiaBP1 >= targetDiaBP.toInt()) {
+                    finalSysBPList.add(morningSysBP2.toString())
+                    finalDiaBPList.add(morningDiaBP2.toString())
+                } else {
+                    finalSysBPList.add(morningSysBP1.toString())
+                    finalDiaBPList.add(morningDiaBP1.toString())
+                }
+                totalReadings++
+
+                if (eveningSysBP1 >= targetSysBP.toInt() || eveningDiaBP1 >= targetDiaBP.toInt()) {
+                    finalSysBPList.add(eveningSysBP2.toString())
+                    finalDiaBPList.add(eveningDiaBP2.toString())
+                } else {
+                    finalSysBPList.add(eveningSysBP1.toString())
+                    finalDiaBPList.add(eveningDiaBP1.toString())
+                }
+                totalReadings++
+
+                validReadings++
+            }
+        }
+
+        // Use finalSysBPList and finalDiaBPList for display
+        finalSysBPList.forEachIndexed { index, sysBP ->
+            val diaBP = finalDiaBPList.getOrNull(index)
+            addRow(sysBP, diaBP, true)
+        }
+
+        // Set latestSysBPList and latestDiaBPList back to sysBPList and diaBPList
+        sysBPList = finalSysBPList
+        diaBPList = finalDiaBPList
 
     }
+
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
@@ -690,15 +758,33 @@ class VerifyScanActivity : AppCompatActivity() {
     }
 
     // Add new row
-    private fun addRow(sysBP: String?, diaBP: String?) {
+    private fun addRow(sysBP: String?, diaBP: String?, isSevenDayCheck: Boolean = false) {
         val rowBPRecordLayout = layoutInflater.inflate(R.layout.row_bp_record, null, false)
 
         val sysBPTIET = rowBPRecordLayout.findViewById<View>(R.id.sysBPTIET) as TextInputEditText
-        sysBPTIET.setText(sysBP ?: null)
-        sysBPFields.add(sysBPTIET)
-
         val diaBPTIET = rowBPRecordLayout.findViewById<View>(R.id.diaBPTIET) as TextInputEditText
+
+        sysBPTIET.setText(sysBP ?: null)
         diaBPTIET.setText(diaBP ?: null)
+
+        if (isSevenDayCheck) {
+            if (sysBP?.toIntOrNull() == 999 || diaBP?.toIntOrNull() == 999) {
+                sysBPTIET.setTextColor(resources.getColor(R.color.red, null))
+                diaBPTIET.setTextColor(resources.getColor(R.color.red, null))
+            } else {
+                val sysBPInt = sysBP?.toIntOrNull() ?: 0
+                val diaBPInt = diaBP?.toIntOrNull() ?: 0
+                if (sysBPInt > targetSysBP.toInt() || diaBPInt > targetDiaBP.toInt()) {
+                    sysBPTIET.setTextColor(resources.getColor(R.color.red, null))
+                    diaBPTIET.setTextColor(resources.getColor(R.color.red, null))
+                } else {
+                    sysBPTIET.setTextColor(resources.getColor(R.color.green, null))
+                    diaBPTIET.setTextColor(resources.getColor(R.color.green, null))
+                }
+            }
+        }
+
+        sysBPFields.add(sysBPTIET)
         diaBPFields.add(diaBPTIET)
 
         val swapValuesIV = rowBPRecordLayout.findViewById<View>(R.id.swapValuesIV) as ImageView
@@ -726,7 +812,6 @@ class VerifyScanActivity : AppCompatActivity() {
 
         binding.rowBPRecordLL.addView(rowBPRecordLayout)
     }
-
     // Add divider to separate old and new records
     private fun addDivider() {
         val dividerOldNewRecordLayout =
