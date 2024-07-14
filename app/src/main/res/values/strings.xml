@@ -191,7 +191,8 @@
     <!-- activity_scan.xml -->
     <string name="enhance_scan_patient_id">Patient ID:</string>
     <string name="enhance_scan_name">Name:</string>
-    <string name="enhance_scan_source">Select Source</string>
+    <string name="enhance_general_scan">General Scan</string>
+    <string name="enhance_7_day_scan">7 Day Scan</string>
 
     <!-- activity_settings.xml -->
     <string name="enhance_settings_account">Account</string>

@@ -122,6 +122,9 @@ class VerifyScanActivity : AppCompatActivity() {
                 }
 
                 addDivider()
+
+                println("sysBPListHistory: $sysBPListHistory")
+                println("diaBPListHistory: $diaBPListHistory")
             }
         }
 
@@ -136,14 +139,14 @@ class VerifyScanActivity : AppCompatActivity() {
                 }
             }
         }
-        println("sysBPList: $sysBPList")
-        println("diaBPList: $diaBPList")
+        println("sysBPList after adding new scans: $sysBPList")
+        println("diaBPList after adding new scans: $diaBPList")
 
-        var removal = ((sysBPList).count()/2)-1
+/*        var removal = ((sysBPList).count()/2)-1
         sysBPList = sysBPList.drop(removal).toMutableList()
         diaBPList = diaBPList.drop(removal).toMutableList()
-        println("sysBPList: $sysBPList")
-        println("diaBPList: $diaBPList")
+        println("sysBPList after removal: $sysBPList")
+        println("diaBPList after removal: $diaBPList")*/
 
         // Calculate total rows (inclusive of currently detected rows)
         var totalRows = maxOf(sysBPList.size, diaBPList.size)
@@ -153,6 +156,9 @@ class VerifyScanActivity : AppCompatActivity() {
 
         // Calculate currently detected rows
         var currentRows = maxOf(sysBPList.size, diaBPList.size)
+
+        println("Total rows: $totalRows")
+        println("Current rows: $currentRows")
 
         // Display toast for current number of records detected
         if (currentRows > 1 && totalRows <= 1) {
