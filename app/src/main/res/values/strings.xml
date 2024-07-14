@@ -18,17 +18,42 @@
     <string name="ocr_image_error_header">Error processing image</string>
     <string name="ocr_image_error_body">The image cannot be processed due to an error.\n\nContact IT support with the following error code if issue persists: %1$s</string>
     <string name="ocr_text_error_header">Nothing to process</string>
-    <string name="ocr_text_error_body">We couldn\\\'t find any handwriting or text to process.\n\nTip: Ensure the image is clear and cropped to only the values, and exclude any headers (such as \'Systolic\' and \'Diastolic\').</string>
+    <string name="ocr_text_error_body">We couldn\'t find any handwriting or text to process.\n\nTip: Ensure the image is clear and cropped to only the values, and exclude any headers (such as \'Systolic\' and \'Diastolic\').</string>
 
     <!-- VerifyScanActivity.kt -->
     <string name="verify_scan_rows">%1$d records have been detected.\n\nTotal records: %2$d</string>
     <string name="verify_scan_no_records">No records detected. Rescan or manually insert them by adding a new row.</string>
     <string name="verify_scan_inadequate_reading_header">Inadequate number of readings</string>
-    <string name="verify_scan_inadequate_reading_body">Do you want to proceed with the analysis?</string>
+    <string name="verify_scan_inadequate_reading_body">Would you like to rescan for more records?</string>
+    <string name="verify_scan_calculation_successful">Calculation saved successfully.</string>
+    <string name="verify_scan_saving_header">Error saving record</string>
+    <string name="verify_scan_saving_body">The app wasn\'t able to save the current record.\n\nIf the issue persists, contact IT support with the following error code: %1$s</string>
+    <string name="verify_scan_error_header">Error(s) detected</string>
+    <string name="verify_scan_error_body">Correct all errors before continuing.</string>
+    <string name="verify_scan_rescan_header">Rescan current records</string>
+    <string name="verify_scan_rescan_body">Do you want to rescan the current records?\n\n(note: your previously scanned records will be saved)</string>
+    <string name="verify_scan_discard_header">Discard progress</string>
+    <string name="verify_scan_discard_body">Do you want to discard all progress and start over?</string>
+    <string name="verify_scan_empty_field">Field is empty.</string>
+    <string name="verify_scan_whole_number">Field must only contain whole number.</string>
+    <string name="verify_scan_valid_value">Value cannot be below $%1d or above $%2d.</string>
+    <string name="verify_scan_invalid_value">Invalid value.</string>
+    <string name="verify_scan_abnormal_value">Abnormal value.</string>
+    <string name="verify_scan_erroneous_header">Too many erroneous results</string>
+    <string name="verify_scan_erroneous_body">Do you want to rescan the current records to achieve a better accuracy?\n\n(note: your previously scanned records will be saved)</string>
+    <string name="verify_scan_remove_row_header">Remove row</string>
+    <string name="verify_scan_remove_row_body">Do you want to remove the selected row?</string>
 
     <!-- ProfileActivity strings -->
     <string name="profile_gender_male">MALE</string>
     <string name="profile_gender_female">FEMALE</string>
+    <string name="profile_retrieve_data">Retrieving patient data</string>
+    <string name="profile_retrieve_data_caption">Please wait a moment…</string>
+    <string name="profile_document_error_header">Error getting Patient Records</string>
+    <string name="profile_document_error_body">Something went wrong in getting the patient information. \n\nIf the issue persists, contact IT support with the following error code: %1$s</string>
+    <string name="profile_patient_weight">%1$s kg</string>
+    <string name="profile_patient_height">%1$s cm</string>
+    <string name="profile_patient_target_bp" translatable="false">%1$s / %2$s</string>
 
     <!-- RegistrationActivity strings -->
     <string name="register_gender_male">Male</string>
@@ -36,9 +61,11 @@
     <string name="register_field_verification">Please correct all errors before proceeding.</string>
     <string name="profile_picture_info">To select another photo, tap on the current photo to open your gallery.</string>
     <string name="register_image_verification_header">No photo uploaded</string>
-    <string name="register_image_verification_body">Please upload patient\\\'s photo before continuing.</string>
+    <string name="register_image_verification_body">Please upload patient\'s photo before continuing.</string>
     <string name="register_empty_field_verification">Field cannot be empty</string>
+    <string name="register_empty_bp_verification">Field cannot be empty. If you desire a default value, enter %1$d</string>
     <string name="register_invalid_value_verification">Invalid value</string>
+    <string name="register_invalid_number_verification">Number too high or low</string>
     <string name="register_loading_dialog">Please wait while the patient is being registered.</string>
     <string name="register_exist_error_header">Patient already registered</string>
     <string name="register_exist_error_body">Would you like to search the patient instead?</string>
@@ -46,39 +73,28 @@
 
 
     <!-- DiagnosePatient.kt -->
-    <string name="controlled_bp">Your BP is currently under control. Keep up the good work!</string>
-    <string name="uncontrolled_bp">Your BP is seeing an increase. Consider some of the recommendations to lower your BP.</string>
+    <string name="controlled_bp">(Controlled BP)</string>
+    <string name="uncontrolled_bp">(Uncontrolled BP)</string>
 
+    <string name="well_controlled_hypertension">Well Controlled Hypertension</string>
     <string name="white_coat_uncontrolled_hypertension">White Coat Uncontrolled Hypertension</string>
     <string name="masked_hypertension">Masked Hypertension</string>
     <string name="uncontrolled_hypertension">Uncontrolled Hypertension</string>
-    <string name="well_controlled_hypertension">Well Controlled Hypertension</string>
+
+    <string name="suboptimum">(Supobtimum)</string>
+    <string name="well_controlled">(Well Controlled)</string>
+    <string name="unknown_hypertension_status">(Unknown)</string>
 
     <!-- RecommendationActivity.kt -->
-    <string name="no_recommendations">No Recomendations.</string>
-
-    <string name="well_controlled_bp_recommendation_diet">- Continue maintaining a healthy diet.\n</string>
-    <string name="well_controlled_bp_recommendation_lifestyle">- Continue maintaining a healthy lifestyle. \n</string>
+    <string name="no_recommendations">No Recomendations.\n</string>
     <string name="well_controlled_bp_recommendation_medical">- Adhere to medications assigned by doctor, if any.\n</string>
-    <string name="suboptimum_bp_recommendation_diet">
-        - Try a healthier diet with more vegetables. \n
-        - Lower sodium intake (&lt; 1.5g / day). \n
-        - Limit caffeine usage. \n
-    </string>
-    <string name="suboptimum_bp_recommendation_lifestyle">
-        - Manage your stress levels \n
-        - Increase your physical activities (2.5 - 5 hours / week) \n
-        - Maintain a healthy weight (BMI &lt; 22.9) \n
-        - Stop smoking and/or drinking \n
-        - Need sufficient sleep (&lt;7 hours / night) \n
-    </string>
     <string name="suboptimum_bp_recommendation_medical">
         - Increase titration of antihypertensive medications.\n
     </string>
 
     <!-- MainActivity.kt -->
     <string name="main_activity_patient_header">Patient not found.</string>
-    <string name="main_activity_patient_body">Ensure patient\\\'s information is entered correctly. Otherwise, kindly confirm if this is the patient\\\'s first visit and proceed to register their information.</string>
+    <string name="main_activity_patient_body">Ensure patient\'s information is entered correctly. Otherwise, kindly confirm if this is the patient\'s first visit and proceed to register their information.</string>
     <string name="main_activity_patient_validation">ID cannot be empty</string>
 
     <!-- Navigation drawer strings -->
@@ -122,13 +138,7 @@
 
     <string name="dialog_positive_ok">OK</string>
     <string name="bp_stage">BP Stage</string>
-    <string name="medical">Medical:</string>
-    <string name="lifestyle">Lifestyle:</string>
-    <string name="diet">Diet:</string>
-    <string name="recommendation"> Recommendation:</string>
-    <string name="control_status"> Control Status:</string>
-    <string name="bpDivider" translatable="false">/</string>
-    <string name="average_home_bp"> Average Home BP:</string>
+
     <string name="date_format">dd/MM/yyyy HH:mm:ss</string>
 
     <!-- activity_about.xml -->
@@ -167,12 +177,21 @@
     <string name="enhance_profile_patient_id">Patient ID</string>
     <string name="enhance_profile_dob">Date of Birth</string>
     <string name="enhance_profile_gender">Gender</string>
-    <string name="enhance_profile_address">Address</string>
     <string name="enhance_profile_weight">Weight</string>
     <string name="enhance_profile_height">Height</string>
+    <string name="enhance_profile_target_bp">Target BP</string>
 
     <!-- activity_recommendation -->
-    <string name="enhance_recco_heaeder">The following are the recommendations based on the scanned BP records:</string>
+    <string name="enhance_recco_header">The following are the recommendations based on the scanned BP records:</string>
+    <string name="enhance_recco_do">Do:</string>
+    <string name="enhance_recco_dont">Don\'t:</string>
+    <string name="bpDivider" translatable="false">/</string>
+    <string name="enhance_recco_target_home_bp"> Target HBP</string>
+    <string name="enhance_recco_target_office_bp"> Target OBP</string>
+    <string name="enhance_recco_average_home_bp"> Average Home BP</string>
+    <string name="enhance_recco_office_bp"> Office BP</string>
+    <string name="enhance_recco_hypertension_status"> Hypertension Status</string>
+    <string name="enhance_recco_recommendation">Recommendations</string>
 
     <!-- activity_registration.xml -->
     <string name="enhance_register_photo">Photo</string>
@@ -182,7 +201,8 @@
     <string name="enhance_register_patient_id">Patient ID No.</string>
     <string name="enhance_register_dob">Date of Birth</string>
     <string name="enhance_register_gender">Gender</string>
-    <string name="enhance_register_address">Address</string>
+    <string name="enhance_register_target_sys">Target Systolic</string>
+    <string name="enhance_register_target_dia">Target Diastolic</string>
     <string name="enhance_register_health_info">Health Information</string>
     <string name="enhance_register_weight">Weight</string>
     <string name="enhance_register_height">Height</string>
@@ -226,8 +246,9 @@
     <string name="enhance_verify_patient_id">Patient\'s ID:</string>
     <string name="enhance_verify_home_bp">Home BP Target:</string>
     <string name="enhance_verify_home_divider" translatable="false">/</string>
-    <string name="enhance_verify_clinic_bp">Clinic BP Target:</string>
+    <string name="enhance_verify_clinic_target_bp">Clinic BP Target:</string>
     <string name="enhance_verify_clinic_divider" translatable="false">/</string>
+    <string name="enhance_verify_clinic_bp">Clinic BP:</string>
     <string name="enhance_verify_add_row">Add Row</string>
     <string name="enhance_verify_more_options">More Options</string>
     <string name="enhance_verify_disclaimer">Disclaimer: The scanner is not perfect and may yield erroneous results at times. The onus is on you to ensure the accuracy of these results before calculating the average blood pressure for this patient.</string>
@@ -252,6 +273,4 @@
 
     <!-- row_bp_record.xml -->
     <string name="enhance_row_bp_divider" translatable="false">/</string>
-
-
 </resources>

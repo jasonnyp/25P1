@@ -25,10 +25,34 @@
     <string name="verify_scan_no_records">未检测到记录。请重新扫描或通过添加新行手动插入记录。</string>
     <string name="verify_scan_inadequate_reading_header">读数数量不足</string>
     <string name="verify_scan_inadequate_reading_body">您想继续进行分析吗？</string>
+    <string name="verify_scan_calculation_successful">计算保存成功。</string>
+    <string name="verify_scan_saving_header">保存记录时出错</string>
+    <string name="verify_scan_saving_body">应用无法保存当前记录。\n\n如果问题仍然存在，请联系 IT 支持并提供以下错误代码：%1$s</string>
+    <string name="verify_scan_error_header">检测到错误</string>
+    <string name="verify_scan_error_body">请在继续之前纠正所有错误。</string>
+    <string name="verify_scan_rescan_header">重新扫描当前记录</string>
+    <string name="verify_scan_rescan_body">您要重新扫描当前记录吗？\n\n（注意：您之前扫描的记录将会被保存）</string>
+    <string name="verify_scan_discard_header">放弃进度</string>
+    <string name="verify_scan_discard_body">您要放弃所有进度并重新开始吗？</string>
+    <string name="verify_scan_empty_field">字段为空。</string>
+    <string name="verify_scan_whole_number">字段必须只包含整数。</string>
+    <string name="verify_scan_valid_value">值不能超过200或低于0。</string>
+    <string name="verify_scan_invalid_value">无效值。</string>
+    <string name="verify_scan_abnormal_value">异常值。</string>
+    <string name="verify_scan_erroneous_header">错误结果太多</string>
+    <string name="verify_scan_erroneous_body">您要重新扫描当前记录以获得更高的准确性吗？\n\n（注意：您之前扫描的记录将会被保存）</string>
+    <string name="verify_scan_remove_row_header">移除行</string>
+    <string name="verify_scan_remove_row_body">您要移除选中的行吗？</string>
 
     <!-- ProfileActivity strings -->
     <string name="profile_gender_male">男</string>
     <string name="profile_gender_female">女</string>
+    <string name="profile_retrieve_data">正在检索患者数据</string>
+    <string name="profile_retrieve_data_caption">请稍等片刻…</string>
+    <string name="profile_document_error_header">获取患者记录时出错</string>
+    <string name="profile_document_error_body">获取患者信息时出错。\n\n如果问题仍然存在，请联系 IT 支持并提供以下错误代码：%1$s</string>
+    <string name="profile_patient_weight">%1$s 公斤</string>
+    <string name="profile_patient_height">%1$s 厘米</string>
 
     <!-- RegistrationActivity strings -->
     <string name="register_gender_male">男性</string>
@@ -38,43 +62,33 @@
     <string name="register_image_verification_header">未上传照片</string>
     <string name="register_image_verification_body">请在继续之前上传病人的照片。</string>
     <string name="register_empty_field_verification">字段不能为空</string>
+    <string name="register_empty_bp_verification">字段不能为空。如果您需要默认值，请输入 %1$d</string>
     <string name="register_invalid_value_verification">无效的值</string>
+    <string name="register_invalid_number_verification">数字太高或太低</string>
     <string name="register_loading_dialog">正在注册病人，请稍候。</string>
     <string name="register_exist_error_header">病人已经注册</string>
     <string name="register_exist_error_body">您想要搜索该病人吗？</string>
     <string name="register_successful">成功将 %1$s 注册到系统中。</string>
 
-
     <!-- DiagnosePatient.kt -->
     <string name="controlled_bp">您的血压目前处于控制状态。继续保持良好的工作！</string>
     <string name="uncontrolled_bp">您的血压在升高。请考虑一些建议来降低您的血压。</string>
 
+    <string name="well_controlled_hypertension">良好控制的高血压</string>
     <string name="white_coat_uncontrolled_hypertension">白大衣性未受控高血压</string>
     <string name="masked_hypertension">隐匿性高血压</string>
     <string name="uncontrolled_hypertension">未受控高血压</string>
-    <string name="well_controlled_hypertension">良好控制的高血压</string>
+
+    <string name="suboptimum">（亚最佳）</string>
+    <string name="well_controlled">（控制良好）</string>
+    <string name="unknown_hypertension_status">（未知）</string>
 
     <!-- RecommendationActivity.kt -->
-    <string name="no_recommendations">没有建议。</string>
-
-    <string name="well_controlled_bp_recommendation_diet">- 继续保持健康饮食。\n</string>
-    <string name="well_controlled_bp_recommendation_lifestyle">- 继续保持健康的生活方式。\n</string>
+    <string name="no_recommendations">没有建议。\n</string>
     <string name="well_controlled_bp_recommendation_medical">- 遵循医生指定的药物治疗方案（如果有）。\n</string>
-    <string name="suboptimum_bp_recommendation_diet">
-    - 尝试更健康的饮食，多吃蔬菜。\n
-    - 减少钠的摄入量（&lt; 1.5g / 天）。\n
-    - 限制咖啡因的使用。\n
-</string>
-    <string name="suboptimum_bp_recommendation_lifestyle">
-    - 管理你的压力水平。\n
-    - 增加身体活动（每周2.5 - 5小时）。\n
-    - 保持健康的体重（BMI &lt; 22.9）。\n
-    - 戒烟和/或戒酒。\n
-    - 保证充足的睡眠（&lt; 7小时 / 夜）。\n
-</string>
     <string name="suboptimum_bp_recommendation_medical">
     - 增加抗高血压药物的剂量。\n
-</string>
+    </string>
 
     <!-- MainActivity.kt -->
     <string name="main_activity_patient_header">未找到病人。</string>
@@ -121,12 +135,7 @@
 
     <string name="dialog_positive_ok">确定</string>
     <string name="bp_stage">血压阶段</string>
-    <string name="medical">医疗：</string>
-    <string name="lifestyle">生活方式：</string>
-    <string name="diet">饮食：</string>
-    <string name="recommendation">建议：</string>
-    <string name="control_status">控制状态：</string>
-    <string name="average_home_bp">平均家庭血压：</string>
+
     <string name="date_format">dd日MM月yyyy年 HH:mm:ss</string>
 
     <!-- activity_about.xml -->
@@ -164,12 +173,20 @@
     <string name="enhance_profile_patient_id">患者识别码</string>
     <string name="enhance_profile_dob">出生日期</string>
     <string name="enhance_profile_gender">性别</string>
-    <string name="enhance_profile_address">地址</string>
     <string name="enhance_profile_weight">体重</string>
     <string name="enhance_profile_height">身高</string>
+    <string name="enhance_profile_target_bp">目标血压</string>
 
     <!-- activity_recommendation.xml -->
-    <string name="enhance_recco_heaeder">以下是基于扫描的血压记录的建议：</string>
+    <string name="enhance_recco_header">以下是基于扫描的血压记录的建议：</string>
+    <string name="enhance_recco_do">医学：</string>
+    <string name="enhance_recco_dont">饮食：</string>
+    <string name="enhance_recco_target_home_bp"> 目标家庭血压</string>
+    <string name="enhance_recco_target_office_bp"> 目标办公室血压</string>
+    <string name="enhance_recco_average_home_bp"> 平均家庭血压</string>
+    <string name="enhance_recco_office_bp"> 办公室血压</string>
+    <string name="enhance_recco_hypertension_status"> 高血压状态</string>
+    <string name="enhance_recco_recommendation">建议</string>
 
     <!-- activity_registration.xml -->
     <string name="enhance_register_photo">照片</string>
@@ -179,7 +196,8 @@
     <string name="enhance_register_patient_id">患者身份证号</string>
     <string name="enhance_register_dob">出生日期</string>
     <string name="enhance_register_gender">性别</string>
-    <string name="enhance_register_address">地址</string>
+    <string name="enhance_register_target_sys">目标收缩压</string>
+    <string name="enhance_register_target_dia">目标舒张压</string>
     <string name="enhance_register_health_info">健康信息</string>
     <string name="enhance_register_weight">体重</string>
     <string name="enhance_register_height">身高</string>
@@ -222,7 +240,8 @@
     <!-- activity_verify_scan.xml -->
     <string name="enhance_verify_patient_id">患者ID：</string>
     <string name="enhance_verify_home_bp">家庭血压目标：</string>
-    <string name="enhance_verify_clinic_bp">诊所血压目标：</string>
+    <string name="enhance_verify_clinic_target_bp">诊所血压目标：</string>
+    <string name="enhance_verify_clinic_bp">诊所血压</string>
     <string name="enhance_verify_add_row">添加行</string>
     <string name="enhance_verify_more_options">更多选项</string>
     <string name="enhance_verify_disclaimer">免责声明：扫描仪并非完美，有时可能产生错误结果。在计算此患者的平均血压之前，请确保这些结果的准确性由您负责。</string>

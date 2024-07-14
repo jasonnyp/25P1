@@ -12,8 +12,8 @@ import com.google.firebase.ktx.Firebase
 import com.singhealth.enhance.R
 import com.singhealth.enhance.activities.DashboardActivity
 import com.singhealth.enhance.activities.MainActivity
+import com.singhealth.enhance.activities.error.errorDialogBuilder
 import com.singhealth.enhance.activities.error.internetConnectionCheck
-import com.singhealth.enhance.activities.error.patientHistoryNotFoundErrorDialog
 import com.singhealth.enhance.activities.error.patientNotFoundInSessionErrorDialog
 import com.singhealth.enhance.activities.ocr.ScanActivity
 import com.singhealth.enhance.activities.patient.ProfileActivity
@@ -139,6 +139,8 @@ class HistoryActivity : AppCompatActivity(), HistoryAdapter.OnItemClickListener 
                         val homeDiaBPTarget = document.get("homeDiaBPTarget") as? Long
                         val clinicSysBPTarget = document.get("clinicSysBPTarget") as? Long
                         val clinicDiaBPTarget = document.get("clinicDiaBPTarget") as? Long
+                        val clinicSysBP = document.get("clinicSysBP") as? Long
+                        val clinicDiaBP = document.get("clinicDiaBP") as? Long
                         history.add(
                             HistoryData(
                                 dateTime.toString(),
@@ -148,7 +150,9 @@ class HistoryActivity : AppCompatActivity(), HistoryAdapter.OnItemClickListener 
                                 homeSysBPTarget,
                                 homeDiaBPTarget,
                                 clinicSysBPTarget,
-                                clinicDiaBPTarget
+                                clinicDiaBPTarget,
+                                clinicSysBP,
+                                clinicDiaBP,
                             )
                         )
                     }
@@ -165,7 +169,7 @@ class HistoryActivity : AppCompatActivity(), HistoryAdapter.OnItemClickListener 
                 }
             }
             .addOnFailureListener { e ->
-                patientHistoryNotFoundErrorDialog(this, e)
+                errorDialogBuilder(this, getString(R.string.patient_history_not_found_error_header), getString(R.string.patient_history_not_found_error_body, e))
             }
     }
 
@@ -179,12 +183,16 @@ class HistoryActivity : AppCompatActivity(), HistoryAdapter.OnItemClickListener 
         val clickedItem = sortedHistory[position]
         val avgSysBP = clickedItem.avgSysBP.toString()
         val avgDiaBP = clickedItem.avgDiaBP.toString()
+        val clinicSysBP = clickedItem.clinicSysBP.toString()
+        val clinicDiaBP = clickedItem.clinicDiaBP.toString()
         val date = clickedItem.date.toString()
 
         val bundle = Bundle()
 
         bundle.putInt("avgSysBP", avgSysBP.toInt())
         bundle.putInt("avgDiaBP", avgDiaBP.toInt())
+        bundle.putInt("clinicSysBP", clinicSysBP.toInt())
+        bundle.putInt("clinicDiaBP", clinicDiaBP.toInt())
         bundle.putString("date", date)
         bundle.putString("Source", "History")
 

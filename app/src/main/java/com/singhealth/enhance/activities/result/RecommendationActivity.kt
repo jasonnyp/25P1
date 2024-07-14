@@ -13,9 +13,8 @@ import com.singhealth.enhance.R
 import com.singhealth.enhance.activities.DashboardActivity
 import com.singhealth.enhance.activities.MainActivity
 import com.singhealth.enhance.activities.diagnosis.bpControlStatus
-import com.singhealth.enhance.activities.diagnosis.diagnosePatient
+import com.singhealth.enhance.activities.diagnosis.colourSet
 import com.singhealth.enhance.activities.diagnosis.hypertensionStatus
-import com.singhealth.enhance.activities.diagnosis.showControlStatus
 import com.singhealth.enhance.activities.diagnosis.showRecommendation
 import com.singhealth.enhance.activities.error.firebaseErrorDialog
 import com.singhealth.enhance.activities.history.HistoryActivity
@@ -24,9 +23,6 @@ import com.singhealth.enhance.activities.patient.ProfileActivity
 import com.singhealth.enhance.databinding.ActivityRecommendationBinding
 import com.singhealth.enhance.security.AESEncryption
 import com.singhealth.enhance.security.SecureSharedPreferences
-import java.time.LocalDate
-import java.time.Period
-import java.time.format.DateTimeFormatter
 
 class RecommendationActivity : AppCompatActivity() {
     private lateinit var binding: ActivityRecommendationBinding
@@ -35,7 +31,8 @@ class RecommendationActivity : AppCompatActivity() {
 
     private var avgSysBP: Long = 0
     private var avgDiaBP: Long = 0
-    private var patientAge: Int = 0
+    private var clinicSysBP: Long = 0
+    private var clinicDiaBP: Long = 0
 
     private val db = Firebase.firestore
 
@@ -99,64 +96,52 @@ class RecommendationActivity : AppCompatActivity() {
         val avgBPBundle = intent.extras
         avgSysBP = avgBPBundle!!.getInt("avgSysBP").toLong()
         avgDiaBP = avgBPBundle.getInt("avgDiaBP").toLong()
+        clinicSysBP = avgBPBundle.getInt("clinicSysBP").toLong()
+        clinicDiaBP = avgBPBundle.getInt("clinicDiaBP").toLong()
 
-        // Determine BP Stage
-        val bpStage = diagnosePatient(this, avgSysBP, avgDiaBP)
-
-        // Display average BP
-        binding.avgHomeSysBPTV.text = avgSysBP.toString()
-        binding.avgHomeDiaBPTV.text = avgDiaBP.toString()
-
-        // Calculate patient's age
         val docRef = db.collection("patients").document(patientID.toString())
+        var patientTargetSys: Long
+        var patientTargetDia: Long
+        var clinicTargetSys: Long
+        var clinicTargetDia: Long
+        var hypertension: String
+
         docRef.get()
             .addOnSuccessListener { document ->
-                if (document.exists()) {
-                    val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
-                    val birthDate = LocalDate.parse(
-                        AESEncryption().decrypt(
-                            document.getString("dateOfBirth").toString()
-                        ), formatter
-                    )
-                    val currentDate = LocalDate.now()
-                    val period = Period.between(birthDate, currentDate)
-                    patientAge = period.years
-
-                    val collectionRef = docRef.collection("visits")
-                    collectionRef.get()
-                        .addOnSuccessListener { documents ->
-                            // Display BP Stage and correct Control Status based on the Source Activity
-                            println(avgBPBundle.getString("Source"))
-                            if (avgBPBundle.getString("Source") == "History") {
-                                val date = avgBPBundle.getString("date").toString()
-                                binding.bpStage.text = bpControlStatus(this, avgSysBP, avgDiaBP, 0, 0)
-                                binding.controlStatusTV.text = showControlStatus(documents, patientAge, date)
-                                // "(${bpStage})"
-                            }
-                            else if (avgBPBundle.getString("Source") == "Scan") {
-                                // Display BP Stage
-                                binding.bpStage.text = bpControlStatus(this, avgSysBP, avgDiaBP, 0, 0)
-                                binding.controlStatusTV.text = showControlStatus(documents, patientAge, null)
-                            }
-                            val recoList = showRecommendation(this, hypertensionStatus(this, avgSysBP, avgDiaBP))
-                            binding.dietTV.text = recoList[0]
-                            binding.lifestyleTV.text = recoList[1]
-                            binding.medTV.text = recoList[2]
-
-                            // If / When Statement for setting image
-                            //binding.IV.setImageResource(R.drawable.ic_error) //Change to Image id
-                            val imageResource = when (hypertensionStatus(this, avgSysBP, avgDiaBP)) {
-                                getString(R.string.well_controlled_hypertension) -> R.drawable.excellent
-                                getString(R.string.white_coat_uncontrolled_hypertension) -> R.drawable.good // Not Used for now
-                                getString(R.string.masked_hypertension) -> R.drawable.neutral // Not Used for now
-                                getString(R.string.uncontrolled_hypertension) -> R.drawable.poor
-                                else -> R.drawable.ic_error // Default image if the stage is not recognized
-                            }
-                            binding.statusIV.setImageResource(imageResource)
-                        }
+                docRef.collection("visits").get()
+                if (AESEncryption().decrypt(document.getString("targetSys").toString()) == "" || AESEncryption().decrypt(document.getString("targetDia").toString()) == "") {
+                    patientTargetSys = 0
+                    patientTargetDia = 0
+                    clinicTargetSys = 0
+                    clinicTargetDia = 0
+                } else {
+                    patientTargetSys = AESEncryption().decrypt(document.getString("targetSys").toString()).toLong()
+                    patientTargetDia = AESEncryption().decrypt(document.getString("targetDia").toString()).toLong()
+                    clinicTargetSys = patientTargetSys + 5
+                    clinicTargetDia = patientTargetDia + 5
                 }
 
+                binding.targetHomeSysBPTV.text = patientTargetSys.toString()
+                binding.targetHomeDiaBPTV.text = patientTargetDia.toString()
+                binding.targetOfficeSysBPTV.text = clinicTargetSys.toString()
+                binding.targetOfficeDiaBPTV.text = clinicTargetDia.toString()
 
+                binding.avgHomeSysBPTV.text = avgSysBP.toString()
+                binding.avgHomeDiaBPTV.text = avgDiaBP.toString()
+                binding.avgHomeSysBPTV.setTextColor(colourSet(this, avgSysBP, patientTargetSys))
+                binding.avgHomeDiaBPTV.setTextColor(colourSet(this, avgDiaBP, patientTargetDia))
+                binding.avgHomeBPControl.text = bpControlStatus(this, avgSysBP, avgDiaBP, patientTargetSys, patientTargetDia)
+
+                binding.officeSysBPTV.text = clinicSysBP.toString()
+                binding.officeDiaBPTV.text = clinicDiaBP.toString()
+                binding.officeSysBPTV.setTextColor(colourSet(this, clinicSysBP, clinicTargetSys))
+                binding.officeDiaBPTV.setTextColor(colourSet(this, clinicDiaBP, clinicTargetDia))
+                binding.officeBPControl.text = bpControlStatus(this, clinicSysBP, clinicDiaBP, clinicTargetSys, clinicTargetDia)
+
+                hypertension = hypertensionStatus(this, avgSysBP, avgDiaBP, clinicSysBP, clinicDiaBP, patientTargetSys, patientTargetDia)
+                binding.recommendationBpPhenotype.text = hypertension
+                binding.recommendationBpControl.text = bpControlStatus(this, hypertension)
+                binding.recommendationDo.text = showRecommendation(this, bpControlStatus(this, hypertension))
             }
             .addOnFailureListener { e ->
                 firebaseErrorDialog(this, e, docRef)
