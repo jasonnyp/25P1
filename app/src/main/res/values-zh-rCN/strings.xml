@@ -90,6 +90,14 @@
     - 增加抗高血压药物的剂量。\n
     </string>
 
+    <!-- LanguageActivity.kt -->
+    <string name="language_current_error_header">当前使用的语言</string>
+    <string name="language_current_error_body">这是您当前的应用语言。请选择另一种语言。</string>
+
+    <string name="settings_logout_activity_header">退出确认</string>
+    <string name="settings_logout_activity_body">您确定要退出吗？</string>
+    <string name="settings_contact_helpdesk">如需更多帮助台信息，请联系 6451–5115</string>
+
     <!-- MainActivity.kt -->
     <string name="main_activity_patient_header">未找到病人。</string>
     <string name="main_activity_patient_body">确保病人的信息输入正确。否则，请确认这是否是病人的首次就诊并继续注册其信息。</string>
@@ -153,6 +161,17 @@
     <!-- activity_history.xml -->
     <string name="enhance_history_past">未找到过往记录。</string>
 
+    <!-- activity_language.xml -->
+    <string name="enhance_language_english">英语</string>
+    <string name="enhance_language_chinese_simplified">简体中文</string>
+    <string name="enhance_language_chinese_traditional">繁体中文</string>
+    <string name="enhance_language_malay">马来语</string>
+    <string name="enhance_language_tamil">泰米尔语</string>
+    <string name="enhance_language_thai">泰语</string>
+    <string name="enhance_language_vietnamese">越南语</string>
+    <string name="enhance_language_korean">韩语</string>
+    <string name="enhance_language_japanese">日语</string>
+
     <!-- activity_login.xml -->
     <string name="enhance_login_staff_id">员工身份证明</string>
     <string name="enhance_login_password">密码</string>
@@ -213,6 +232,7 @@
     <string name="enhance_settings_logout">登出</string>
     <string name="enhance_settings_help_support">帮助与支持</string>
     <string name="enhance_settings_user_guide">用户指南</string>
+    <string name="enhance_settings_language">语言选项</string>
     <string name="enhance_settings_contact_helpdesk">联系帮助台</string>
     <string name="enhance_settings_about">关于ENHANCe</string>
     <string name="enhance_settings_terms_of_use">使用条款</string>
@@ -262,6 +282,4 @@
     <string name="enhance_history_item_avgbp">平均血压：</string>
     <string name="enhance_history_item_homebp">家庭血压目标：</string>
     <string name="enhance_history_item_clinicbp">诊所血压目标：</string>
-
-
 </resources>

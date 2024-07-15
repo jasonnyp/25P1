@@ -92,6 +92,15 @@
         - Increase titration of antihypertensive medications.\n
     </string>
 
+    <!-- LanguageActivity.kt -->
+    <string name="language_current_error_header">Current Language in use</string>
+    <string name="language_current_error_body">This is your current app language. Please pick another language.</string>
+
+    <!-- SettingsActivity.kt -->
+    <string name="settings_logout_activity_header">Logout confirmation</string>
+    <string name="settings_logout_activity_body">Are you sure you want to logout?</string>
+    <string name="settings_contact_helpdesk">Contact 6451–5115 for further Helpdesk information</string>
+
     <!-- MainActivity.kt -->
     <string name="main_activity_patient_header">Patient not found.</string>
     <string name="main_activity_patient_body">Ensure patient\'s information is entered correctly. Otherwise, kindly confirm if this is the patient\'s first visit and proceed to register their information.</string>
@@ -157,6 +166,18 @@
     <!-- activity_history.xml -->
     <string name="enhance_history_past">No past records found.</string>
 
+    <!-- activity_language.xml -->
+    <string name="enhance_language_english">English</string>
+    <string name="enhance_language_chinese_simplified">Chinese (Simplified)</string>
+    <string name="enhance_language_chinese_traditional">Chinese (Traditional)</string>
+    <string name="enhance_language_malay">Malay</string>
+    <string name="enhance_language_tamil">Tamil</string>
+    <string name="enhance_language_thai">Thai</string>
+    <string name="enhance_language_vietnamese">Vietnamese</string>
+    <string name="enhance_language_korean">Korean</string>
+    <string name="enhance_language_japanese">Japanese</string>
+    <string name="enhance_language_arrow" translatable="false">Arrow</string>
+
     <!-- activity_login.xml -->
     <string name="enhance_login_staff_id">Staff ID</string>
     <string name="enhance_login_password">Password</string>
@@ -218,6 +239,7 @@
     <string name="enhance_settings_logout">Logout</string>
     <string name="enhance_settings_help_support">Help &amp; support</string>
     <string name="enhance_settings_user_guide">User guide</string>
+    <string name="enhance_settings_language">Language Options</string>
     <string name="enhance_settings_contact_helpdesk">Contact Helpdesk</string>
     <string name="enhance_settings_about">About ENHANCe</string>
     <string name="enhance_settings_terms_of_use">Terms of use</string>

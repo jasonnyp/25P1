@@ -127,4 +127,7 @@ dependencies {
 
     // Dependency for WebView
     implementation("androidx.webkit:webkit:1.8.0")
+
+    // Localisation
+    implementation ("com.github.YarikSOffice:lingver:1.3.0")
 }
