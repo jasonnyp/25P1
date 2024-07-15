@@ -7,6 +7,8 @@ import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import androidx.annotation.StringRes
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.firebase.FirebaseException
+import com.google.firebase.auth.FirebaseAuthException
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.storage.StorageReference
 import com.singhealth.enhance.R
@@ -60,6 +62,35 @@ fun firebaseErrorDialog(context: Context, e: Exception, function:(String) -> Uni
         .setNeutralButton(ResourcesHelper.getString(context, R.string.reconnect_dialog_button)) { dialog, _ ->
             dialog.dismiss()
             function(string)
+        }
+        .show()
+}
+
+fun firebaseErrorDialog(context: Context, exception: Exception?, customMessage: String?) {
+    var message = "An error occurred."
+
+    // Customize error message based on exception type or use a custom message if provided
+    exception?.let {
+        message = when (it) {
+            is FirebaseAuthException -> {
+                // Firebase Authentication related exception
+                "Firebase Authentication error: ${it.message}"
+            }
+            is FirebaseException -> {
+                // Firebase related exception
+                "Firebase error: ${it.message}"
+            }
+            else -> {
+                customMessage ?: "An error occurred."
+            }
+        }
+    }
+    MaterialAlertDialogBuilder(context)
+        .setTitle(ResourcesHelper.getString(context, R.string.firebase_error_header))
+        .setMessage(ResourcesHelper.getString(context, R.string.firebase_error_body, message))
+        .setPositiveButton(ResourcesHelper.getString(context, R.string.ok_dialog)) { dialog, _ -> dialog.dismiss() }
+        .setNeutralButton(ResourcesHelper.getString(context, R.string.reconnect_dialog_button)) { dialog, _ ->
+            dialog.dismiss()
         }
         .show()
 }

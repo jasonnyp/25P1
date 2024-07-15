@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <inset xmlns:android="http://schemas.android.com/apk/res/android"
-    android:insetLeft="8dp"
+    android:insetLeft="16dp"
     android:insetTop="8dp"
-    android:insetRight="8dp"
+    android:insetRight="16dp"
     android:insetBottom="8dp">
     <shape>
         <corners android:radius="8dp" />
         <stroke
             android:width="2dp"
-            android:color="@color/black" />
+            android:color="@color/black"
+            />
     </shape>
 </inset>

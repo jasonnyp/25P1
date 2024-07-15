@@ -10,6 +10,8 @@ import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.core.view.GravityCompat
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.firebase.Firebase
+import com.google.firebase.auth.auth
 import com.singhealth.enhance.R
 import com.singhealth.enhance.activities.MainActivity
 import com.singhealth.enhance.activities.authentication.LoginActivity
@@ -70,6 +72,7 @@ class SettingsActivity : AppCompatActivity() {
                 .setMessage("Are you sure you want to logout?")
                 .setNegativeButton("No") { dialog, _ -> dialog.dismiss() }
                 .setPositiveButton("Yes") { _, _ ->
+                    Firebase.auth.signOut()
                     startActivity(Intent(this, LoginActivity::class.java))
                     finish()
                 }

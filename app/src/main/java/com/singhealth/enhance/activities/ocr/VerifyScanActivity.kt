@@ -1,5 +1,6 @@
 package com.singhealth.enhance.activities.ocr
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -11,6 +12,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.annotation.StringRes
@@ -389,10 +391,26 @@ class VerifyScanActivity : AppCompatActivity() {
             }
         }
 
+        var day = 1
+        var time = 0
         // Use finalSysBPList and finalDiaBPList for display
         finalSysBPList.forEachIndexed { index, sysBP ->
+
             val diaBP = finalDiaBPList.getOrNull(index)
-            addRow(sysBP, diaBP, true)
+            addRow(sysBP, diaBP, true, day, time)
+            time += 1
+            if (time%2 == 0){
+                day += 1
+            }
+        }
+        while (time <11 || day < 7){
+            finalSysBPList.add("999")
+            finalDiaBPList.add("999")
+            addRow("999", "999", true, day, time)
+            time += 1
+            if (time%2 == 0){
+                day += 1
+            }
         }
 
         // Set latestSysBPList and latestDiaBPList back to sysBPList and diaBPList
@@ -539,7 +557,10 @@ class VerifyScanActivity : AppCompatActivity() {
             } else if (!sysBPFields[i].text!!.isDigitsOnly()) {
                 errorCount += 1
                 setError(sysBPFields[i].parent.parent as TextInputLayout, ResourcesHelper.getString(this, R.string.verify_scan_whole_number))
-            } else if (currentValueLength !in 2..3) {
+            } else if (sysBPFields[i].text!!.toString().toInt() == 999) {
+                errorCount++
+                sysBPFields[i].error = "Replace value."
+            }else if (currentValueLength !in 2..3) {
                 errorCount += 1
                 setError(sysBPFields[i].parent.parent as TextInputLayout, ResourcesHelper.getString(this, R.string.verify_scan_invalid_value))
             } else if (sysBPFields[i].text.toString().toInt() !in 90..150) {
@@ -557,7 +578,10 @@ class VerifyScanActivity : AppCompatActivity() {
             } else if (!diaBPFields[i].text!!.isDigitsOnly()) {
                 errorCount += 1
                 setError(diaBPFields[i].parent.parent as TextInputLayout, ResourcesHelper.getString(this, R.string.verify_scan_whole_number))
-            } else if (currentValueLength !in 2..3) {
+            } else if (diaBPFields[i].text!!.toString().toInt() == 999) {
+                errorCount++
+                diaBPFields[i].error = "Replace value."
+            }else if (currentValueLength !in 2..3) {
                 errorCount += 1
                 setError(diaBPFields[i].parent.parent as TextInputLayout, ResourcesHelper.getString(this, R.string.verify_scan_invalid_value))
             } else if (diaBPFields[i].text.toString().toInt() !in 60..110) {
@@ -574,7 +598,10 @@ class VerifyScanActivity : AppCompatActivity() {
                 setError(sysBPFields[i].parent.parent as TextInputLayout, ResourcesHelper.getString(this, R.string.verify_scan_empty_field))
             } else if (!sysBPFields[i].text!!.isDigitsOnly()) {
                 setError(sysBPFields[i].parent.parent as TextInputLayout, ResourcesHelper.getString(this, R.string.verify_scan_whole_number))
-            } else if (currentValueLength !in 2..3) {
+            } else if (sysBPFields[i].text!!.toString().toInt() == 999) {
+                errorCount++
+                sysBPFields[i].error = "Replace value."
+            }else if (currentValueLength !in 2..3) {
                 setError(sysBPFields[i].parent.parent as TextInputLayout, ResourcesHelper.getString(this, R.string.verify_scan_invalid_value))
             } else if (sysBPFields[i].text.toString().toInt() !in 90..150) {
                 setError(sysBPFields[i].parent.parent as TextInputLayout, ResourcesHelper.getString(this, R.string.verify_scan_abnormal_value))
@@ -588,7 +615,10 @@ class VerifyScanActivity : AppCompatActivity() {
                 setError(diaBPFields[i].parent.parent as TextInputLayout, ResourcesHelper.getString(this, R.string.verify_scan_empty_field))
             } else if (!diaBPFields[i].text!!.isDigitsOnly()) {
                 setError(diaBPFields[i].parent.parent as TextInputLayout, ResourcesHelper.getString(this, R.string.verify_scan_whole_number))
-            } else if (currentValueLength !in 2..3) {
+            } else if (diaBPFields[i].text!!.toString().toInt() == 999) {
+                errorCount++
+                diaBPFields[i].error = "Replace value."
+            }else if (currentValueLength !in 2..3) {
                 setError(diaBPFields[i].parent.parent as TextInputLayout, ResourcesHelper.getString(this, R.string.verify_scan_invalid_value))
             } else if (diaBPFields[i].text.toString().toInt() !in 60..110) {
                 setError(diaBPFields[i].parent.parent as TextInputLayout, ResourcesHelper.getString(this, R.string.verify_scan_abnormal_value))
@@ -695,6 +725,9 @@ class VerifyScanActivity : AppCompatActivity() {
             if (sysField.text.isNullOrEmpty()) {
                 valid = false
                 setError(sysField.parent.parent as TextInputLayout, ResourcesHelper.getString(this, R.string.verify_scan_empty_field))
+            } else if (sysField.text!!.toString().toInt() == 999) {
+                valid = false
+                sysField.error = "Replace field with correct value."
             } else if (!sysField.text!!.isDigitsOnly()) {
                 valid = false
                 setError(sysField.parent.parent as TextInputLayout, ResourcesHelper.getString(this, R.string.verify_scan_whole_number))
@@ -705,7 +738,10 @@ class VerifyScanActivity : AppCompatActivity() {
             if (diaField.text.isNullOrEmpty()) {
                 valid = false
                 setError(diaField.parent.parent as TextInputLayout, ResourcesHelper.getString(this, R.string.verify_scan_empty_field))
-            } else if (!diaField.text!!.isDigitsOnly()) {
+            } else if (diaField.text!!.toString().toInt() == 999) {
+                valid = false
+                diaField.error = "Replace field with correct value."
+            }else if (!diaField.text!!.isDigitsOnly()) {
                 valid = false
                 setError(diaField.parent.parent as TextInputLayout, ResourcesHelper.getString(this, R.string.verify_scan_whole_number))
             }
@@ -758,14 +794,25 @@ class VerifyScanActivity : AppCompatActivity() {
     }
 
     // Add new row
-    private fun addRow(sysBP: String?, diaBP: String?, isSevenDayCheck: Boolean = false) {
+    @SuppressLint("SetTextI18n")
+    private fun addRow(sysBP: String?, diaBP: String?, isSevenDayCheck: Boolean = false, day: Int = -1, time:Int = -1) {
         val rowBPRecordLayout = layoutInflater.inflate(R.layout.row_bp_record, null, false)
 
         val sysBPTIET = rowBPRecordLayout.findViewById<View>(R.id.sysBPTIET) as TextInputEditText
         val diaBPTIET = rowBPRecordLayout.findViewById<View>(R.id.diaBPTIET) as TextInputEditText
+        val dayTV = rowBPRecordLayout.findViewById<View>(R.id.headerTextView) as TextView
 
         sysBPTIET.setText(sysBP ?: null)
         diaBPTIET.setText(diaBP ?: null)
+        if (day != -1 && time != -1){
+            dayTV.visibility = View.VISIBLE
+            if (time% 2 == 0) {
+                dayTV.text = "Day ${day + 1} - Morning"
+            } else {
+                dayTV.text = "Day ${day + 1} - Evening"
+            }
+        }
+
 
         if (isSevenDayCheck) {
             if (sysBP?.toIntOrNull() == 999 || diaBP?.toIntOrNull() == 999) {

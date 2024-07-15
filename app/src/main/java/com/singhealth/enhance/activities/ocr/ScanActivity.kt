@@ -55,7 +55,6 @@ class ScanActivity : AppCompatActivity() {
         setupBottomNavigationView()
         checkPatientInfo()
 
-        binding.ocrInstructionsTextViewValue.text = getString(R.string.ocr_instructions)
         cameraPermissions = arrayOf(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE)
         storagePermissions = arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE)
         progressDialog = ProgressDialog(this)

@@ -10,82 +10,149 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        >
+        android:layout_height="match_parent">
 
-        <!-- Patient Information -->
         <LinearLayout
             android:id="@+id/patientInfoContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:baselineAligned="false"
-            android:orientation="horizontal"
-            android:padding="16dp"
-            android:layout_alignParentTop="true"
-            android:layout_marginBottom="16dp"
-            android:layout_marginTop="16dp"
-            android:background="@drawable/border">
+            android:orientation="vertical"
+            android:padding="16dp">
 
-            <!-- Patient ID Section -->
-            <LinearLayout
-                android:layout_width="0dp"
+            <com.google.android.material.card.MaterialCardView
+                style="?attr/materialCardViewFilledStyle"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/patientIdTextView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/enhance_scan_patient_id"
-                    android:textSize="18sp"
-                    android:textColor="@color/black"/>
-
-                <TextView
-                    android:id="@+id/patientIdValueTextView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                android:textSize="18sp"
-                android:textColor="@color/black"/>
-            </LinearLayout>
-
-            <!-- Patient Name Section -->
+                app:cardBackgroundColor="@color/theme_primary_variant">
+            <!-- Patient Information -->
             <LinearLayout
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:padding="16dp">
 
-                <TextView
-                    android:id="@+id/patientNameTextView"
-                    android:layout_width="wrap_content"
+                <!-- Patient ID Section -->
+                <LinearLayout
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:text="@string/enhance_scan_name"
-                    android:textSize="18sp"
-                    android:textColor="@color/black"/>
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
 
-                <TextView
-                    android:id="@+id/patientNameValueTextView"
-                    android:layout_width="wrap_content"
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=" "
+                        android:textColor="@color/black"
+                        android:textSize="18sp" />
+
+                    <TextView
+                        android:id="@+id/patientIdTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/enhance_scan_patient_id"
+                        android:textColor="@color/black"
+                        android:textSize="18sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=" "
+                        android:textColor="@color/black"
+                        android:textSize="18sp" />
+
+                    <TextView
+                        android:id="@+id/patientIdValueTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textStyle="bold"
+                        android:textColor="@color/black"
+                        android:textSize="18sp" />
+                </LinearLayout>
+
+                <!-- Patient Name Section -->
+                <LinearLayout
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                android:textSize="18sp"
-                android:textColor="@color/black"/>
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=" "
+                        android:textColor="@color/black"
+                        android:textSize="18sp" />
+
+                    <TextView
+                        android:id="@+id/patientNameTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/enhance_scan_name"
+                        android:textColor="@color/black"
+                        android:textSize="18sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=" "
+                        android:textColor="@color/black"
+                        android:textSize="18sp" />
+
+                    <TextView
+                        android:id="@+id/patientNameValueTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textStyle="bold"
+                        android:textColor="@color/black"
+                        android:textSize="18sp" />
+                </LinearLayout>
             </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
 
         </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_below="@id/patientInfoContainer"
+            android:padding="16dp">
+
+        <com.google.android.material.card.MaterialCardView
+            style="?attr/materialCardViewFilledStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardBackgroundColor="@color/theme_primary_variant"
+            >
+
         <!-- OCR Instructions -->
-        <TextView
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/ocrInstructionsTextViewValue"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="16sp"
-            android:textColor="@color/black"
-            android:padding="16dp"
             android:layout_below="@id/patientInfoContainer"
-            android:layout_marginBottom="16dp"
-            android:background="@drawable/border"
-            android:visibility="visible" />
+            android:layout_margin="8dp"
+            android:orientation="horizontal"
+            android:padding="16dp">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:src="@drawable/baseline_error_24"
+                app:tint="#D32F2F" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/ocr_instructions"
+                android:textColor="#D32F2F"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+        </LinearLayout>
 
         <com.canhub.cropper.CropImageView
             android:id="@+id/cropIV"
@@ -100,29 +167,35 @@
         <!-- Buttons Container -->
         <LinearLayout
             android:id="@+id/buttonsContainer"
-            android:layout_above="@id/bottomNavigationView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_above="@id/bottomNavigationView"
+            android:gravity="center"
             android:orientation="horizontal"
             android:paddingLeft="16dp"
-            android:paddingRight="16dp"
-            android:gravity="center">
+            android:paddingTop="20dp"
+            android:paddingRight="16dp">
 
             <Button
                 android:id="@+id/generalSourceBtn"
                 android:layout_width="0dp"
-                android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="12dp"
+                android:layout_weight="0.9"
                 android:text="@string/enhance_general_scan"
                 android:textAllCaps="true" />
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.1" />
 
             <Button
                 android:id="@+id/sevenDaySourceBtn"
                 android:layout_width="0dp"
-                android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="12dp"
+                android:layout_weight="0.9"
                 android:text="@string/enhance_7_day_scan"
                 android:textAllCaps="true" />
 
@@ -133,9 +206,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            app:menu="@menu/navigation_bar"
             app:labelVisibilityMode="labeled"
-            />
+            app:menu="@menu/navigation_bar" />
     </RelativeLayout>
 
     <com.google.android.material.navigation.NavigationView
