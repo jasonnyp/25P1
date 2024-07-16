@@ -91,6 +91,8 @@
     <!-- LanguageActivity.kt -->
     <string name="language_current_error_header">當前使用的語言</string>
     <string name="language_current_error_body">這是您當前的應用語言。請選擇另一種語言。</string>
+    <string name="language_unsupported_header">語言目前不支援</string>
+    <string name="language_unsupported_body">此語言本地化正在進行中。請選擇其他語言。</string>
 
     <string name="settings_logout_activity_header">登出確認</string>
     <string name="settings_logout_activity_body">您確定要登出嗎？</string>
@@ -158,17 +160,6 @@
 
     <!-- activity_history.xml -->
     <string name="enhance_history_past">未找到過往記錄。</string>
-
-    <!-- activity_history.xml -->
-    <string name="enhance_language_english">英文</string>
-    <string name="enhance_language_chinese_simplified">簡體中文</string>
-    <string name="enhance_language_chinese_traditional">繁體中文</string>
-    <string name="enhance_language_malay">馬來文</string>
-    <string name="enhance_language_tamil">泰米爾文</string>
-    <string name="enhance_language_thai">泰文</string>
-    <string name="enhance_language_vietnamese">越南文</string>
-    <string name="enhance_language_korean">韓文</string>
-    <string name="enhance_language_japanese">日文</string>
 
     <!-- activity_login.xml -->
     <string name="enhance_login_staff_id">員工身份證明</string>

@@ -95,6 +95,8 @@
     <!-- LanguageActivity.kt -->
     <string name="language_current_error_header">Current Language in use</string>
     <string name="language_current_error_body">This is your current app language. Please pick another language.</string>
+    <string name="language_unsupported_header">Language currently unsupported</string>
+    <string name="language_unsupported_body">This language localisation is currently in progress. Please pick another language.</string>
 
     <!-- SettingsActivity.kt -->
     <string name="settings_logout_activity_header">Logout confirmation</string>
@@ -167,15 +169,15 @@
     <string name="enhance_history_past">No past records found.</string>
 
     <!-- activity_language.xml -->
-    <string name="enhance_language_english">English</string>
-    <string name="enhance_language_chinese_simplified">Chinese (Simplified)</string>
-    <string name="enhance_language_chinese_traditional">Chinese (Traditional)</string>
-    <string name="enhance_language_malay">Malay</string>
-    <string name="enhance_language_tamil">Tamil</string>
-    <string name="enhance_language_thai">Thai</string>
-    <string name="enhance_language_vietnamese">Vietnamese</string>
-    <string name="enhance_language_korean">Korean</string>
-    <string name="enhance_language_japanese">Japanese</string>
+    <string name="enhance_language_english" translatable="false">English</string>
+    <string name="enhance_language_chinese_simplified" translatable="false">简体中文</string>
+    <string name="enhance_language_chinese_traditional" translatable="false">繁體中文</string>
+    <string name="enhance_language_malay" translatable="false">Bahasa Melayu [Currently Unsupported]</string>
+    <string name="enhance_language_tamil" translatable="false">தமிழ் [Currently Unsupported]</string>
+    <string name="enhance_language_thai" translatable="false">ไทย [Currently Unsupported]</string>
+    <string name="enhance_language_vietnamese" translatable="false">Tiếng Việt [Currently Unsupported]</string>
+    <string name="enhance_language_korean" translatable="false">한국어 [Currently Unsupported]</string>
+    <string name="enhance_language_japanese" translatable="false">日本語 [Currently Unsupported]</string>
     <string name="enhance_language_arrow" translatable="false">Arrow</string>
 
     <!-- activity_login.xml -->
