@@ -1,0 +1,283 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- AuthenticationActivity strings -->
+    <string name="resend_verification_code">點擊重新發送驗證碼</string>
+
+    <!-- LoginActivity strings -->
+    <string name="good_morning">早上好！</string>
+    <string name="good_afternoon">下午好！</string>
+    <string name="good_evening">晚上好！</string>
+    <string name="login_validate_staff">工作人員識別碼不能為空！</string>
+    <string name="login_validate_password">密碼不能為空！</string>
+
+    <!-- ScanActivity strings -->
+    <string name="ocr_instructions">請確保僅顯示血壓值，裁剪時排除所有標題。</string>
+    <string name="ocr_app_permissions_header">啟用應用權限</string>
+    <string name="ocr_app_permissions_body">要使用 OCR 功能，您需要允許訪問您的相機、圖庫和外部存儲。</string>
+    <string name="ocr_image_error_header">處理圖像時出錯</string>
+    <string name="ocr_image_error_body">由於錯誤，無法處理圖像。\n\n如果問題仍然存在，請聯繫 IT 支援並提供以下錯誤代碼：%1$s</string>
+    <string name="ocr_text_error_header">沒有可處理的內容</string>
+    <string name="ocr_text_error_body">我們找不到任何手寫或文本可以處理。\n\n提示：確保圖像清晰並且僅裁剪到數值部分，排除任何標題（例如“收縮壓”和“舒張壓”）。</string>
+
+    <!-- VerifyScanActivity.kt -->
+    <string name="verify_scan_rows">已檢測到 %1$d 條記錄。\n\n總記錄數：%2$d</string>
+    <string name="verify_scan_no_records">未檢測到記錄。請重新掃描或通過手動插入新行。</string>
+    <string name="verify_scan_inadequate_reading_header">讀數數量不足</string>
+    <string name="verify_scan_inadequate_reading_body">您想繼續進行分析嗎？</string>
+    <string name="verify_scan_calculation_successful">計算保存成功。</string>
+    <string name="verify_scan_saving_header">保存記錄時出錯</string>
+    <string name="verify_scan_saving_body">應用無法保存當前記錄。\n\n如果問題仍然存在，請聯繫 IT 支援並提供以下錯誤代碼：%1$s</string>
+    <string name="verify_scan_error_header">檢測到錯誤</string>
+    <string name="verify_scan_error_body">請在繼續之前糾正所有錯誤。</string>
+    <string name="verify_scan_rescan_header">重新掃描當前記錄</string>
+    <string name="verify_scan_rescan_body">您要重新掃描當前記錄嗎？\n\n（注意：您之前掃描的記錄將會被保存）</string>
+    <string name="verify_scan_discard_header">放棄進度</string>
+    <string name="verify_scan_discard_body">您要放棄所有進度並重新開始嗎？</string>
+    <string name="verify_scan_empty_field">字段為空。</string>
+    <string name="verify_scan_whole_number">字段必須只包含整數。</string>
+    <string name="verify_scan_valid_value">值不能超過200或低於0。</string>
+    <string name="verify_scan_invalid_value">無效值。</string>
+    <string name="verify_scan_abnormal_value">異常值。</string>
+    <string name="verify_scan_erroneous_header">錯誤結果過多</string>
+    <string name="verify_scan_erroneous_body">您要重新掃描當前記錄以獲得更高的準確性嗎？\n\n（注意：您之前掃描的記錄將會被保存）</string>
+    <string name="verify_scan_remove_row_header">移除行</string>
+    <string name="verify_scan_remove_row_body">您要移除選中的行嗎？</string>
+
+    <!-- ProfileActivity strings -->
+    <string name="profile_gender_male">男</string>
+    <string name="profile_gender_female">女</string>
+    <string name="profile_retrieve_data">正在檢索患者數據</string>
+    <string name="profile_retrieve_data_caption">請稍等片刻…</string>
+    <string name="profile_document_error_header">獲取患者記錄時出錯</string>
+    <string name="profile_document_error_body">獲取患者信息時出錯。\n\n如果問題仍然存在，請聯繫 IT 支援並提供以下錯誤代碼：%1$s</string>
+    <string name="profile_patient_weight">%1$s 公斤</string>
+    <string name="profile_patient_height">%1$s 厘米</string>
+
+    <!-- RegistrationActivity strings -->
+    <string name="register_gender_male">男性</string>
+    <string name="register_gender_female">女性</string>
+    <string name="register_field_verification">請在繼續之前糾正所有錯誤。</string>
+    <string name="profile_picture_info">要選擇另一張照片，請點擊當前照片以打開您的相冊。</string>
+    <string name="register_image_verification_header">未上傳照片</string>
+    <string name="register_image_verification_body">請在繼續之前上傳病人的照片。</string>
+    <string name="register_empty_field_verification">字段不能為空</string>
+    <string name="register_empty_bp_verification">字段不能為空。如果您需要默認值，請輸入 %1$d</string>
+    <string name="register_invalid_value_verification">無效的值</string>
+    <string name="register_invalid_number_verification">數字太高或太低</string>
+    <string name="register_loading_dialog">正在註冊病人，請稍候。</string>
+    <string name="register_exist_error_header">病人已經註冊</string>
+    <string name="register_exist_error_body">您想要搜索該病人嗎？</string>
+    <string name="register_successful">成功將 %1$s 註冊到系統中。</string>
+
+    <!-- DiagnosePatient.kt -->
+    <string name="controlled_bp">您的血壓目前處於控制狀態。繼續保持良好的工作！</string>
+    <string name="uncontrolled_bp">您的血壓在升高。請考慮一些建議來降低您的血壓。</string>
+
+    <string name="well_controlled_hypertension">良好控制的高血壓</string>
+    <string name="white_coat_uncontrolled_hypertension">白大褂性未受控高血壓</string>
+    <string name="masked_hypertension">隱匿性高血壓</string>
+    <string name="uncontrolled_hypertension">未受控高血壓</string>
+
+    <string name="suboptimum">（亞最佳）</string>
+    <string name="well_controlled">（控制良好）</string>
+    <string name="unknown_hypertension_status">（未知）</string>
+
+    <!-- RecommendationActivity.kt -->
+    <string name="no_recommendations">目前沒有建議。\n</string>
+    <string name="well_controlled_bp_recommendation_medical">- 遵循醫生指定的藥物治療方案（如果有）。\n</string>
+    <string name="suboptimum_bp_recommendation_medical">- 增加抗高血壓藥物的劑量。\n</string>
+
+    <!-- LanguageActivity.kt -->
+    <string name="language_current_error_header">當前使用的語言</string>
+    <string name="language_current_error_body">這是您當前的應用語言。請選擇另一種語言。</string>
+
+    <string name="settings_logout_activity_header">登出確認</string>
+    <string name="settings_logout_activity_body">您確定要登出嗎？</string>
+    <string name="settings_contact_helpdesk">如需更多幫助信息，請聯繫 6451–5115</string>
+
+    <!-- MainActivity.kt -->
+    <string name="main_activity_patient_header">未找到病人。</string>
+    <string name="main_activity_patient_body">確保病人的信息輸入正確。否則，請確認這是否為病人的首次就診並繼續註冊其信息。</string>
+    <string name="main_activity_patient_validation">ID不能為空</string>
+
+    <!-- Navigation drawer strings -->
+    <string name="home_title">首頁</string>
+    <string name="patient_registration_title">患者註冊</string>
+    <string name="settings_title">設置</string>
+
+    <!-- Navigation bar strings -->
+    <string name="profile_title">個人資料</string>
+    <string name="scan_title">掃描</string>
+    <string name="history_title">歷史記錄</string>
+    <string name="dashboard_title">儀表板</string>
+
+    <!-- Dialog strings -->
+    <string name="ok_dialog">確定</string>
+    <string name="yes_dialog">是</string>
+    <string name="no_dialog">否</string>
+    <string name="cancel_dialog">取消</string>
+    <string name="try_again_dialog">重試</string>
+
+    <!-- ErrorHandling.kt settings -->
+    <string name="firebase_error_header">訪問 Firestore 數據庫時出錯</string>
+    <string name="firebase_error_body">應用程序在與 Firestore 數據庫通訊時遇到問題。\n\n如果問題仍然存在，請聯繫 IT 支持並提供以下錯誤代碼：%1$s</string>
+    <string name="firebase_error_return_to_main">返回主頁</string>
+
+    <string name="reconnect_error_header">沒有網絡連接</string>
+    <string name="reconnect_error_body">您未連接到互聯網。許多應用功能依賴於互聯網連接，您的進度可能不會保存。\n\n如果問題仍然存在，請聯繫 IT 幫助台尋求進一步幫助。</string>
+
+    <string name="login_error_header">身份驗證失敗</string>
+    <string name="login_error_body">您提供的工作人員識別碼或密碼與我們的記錄不匹配。\n\n（注意：如果您忘記了登錄憑證，請聯繫 IT 幫助台尋求進一步幫助。）</string>
+
+    <string name="patient_info_session_error_header">找不到病人識別碼</string>
+    <string name="patient_info_session_error_body">相關的病人識別碼不在當前會話中。\n\n請聯繫 IT 幫助台尋求進一步幫助。</string>
+
+    <string name="patient_history_not_found_error_header">找不到病歷</string>
+    <string name="patient_history_not_found_error_body">無法顯示相關的病歷。\n\n如果問題仍然存在，請聯繫 IT 支持並提供以下錯誤代碼：%1$s</string>
+
+    <!-- Patient error strings -->
+    <string name="patient_info_not_found">當前會話中未找到病人信息。請重試。</string>
+
+    <string name="dialog_positive_ok">確定</string>
+    <string name="bp_stage">血壓階段</string>
+
+    <string name="date_format">dd日MM月yyyy年 HH:mm:ss</string>
+
+    <!-- activity_about.xml -->
+    <string name="enhance_about_collab">合作單位：</string>
+    <string name="enhance_about_app_ver">應用版本：</string>
+    <string name="enhance_about_info">ENHANCe 是一個數字臨床決策支持工具，用於從紙質和數字日記中捕捉高血壓記錄，並支持初級保健醫生在管理家庭血壓監測患者時的臨床決策。</string>
+    <string name="enhance_about_purpose">該工具結合了光學字符識別技術，可以識別大多數手寫的血壓值，並自動計算平均血壓。這樣就取代了手動讀取和計算血壓的繁瑣過程，從而減少了工作量和人為錯誤。</string>
+
+    <!-- activity_authentication.xml -->
+    <string name="enhance_auth_2fa">雙因素認證</string>
+    <string name="enhance_auth_2fa_body">輸入通過短信發送到您註冊號碼的代碼。</string>
+    <string name="enhance_auth_code">代碼</string>
+    <string name="enhance_auth_verify">驗證</string>
+
+    <!-- activity_history.xml -->
+    <string name="enhance_history_past">未找到過往記錄。</string>
+
+    <!-- activity_history.xml -->
+    <string name="enhance_language_english">英文</string>
+    <string name="enhance_language_chinese_simplified">簡體中文</string>
+    <string name="enhance_language_chinese_traditional">繁體中文</string>
+    <string name="enhance_language_malay">馬來文</string>
+    <string name="enhance_language_tamil">泰米爾文</string>
+    <string name="enhance_language_thai">泰文</string>
+    <string name="enhance_language_vietnamese">越南文</string>
+    <string name="enhance_language_korean">韓文</string>
+    <string name="enhance_language_japanese">日文</string>
+
+    <!-- activity_login.xml -->
+    <string name="enhance_login_staff_id">員工身份證明</string>
+    <string name="enhance_login_password">密碼</string>
+    <string name="enhance_login_login">登錄</string>
+
+    <!-- activity_main.xml -->
+    <string name="enhance_main_welcome_message">歡迎使用 ENHANCe！</string>
+    <string name="enhance_main_register_patient">註冊患者</string>
+    <string name="enhance_main_existing_patient">搜索現有患者：</string>
+    <string name="enhance_main_patient_id">患者識別碼</string>
+    <string name="enhance_main_search_record">搜索記錄</string>
+
+    <!-- activity_privacy_statement.xml -->
+    <string name="activity_privacy_statement">這是隱私聲明頁面。</string>
+
+    <!-- activity_profile.xml -->
+    <string name="enhance_profile_legal_name">法定姓名</string>
+    <string name="enhance_profile_patient_id">患者識別碼</string>
+    <string name="enhance_profile_dob">出生日期</string>
+    <string name="enhance_profile_gender">性別</string>
+    <string name="enhance_profile_weight">體重</string>
+    <string name="enhance_profile_height">身高</string>
+    <string name="enhance_profile_target_bp">目標血壓</string>
+
+    <!-- activity_recommendation.xml -->
+    <string name="enhance_recco_header">以下是基於掃描的血壓記錄的建議：</string>
+    <string name="enhance_recco_do">醫學：</string>
+    <string name="enhance_recco_dont">飲食：</string>
+    <string name="enhance_recco_target_home_bp"> 目標家庭血壓</string>
+    <string name="enhance_recco_target_office_bp"> 目標辦公室血壓</string>
+    <string name="enhance_recco_average_home_bp"> 平均家庭血壓</string>
+    <string name="enhance_recco_office_bp"> 辦公室血壓</string>
+    <string name="enhance_recco_hypertension_status"> 高血壓狀態</string>
+    <string name="enhance_recco_recommendation">建議</string>
+
+    <!-- activity_registration.xml -->
+    <string name="enhance_register_photo">照片</string>
+    <string name="enhance_register_upload_photo">點擊文件上傳圖標以從您的圖庫選擇照片。</string>
+    <string name="enhance_register_particulars">個人詳情</string>
+    <string name="enhance_register_legal_name">法定姓名</string>
+    <string name="enhance_register_patient_id">患者身份證號</string>
+    <string name="enhance_register_dob">出生日期</string>
+    <string name="enhance_register_gender">性別</string>
+    <string name="enhance_register_target_sys">目標收縮壓</string>
+    <string name="enhance_register_target_dia">目標舒張壓</string>
+    <string name="enhance_register_health_info">健康信息</string>
+    <string name="enhance_register_weight">體重</string>
+    <string name="enhance_register_height">身高</string>
+    <string name="enhance_register_button">註冊</string>
+
+    <!-- activity_scan.xml -->
+    <string name="enhance_scan_patient_id">患者身份證號：</string>
+    <string name="enhance_scan_name">姓名：</string>
+    <string name="enhance_scan_source">選擇來源</string>
+
+    <!-- activity_settings.xml -->
+    <string name="enhance_settings_account">帳戶</string>
+    <string name="enhance_settings_logout">登出</string>
+    <string name="enhance_settings_help_support">幫助與支持</string>
+    <string name="enhance_settings_user_guide">用戶指南</string>
+    <string name="enhance_settings_language">語言選項</string>
+    <string name="enhance_settings_contact_helpdesk">聯繫幫助台</string>
+    <string name="enhance_settings_about">關於ENHANCe</string>
+    <string name="enhance_settings_terms_of_use">使用條款</string>
+    <string name="enhance_settings_privacy_statement">隱私聲明</string>
+    <string name="enhance_settings_report_vulnerability">報告漏洞</string>
+
+    <!-- activity_terms_of_use.xml -->
+    <string name="enhance_terms_header">這是使用條款頁面。</string>
+
+    <!-- activity_user_guide.xml -->
+    <string name="enhance_user_patient"><![CDATA[患者註冊與搜索]]></string>
+    <string name="enhance_user_patient_body">註冊新患者，包括他們的頭像、NRIC 號碼、法定姓名、性別、出生日期、地址、身高和體重。\n\n對於已註冊的患者，只需使用其 NRIC 和法定姓名進行搜索。</string>
+    <string name="enhance_user_scan">掃描記錄</string>
+    <string name="enhance_user_scan_body">使用設備相機掃描血壓（BP）記錄，或從圖庫中選擇一張圖片。\n\n之後，您可以選擇重新拍攝/重新選擇圖片。\n\n重要提示：為了確保下一步的手寫/文本識別準確性，您必須裁剪圖片，使其只顯示血壓值（排除任何標題）。</string>
+    <string name="enhance_user_verify_scan">驗證掃描 - 檢查</string>
+    <string name="enhance_user_verify_scan_body">算法檢查確認存在超過 12 條記錄。否則，它會提示您重新掃描或繼續分析。\n\n如果當前記錄超過六個錯誤，系統也會提示您重新掃描。</string>
+    <string name="enhance_user_edit">驗證掃描 - 編輯值</string>
+    <string name="enhance_user_edit_body">如果算法認為任何血壓值異常/不正確，您會收到警報（提供原因）。\n\n您還需要輸入家庭血壓目標和診所血壓目標。\n\n如果發現任何錯誤，您也可以編輯血壓值。\n\n只需按下紅色圓形減號圖標即可刪除相應的行，或按下“添加新行”按鈕添加新行。\n\n注意：如果決定再次掃描當前記錄，除之前的進度外，當前進度將被刪除。\n一旦所有血壓值檢查完畢，點擊計算平均值繼續。</string>
+    <string name="enhance_user_history">歷史記錄</string>
+    <string name="enhance_user_history_body">您可以查看所選患者先前記錄的平均血壓值、家庭血壓目標和診所血壓目標。</string>
+    <string name="enhance_user_faq">常見問題</string>
+    <string name="enhance_user_faq_body">問：如何訪問掃描記錄頁面？\n\n答：您需要先搜索患者，然後才能在底部導航欄選擇“掃描記錄”。\n\n問：為了最大限度地提高手寫/文本檢測準確性，圖像的哪部分應保留？\n\n答：調整相機，使其填滿屏幕的頂部和底部。嘗試僅水平裁剪圖像，並在裁剪的圖像中僅保留收縮壓和舒張壓值（排除標題；僅保留數字）。</string>
+
+    <!-- activity_verify_scan.xml -->
+    <string name="enhance_verify_patient_id">患者ID：</string>
+    <string name="enhance_verify_home_bp">家庭血壓目標：</string>
+    <string name="enhance_verify_clinic_target_bp">診所血壓目標：</string>
+    <string name="enhance_verify_clinic_bp">診所血壓</string>
+    <string name="enhance_verify_add_row">添加行</string>
+    <string name="enhance_verify_more_options">更多選項</string>
+    <string name="enhance_verify_disclaimer">免責聲明：掃描儀並非完美，有時可能產生錯誤結果。在計算此患者的平均血壓之前，請確保這些結果的準確性由您負責。</string>
+    <string name="enhance_verify_calculate_bp">計算平均血壓</string>
+
+    <!-- bottom_sheet_verify_scan.xml -->
+    <string name="enhance_verify_bottom_option">選擇一個選項：</string>
+    <string name="enhance_verify_bottom_continue_scan">繼續掃描</string>
+    <string name="enhance_verify_bottom_rescan">重新掃描當前記錄</string>
+    <string name="enhance_verify_bottom_discard">放棄所有進度</string>
+
+    <!-- dashboard.xml -->
+    <string name="enhance_dashboard_reload">重新加載</string>
+
+    <!-- divider_old_new_record.xml -->
+    <string name="enhance_divider_old_new_current_scan_results">當前掃描結果：</string>
+
+    <!-- history_item.xml -->
+    <string name="enhance_history_item_avgbp">平均血壓：</string>
+    <string name="enhance_history_item_homebp">家庭血壓目標：</string>
+    <string name="enhance_history_item_clinicbp">診所血壓目標：</string>
+</resources>
