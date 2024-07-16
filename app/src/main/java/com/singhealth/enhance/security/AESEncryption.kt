@@ -32,7 +32,7 @@ class AESEncryption {
             return Base64.encodeToString(
                 cipher.doFinal(stringToEncrypt.toByteArray(charset("UTF-8"))),
                 Base64.DEFAULT
-            ).replace("/", "*")
+            ).replace("/", "*").replace("+", "!")
         } catch (e: Exception) {
             Log.d("Encryption error", e.message.toString())
         }
@@ -62,7 +62,7 @@ class AESEncryption {
             return String(
                 cipher.doFinal(
                     Base64.decode(
-                        stringToDecrypt.replace("*", "/"),
+                        stringToDecrypt.replace("*", "/").replace("!", "+"),
                         Base64.DEFAULT
                     )
                 )
