@@ -6,14 +6,35 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/headerTextView"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="18sp"
-        android:padding="8dp"
+        android:orientation="horizontal"
         android:textColor="@android:color/black"
-        android:visibility="gone"/>
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/headerTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:textSize="18sp" />
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.1" />
+
+        <Button
+            android:id="@+id/addRowBtn"
+            style="?attr/materialButtonOutlinedStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:text="@string/enhance_verify_add_row"
+            android:textSize="16sp" />
+
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -40,9 +61,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="number"
+                        android:maxLength="3"
                         android:textSize="20sp"
-                        android:textStyle="bold"
-                        android:maxLength="3"/>
+                        android:textStyle="bold" />
                 </com.google.android.material.textfield.TextInputLayout>
             </LinearLayout>
 
@@ -69,9 +90,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="number"
+                        android:maxLength="3"
                         android:textSize="20sp"
-                        android:textStyle="bold"
-                        android:maxLength="3"/>
+                        android:textStyle="bold" />
                 </com.google.android.material.textfield.TextInputLayout>
             </LinearLayout>
         </LinearLayout>
@@ -79,8 +100,7 @@
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="3"
-            >
+            android:layout_weight="3">
 
             <LinearLayout
                 android:layout_width="0dp"

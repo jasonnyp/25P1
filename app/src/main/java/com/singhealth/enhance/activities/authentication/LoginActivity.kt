@@ -61,21 +61,8 @@ class LoginActivity : AppCompatActivity() {
                 auth.signInWithEmailAndPassword(email, password)
                     .addOnCompleteListener(this) { task ->
                         if (task.isSuccessful) {
-                            //val user = auth.currentUser
-                            val authenticationIntent =
-                                Intent(this, MainActivity::class.java)
 
-                            val userInfoBundle = Bundle()
-                            userInfoBundle.putString("staffID", email)
-                            userInfoBundle.putString("password", password.toString())
-                            userInfoBundle.putString(
-                                "staffPhoneNumber",
-                                "99999999"
-                            )
-
-                            authenticationIntent.putExtras(userInfoBundle)
-
-                            startActivity(authenticationIntent)
+                            startActivity(Intent(this, MainActivity::class.java))
                             finish()
                         } else {
                             errorDialogBuilder(this, getString(R.string.login_error_header), getString(R.string.login_error_body))

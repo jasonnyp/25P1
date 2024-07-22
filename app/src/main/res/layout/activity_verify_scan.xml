@@ -17,7 +17,8 @@
             style="?attr/materialCardViewFilledStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp">
+            android:layout_marginBottom="8dp"
+            app:cardBackgroundColor="@color/theme_primary_variant">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -30,14 +31,16 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="4dp"
                     android:text="@string/enhance_verify_patient_id"
-                    android:textAppearance="?attr/textAppearanceBodyMedium" />
+                    android:textAppearance="?attr/textAppearanceBodyMedium"
+                    android:textSize="16sp" />
 
                 <TextView
                     android:id="@+id/patientIDTV"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="?attr/textAppearanceBodyLarge"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:textSize="16sp" />
 
                 <com.google.android.material.divider.MaterialDivider
                     android:layout_width="match_parent"
@@ -62,7 +65,8 @@
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="4dp"
                             android:text="@string/enhance_verify_home_bp"
-                            android:textAppearance="?attr/textAppearanceBodyMedium" />
+                            android:textAppearance="?attr/textAppearanceBodyMedium"
+                            android:textSize="16sp" />
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -75,7 +79,7 @@
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="0.7"
-                                android:textSize="18sp"
+                                android:textSize="16sp"
                                 android:layout_marginBottom="12dp"
                                 android:textStyle="bold"
                                 android:textAppearance="?attr/textAppearanceBodyLarge" />
@@ -85,16 +89,17 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginHorizontal="6dp"
                                 android:text="@string/enhance_verify_home_divider"
-                                android:textAppearance="?attr/textAppearanceBodyLarge" />
+                                android:textAppearance="?attr/textAppearanceBodyLarge"
+                                android:textSize="16sp" />
 
                             <TextView
                                 android:id="@+id/verifyHomeDia"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                android:textSize="18sp"
-                                android:layout_marginStart="1dp"
+                                android:textSize="16sp"
                                 android:layout_marginBottom="12dp"
+                                android:layout_marginStart="1dp"
                                 android:textStyle="bold"
                                 android:textAppearance="?attr/textAppearanceBodyLarge" />
                         </LinearLayout>
@@ -112,7 +117,8 @@
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="4dp"
                             android:text="@string/enhance_verify_clinic_target_bp"
-                            android:textAppearance="?attr/textAppearanceBodyMedium" />
+                            android:textAppearance="?attr/textAppearanceBodyMedium"
+                            android:textSize="16sp" />
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -125,7 +131,7 @@
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="0.7"
-                                android:textSize="18sp"
+                                android:textSize="16sp"
                                 android:layout_marginBottom="12dp"
                                 android:textStyle="bold"
                                 android:textAppearance="?attr/textAppearanceBodyLarge" />
@@ -135,14 +141,15 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginHorizontal="6dp"
                                 android:text="@string/enhance_verify_clinic_divider"
-                                android:textAppearance="?attr/textAppearanceBodyLarge" />
+                                android:textAppearance="?attr/textAppearanceBodyLarge"
+                                android:textSize="16sp" />
 
                             <TextView
                                 android:id="@+id/verifyClinicTargetDia"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                android:textSize="18sp"
+                                android:textSize="16sp"
                                 android:layout_marginBottom="12dp"
                                 android:layout_marginStart="1dp"
                                 android:textStyle="bold"
@@ -156,7 +163,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="4dp"
                     android:text="@string/enhance_verify_clinic_bp"
-                    android:textAppearance="?attr/textAppearanceBodyMedium" />
+                    android:textAppearance="?attr/textAppearanceBodyMedium"
+                    android:textSize="16sp" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -170,21 +178,20 @@
                         android:layout_weight="3"
                         android:orientation="horizontal">
 
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/verifyClinicSysBox"
-                        >
-
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/verifyClinicSys"
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/verifyClinicSysBox"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:inputType="number"
-                            android:maxLength="3"
-                            android:textSize="20sp"
-                            android:textStyle="bold" />
-                    </com.google.android.material.textfield.TextInputLayout>
+                            android:layout_height="wrap_content">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/verifyClinicSys"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:inputType="number"
+                                android:maxLength="3"
+                                android:textSize="16sp"
+                                android:textStyle="bold" />
+                        </com.google.android.material.textfield.TextInputLayout>
                     </LinearLayout>
 
                     <TextView
@@ -192,31 +199,32 @@
                         android:layout_height="match_parent"
                         android:layout_marginHorizontal="6dp"
                         android:gravity="center"
-                        android:text="@string/enhance_verify_clinic_divider"/>
+                        android:text="@string/enhance_verify_clinic_divider"
+                        android:textAppearance="?attr/textAppearanceBodyLarge"
+                        android:textSize="16sp" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_weight="3"
                         android:orientation="horizontal">
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:id="@+id/verifyClinicDiaBox"
-                        >
 
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/verifyClinicDia"
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/verifyClinicDiaBox"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:inputType="number"
-                            android:maxLength="3"
-                            android:textSize="20sp"
-                            android:textStyle="bold"
-                            />
-                    </com.google.android.material.textfield.TextInputLayout>
-                </LinearLayout>
+                            android:layout_height="match_parent">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/verifyClinicDia"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:inputType="number"
+                                android:maxLength="3"
+                                android:textSize="16sp"
+                                android:textStyle="bold" />
+                        </com.google.android.material.textfield.TextInputLayout>
                     </LinearLayout>
+                </LinearLayout>
 
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
@@ -249,14 +257,16 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="8dp"
-                    android:text="@string/enhance_verify_add_row" />
+                    android:text="@string/enhance_verify_add_row"
+                    android:textSize="16sp" />
 
                 <Button
                     android:id="@+id/moreOptionsBtn"
                     style="@style/Widget.Material3.Button.ElevatedButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/enhance_verify_more_options" />
+                    android:text="@string/enhance_verify_more_options"
+                    android:textSize="16sp" />
             </LinearLayout>
 
             <com.google.android.material.divider.MaterialDivider
@@ -269,14 +279,16 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="6dp"
                 android:text="@string/enhance_verify_disclaimer"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:textSize="16sp" />
 
             <Button
                 android:id="@+id/calculateAvgBPBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/enhance_verify_calculate_bp"
-                android:textAllCaps="true" />
+                android:textAllCaps="true"
+                android:textSize="16sp" />
         </LinearLayout>
     </LinearLayout>
 </ScrollView>

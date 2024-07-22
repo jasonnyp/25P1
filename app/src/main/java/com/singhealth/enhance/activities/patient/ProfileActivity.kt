@@ -120,10 +120,18 @@ class ProfileActivity : AppCompatActivity() {
 
         binding.profileLL.visibility = View.INVISIBLE
 
-        binding.profileLL.visibility = View.INVISIBLE
-
         progressDialog = ProgressDialog(this)
         progressDialog.setCanceledOnTouchOutside(false)
+
+        binding.editProfileSourceBtn.setOnClickListener {
+            if (SecureSharedPreferences.getSharedPreferences(applicationContext).getString("patientID", null)
+                    .isNullOrEmpty()
+            ) {
+                patientNotFoundInSessionErrorDialog(this)
+            } else {
+                startActivity(Intent(this, EditProfileActivity::class.java))
+            }
+        }
 
         val patientID = SecureSharedPreferences.getSharedPreferences(applicationContext).getString(
             "patientID",
@@ -142,81 +150,12 @@ class ProfileActivity : AppCompatActivity() {
         } else super.onOptionsItemSelected(item)
     }
 
-    // P1 2024: Determine the Patient's BP Stage (Seemingly unused)
-//    private fun diagnosePatient(patientID: String){
-//        var BPStage : String
-//        val db = Firebase.firestore
-//
-//        var docRef = db.collection("patients").document(patientID)
-//
-//        // Gets all past bp records for corresponding patient from db
-//        db.collection("patients").document(patientID).collection("visits").get()
-//            .addOnSuccessListener{ documents ->
-//                if (documents.isEmpty) {
-//                    BPStage = "N/A"
-//                    binding.bpStage.text = BPStage
-//                }
-//                else {
-//                    // Add all BP readings into array
-//                    val arr = ArrayList<Diag>()
-//                    val inputDateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")
-//                    for (document in documents) {
-//                        val dateTimeString = document.get("date") as? String
-//                        val dateTime = LocalDateTime.parse(dateTimeString, inputDateFormatter)
-//                        val SysBP = document.get("averageSysBP") as? Long
-//                        val DiaBP = document.get("averageDiaBP") as? Long
-//                        arr.add(Diag(
-//                            dateTime.toString(),
-//                            SysBP,
-//                            DiaBP)
-//                        )
-//                    }
-//                    // Sort array by date in descending order
-//                    val sortedArr = arr.sortedByDescending { it.date }
-//
-//                    // Get the first item in the array (most recent reading)
-//                    val recentSys = sortedArr[0].avgSysBP
-//                    val recentDia = sortedArr[0].avgDiaBP
-//                    val recentDate = sortedArr[0].date
-//
-//                    // Determine BP Stage
-//                    if (recentSys != null && recentDia != null) {
-//                        println("Date: $recentDate, Most Recent Sys: $recentSys, Most Recent Dia: $recentDia")
-//                        if (recentSys <= 120 && recentDia <= 80) {
-//                            BPStage = "(Normal BP)"
-//                        }
-//                        else if (recentSys >= 160 || recentDia >= 100) {
-//                            BPStage = "(Stage 2 Hypertension)"
-//                        }
-//                        else if (recentSys >= 140 || recentDia >= 90) {
-//                            BPStage = "(Stage 1 Hypertension)"
-//                        }
-//                        else if (recentSys > 120 || recentDia > 80) {
-//                            BPStage = "(High Normal BP)"
-//                        }
-//                        else {
-//                            BPStage = "N/A"
-//                        }
-//                        binding.bpStage.text = BPStage
-//
-//                        // Update db to store recent BP Stage
-//                        val data = hashMapOf("bpStage" to BPStage)
-//                        docRef.set(data, SetOptions.merge())
-//                    }
-//                    else {
-//                        println("Sys or Dia is null")
-//                    }
-//                }
-//            }
-//            .addOnFailureListener{
-//                    e -> println("Error getting documents: $e")
-//            }
-//    }
-
     private fun retrievePatient(patientID: String) {
-        progressDialog.setTitle(getString(R.string.profile_retrieve_data))
-        progressDialog.setMessage(getString(R.string.profile_retrieve_data_caption))
-        progressDialog.show()
+        if (intent.getStringExtra("Source") == "EditProfileActivity" || intent.getStringExtra("Source") == "MainActivity"){
+            progressDialog.setTitle(getString(R.string.profile_retrieve_data))
+            progressDialog.setMessage(getString(R.string.profile_retrieve_data_caption))
+            progressDialog.show()
+        }
 
         val docRef = db.collection("patients").document(patientID)
 
@@ -257,15 +196,13 @@ class ProfileActivity : AppCompatActivity() {
                                     docRef.set(data, SetOptions.merge())
                                 }
                             }
-
+                            binding.profileLL.visibility = View.VISIBLE
+                            progressDialog.dismiss()
                         }
                         .addOnFailureListener{ e ->
                             errorDialogBuilder(this, getString(R.string.profile_document_error_header), getString(R.string.profile_document_error_body, e))
                             println("Error getting documents: $e")
                         }
-
-                    binding.profileLL.visibility = View.VISIBLE
-                    progressDialog.dismiss()
                 }
             }
             .addOnFailureListener { e ->
@@ -346,4 +283,75 @@ class ProfileActivity : AppCompatActivity() {
                 firebaseErrorDialog(this, e, ::loadImageFromUrl, imageUrl)
             }
     }
+
+    // P1 2024: Determine the Patient's BP Stage (Seemingly unused)
+//    private fun diagnosePatient(patientID: String){
+//        var BPStage : String
+//        val db = Firebase.firestore
+//
+//        var docRef = db.collection("patients").document(patientID)
+//
+//        // Gets all past bp records for corresponding patient from db
+//        db.collection("patients").document(patientID).collection("visits").get()
+//            .addOnSuccessListener{ documents ->
+//                if (documents.isEmpty) {
+//                    BPStage = "N/A"
+//                    binding.bpStage.text = BPStage
+//                }
+//                else {
+//                    // Add all BP readings into array
+//                    val arr = ArrayList<Diag>()
+//                    val inputDateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")
+//                    for (document in documents) {
+//                        val dateTimeString = document.get("date") as? String
+//                        val dateTime = LocalDateTime.parse(dateTimeString, inputDateFormatter)
+//                        val SysBP = document.get("averageSysBP") as? Long
+//                        val DiaBP = document.get("averageDiaBP") as? Long
+//                        arr.add(Diag(
+//                            dateTime.toString(),
+//                            SysBP,
+//                            DiaBP)
+//                        )
+//                    }
+//                    // Sort array by date in descending order
+//                    val sortedArr = arr.sortedByDescending { it.date }
+//
+//                    // Get the first item in the array (most recent reading)
+//                    val recentSys = sortedArr[0].avgSysBP
+//                    val recentDia = sortedArr[0].avgDiaBP
+//                    val recentDate = sortedArr[0].date
+//
+//                    // Determine BP Stage
+//                    if (recentSys != null && recentDia != null) {
+//                        println("Date: $recentDate, Most Recent Sys: $recentSys, Most Recent Dia: $recentDia")
+//                        if (recentSys <= 120 && recentDia <= 80) {
+//                            BPStage = "(Normal BP)"
+//                        }
+//                        else if (recentSys >= 160 || recentDia >= 100) {
+//                            BPStage = "(Stage 2 Hypertension)"
+//                        }
+//                        else if (recentSys >= 140 || recentDia >= 90) {
+//                            BPStage = "(Stage 1 Hypertension)"
+//                        }
+//                        else if (recentSys > 120 || recentDia > 80) {
+//                            BPStage = "(High Normal BP)"
+//                        }
+//                        else {
+//                            BPStage = "N/A"
+//                        }
+//                        binding.bpStage.text = BPStage
+//
+//                        // Update db to store recent BP Stage
+//                        val data = hashMapOf("bpStage" to BPStage)
+//                        docRef.set(data, SetOptions.merge())
+//                    }
+//                    else {
+//                        println("Sys or Dia is null")
+//                    }
+//                }
+//            }
+//            .addOnFailureListener{
+//                    e -> println("Error getting documents: $e")
+//            }
+//    }
 }

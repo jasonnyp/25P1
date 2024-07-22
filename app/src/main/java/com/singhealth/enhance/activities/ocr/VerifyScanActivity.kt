@@ -259,6 +259,57 @@ class VerifyScanActivity : AppCompatActivity() {
         // Calculate and save average BP, home BP and clinic BP targets, then display outcome and recommendation (separate activity)
         binding.calculateAvgBPBtn.setOnClickListener {
             if (validateFields()) {
+                if (sevenDay){
+                    // Discard the readings of day 1
+                    val latestSysBPList = sysBPList.takeLast(28).drop(4)
+                    val latestDiaBPList = diaBPList.takeLast(28).drop(4)
+
+                    println("latestSysBPList: $latestSysBPList")
+                    println("latestDiaBPList: $latestDiaBPList")
+
+                    var validReadings = 0
+                    var totalReadings = 0
+                    val finalSysBPList = mutableListOf<String>()
+                    val finalDiaBPList = mutableListOf<String>()
+
+                    for (i in latestSysBPList.indices step 4) {
+                        if (i + 3 < latestSysBPList.size) {
+                            val morningSysBP1 = latestSysBPList[i].toInt()
+                            val morningDiaBP1 = latestDiaBPList[i].toInt()
+                            val morningSysBP2 = latestSysBPList[i + 1].toInt()
+                            val morningDiaBP2 = latestDiaBPList[i + 1].toInt()
+
+                            val eveningSysBP1 = latestSysBPList[i + 2].toInt()
+                            val eveningDiaBP1 = latestDiaBPList[i + 2].toInt()
+                            val eveningSysBP2 = latestSysBPList[i + 3].toInt()
+                            val eveningDiaBP2 = latestDiaBPList[i + 3].toInt()
+
+                            if ((morningSysBP1 >= targetSysBP.toInt() || morningDiaBP1 >= targetDiaBP.toInt())&& (morningSysBP1>=morningSysBP2 || morningDiaBP1>=morningDiaBP2)) {
+                                finalSysBPList.add(morningSysBP2.toString())
+                                finalDiaBPList.add(morningDiaBP2.toString())
+                            } else {
+                                finalSysBPList.add(morningSysBP1.toString())
+                                finalDiaBPList.add(morningDiaBP1.toString())
+                            }
+                            totalReadings++
+
+                            if ((eveningSysBP1 >= targetSysBP.toInt() || eveningDiaBP1 >= targetDiaBP.toInt()) && (eveningSysBP1 >= eveningSysBP2 || eveningDiaBP1 >= eveningDiaBP2)) {
+                                finalSysBPList.add(eveningSysBP2.toString())
+                                finalDiaBPList.add(eveningDiaBP2.toString())
+                            } else {
+                                finalSysBPList.add(eveningSysBP1.toString())
+                                finalDiaBPList.add(eveningDiaBP1.toString())
+                            }
+                            totalReadings++
+
+                            validReadings++
+                        }
+                    }
+
+                    // Set latestSysBPList and latestDiaBPList back to sysBPList and diaBPList
+                    sysBPList = finalSysBPList
+                    diaBPList = finalDiaBPList
+                }
                 getBPTarget()
                 calcAvgBP()
                 clinicSysBP = binding.verifyClinicSys.text.toString().toInt()
@@ -345,58 +396,12 @@ class VerifyScanActivity : AppCompatActivity() {
         sysBPList = intent.extras?.getStringArrayList("sysBPList")?.toMutableList() ?: mutableListOf()
         diaBPList = intent.extras?.getStringArrayList("diaBPList")?.toMutableList() ?: mutableListOf()
 
-        // Discard the readings of day 1
-        val latestSysBPList = sysBPList.takeLast(28).drop(4)
-        val latestDiaBPList = diaBPList.takeLast(28).drop(4)
-
-        println("latestSysBPList: $latestSysBPList")
-        println("latestDiaBPList: $latestDiaBPList")
-
-        var validReadings = 0
-        var totalReadings = 0
-        val finalSysBPList = mutableListOf<String>()
-        val finalDiaBPList = mutableListOf<String>()
-
-        for (i in latestSysBPList.indices step 4) {
-            if (i + 3 < latestSysBPList.size) {
-                val morningSysBP1 = latestSysBPList[i].toInt()
-                val morningDiaBP1 = latestDiaBPList[i].toInt()
-                val morningSysBP2 = latestSysBPList[i + 1].toInt()
-                val morningDiaBP2 = latestDiaBPList[i + 1].toInt()
-
-                val eveningSysBP1 = latestSysBPList[i + 2].toInt()
-                val eveningDiaBP1 = latestDiaBPList[i + 2].toInt()
-                val eveningSysBP2 = latestSysBPList[i + 3].toInt()
-                val eveningDiaBP2 = latestDiaBPList[i + 3].toInt()
-
-                if (morningSysBP1 >= targetSysBP.toInt() || morningDiaBP1 >= targetDiaBP.toInt()) {
-                    finalSysBPList.add(morningSysBP2.toString())
-                    finalDiaBPList.add(morningDiaBP2.toString())
-                } else {
-                    finalSysBPList.add(morningSysBP1.toString())
-                    finalDiaBPList.add(morningDiaBP1.toString())
-                }
-                totalReadings++
-
-                if (eveningSysBP1 >= targetSysBP.toInt() || eveningDiaBP1 >= targetDiaBP.toInt()) {
-                    finalSysBPList.add(eveningSysBP2.toString())
-                    finalDiaBPList.add(eveningDiaBP2.toString())
-                } else {
-                    finalSysBPList.add(eveningSysBP1.toString())
-                    finalDiaBPList.add(eveningDiaBP1.toString())
-                }
-                totalReadings++
-
-                validReadings++
-            }
-        }
-
         var day = 1
         var time = 0
         // Use finalSysBPList and finalDiaBPList for display
-        finalSysBPList.forEachIndexed { index, sysBP ->
+        sysBPList.forEachIndexed { index, sysBP ->
 
-            val diaBP = finalDiaBPList.getOrNull(index)
+            val diaBP = diaBPList.getOrNull(index)
             addRow(sysBP, diaBP, true, day, time)
             time += 1
             if (time%2 == 0){
@@ -404,18 +409,14 @@ class VerifyScanActivity : AppCompatActivity() {
             }
         }
         while (time <11 || day < 7){
-            finalSysBPList.add("999")
-            finalDiaBPList.add("999")
+            sysBPList.add("999")
+            diaBPList.add("999")
             addRow("999", "999", true, day, time)
             time += 1
             if (time%2 == 0){
                 day += 1
             }
         }
-
-        // Set latestSysBPList and latestDiaBPList back to sysBPList and diaBPList
-        sysBPList = finalSysBPList
-        diaBPList = finalDiaBPList
 
     }
 
@@ -563,7 +564,7 @@ class VerifyScanActivity : AppCompatActivity() {
             }else if (currentValueLength !in 2..3) {
                 errorCount += 1
                 setError(sysBPFields[i].parent.parent as TextInputLayout, ResourcesHelper.getString(this, R.string.verify_scan_invalid_value))
-            } else if (sysBPFields[i].text.toString().toInt() !in 90..150) {
+            } else if (sysBPFields[i].text.toString().toInt() !in 80..230) {
                 errorCount += 1
                 setError(sysBPFields[i].parent.parent as TextInputLayout, ResourcesHelper.getString(this, R.string.verify_scan_abnormal_value))
             }
@@ -584,7 +585,7 @@ class VerifyScanActivity : AppCompatActivity() {
             }else if (currentValueLength !in 2..3) {
                 errorCount += 1
                 setError(diaBPFields[i].parent.parent as TextInputLayout, ResourcesHelper.getString(this, R.string.verify_scan_invalid_value))
-            } else if (diaBPFields[i].text.toString().toInt() !in 60..110) {
+            } else if (diaBPFields[i].text.toString().toInt() !in 45..135) {
                 errorCount += 1
                 setError(diaBPFields[i].parent.parent as TextInputLayout, ResourcesHelper.getString(this, R.string.verify_scan_abnormal_value))
             }
@@ -600,10 +601,10 @@ class VerifyScanActivity : AppCompatActivity() {
                 setError(sysBPFields[i].parent.parent as TextInputLayout, ResourcesHelper.getString(this, R.string.verify_scan_whole_number))
             } else if (sysBPFields[i].text!!.toString().toInt() == 999) {
                 errorCount++
-                sysBPFields[i].error = "Replace value."
+                setError(sysBPFields[i].parent.parent as TextInputLayout, ResourcesHelper.getString(this, R.string.verify_scan_replace_value))
             }else if (currentValueLength !in 2..3) {
                 setError(sysBPFields[i].parent.parent as TextInputLayout, ResourcesHelper.getString(this, R.string.verify_scan_invalid_value))
-            } else if (sysBPFields[i].text.toString().toInt() !in 90..150) {
+            } else if (sysBPFields[i].text.toString().toInt() !in 80..230) {
                 setError(sysBPFields[i].parent.parent as TextInputLayout, ResourcesHelper.getString(this, R.string.verify_scan_abnormal_value))
             }
         }
@@ -617,10 +618,10 @@ class VerifyScanActivity : AppCompatActivity() {
                 setError(diaBPFields[i].parent.parent as TextInputLayout, ResourcesHelper.getString(this, R.string.verify_scan_whole_number))
             } else if (diaBPFields[i].text!!.toString().toInt() == 999) {
                 errorCount++
-                diaBPFields[i].error = "Replace value."
+                setError(diaBPFields[i].parent.parent as TextInputLayout, ResourcesHelper.getString(this, R.string.verify_scan_replace_value))
             }else if (currentValueLength !in 2..3) {
                 setError(diaBPFields[i].parent.parent as TextInputLayout, ResourcesHelper.getString(this, R.string.verify_scan_invalid_value))
-            } else if (diaBPFields[i].text.toString().toInt() !in 60..110) {
+            } else if (diaBPFields[i].text.toString().toInt() !in 45..135) {
                 setError(diaBPFields[i].parent.parent as TextInputLayout, ResourcesHelper.getString(this, R.string.verify_scan_abnormal_value))
             }
         }
@@ -727,10 +728,15 @@ class VerifyScanActivity : AppCompatActivity() {
                 setError(sysField.parent.parent as TextInputLayout, ResourcesHelper.getString(this, R.string.verify_scan_empty_field))
             } else if (sysField.text!!.toString().toInt() == 999) {
                 valid = false
-                sysField.error = "Replace field with correct value."
+                setError(sysField.parent.parent as TextInputLayout, ResourcesHelper.getString(this, R.string.verify_scan_abnormal_value))
             } else if (!sysField.text!!.isDigitsOnly()) {
                 valid = false
                 setError(sysField.parent.parent as TextInputLayout, ResourcesHelper.getString(this, R.string.verify_scan_whole_number))
+            }else if (sysField.text!!.length !in 2..3){
+                valid = false
+                setError(sysField.parent.parent as TextInputLayout, ResourcesHelper.getString(this, R.string.verify_scan_invalid_value))
+            }else if (sysField.text.toString().toInt() !in 50..230) {
+                setError(sysField.parent.parent as TextInputLayout, ResourcesHelper.getString(this, R.string.verify_scan_abnormal_value))
             }
         }
 
@@ -740,10 +746,15 @@ class VerifyScanActivity : AppCompatActivity() {
                 setError(diaField.parent.parent as TextInputLayout, ResourcesHelper.getString(this, R.string.verify_scan_empty_field))
             } else if (diaField.text!!.toString().toInt() == 999) {
                 valid = false
-                diaField.error = "Replace field with correct value."
+                setError(diaField.parent.parent as TextInputLayout, ResourcesHelper.getString(this, R.string.verify_scan_abnormal_value))
             }else if (!diaField.text!!.isDigitsOnly()) {
                 valid = false
                 setError(diaField.parent.parent as TextInputLayout, ResourcesHelper.getString(this, R.string.verify_scan_whole_number))
+            }else if (diaField.text!!.length !in 2..3){
+                valid = false
+                setError(diaField.parent.parent as TextInputLayout, ResourcesHelper.getString(this, R.string.verify_scan_invalid_value))
+            }else if (diaField.text.toString().toInt() !in 35..135) {
+                setError(diaField.parent.parent as TextInputLayout, ResourcesHelper.getString(this, R.string.verify_scan_abnormal_value))
             }
         }
 
@@ -821,7 +832,7 @@ class VerifyScanActivity : AppCompatActivity() {
             } else {
                 val sysBPInt = sysBP?.toIntOrNull() ?: 0
                 val diaBPInt = diaBP?.toIntOrNull() ?: 0
-                if (sysBPInt > targetSysBP.toInt() || diaBPInt > targetDiaBP.toInt()) {
+                if (sysBPInt >= targetSysBP.toInt() || diaBPInt >= targetDiaBP.toInt()) {
                     sysBPTIET.setTextColor(resources.getColor(R.color.red, null))
                     diaBPTIET.setTextColor(resources.getColor(R.color.red, null))
                 } else {

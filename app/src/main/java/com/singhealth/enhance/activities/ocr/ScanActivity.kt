@@ -21,6 +21,7 @@ import com.canhub.cropper.CropImageOptions
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.ml.vision.FirebaseVision
 import com.google.firebase.ml.vision.common.FirebaseVisionImage
+import com.google.firebase.ml.vision.document.FirebaseVisionCloudDocumentRecognizerOptions
 import com.google.firebase.ml.vision.document.FirebaseVisionDocumentText
 import com.singhealth.enhance.R
 import com.singhealth.enhance.activities.*
@@ -175,7 +176,13 @@ class ScanActivity : AppCompatActivity() {
         progressDialog.setMessage("Please wait a moment...")
         progressDialog.show()
 
-        val ocrEngine = FirebaseVision.getInstance().cloudDocumentTextRecognizer
+
+        val options = FirebaseVisionCloudDocumentRecognizerOptions.Builder()
+            .setLanguageHints(listOf("kr")) // Set language hints if needed
+            .build()
+
+
+        val ocrEngine = FirebaseVision.getInstance().getCloudDocumentTextRecognizer(options)
         val imageToProcess = FirebaseVisionImage.fromFilePath(this, outputUri)
 
         ocrEngine.processImage(imageToProcess)
@@ -208,18 +215,24 @@ class ScanActivity : AppCompatActivity() {
                 .filter { it != "*" && it != "7" && it != "07" && it != "8" }
                 .map {
                     when (it) {
-                        "Sis", "Eis", "Su" -> "84"
+                        "Sis", "Eis", "Su", "Eu", "fir" -> "84"
                         "14" -> "121"
                         "10" -> "70"
                         "16" -> "116"
                         "1/6" -> "116"
+                        "T17" -> "117"
+                        "+5" -> "75"
+                        "+9" -> "79"
+                        "川", "!!!" -> "111"
+                        "734" -> "134"
+                        "13T" -> "131"
                         else -> it.replace(Regex("[^\\d]"), "")
                     }
                 }
-                .filter { it.matches(Regex("\\d+")) && it.toInt() in 40..210 }
+                .map { it.replace(Regex("(\\d*)T(\\d*)"), "1$1$2") }
+                .filter { it.matches(Regex("\\d+")) && it.toInt() in 45..230 }
                 .map { it.toInt() }
                 .toMutableList()
-
             println("Filtered numbers: $numbers")
             processNumbers(numbers, sysBPList, diaBPList)
             fixCommonErrors(sysBPList, diaBPList)
@@ -260,17 +273,22 @@ class ScanActivity : AppCompatActivity() {
             val diastolic = numbers.getOrNull(i + 1)
 
             if (systolic != null && diastolic != null) {
-                if (systolic in 100..210 && diastolic in 40..100) {
-                    correctedNumbers.add(systolic)
+                 if (systolic in 80..230 && diastolic in 45..135) {
+                    if (diastolic > systolic){
+                        correctedNumbers.add(diastolic)
+                        correctedNumbers.add(systolic)
+                    } else {
+                        correctedNumbers.add(systolic)
+                        correctedNumbers.add(diastolic)
+                    }
+                } else if (systolic in 45..135 && diastolic in 80..230) {
                     correctedNumbers.add(diastolic)
-                } else if (systolic in 40..100 && diastolic in 100..210) {
-                    correctedNumbers.add(diastolic)
                     correctedNumbers.add(systolic)
-                } else if (systolic in 40..100 || systolic >= 211) {
+                } else if (systolic !in 80..230) {
                     correctedNumbers.add(999)
                     correctedNumbers.add(diastolic)
                     i -= 1
-                } else if (diastolic in 120..200 || diastolic <= 39) {
+                } else if (diastolic !in 45..135) {
                     correctedNumbers.add(systolic)
                     correctedNumbers.add(999)
                     i -= 1
@@ -300,6 +318,7 @@ class ScanActivity : AppCompatActivity() {
                 diaBPList.add(value.toString())
             }
         }
+
     }
 
 

@@ -126,7 +126,9 @@ class MainActivity : AppCompatActivity() {
             .addOnSuccessListener { document ->
                 if (document.exists()) {
                     savePatientData(patientID)
-                    startActivity(Intent(this, ProfileActivity::class.java))
+                    val profileActivityIntent = Intent(this, ProfileActivity::class.java)
+                    profileActivityIntent.putExtra("Source", "MainActivity")
+                    startActivity(profileActivityIntent)
                 } else {
                     errorDialogBuilder(this, getString(R.string.main_activity_patient_header), getString(R.string.main_activity_patient_header))
                 }

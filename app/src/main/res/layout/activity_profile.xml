@@ -164,7 +164,29 @@
                         </LinearLayout>
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
+                <!-- Buttons Container -->
+                <LinearLayout
+                    android:id="@+id/buttonsProfileContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_above="@id/bottomNavigationView"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:paddingTop="20dp">
+
+                    <Button
+                        android:id="@+id/editProfileSourceBtn"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="12dp"
+                        android:layout_weight="0.9"
+                        android:text="@string/profile_edit_button"
+                        android:textAllCaps="true" />
+
+
+                </LinearLayout>
             </LinearLayout>
+
         </ScrollView>
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
