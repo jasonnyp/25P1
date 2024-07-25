@@ -1,9 +1,22 @@
 package com.singhealth.enhance.activities.dashboard
 
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.Canvas
 import android.graphics.Color
+import android.graphics.Paint
+import android.graphics.pdf.PdfDocument
 import android.os.Bundle
+import android.os.CancellationSignal
+import android.os.ParcelFileDescriptor
+import android.print.PageRange
+import android.print.PrintAttributes
+import android.print.PrintDocumentAdapter
+import android.print.PrintDocumentInfo
+import android.print.PrintManager
+import android.print.pdf.PrintedPdfDocument
 import android.view.MenuItem
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
@@ -27,6 +40,8 @@ import com.singhealth.enhance.activities.patient.RegistrationActivity
 import com.singhealth.enhance.activities.settings.SettingsActivity
 import com.singhealth.enhance.databinding.ActivitySimpleDashboardBinding
 import com.singhealth.enhance.security.SecureSharedPreferences
+import java.io.FileOutputStream
+import java.io.IOException
 import java.text.SimpleDateFormat
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -48,13 +63,12 @@ class SimpleDashboardActivity : AppCompatActivity() {
 
     private lateinit var lineChart: LineChart
     private lateinit var diastolicLineChart: LineChart
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-
         binding = ActivitySimpleDashboardBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
 
         // Navigation drawer
         actionBarDrawerToggle = ActionBarDrawerToggle(this, binding.drawerLayout, 0, 0)
@@ -123,8 +137,7 @@ class SimpleDashboardActivity : AppCompatActivity() {
         }
 
         // Check if patient information exist in session
-        val patientSharedPreferences =
-            SecureSharedPreferences.getSharedPreferences(applicationContext)
+        val patientSharedPreferences = SecureSharedPreferences.getSharedPreferences(applicationContext)
         if (patientSharedPreferences.getString("patientID", null).isNullOrEmpty()) {
             Toast.makeText(
                 this,
@@ -137,13 +150,15 @@ class SimpleDashboardActivity : AppCompatActivity() {
             patientID = patientSharedPreferences.getString("patientID", null).toString()
         }
 
+        binding.printSourceBtn.setOnClickListener {
+            printCharts()
+        }
+
         db.collection("patients").document(patientID).collection("visits").get()
             .addOnSuccessListener { documents ->
                 if (documents.isEmpty) {
                     println("Empty Collection: 'visits'")
                 } else {
-
-
                     val inputDateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")
                     val outputDateFormatter = DateTimeFormatter.ofPattern("dd MMM yyyy, HH:mm:ss")
 
@@ -199,153 +214,264 @@ class SimpleDashboardActivity : AppCompatActivity() {
             }
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return if (actionBarDrawerToggle.onOptionsItemSelected(item)) {
-            true
-        } else super.onOptionsItemSelected(item)
-    }
-
     private fun setupLineChart() {
         val systolicEntries = ArrayList<Entry>()
         val systolicTargetEntries = ArrayList<Entry>()
 
-        val inputDateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss" , Locale.getDefault())
-        val correctlySortedHistory = sortedHistory.sortedBy { historyData ->
-            inputDateFormat.parse(historyData.date)
-        }
-// Initialize a map to hold date strings to indices
-        val dateToIndexMap = correctlySortedHistory.map { it.date }.distinct().withIndex().associate { it.value to it.index.toFloat() }
+        val inputDateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault())
+        val outputDateFormat = SimpleDateFormat("dd/MM/yy", Locale.getDefault())
+        val limitedHistory = sortedHistory
+            .sortedBy { historyData -> inputDateFormat.parse(historyData.date) }
+            .takeLast(3)
 
-        sortedHistory.forEach { historyData ->
+        val dateToIndexMap = limitedHistory.map { it.date }
+            .distinct()
+            .withIndex()
+            .associate { it.value to it.index.toFloat() }
+
+        limitedHistory.forEach { historyData ->
             val systolicValue = historyData.avgSysBP?.toFloat() ?: 0f
             val systolicTargetValue = historyData.homeSysBPTarget?.toFloat() ?: 0f
-
-            /*val dateString = historyData.date // Assuming this is a String
-            val date = inputDateFormat.parse(dateString) // Parse the date string
-            val dateFloat = date.time.toFloat() // Convert date to float for the x-axis*/
-
-            val index = dateToIndexMap[historyData.date] ?: 0f // Get the index for the date
+            val index = dateToIndexMap[historyData.date] ?: 0f
 
             systolicEntries.add(Entry(index, systolicValue))
             systolicTargetEntries.add(Entry(index, systolicTargetValue))
         }
-        Collections.sort(systolicEntries, EntryXComparator())
-        Collections.sort(systolicTargetEntries, EntryXComparator())
 
-        // Create data sets for systolic and diastolic values
-        val systolicDataSet = LineDataSet(systolicEntries, "Systolic BP")
-        val systolicTargetDataSet = LineDataSet(systolicTargetEntries, "Systolic Target BP")
-        lineChart.description.text = ""
-        lineChart.xAxis.labelRotationAngle = -90f
+        systolicEntries.sortBy { it.x }
+        systolicTargetEntries.sortBy { it.x }
 
-        // Customize the data sets appearance (Optional)
-        systolicDataSet.color = Color.BLUE
-        systolicDataSet.valueTextSize = 15f // Set your desired text size
-        systolicTargetDataSet.color = Color.RED
-        systolicTargetDataSet.valueTextSize = 15f // Set your desired text size
-
-        // Create LineData with the data sets
-        val lineData = LineData(systolicDataSet, systolicTargetDataSet)
-
-        lineChart.xAxis.textSize = 13f // Set your desired text size
-        lineChart.axisLeft.textSize = 15f // Set your desired text size
-        lineChart.axisRight.textSize = 15f // Set your desired text size
-        lineChart.legend.textSize = 15f // Set your desired t
-
-        //lineChart.xAxis.labelRotationAngle = -45f
-
-        // Set the custom ValueFormatter for x-axis
-        lineChart.xAxis.valueFormatter = object : ValueFormatter() {
-            private val indexToDateMap = dateToIndexMap.entries.associateBy({ it.value }) { it.key }
-
-            override fun getAxisLabel(value: Float, axis: AxisBase?): String {
-                return indexToDateMap[value]?.let {
-                    val date = SimpleDateFormat("yyyy-MM-dd'T'HH:mm", Locale.getDefault()).parse(it)
-                    SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(date)
-                } ?: ""
-            }
+        val systolicDataSet = LineDataSet(systolicEntries, "Systolic BP").apply {
+            color = Color.BLUE
+            valueTextSize = 15f
         }
-        lineChart.xAxis.granularity = 1f
-        lineChart.xAxis.labelCount = dateToIndexMap.size
 
-        lineChart.xAxis.position = XAxis.XAxisPosition.BOTTOM
+        val systolicTargetDataSet = LineDataSet(systolicTargetEntries, "Systolic Target BP").apply {
+            color = Color.RED
+            valueTextSize = 15f
+        }
 
-        // Set the data on the chart
-        lineChart.data = lineData
+        lineChart.apply {
+            description.text = ""
+            xAxis.apply {
+                labelRotationAngle = 0f
+                textSize = 13f
+                granularity = 1f
+                labelCount = dateToIndexMap.size
+                position = XAxis.XAxisPosition.BOTTOM
+                setAvoidFirstLastClipping(true)
+                axisMinimum = -0.2f // Add padding to the left
+                axisMaximum = (dateToIndexMap.size - 1).toFloat() + 0.2f // Add padding to the right
+                valueFormatter = object : ValueFormatter() {
+                    private val indexToDateMap = dateToIndexMap.entries.associateBy({ it.value }) { it.key }
 
-        // Refresh the chart
-        lineChart.invalidate()
+                    override fun getAxisLabel(value: Float, axis: AxisBase?): String {
+                        return indexToDateMap[value]?.let {
+                            outputDateFormat.format(inputDateFormat.parse(it))
+                        } ?: ""
+                    }
+                }
+            }
+            axisLeft.apply {
+                textSize = 15f
+                setDrawGridLines(false)
+            }
+            axisRight.apply {
+                textSize = 15f
+                setDrawGridLines(false)
+            }
+            legend.textSize = 15f
+            extraBottomOffset = 10f // Add extra offset for spacing
+            data = LineData(systolicDataSet, systolicTargetDataSet)
+            invalidate()
+        }
     }
 
     private fun setupDiastolicLineChart() {
-        // Similar code as setupSystolicLineChart() but for diastolic data
-        // Use diastolicLineChart for this setup
-
-        val diastolicTargetEntries = ArrayList<Entry>()
         val diastolicEntries = ArrayList<Entry>()
+        val diastolicTargetEntries = ArrayList<Entry>()
+
         val inputDateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm", Locale.getDefault())
-        val correctlySortedHistory = sortedHistory.sortedBy { historyData ->
-            inputDateFormat.parse(historyData.date)
-        }
+        val outputDateFormat = SimpleDateFormat("dd/MM/yy", Locale.getDefault())
+        val limitedHistory = sortedHistory
+            .sortedBy { historyData -> inputDateFormat.parse(historyData.date) }
+            .takeLast(3)
 
-        val dateToIndexMap = correctlySortedHistory.map { it.date }.distinct().withIndex().associate { it.value to it.index.toFloat() }
+        val dateToIndexMap = limitedHistory.map { it.date }
+            .distinct()
+            .withIndex()
+            .associate { it.value to it.index.toFloat() }
 
-        sortedHistory.forEach { historyData ->
-            val diastolicTargetValue = historyData.homeDiaBPTarget?.toFloat() ?: 0f
+        limitedHistory.forEach { historyData ->
             val diastolicValue = historyData.avgDiaBP?.toFloat() ?: 0f
+            val diastolicTargetValue = historyData.homeDiaBPTarget?.toFloat() ?: 0f
+            val index = dateToIndexMap[historyData.date] ?: 0f
 
-//            val dateString = historyData.date // Assuming this is a String
-//            val date = inputDateFormat.parse(dateString) // Parse the date string
-//            val dateFloat = date.time.toFloat() // Convert date to float for the x-axis
-            val index = dateToIndexMap[historyData.date] ?: 0f // Get the index for the date
-
-
-            println("Target" + diastolicTargetValue)
             diastolicEntries.add(Entry(index, diastolicValue))
             diastolicTargetEntries.add(Entry(index, diastolicTargetValue))
         }
 
-        Collections.sort(diastolicEntries, EntryXComparator())
-        Collections.sort(diastolicTargetEntries, EntryXComparator())
+        diastolicEntries.sortBy { it.x }
+        diastolicTargetEntries.sortBy { it.x }
 
-        // Create data sets for systolic and diastolic values
-        val diastolicTargetDataSet = LineDataSet(diastolicTargetEntries, "Diastolic Target BP")
-        val diastolicDataSet = LineDataSet(diastolicEntries, "Diastolic BP")
-        diastolicLineChart.description.text = ""
-        diastolicLineChart.xAxis.labelRotationAngle = -90f
+        val diastolicDataSet = LineDataSet(diastolicEntries, "Diastolic BP").apply {
+            color = Color.BLUE
+            valueTextSize = 15f
+        }
 
-        // Customize the data sets appearance (Optional)
-        diastolicTargetDataSet.color = Color.RED
-        diastolicLineChart.axisLeft.textSize = 15f // Set your desired text size
-        diastolicDataSet.color = Color.BLUE
-        diastolicDataSet.valueTextSize = 15f // Set your desired text size
+        val diastolicTargetDataSet = LineDataSet(diastolicTargetEntries, "Diastolic Target BP").apply {
+            color = Color.RED
+            valueTextSize = 15f
+        }
 
-        // Create LineData with the data sets
-        val lineData = LineData(diastolicDataSet, diastolicTargetDataSet)
+        diastolicLineChart.apply {
+            description.text = ""
+            xAxis.apply {
+                labelRotationAngle = 0f
+                textSize = 13f
+                granularity = 1f
+                labelCount = dateToIndexMap.size
+                position = XAxis.XAxisPosition.BOTTOM
+                setAvoidFirstLastClipping(true)
+                axisMinimum = -0.2f // Add padding to the left
+                axisMaximum = (dateToIndexMap.size - 1).toFloat() + 0.2f // Add padding to the right
+                valueFormatter = object : ValueFormatter() {
+                    private val indexToDateMap = dateToIndexMap.entries.associateBy({ it.value }) { it.key }
 
-        diastolicLineChart.xAxis.textSize = 13f // Set your desired text size
-        diastolicLineChart.axisLeft.textSize = 15f // Set your desired text size
-        diastolicLineChart.axisRight.textSize = 15f // Set your desired text size
-        diastolicLineChart.legend.textSize = 15f // Set your desired t
-        // Set the custom ValueFormatter for x-axis
-        diastolicLineChart.xAxis.valueFormatter = object : ValueFormatter() {
-            private val indexToDateMap = dateToIndexMap.entries.associateBy({ it.value }) { it.key }
+                    override fun getAxisLabel(value: Float, axis: AxisBase?): String {
+                        return indexToDateMap[value]?.let {
+                            outputDateFormat.format(inputDateFormat.parse(it))
+                        } ?: ""
+                    }
+                }
+            }
+            axisLeft.apply {
+                textSize = 15f
+                setDrawGridLines(false)
+            }
+            axisRight.apply {
+                textSize = 15f
+                setDrawGridLines(false)
+            }
+            legend.textSize = 15f
+            extraBottomOffset = 10f // Add extra offset for spacing
+            data = LineData(diastolicDataSet, diastolicTargetDataSet)
+            invalidate()
+        }
+    }
 
-            override fun getAxisLabel(value: Float, axis: AxisBase?): String {
-                return indexToDateMap[value]?.let {
-                    val date = SimpleDateFormat("yyyy-MM-dd'T'HH:mm", Locale.getDefault()).parse(it)
-                    SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(date)
-                } ?: ""
+
+    private fun printCharts() {
+        val printManager = getSystemService(PRINT_SERVICE) as PrintManager
+        val jobName = "${getString(R.string.app_name)}_Charts"
+
+        val printAdapter = object : PrintDocumentAdapter() {
+            private var currentPrintAttributes: PrintAttributes? = null
+
+            override fun onLayout(
+                oldAttributes: PrintAttributes?,
+                newAttributes: PrintAttributes?,
+                cancellationSignal: CancellationSignal?,
+                callback: LayoutResultCallback?,
+                extras: Bundle?
+            ) {
+                if (cancellationSignal?.isCanceled == true) {
+                    callback?.onLayoutCancelled()
+                    return
+                }
+                currentPrintAttributes = newAttributes
+                val printInfo = PrintDocumentInfo.Builder(jobName)
+                    .setContentType(PrintDocumentInfo.CONTENT_TYPE_DOCUMENT)
+                    .build()
+                callback?.onLayoutFinished(printInfo, true)
+            }
+
+            override fun onWrite(
+                pages: Array<out PageRange>?,
+                destination: ParcelFileDescriptor?,
+                cancellationSignal: CancellationSignal?,
+                callback: WriteResultCallback?
+            ) {
+                if (cancellationSignal?.isCanceled == true) {
+                    callback?.onWriteCancelled()
+                    return
+                }
+                currentPrintAttributes?.let { printAttributes ->
+                    val pdfDocument = PrintedPdfDocument(this@SimpleDashboardActivity, printAttributes)
+
+                    // Create a page description
+                    val totalHeight = lineChart.height + diastolicLineChart.height + 200 // Adding extra space for headings
+                    val pageInfo = PdfDocument.PageInfo.Builder(lineChart.width, totalHeight, 1).create()
+
+                    // Start a page
+                    val page = pdfDocument.startPage(pageInfo)
+
+                    // Draw the charts on the page with headings
+                    drawChartsOnPage(page, lineChart, diastolicLineChart)
+                    pdfDocument.finishPage(page)
+
+                    try {
+                        destination?.fileDescriptor?.let {
+                            FileOutputStream(it).use { fileOutputStream ->
+                                pdfDocument.writeTo(fileOutputStream)
+                            }
+                        }
+                    } catch (e: IOException) {
+                        callback?.onWriteFailed(e.toString())
+                        return
+                    } finally {
+                        pdfDocument.close()
+                    }
+                    callback?.onWriteFinished(arrayOf(PageRange.ALL_PAGES))
+                } ?: run {
+                    // Handle the case where currentPrintAttributes is null
+                    callback?.onWriteFailed("Print attributes are null")
+                }
+            }
+
+            private fun drawChartsOnPage(page: PdfDocument.Page, chart1: LineChart, chart2: LineChart) {
+                val canvas = page.canvas
+                val paint = Paint().apply {
+                    textSize = 45f
+                    isFakeBoldText = true
+                }
+
+                val headingHeight = 50 // Height reserved for headings
+                val chartSpacing = 50 // Spacing between the charts
+
+                // Draw headings
+                canvas.drawText("Systolic Comparison Chart", 0f,
+                    (headingHeight + 20).toFloat(), paint)
+
+                // Draw the first chart
+                val bitmap1 = getBitmapFromView(chart1)
+                canvas.drawBitmap(bitmap1, 0f, headingHeight.toFloat(), paint)
+
+                // Draw the second heading
+                canvas.drawText("Diastolic Comparison Chart", 0f,
+                    (bitmap1.height + headingHeight + 50 + chartSpacing).toFloat(), paint)
+
+                // Draw the second chart
+                val bitmap2 = getBitmapFromView(chart2)
+                val spacing = bitmap1.height + headingHeight + chartSpacing + 50
+                canvas.drawBitmap(bitmap2, 0f, spacing.toFloat(), paint)            }
+
+            private fun getBitmapFromView(view: View): Bitmap {
+                val bitmap = Bitmap.createBitmap(view.width, view.height, Bitmap.Config.ARGB_8888)
+                val canvas = Canvas(bitmap)
+                view.draw(canvas)
+                return bitmap
             }
         }
-        diastolicLineChart.xAxis.granularity = 1f
-        diastolicLineChart.xAxis.labelCount = dateToIndexMap.size
-        diastolicLineChart.xAxis.position = XAxis.XAxisPosition.BOTTOM
 
-        // Set the data on the chart
-        diastolicLineChart.data = lineData
+        val printAttributes = PrintAttributes.Builder()
+            .setMediaSize(PrintAttributes.MediaSize.NA_LETTER) // or any size that fits your requirement
+            .setResolution(PrintAttributes.Resolution("default", "default", 300, 300))
+            .setMinMargins(PrintAttributes.Margins.NO_MARGINS)
+            .build()
 
-        // Refresh the chart
-        diastolicLineChart.invalidate()
+        printManager.print(jobName, printAdapter, printAttributes)
     }
+
+
 }
