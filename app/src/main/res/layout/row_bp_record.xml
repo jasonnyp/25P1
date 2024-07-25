@@ -27,7 +27,7 @@
             android:layout_weight="0.1" />
 
         <Button
-            android:id="@+id/addRowBtn"
+            android:id="@+id/addOneRowBtn"
             style="?attr/materialButtonOutlinedStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

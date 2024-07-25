@@ -204,9 +204,6 @@ class EditProfileActivity : AppCompatActivity() {
         binding.updateBtn.setOnClickListener {
             if (validateFields()) {
                 updatePatient()
-                var profileActivityIntent = Intent(this, ProfileActivity::class.java)
-                profileActivityIntent.extras?.putString("Source", "EditProfileActivity")
-                startActivity(Intent(profileActivityIntent))
             } else {
                 Toast.makeText(
                     this,
@@ -439,7 +436,9 @@ class EditProfileActivity : AppCompatActivity() {
                                     Toast.LENGTH_SHORT
                                 ).show()
 
-                                startActivity(Intent(this, ProfileActivity::class.java))
+                                var profileActivityIntent = Intent(this, ProfileActivity::class.java)
+                                profileActivityIntent.extras?.putString("Source", "EditProfileActivity")
+                                startActivity(Intent(profileActivityIntent))
                                 finish()
                             }
                             .addOnFailureListener { e ->

@@ -223,7 +223,7 @@ class ScanActivity : AppCompatActivity() {
                         "T17" -> "117"
                         "+5" -> "75"
                         "+9" -> "79"
-                        "川", "!!!" -> "111"
+                        "川", "!!!", "|||" -> "111"
                         "734" -> "134"
                         "13T" -> "131"
                         else -> it.replace(Regex("[^\\d]"), "")
@@ -287,11 +287,9 @@ class ScanActivity : AppCompatActivity() {
                 } else if (systolic !in 80..230) {
                     correctedNumbers.add(999)
                     correctedNumbers.add(diastolic)
-                    i -= 1
                 } else if (diastolic !in 45..135) {
                     correctedNumbers.add(systolic)
                     correctedNumbers.add(999)
-                    i -= 1
                 } else {
                     correctedNumbers.add(999)
                     correctedNumbers.add(999)
@@ -347,9 +345,9 @@ class ScanActivity : AppCompatActivity() {
 
 
         val verifyScanIntent = Intent(this, VerifyScanActivity::class.java).apply { putExtras(bundle) }
-        progressDialog.dismiss()
         startActivity(verifyScanIntent)
         finish()
+        progressDialog.dismiss()
     }
 
 
