@@ -11,6 +11,9 @@
     <string name="login_validate_staff">工作人員識別碼不能為空！</string>
     <string name="login_validate_password">密碼不能為空！</string>
 
+    <!-- SimpleDashboardActivity strings -->
+    <string name="dashboard_no_records_found">未找到記錄。</string>
+
     <!-- ScanActivity strings -->
     <string name="ocr_instructions">請確保僅顯示血壓值，裁剪時排除所有標題。</string>
     <string name="ocr_app_permissions_header">啟用應用權限</string>
@@ -214,7 +217,6 @@
     <!-- activity_scan.xml -->
     <string name="enhance_scan_patient_id">患者身份證號：</string>
     <string name="enhance_scan_name">姓名：</string>
-    <string name="enhance_scan_source">選擇來源</string>
 
     <!-- activity_settings.xml -->
     <string name="enhance_settings_account">帳戶</string>

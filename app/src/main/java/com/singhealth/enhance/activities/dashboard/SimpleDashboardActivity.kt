@@ -1,14 +1,10 @@
-package com.singhealth.enhance.activities// MainActivity.kt
+package com.singhealth.enhance.activities.dashboard
 
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.view.MenuItem
-import android.view.View
-import android.webkit.WebChromeClient
-import android.webkit.WebSettings
-import android.webkit.WebView
-import android.webkit.WebViewClient
+import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import com.github.mikephil.charting.charts.LineChart
@@ -22,14 +18,14 @@ import com.github.mikephil.charting.utils.EntryXComparator
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.singhealth.enhance.R
-import com.singhealth.enhance.activities.error.patientNotFoundInSessionErrorDialog
+import com.singhealth.enhance.activities.MainActivity
 import com.singhealth.enhance.activities.history.HistoryActivity
 import com.singhealth.enhance.activities.history.HistoryData
 import com.singhealth.enhance.activities.ocr.ScanActivity
 import com.singhealth.enhance.activities.patient.ProfileActivity
 import com.singhealth.enhance.activities.patient.RegistrationActivity
 import com.singhealth.enhance.activities.settings.SettingsActivity
-import com.singhealth.enhance.databinding.DashboardBinding
+import com.singhealth.enhance.databinding.ActivitySimpleDashboardBinding
 import com.singhealth.enhance.security.SecureSharedPreferences
 import java.text.SimpleDateFormat
 import java.time.LocalDateTime
@@ -37,10 +33,9 @@ import java.time.format.DateTimeFormatter
 import java.util.Collections
 import java.util.Locale
 
+class SimpleDashboardActivity : AppCompatActivity() {
 
-class DashboardActivity : AppCompatActivity() {
-
-    private lateinit var binding: DashboardBinding
+    private lateinit var binding: ActivitySimpleDashboardBinding
 
     private lateinit var actionBarDrawerToggle: ActionBarDrawerToggle
 
@@ -53,12 +48,11 @@ class DashboardActivity : AppCompatActivity() {
 
     private lateinit var lineChart: LineChart
     private lateinit var diastolicLineChart: LineChart
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
 
-        binding = DashboardBinding.inflate(layoutInflater)
+        binding = ActivitySimpleDashboardBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
 
@@ -128,15 +122,17 @@ class DashboardActivity : AppCompatActivity() {
             }
         }
 
-        // Reload WebView
-        binding.reloadBtn.setOnClickListener(View.OnClickListener {
-            binding.WB.reload()
-        })
-
         // Check if patient information exist in session
-        val patientSharedPreferences = SecureSharedPreferences.getSharedPreferences(applicationContext)
+        val patientSharedPreferences =
+            SecureSharedPreferences.getSharedPreferences(applicationContext)
         if (patientSharedPreferences.getString("patientID", null).isNullOrEmpty()) {
-            patientNotFoundInSessionErrorDialog(this)
+            Toast.makeText(
+                this,
+                "Patient information could not be found in current session. Please try again.",
+                Toast.LENGTH_LONG
+            ).show()
+            startActivity(Intent(this, MainActivity::class.java))
+            finish()
         } else {
             patientID = patientSharedPreferences.getString("patientID", null).toString()
         }
@@ -146,8 +142,10 @@ class DashboardActivity : AppCompatActivity() {
                 if (documents.isEmpty) {
                     println("Empty Collection: 'visits'")
                 } else {
+
+
                     val inputDateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")
-                    val outputDateFormatter = DateTimeFormatter.ofPattern(getString(R.string.date_format))
+                    val outputDateFormatter = DateTimeFormatter.ofPattern("dd MMM yyyy, HH:mm:ss")
 
                     for (document in documents) {
                         val dateTimeString = document.get("date") as? String
@@ -172,44 +170,35 @@ class DashboardActivity : AppCompatActivity() {
                                 clinicSysBPTarget,
                                 clinicDiaBPTarget,
                                 clinicSysBP,
-                                clinicDiaBP
+                                clinicDiaBP,
                             )
                         )
                     }
+                }
 
-                    sortedHistory = history.sortedByDescending { it.date }
-                    println("Sorted History$sortedHistory")
+                sortedHistory = history.sortedByDescending { it.date }
+
+                if (sortedHistory.isEmpty()) {
+                    Toast.makeText(
+                        this,
+                        getString(R.string.dashboard_no_records_found),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                } else {
+                    println("BIG BALLer")
+
+                    println("Sorted History" + sortedHistory)
                     println("Sorted History 1st" + sortedHistory[0])
                     println("Sorted History 1st SYS DATA" + sortedHistory[0].avgSysBP)
 
-                    /*
                     lineChart = findViewById(R.id.syslineChart)
                     setupLineChart()
                     diastolicLineChart = findViewById(R.id.diastolicLineChart)
                     setupDiastolicLineChart()
-                    */
-
-                    // WebView (Does not work in emulator, but works on physical device)
-                    val myWebView : WebView = binding.WB
-                    myWebView.webViewClient = WebViewClient()
-                    myWebView.webChromeClient = WebChromeClient()
-                    myWebView.settings.javaScriptEnabled = true
-                    myWebView.settings.allowContentAccess = true
-                    myWebView.settings.domStorageEnabled = true
-                    myWebView.settings.loadsImagesAutomatically = true
-                    myWebView.settings.mixedContentMode = WebSettings.MIXED_CONTENT_ALWAYS_ALLOW
-                    myWebView.settings.setSupportMultipleWindows(true)
-                    myWebView.loadUrl("https://enhance-bdc3f.web.app/?params=%7B%22ds14.documentid%22%3A%22${patientID}%22%7D")
-                    println("https://enhance-bdc3f.web.app/?params={'ds14.documentid':'${patientID}'}")
-
                 }
             }
-            .addOnFailureListener { e ->
-                println("Error getting documents: $e")
-            }
-
-
     }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return if (actionBarDrawerToggle.onOptionsItemSelected(item)) {
             true
@@ -220,11 +209,11 @@ class DashboardActivity : AppCompatActivity() {
         val systolicEntries = ArrayList<Entry>()
         val systolicTargetEntries = ArrayList<Entry>()
 
-        val inputDateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm", Locale.getDefault())
+        val inputDateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss" , Locale.getDefault())
         val correctlySortedHistory = sortedHistory.sortedBy { historyData ->
             inputDateFormat.parse(historyData.date)
         }
-        // Initialize a map to hold date strings to indices
+// Initialize a map to hold date strings to indices
         val dateToIndexMap = correctlySortedHistory.map { it.date }.distinct().withIndex().associate { it.value to it.index.toFloat() }
 
         sortedHistory.forEach { historyData ->
@@ -360,4 +349,3 @@ class DashboardActivity : AppCompatActivity() {
         diastolicLineChart.invalidate()
     }
 }
-

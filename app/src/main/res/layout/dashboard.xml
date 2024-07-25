@@ -5,7 +5,7 @@
     android:id="@+id/drawerLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.DashboardActivity">
+    tools:context=".activities.dashboard.DashboardActivity">
 
     <!-- P4B: Changed Constraint Layout to Linear Layout, set weight sum to 1 and adjusted graphs to fit onto smaller screens -->
     <LinearLayout

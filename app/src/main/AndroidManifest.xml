@@ -160,7 +160,14 @@
 
         <!-- Dashboard -->
         <activity
-            android:name=".activities.DashboardActivity"
+            android:name=".activities.dashboard.DashboardActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:exported="false"
+            android:label="Dashboard"
+            >
+        </activity>
+        <activity
+            android:name=".activities.dashboard.SimpleDashboardActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:exported="false"
             android:label="Dashboard"

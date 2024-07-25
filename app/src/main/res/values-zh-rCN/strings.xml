@@ -11,6 +11,9 @@
     <string name="login_validate_staff">工作人员识别码不能为空！</string>
     <string name="login_validate_password">密码不能为空！</string>
 
+    <!-- SimpleDashboardActivity strings -->
+    <string name="dashboard_no_records_found">未找到记录。</string>
+
     <!-- ScanActivity strings -->
     <string name="ocr_instructions">请确保仅显示血压值，裁剪时排除所有标题。</string>
     <string name="ocr_app_permissions_header">启用应用权限</string>

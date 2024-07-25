@@ -127,6 +127,14 @@ fun errorDialogBuilder(context: Context, title: String, message: String, activit
         .show()
 }
 
+fun ocrTextErrorDialog(context: Context) {
+    MaterialAlertDialogBuilder(context)
+        .setIcon(R.drawable.ic_error)
+        .setTitle(ResourcesHelper.getString(context, R.string.ocr_text_error_header))
+        .setMessage(ResourcesHelper.getString(context, R.string.ocr_text_error_body))
+        .setPositiveButton(ResourcesHelper.getString(context, R.string.dialog_positive_ok)) { dialog, _ -> dialog.dismiss() }.show()
+}
+
 fun patientNotFoundInSessionErrorDialog(context: Context) {
     MaterialAlertDialogBuilder(context)
         .setTitle(ResourcesHelper.getString(context, R.string.patient_info_session_error_header))
