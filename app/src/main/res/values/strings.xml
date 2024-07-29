@@ -11,6 +11,9 @@
     <string name="login_validate_staff">Staff ID cannot be empty!</string>
     <string name="login_validate_password">Password cannot be empty!</string>
 
+    <!-- SimpleDashboardActivity strings -->
+    <string name="dashboard_no_records_found">No records found.</string>
+
     <!-- ScanActivity strings -->
     <string name="ocr_instructions">Please ensure that only the blood pressure values are seen and exclude all headers when cropping.</string>
     <string name="ocr_app_permissions_header">Enable app permissions</string>
@@ -87,10 +90,8 @@
 
     <!-- RecommendationActivity.kt -->
     <string name="no_recommendations">No Recomendations.\n</string>
-    <string name="well_controlled_bp_recommendation_medical">- Adhere to medications assigned by doctor, if any.\n</string>
-    <string name="suboptimum_bp_recommendation_medical">
-        - Increase titration of antihypertensive medications.\n
-    </string>
+    <string name="well_controlled_bp_recommendation_medical">- Reinforce medication adherence to medications, and continue with lifestyle maintenance. \n</string>
+    <string name="suboptimum_bp_recommendation_medical">- Access adherence to medications, consider lifestyle changes and up titration of antihypertensive medications.\n</string>
 
     <!-- LanguageActivity.kt -->
     <string name="language_current_error_header">Current Language in use</string>
@@ -248,6 +249,8 @@
     <string name="enhance_settings_terms_of_use">Terms of use</string>
     <string name="enhance_settings_privacy_statement">Privacy statement</string>
     <string name="enhance_settings_report_vulnerability">Report vulnerability</string>
+
+    <!-- activity_simple_dashboard.xml -->
 
     <!-- activity_terms_of_use.xml -->
     <string name="enhance_terms_header">This is the Terms of Use activity.</string>

@@ -10,8 +10,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.singhealth.enhance.R
-import com.singhealth.enhance.activities.DashboardActivity
 import com.singhealth.enhance.activities.MainActivity
+import com.singhealth.enhance.activities.dashboard.SimpleDashboardActivity
 import com.singhealth.enhance.activities.error.errorDialogBuilder
 import com.singhealth.enhance.activities.error.internetConnectionCheck
 import com.singhealth.enhance.activities.error.patientNotFoundInSessionErrorDialog
@@ -100,7 +100,7 @@ class HistoryActivity : AppCompatActivity(), HistoryAdapter.OnItemClickListener 
                 }
 
                 R.id.item_dashboard -> {
-                    startActivity(Intent(this, DashboardActivity::class.java))
+                    startActivity(Intent(this, SimpleDashboardActivity::class.java))
                     finish()
                     false
                 }

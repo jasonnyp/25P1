@@ -11,6 +11,9 @@
     <string name="login_validate_staff">工作人员识别码不能为空！</string>
     <string name="login_validate_password">密码不能为空！</string>
 
+    <!-- SimpleDashboardActivity strings -->
+    <string name="dashboard_no_records_found">未找到记录。</string>
+
     <!-- ScanActivity strings -->
     <string name="ocr_instructions">请确保仅显示血压值，裁剪时排除所有标题。</string>
     <string name="ocr_app_permissions_header">启用应用权限</string>
@@ -85,10 +88,8 @@
 
     <!-- RecommendationActivity.kt -->
     <string name="no_recommendations">没有建议。\n</string>
-    <string name="well_controlled_bp_recommendation_medical">- 遵循医生指定的药物治疗方案（如果有）。\n</string>
-    <string name="suboptimum_bp_recommendation_medical">
-    - 增加抗高血压药物的剂量。\n
-    </string>
+    <string name="well_controlled_bp_recommendation_medical">- 强调药物依从性，并继续保持健康的生活方式。\n</string>
+    <string name="suboptimum_bp_recommendation_medical">- 评估药物依从性，考虑生活方式改变和升级抗高血压药物。\n</string>
 
     <!-- LanguageActivity.kt -->
     <string name="language_current_error_header">当前使用的语言</string>

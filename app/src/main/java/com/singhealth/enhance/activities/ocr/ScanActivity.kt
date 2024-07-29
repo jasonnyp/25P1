@@ -13,7 +13,6 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.core.text.isDigitsOnly
 import com.canhub.cropper.CropImage
 import com.canhub.cropper.CropImageContract
 import com.canhub.cropper.CropImageContractOptions
@@ -23,8 +22,11 @@ import com.google.firebase.ml.vision.FirebaseVision
 import com.google.firebase.ml.vision.common.FirebaseVisionImage
 import com.google.firebase.ml.vision.document.FirebaseVisionDocumentText
 import com.singhealth.enhance.R
-import com.singhealth.enhance.activities.*
-import com.singhealth.enhance.activities.error.*
+import com.singhealth.enhance.activities.MainActivity
+import com.singhealth.enhance.activities.dashboard.SimpleDashboardActivity
+import com.singhealth.enhance.activities.error.internetConnectionCheck
+import com.singhealth.enhance.activities.error.ocrTextErrorDialog
+import com.singhealth.enhance.activities.error.patientNotFoundInSessionErrorDialog
 import com.singhealth.enhance.activities.history.HistoryActivity
 import com.singhealth.enhance.activities.patient.ProfileActivity
 import com.singhealth.enhance.activities.patient.RegistrationActivity
@@ -32,7 +34,6 @@ import com.singhealth.enhance.activities.settings.SettingsActivity
 import com.singhealth.enhance.databinding.ActivityScanBinding
 import com.singhealth.enhance.security.AESEncryption
 import com.singhealth.enhance.security.SecureSharedPreferences
-import kotlin.math.abs
 
 class ScanActivity : AppCompatActivity() {
     private lateinit var binding: ActivityScanBinding
@@ -104,7 +105,7 @@ class ScanActivity : AppCompatActivity() {
                     false
                 }
                 R.id.item_dashboard -> {
-                    navigateTo(DashboardActivity::class.java)
+                    navigateTo(SimpleDashboardActivity::class.java)
                     false
                 }
                 else -> false
@@ -179,7 +180,7 @@ class ScanActivity : AppCompatActivity() {
             }
             .addOnFailureListener { e ->
                 progressDialog.dismiss()
-                ocrImageErrorDialog(this, e)
+                ocrTextErrorDialog(this, )
             }
     }
 

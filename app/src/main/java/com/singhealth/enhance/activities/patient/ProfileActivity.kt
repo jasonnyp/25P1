@@ -16,8 +16,8 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 import com.singhealth.enhance.R
-import com.singhealth.enhance.activities.DashboardActivity
 import com.singhealth.enhance.activities.MainActivity
+import com.singhealth.enhance.activities.dashboard.SimpleDashboardActivity
 import com.singhealth.enhance.activities.diagnosis.hypertensionStatus
 import com.singhealth.enhance.activities.diagnosis.sortPatientVisits
 import com.singhealth.enhance.activities.error.errorDialogBuilder
@@ -107,7 +107,7 @@ class ProfileActivity : AppCompatActivity() {
                 }
 
                 R.id.item_dashboard -> {
-                    startActivity(Intent(this, DashboardActivity::class.java))
+                    startActivity(Intent(this, SimpleDashboardActivity::class.java))
                     finish()
                     false
                 }
