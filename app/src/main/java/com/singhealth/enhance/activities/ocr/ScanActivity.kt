@@ -13,7 +13,6 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.core.text.isDigitsOnly
 import com.canhub.cropper.CropImage
 import com.canhub.cropper.CropImageContract
 import com.canhub.cropper.CropImageContractOptions
@@ -176,11 +175,9 @@ class ScanActivity : AppCompatActivity() {
         progressDialog.setMessage("Please wait a moment...")
         progressDialog.show()
 
-
         val options = FirebaseVisionCloudDocumentRecognizerOptions.Builder()
             .setLanguageHints(listOf("kr")) // Set language hints if needed
             .build()
-
 
         val ocrEngine = FirebaseVision.getInstance().getCloudDocumentTextRecognizer(options)
         val imageToProcess = FirebaseVisionImage.fromFilePath(this, outputUri)
@@ -205,7 +202,7 @@ class ScanActivity : AppCompatActivity() {
             ocrTextErrorDialog(this)
         } else {
             val words = extractWordsFromBlocks(blocks)
-            println("Scanned words:" )
+            println("Scanned words:")
             words.forEachIndexed { index, word ->
                 println("Word ${index + 1}: ${word.text}")
             }
@@ -240,7 +237,6 @@ class ScanActivity : AppCompatActivity() {
             println("diaBPList after fixing common errors: $diaBPList")
 
             navigateToVerifyScanActivity(sysBPList, diaBPList, sevenDay)
-
         }
     }
 
@@ -273,8 +269,8 @@ class ScanActivity : AppCompatActivity() {
             val diastolic = numbers.getOrNull(i + 1)
 
             if (systolic != null && diastolic != null) {
-                 if (systolic in 80..230 && diastolic in 45..135) {
-                    if (diastolic > systolic){
+                if (systolic in 80..230 && diastolic in 45..135) {
+                    if (diastolic > systolic) {
                         correctedNumbers.add(diastolic)
                         correctedNumbers.add(systolic)
                     } else {
@@ -316,9 +312,7 @@ class ScanActivity : AppCompatActivity() {
                 diaBPList.add(value.toString())
             }
         }
-
     }
-
 
     private fun fixCommonErrors(sysBPList: MutableList<String>, diaBPList: MutableList<String>) {
         for (i in 0 until maxOf(sysBPList.size, diaBPList.size)) {
@@ -342,14 +336,10 @@ class ScanActivity : AppCompatActivity() {
             }
         }
 
-
-
         val verifyScanIntent = Intent(this, VerifyScanActivity::class.java).apply { putExtras(bundle) }
         startActivity(verifyScanIntent)
         finish()
-        progressDialog.dismiss()
     }
-
 
     private val requestPermissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
         if (!isGranted) {
@@ -366,6 +356,13 @@ class ScanActivity : AppCompatActivity() {
         return if (actionBarDrawerToggle.onOptionsItemSelected(item)) {
             true
         } else super.onOptionsItemSelected(item)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        if (progressDialog.isShowing) {
+            progressDialog.dismiss()
+        }
     }
 
     private fun navigateTo(activityClass: Class<*>) {

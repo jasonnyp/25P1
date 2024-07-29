@@ -80,6 +80,8 @@ class VerifyScanActivity : AppCompatActivity() {
     private var avgSysBP = 0
     private var avgDiaBP = 0
 
+    private val undoStack = mutableListOf<Pair<MutableList<String>, MutableList<String>>>()
+
     private val db = Firebase.firestore
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -474,6 +476,40 @@ class VerifyScanActivity : AppCompatActivity() {
     fun discardProgress() {
         errorDialogBuilder(this, ResourcesHelper.getString(this, R.string.verify_scan_discard_header),
             ResourcesHelper.getString(this, R.string.verify_scan_discard_body), ScanActivity::class.java, R.drawable.ic_delete)
+    }
+
+    fun saveStateForUndo() {
+        undoStack.add(Pair(sysBPList.toMutableList(), diaBPList.toMutableList()))
+    }
+
+    fun undo() {
+        if (undoStack.isNotEmpty()) {
+            println("Performing undo")
+            val lastState = undoStack[undoStack.size - 1]
+            sysBPList.clear()
+            sysBPList.addAll(lastState.first)
+            diaBPList.clear()
+            diaBPList.addAll(lastState.second)
+            println("Restored sysBPList: $sysBPList")
+            println("Restored diaBPList: $diaBPList")
+            refreshViews()
+        } else {
+            println("Undo stack is empty")
+        }
+    }
+
+    private fun refreshViews() {
+        println("Refreshing views")
+        binding.rowBPRecordLL.removeAllViews()
+        sysBPFields.clear()
+        diaBPFields.clear()
+        if (sevenDay){
+            sevenDayCheck()
+        } else {
+            for (i in 0 until minOf(sysBPList.size, diaBPList.size)) {
+                addRow(sysBPList[i], diaBPList[i])
+            }
+        }
     }
 
     private fun postScanValidation() {
@@ -1020,19 +1056,26 @@ class VerifyScanActivity : AppCompatActivity() {
         addRowBtn.isEnabled = (sysBPList.size < 28 && diaBPList.size < 28)
     }
 
-
-
     @SuppressLint("SetTextI18n")
     private fun addRow(sysBP: String?, diaBP: String?, isSevenDayCheck: Boolean = false, day: Int = -1, time: Int = -1, showHeader: Boolean = false) {
+        println("Adding row: sysBP=$sysBP, diaBP=$diaBP, isSevenDayCheck=$isSevenDayCheck, day=$day, time=$time, showHeader=$showHeader")
+        saveStateForUndo()
+
         val rowBPRecordLayout = layoutInflater.inflate(R.layout.row_bp_record, null, false)
 
         val sysBPTIET = rowBPRecordLayout.findViewById<View>(R.id.sysBPTIET) as TextInputEditText
         val diaBPTIET = rowBPRecordLayout.findViewById<View>(R.id.diaBPTIET) as TextInputEditText
         val dayTV = rowBPRecordLayout.findViewById<View>(R.id.headerTextView) as TextView
         val headerRowContainer = rowBPRecordLayout.findViewById<View>(R.id.headerRowContainer) as LinearLayout
+        val bpRowContainer = rowBPRecordLayout.findViewById<View>(R.id.bpRowContainer) as LinearLayout
 
-        sysBPTIET.setText(sysBP ?: "")
-        diaBPTIET.setText(diaBP ?: "")
+        if (sysBP == null && diaBP == null) {
+            bpRowContainer.visibility = View.GONE
+        } else {
+            bpRowContainer.visibility = View.VISIBLE
+            sysBPTIET.setText(sysBP)
+            diaBPTIET.setText(diaBP)
+        }
 
         if (day != -1 && time != -1 && showHeader) {
             headerRowContainer.visibility = View.VISIBLE
@@ -1047,16 +1090,8 @@ class VerifyScanActivity : AppCompatActivity() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
             override fun afterTextChanged(s: Editable?) {
                 val index = sysBPFields.indexOf(sysBPTIET)
-                println("index: $index")
-                // Print statements for debugging fields addition
-                println("Adding new TextInputEditText to sysBPFields and diaBPFields")
-                val sysBPValues = sysBPFields.map { it.text.toString() }
-                println("sysBPValues: $sysBPValues")
-                println("sysBPList: $sysBPList")
-
                 if (index != -1) {
                     sysBPList[index] = s.toString()
-                    sysBPFields[index] = sysBPTIET
                 }
             }
         })
@@ -1066,15 +1101,8 @@ class VerifyScanActivity : AppCompatActivity() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
             override fun afterTextChanged(s: Editable?) {
                 val index = diaBPFields.indexOf(diaBPTIET)
-                println("index: $index")
-                // Print statements for debugging fields addition
-                println("Adding new TextInputEditText to sysBPFields and diaBPFields")
-                val diaBPValues = diaBPFields.map { it.text.toString() }
-                println("diaBPValues: $diaBPValues")
-                println("diaBPList: $diaBPList")
                 if (index != -1) {
                     diaBPList[index] = s.toString()
-                    diaBPFields[index] = diaBPTIET
                 }
             }
         })
@@ -1141,6 +1169,9 @@ class VerifyScanActivity : AppCompatActivity() {
             println("Button disabled: max row limit reached")
         }
 
+        println("Row added. Updated sysBPList: $sysBPList")
+        println("Updated diaBPList: $diaBPList")
+
     }
 
 
@@ -1154,6 +1185,7 @@ class VerifyScanActivity : AppCompatActivity() {
 
 
 class ModalBottomSheet(private val activity: VerifyScanActivity, private val isSevenDay: Boolean = false) : BottomSheetDialogFragment() {
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -1166,10 +1198,17 @@ class ModalBottomSheet(private val activity: VerifyScanActivity, private val isS
         // Continue scanning
         val continueBS = view.findViewById<LinearLayout>(R.id.continueBS)
         val rescanBS = view.findViewById<LinearLayout>(R.id.rescanBS)
+        val undoBS = view.findViewById<LinearLayout>(R.id.undoBS)
 
         if (isSevenDay) {
             continueBS.visibility = View.GONE
             rescanBS.visibility = View.GONE
+
+            undoBS.setOnClickListener {
+                activity.undo()
+                dismiss()
+            }
+
         } else {
             continueBS.setOnClickListener {
                 activity.continueScan()
@@ -1179,6 +1218,11 @@ class ModalBottomSheet(private val activity: VerifyScanActivity, private val isS
             // Rescan current records
             rescanBS.setOnClickListener {
                 activity.rescanRecords()
+                dismiss()
+            }
+
+            undoBS.setOnClickListener {
+                activity.undo()
                 dismiss()
             }
         }
