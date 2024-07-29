@@ -8,6 +8,9 @@
     <string name="login_validate_staff">Staff ID cannot be empty!</string>
     <string name="login_validate_password">Password cannot be empty!</string>
 
+    <!-- SimpleDashboardActivity strings -->
+    <string name="dashboard_no_records_found">No records found.</string>
+
     <!-- ScanActivity strings -->
     <string name="ocr_instructions">IMPORTANT: Please ensure that only the blood pressure values are seen and exclude all headers when cropping.</string>
     <string name="ocr_app_permissions_header">Enable app permissions</string>
@@ -95,10 +98,19 @@
 
     <!-- RecommendationActivity.kt -->
     <string name="no_recommendations">No Recomendations.\n</string>
-    <string name="well_controlled_bp_recommendation_medical">- Adhere to medications assigned by doctor, if any.\n</string>
-    <string name="suboptimum_bp_recommendation_medical">
-        - Increase titration of antihypertensive medications.\n
-    </string>
+    <string name="well_controlled_bp_recommendation_medical">- Reinforce medication adherence to medications, and continue with lifestyle maintenance. \n</string>
+    <string name="suboptimum_bp_recommendation_medical">- Access adherence to medications, consider lifestyle changes and up titration of antihypertensive medications.\n</string>
+
+    <!-- LanguageActivity.kt -->
+    <string name="language_current_error_header">Current Language in use</string>
+    <string name="language_current_error_body">This is your current app language. Please pick another language.</string>
+    <string name="language_unsupported_header">Language currently unsupported</string>
+    <string name="language_unsupported_body">This language localisation is currently in progress. Please pick another language.</string>
+
+    <!-- SettingsActivity.kt -->
+    <string name="settings_logout_activity_header">Logout confirmation</string>
+    <string name="settings_logout_activity_body">Are you sure you want to logout?</string>
+    <string name="settings_contact_helpdesk">Contact 6451–5115 for further Helpdesk information</string>
 
     <!-- MainActivity.kt -->
     <string name="main_activity_patient_header">Patient not found.</string>
@@ -164,6 +176,18 @@
 
     <!-- activity_history.xml -->
     <string name="enhance_history_past">No past records found.</string>
+
+    <!-- activity_language.xml -->
+    <string name="enhance_language_english" translatable="false">English</string>
+    <string name="enhance_language_chinese_simplified" translatable="false">简体中文</string>
+    <string name="enhance_language_chinese_traditional" translatable="false">繁體中文</string>
+    <string name="enhance_language_malay" translatable="false">Bahasa Melayu [Currently Unsupported]</string>
+    <string name="enhance_language_tamil" translatable="false">தமிழ் [Currently Unsupported]</string>
+    <string name="enhance_language_thai" translatable="false">ไทย [Currently Unsupported]</string>
+    <string name="enhance_language_vietnamese" translatable="false">Tiếng Việt [Currently Unsupported]</string>
+    <string name="enhance_language_korean" translatable="false">한국어 [Currently Unsupported]</string>
+    <string name="enhance_language_japanese" translatable="false">日本語 [Currently Unsupported]</string>
+    <string name="enhance_language_arrow" translatable="false">Arrow</string>
 
     <!-- activity_login.xml -->
     <string name="enhance_login_staff_id">Staff ID</string>
@@ -247,11 +271,14 @@
     <string name="enhance_settings_logout">Logout</string>
     <string name="enhance_settings_help_support">Help &amp; support</string>
     <string name="enhance_settings_user_guide">User guide</string>
+    <string name="enhance_settings_language">Language Options</string>
     <string name="enhance_settings_contact_helpdesk">Contact Helpdesk</string>
     <string name="enhance_settings_about">About ENHANCe</string>
     <string name="enhance_settings_terms_of_use">Terms of use</string>
     <string name="enhance_settings_privacy_statement">Privacy statement</string>
     <string name="enhance_settings_report_vulnerability">Report vulnerability</string>
+
+    <!-- activity_simple_dashboard.xml -->
 
     <!-- activity_terms_of_use.xml -->
     <string name="enhance_terms_header">This is the Terms of Use activity.</string>

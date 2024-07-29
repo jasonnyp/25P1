@@ -1,4 +1,4 @@
-package com.singhealth.enhance.activities// MainActivity.kt
+package com.singhealth.enhance.activities.dashboard// MainActivity.kt
 
 import android.content.Intent
 import android.graphics.Color
@@ -22,6 +22,7 @@ import com.github.mikephil.charting.utils.EntryXComparator
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.singhealth.enhance.R
+import com.singhealth.enhance.activities.MainActivity
 import com.singhealth.enhance.activities.error.patientNotFoundInSessionErrorDialog
 import com.singhealth.enhance.activities.history.HistoryActivity
 import com.singhealth.enhance.activities.history.HistoryData
@@ -190,6 +191,7 @@ class DashboardActivity : AppCompatActivity() {
                     */
 
                     // WebView (Does not work in emulator, but works on physical device)
+                    // Correction to above: It does not work on older versions, but on more modern android sdks
                     val myWebView : WebView = binding.WB
                     myWebView.webViewClient = WebViewClient()
                     myWebView.webChromeClient = WebChromeClient()

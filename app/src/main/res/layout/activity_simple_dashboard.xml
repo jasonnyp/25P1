@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawerLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.dashboard.SimpleDashboardActivity">
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:weightSum="1">
+
+        <TextView
+            android:id="@+id/syschartTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:textAlignment="center"
+            android:text="Systolic Comparison Chart"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <com.github.mikephil.charting.charts.LineChart
+            android:id="@+id/syslineChart"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight = "0.5"
+            android:layout_marginTop="8dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            app:layout_constraintTop_toBottomOf="@id/syschartTitle"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+        <TextView
+            android:id="@+id/diastolicChartTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:textAlignment="center"
+            android:text="Diastolic Comparison Chart"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            app:layout_constraintTop_toBottomOf="@id/syslineChart"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+        -->
+        <!-- Diastolic Line Chart -->
+        <com.github.mikephil.charting.charts.LineChart
+            android:id="@+id/diastolicLineChart"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight = "0.5"
+            android:layout_marginTop="8dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            app:layout_constraintTop_toBottomOf="@id/diastolicChartTitle"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <Button
+            android:id="@+id/printSourceBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="12dp"
+            android:text="Print"
+            android:textAllCaps="true" />
+
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/bottomNavigationView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:labelVisibilityMode="labeled"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:menu="@menu/navigation_bar" />
+    </LinearLayout>
+
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/navigationView"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:layout_marginTop="1dp"
+        android:isScrollContainer="true"
+        app:headerLayout="@layout/header_navigation_drawer"
+        app:layout_constraintEnd_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:menu="@menu/navigation_drawer" />
+
+</androidx.drawerlayout.widget.DrawerLayout>
