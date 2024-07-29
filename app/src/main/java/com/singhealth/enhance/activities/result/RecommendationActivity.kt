@@ -18,11 +18,13 @@ import com.singhealth.enhance.activities.diagnosis.hypertensionStatus
 import com.singhealth.enhance.activities.diagnosis.showRecommendation
 import com.singhealth.enhance.activities.error.firebaseErrorDialog
 import com.singhealth.enhance.activities.history.HistoryActivity
+import com.singhealth.enhance.activities.history.HistoryData
 import com.singhealth.enhance.activities.ocr.ScanActivity
 import com.singhealth.enhance.activities.patient.ProfileActivity
 import com.singhealth.enhance.databinding.ActivityRecommendationBinding
-import com.singhealth.enhance.security.AESEncryption
 import com.singhealth.enhance.security.SecureSharedPreferences
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 class RecommendationActivity : AppCompatActivity() {
     private lateinit var binding: ActivityRecommendationBinding
@@ -33,6 +35,10 @@ class RecommendationActivity : AppCompatActivity() {
     private var avgDiaBP: Long = 0
     private var clinicSysBP: Long = 0
     private var clinicDiaBP: Long = 0
+    private var bundlePosition: Int = 0
+    private var bundleDate: String = ""
+    private val history = ArrayList<HistoryData>()
+    private lateinit var sortedHistory: List<HistoryData>
 
     private val db = Firebase.firestore
 
@@ -98,6 +104,8 @@ class RecommendationActivity : AppCompatActivity() {
         avgDiaBP = avgBPBundle.getInt("avgDiaBP").toLong()
         clinicSysBP = avgBPBundle.getInt("clinicSysBP").toLong()
         clinicDiaBP = avgBPBundle.getInt("clinicDiaBP").toLong()
+        bundlePosition = avgBPBundle.getInt("historyItemPosition")
+        bundleDate = avgBPBundle.getString("date").toString()
 
         val docRef = db.collection("patients").document(patientID.toString())
         var patientTargetSys: Long
@@ -109,39 +117,65 @@ class RecommendationActivity : AppCompatActivity() {
         docRef.get()
             .addOnSuccessListener { document ->
                 docRef.collection("visits").get()
-                if (AESEncryption().decrypt(document.getString("targetSys").toString()) == "" || AESEncryption().decrypt(document.getString("targetDia").toString()) == "") {
-                    patientTargetSys = 0
-                    patientTargetDia = 0
-                    clinicTargetSys = 0
-                    clinicTargetDia = 0
-                } else {
-                    patientTargetSys = AESEncryption().decrypt(document.getString("targetSys").toString()).toLong()
-                    patientTargetDia = AESEncryption().decrypt(document.getString("targetDia").toString()).toLong()
-                    clinicTargetSys = patientTargetSys + 5
-                    clinicTargetDia = patientTargetDia + 5
-                }
+                    .addOnSuccessListener { documents ->
+                        val inputDateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")
+                        val outputDateFormatter = DateTimeFormatter.ofPattern(getString(R.string.date_format))
 
-                binding.targetHomeSysBPTV.text = patientTargetSys.toString()
-                binding.targetHomeDiaBPTV.text = patientTargetDia.toString()
-                binding.targetOfficeSysBPTV.text = clinicTargetSys.toString()
-                binding.targetOfficeDiaBPTV.text = clinicTargetDia.toString()
+                        for (d in documents) {
+                            val dateTimeString = d.get("date") as? String
+                            val dateTime = LocalDateTime.parse(dateTimeString, inputDateFormatter)
+                            val dateTimeFormatted = dateTime.format(outputDateFormatter)
+                            val avgSysBP = d.get("averageSysBP") as? Long
+                            val avgDiaBP = d.get("averageDiaBP") as? Long
+                            val homeSysBPTarget = d.get("homeSysBPTarget") as? Long
+                            val homeDiaBPTarget = d.get("homeDiaBPTarget") as? Long
+                            val clinicSysBPTarget = d.get("clinicSysBPTarget") as? Long
+                            val clinicDiaBPTarget = d.get("clinicDiaBPTarget") as? Long
+                            val clinicSysBP = d.get("clinicSysBP") as? Long
+                            val clinicDiaBP = d.get("clinicDiaBP") as? Long
+                            history.add(
+                                HistoryData(
+                                    dateTime.toString(),
+                                    dateTimeFormatted,
+                                    avgSysBP,
+                                    avgDiaBP,
+                                    homeSysBPTarget,
+                                    homeDiaBPTarget,
+                                    clinicSysBPTarget,
+                                    clinicDiaBPTarget,
+                                    clinicSysBP,
+                                    clinicDiaBP,
+                                )
+                            )
+                        }
+                        sortedHistory = history.sortedByDescending { it.date }
+                        patientTargetSys = sortedHistory[bundlePosition].homeSysBPTarget!!
+                        patientTargetDia = sortedHistory[bundlePosition].homeDiaBPTarget!!
+                        clinicTargetSys = sortedHistory[bundlePosition].clinicSysBPTarget!!
+                        clinicTargetDia = sortedHistory[bundlePosition].clinicDiaBPTarget!!
 
-                binding.avgHomeSysBPTV.text = avgSysBP.toString()
-                binding.avgHomeDiaBPTV.text = avgDiaBP.toString()
-                binding.avgHomeSysBPTV.setTextColor(colourSet(this, avgSysBP, patientTargetSys))
-                binding.avgHomeDiaBPTV.setTextColor(colourSet(this, avgDiaBP, patientTargetDia))
-                binding.avgHomeBPControl.text = bpControlStatus(this, avgSysBP, avgDiaBP, patientTargetSys, patientTargetDia)
+                        binding.targetHomeSysBPTV.text = patientTargetSys.toString()
+                        binding.targetHomeDiaBPTV.text = patientTargetDia.toString()
+                        binding.targetOfficeSysBPTV.text = clinicTargetSys.toString()
+                        binding.targetOfficeDiaBPTV.text = clinicTargetDia.toString()
 
-                binding.officeSysBPTV.text = clinicSysBP.toString()
-                binding.officeDiaBPTV.text = clinicDiaBP.toString()
-                binding.officeSysBPTV.setTextColor(colourSet(this, clinicSysBP, clinicTargetSys))
-                binding.officeDiaBPTV.setTextColor(colourSet(this, clinicDiaBP, clinicTargetDia))
-                binding.officeBPControl.text = bpControlStatus(this, clinicSysBP, clinicDiaBP, clinicTargetSys, clinicTargetDia)
+                        binding.avgHomeSysBPTV.text = avgSysBP.toString()
+                        binding.avgHomeDiaBPTV.text = avgDiaBP.toString()
+                        binding.avgHomeSysBPTV.setTextColor(colourSet(this, avgSysBP, patientTargetSys))
+                        binding.avgHomeDiaBPTV.setTextColor(colourSet(this, avgDiaBP, patientTargetDia))
+                        binding.avgHomeBPControl.text = bpControlStatus(this, avgSysBP, avgDiaBP, patientTargetSys, patientTargetDia)
 
-                hypertension = hypertensionStatus(this, avgSysBP, avgDiaBP, clinicSysBP, clinicDiaBP, patientTargetSys, patientTargetDia)
-                binding.recommendationBpPhenotype.text = hypertension
-                binding.recommendationBpControl.text = bpControlStatus(this, hypertension)
-                binding.recommendationDo.text = showRecommendation(this, bpControlStatus(this, hypertension))
+                        binding.officeSysBPTV.text = clinicSysBP.toString()
+                        binding.officeDiaBPTV.text = clinicDiaBP.toString()
+                        binding.officeSysBPTV.setTextColor(colourSet(this, clinicSysBP, clinicTargetSys))
+                        binding.officeDiaBPTV.setTextColor(colourSet(this, clinicDiaBP, clinicTargetDia))
+                        binding.officeBPControl.text = bpControlStatus(this, clinicSysBP, clinicDiaBP, clinicTargetSys, clinicTargetDia)
+
+                        hypertension = hypertensionStatus(this, avgSysBP, avgDiaBP, clinicSysBP, clinicDiaBP, patientTargetSys, patientTargetDia)
+                        binding.recommendationBpPhenotype.text = hypertension
+                        binding.recommendationBpControl.text = bpControlStatus(this, hypertension)
+                        binding.recommendationDo.text = showRecommendation(this, bpControlStatus(this, hypertension))
+                    }
             }
             .addOnFailureListener { e ->
                 firebaseErrorDialog(this, e, docRef)

@@ -194,6 +194,8 @@ class HistoryActivity : AppCompatActivity(), HistoryAdapter.OnItemClickListener 
         bundle.putInt("clinicSysBP", clinicSysBP.toInt())
         bundle.putInt("clinicDiaBP", clinicDiaBP.toInt())
         bundle.putString("date", date)
+        bundle.putInt("historyItemPosition", position)
+        println(date)
         bundle.putString("Source", "History")
 
         val recommendationIntent = Intent(this, RecommendationActivity::class.java)
