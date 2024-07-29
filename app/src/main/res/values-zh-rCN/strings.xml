@@ -88,10 +88,8 @@
 
     <!-- RecommendationActivity.kt -->
     <string name="no_recommendations">没有建议。\n</string>
-    <string name="well_controlled_bp_recommendation_medical">- 遵循医生指定的药物治疗方案（如果有）。\n</string>
-    <string name="suboptimum_bp_recommendation_medical">
-    - 增加抗高血压药物的剂量。\n
-    </string>
+    <string name="well_controlled_bp_recommendation_medical">- 强调药物依从性，并继续保持健康的生活方式。\n</string>
+    <string name="suboptimum_bp_recommendation_medical">- 评估药物依从性，考虑生活方式改变和升级抗高血压药物。\n</string>
 
     <!-- LanguageActivity.kt -->
     <string name="language_current_error_header">当前使用的语言</string>

@@ -90,10 +90,8 @@
 
     <!-- RecommendationActivity.kt -->
     <string name="no_recommendations">No Recomendations.\n</string>
-    <string name="well_controlled_bp_recommendation_medical">- Adhere to medications assigned by doctor, if any.\n</string>
-    <string name="suboptimum_bp_recommendation_medical">
-        - Increase titration of antihypertensive medications.\n
-    </string>
+    <string name="well_controlled_bp_recommendation_medical">- Reinforce medication adherence to medications, and continue with lifestyle maintenance. \n</string>
+    <string name="suboptimum_bp_recommendation_medical">- Access adherence to medications, consider lifestyle changes and up titration of antihypertensive medications.\n</string>
 
     <!-- LanguageActivity.kt -->
     <string name="language_current_error_header">Current Language in use</string>

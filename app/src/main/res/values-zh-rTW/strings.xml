@@ -88,8 +88,8 @@
 
     <!-- RecommendationActivity.kt -->
     <string name="no_recommendations">目前沒有建議。\n</string>
-    <string name="well_controlled_bp_recommendation_medical">- 遵循醫生指定的藥物治療方案（如果有）。\n</string>
-    <string name="suboptimum_bp_recommendation_medical">- 增加抗高血壓藥物的劑量。\n</string>
+    <string name="well_controlled_bp_recommendation_medical">- 強調藥物依從性，並繼續維持健康的生活方式。\n</string>
+    <string name="suboptimum_bp_recommendation_medical">- 評估藥物依從性，考慮生活方式改變和升級抗高血壓藥物。\n</string>
 
     <!-- LanguageActivity.kt -->
     <string name="language_current_error_header">當前使用的語言</string>
