@@ -20,6 +20,7 @@ import com.canhub.cropper.CropImageOptions
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.ml.vision.FirebaseVision
 import com.google.firebase.ml.vision.common.FirebaseVisionImage
+import com.google.firebase.ml.vision.document.FirebaseVisionCloudDocumentRecognizerOptions
 import com.google.firebase.ml.vision.document.FirebaseVisionDocumentText
 import com.singhealth.enhance.R
 import com.singhealth.enhance.activities.MainActivity
@@ -43,6 +44,7 @@ class ScanActivity : AppCompatActivity() {
     private lateinit var progressDialog: ProgressDialog
     private lateinit var outputUri: Uri
     private lateinit var patientID: String
+    private var sevenDay: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,13 +57,17 @@ class ScanActivity : AppCompatActivity() {
         setupBottomNavigationView()
         checkPatientInfo()
 
-        binding.ocrInstructionsTextViewValue.text = getString(R.string.ocr_instructions)
         cameraPermissions = arrayOf(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE)
         storagePermissions = arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE)
         progressDialog = ProgressDialog(this)
         progressDialog.setCanceledOnTouchOutside(false)
 
         binding.generalSourceBtn.setOnClickListener {
+            onClickRequestPermission()
+        }
+        binding.sevenDaySourceBtn.setOnClickListener {
+            sevenDay = true
+            println("sevenDay: $sevenDay")
             onClickRequestPermission()
         }
     }
@@ -171,7 +177,11 @@ class ScanActivity : AppCompatActivity() {
         progressDialog.setMessage("Please wait a moment...")
         progressDialog.show()
 
-        val ocrEngine = FirebaseVision.getInstance().cloudDocumentTextRecognizer
+        val options = FirebaseVisionCloudDocumentRecognizerOptions.Builder()
+            .setLanguageHints(listOf("kr")) // Set language hints if needed
+            .build()
+
+        val ocrEngine = FirebaseVision.getInstance().getCloudDocumentTextRecognizer(options)
         val imageToProcess = FirebaseVisionImage.fromFilePath(this, outputUri)
 
         ocrEngine.processImage(imageToProcess)
@@ -194,7 +204,7 @@ class ScanActivity : AppCompatActivity() {
             ocrTextErrorDialog(this)
         } else {
             val words = extractWordsFromBlocks(blocks)
-            println("Scanned words:" )
+            println("Scanned words:")
             words.forEachIndexed { index, word ->
                 println("Word ${index + 1}: ${word.text}")
             }
@@ -204,25 +214,31 @@ class ScanActivity : AppCompatActivity() {
                 .filter { it != "*" && it != "7" && it != "07" && it != "8" }
                 .map {
                     when (it) {
-                        "Sis", "Eis", "Su" -> "84"
+                        "Sis", "Eis", "Su", "Eu", "fir" -> "84"
                         "14" -> "121"
                         "10" -> "70"
                         "16" -> "116"
                         "1/6" -> "116"
+                        "T17" -> "117"
+                        "+5" -> "75"
+                        "+9" -> "79"
+                        "川", "!!!", "|||" -> "111"
+                        "734" -> "134"
+                        "13T" -> "131"
                         else -> it.replace(Regex("[^\\d]"), "")
                     }
                 }
-                .filter { it.matches(Regex("\\d+")) && it.toInt() in 40..210 }
+                .map { it.replace(Regex("(\\d*)T(\\d*)"), "1$1$2") }
+                .filter { it.matches(Regex("\\d+")) && it.toInt() in 45..230 }
                 .map { it.toInt() }
                 .toMutableList()
-
             println("Filtered numbers: $numbers")
             processNumbers(numbers, sysBPList, diaBPList)
             fixCommonErrors(sysBPList, diaBPList)
             println("sysBPList after fixing common errors: $sysBPList")
             println("diaBPList after fixing common errors: $diaBPList")
 
-            navigateToVerifyScanActivity(sysBPList, diaBPList)
+            navigateToVerifyScanActivity(sysBPList, diaBPList, sevenDay)
         }
     }
 
@@ -239,13 +255,6 @@ class ScanActivity : AppCompatActivity() {
             println("Word ${index + 1}: ${word.text}")
         }
 
-/*        words.sortWith(compareBy({ it.boundingBox?.top }, { it.boundingBox?.left }))
-
-        println("Words after sorting by bounding box:")
-        words.forEachIndexed { index, word ->
-            println("Word ${index + 1}: ${word.text}")
-        }*/
-
         return words
     }
 
@@ -256,21 +265,27 @@ class ScanActivity : AppCompatActivity() {
     ) {
         val correctedNumbers = mutableListOf<Int>()
 
-        for (i in numbers.indices step 2) {
+        var i = 0
+        while (i < numbers.size) {
             val systolic = numbers.getOrNull(i)
             val diastolic = numbers.getOrNull(i + 1)
 
             if (systolic != null && diastolic != null) {
-                if (systolic in 100..210 && diastolic in 40..100) {
-                    correctedNumbers.add(systolic)
+                if (systolic in 80..230 && diastolic in 45..135) {
+                    if (diastolic > systolic) {
+                        correctedNumbers.add(diastolic)
+                        correctedNumbers.add(systolic)
+                    } else {
+                        correctedNumbers.add(systolic)
+                        correctedNumbers.add(diastolic)
+                    }
+                } else if (systolic in 45..135 && diastolic in 80..230) {
                     correctedNumbers.add(diastolic)
-                } else if (systolic in 40..100 && diastolic in 100..210) {
-                    correctedNumbers.add(diastolic)
                     correctedNumbers.add(systolic)
-                } else if (systolic in 40..100) {
+                } else if (systolic !in 80..230) {
                     correctedNumbers.add(999)
-                    correctedNumbers.add(systolic)
-                } else if (diastolic in 120..200) {
+                    correctedNumbers.add(diastolic)
+                } else if (diastolic !in 45..135) {
                     correctedNumbers.add(systolic)
                     correctedNumbers.add(999)
                 } else {
@@ -284,6 +299,8 @@ class ScanActivity : AppCompatActivity() {
                 correctedNumbers.add(999)
                 correctedNumbers.add(diastolic)
             }
+
+            i += 2
         }
 
         if (correctedNumbers.size % 2 != 0) {
@@ -306,10 +323,11 @@ class ScanActivity : AppCompatActivity() {
         }
     }
 
-    private fun navigateToVerifyScanActivity(sysBPList: MutableList<String>, diaBPList: MutableList<String>) {
+    private fun navigateToVerifyScanActivity(sysBPList: MutableList<String>, diaBPList: MutableList<String>, sevenDay: Boolean) {
         val bundle = Bundle().apply {
             putStringArrayList("sysBPList", ArrayList(sysBPList))
             putStringArrayList("diaBPList", ArrayList(diaBPList))
+            putBoolean("sevenDay", sevenDay)
             intent.extras?.let {
                 it.getString("homeSysBPTarget")?.let { target -> putString("homeSysBPTarget", target) }
                 it.getString("homeDiaBPTarget")?.let { target -> putString("homeDiaBPTarget", target) }
@@ -321,11 +339,9 @@ class ScanActivity : AppCompatActivity() {
         }
 
         val verifyScanIntent = Intent(this, VerifyScanActivity::class.java).apply { putExtras(bundle) }
-        progressDialog.dismiss()
         startActivity(verifyScanIntent)
         finish()
     }
-
 
     private val requestPermissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
         if (!isGranted) {
@@ -342,6 +358,13 @@ class ScanActivity : AppCompatActivity() {
         return if (actionBarDrawerToggle.onOptionsItemSelected(item)) {
             true
         } else super.onOptionsItemSelected(item)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        if (progressDialog.isShowing) {
+            progressDialog.dismiss()
+        }
     }
 
     private fun navigateTo(activityClass: Class<*>) {

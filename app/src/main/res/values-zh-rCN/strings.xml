@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!-- AuthenticationActivity strings -->
-    <string name="resend_verification_code">点击重新发送验证码</string>
-
     <!-- LoginActivity strings -->
     <string name="good_morning">早上好！</string>
     <string name="good_afternoon">下午好！</string>
@@ -225,7 +222,6 @@
     <string name="enhance_settings_logout">登出</string>
     <string name="enhance_settings_help_support">帮助与支持</string>
     <string name="enhance_settings_user_guide">用户指南</string>
-    <string name="enhance_settings_language">语言选项</string>
     <string name="enhance_settings_contact_helpdesk">联系帮助台</string>
     <string name="enhance_settings_about">关于ENHANCe</string>
     <string name="enhance_settings_terms_of_use">使用条款</string>
@@ -275,4 +271,6 @@
     <string name="enhance_history_item_avgbp">平均血压：</string>
     <string name="enhance_history_item_homebp">家庭血压目标：</string>
     <string name="enhance_history_item_clinicbp">诊所血压目标：</string>
+
+
 </resources>

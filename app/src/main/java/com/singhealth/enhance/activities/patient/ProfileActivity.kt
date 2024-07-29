@@ -7,9 +7,11 @@ import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
+import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.SetOptions
 import com.google.firebase.firestore.ktx.firestore
@@ -120,10 +122,23 @@ class ProfileActivity : AppCompatActivity() {
 
         binding.profileLL.visibility = View.INVISIBLE
 
-        binding.profileLL.visibility = View.INVISIBLE
-
         progressDialog = ProgressDialog(this)
         progressDialog.setCanceledOnTouchOutside(false)
+
+        binding.editProfileSourceBtn.setOnClickListener {
+            if (SecureSharedPreferences.getSharedPreferences(applicationContext)
+                    .getString("patientID", null)
+                    .isNullOrEmpty()
+            ) {
+                patientNotFoundInSessionErrorDialog(this)
+            } else {
+                startActivity(Intent(this, EditProfileActivity::class.java))
+            }
+        }
+
+        binding.deleteProfileSourceBtn.setOnClickListener {
+            showDeleteConfirmationDialog()
+        }
 
         val patientID = SecureSharedPreferences.getSharedPreferences(applicationContext).getString(
             "patientID",
@@ -142,81 +157,11 @@ class ProfileActivity : AppCompatActivity() {
         } else super.onOptionsItemSelected(item)
     }
 
-    // P1 2024: Determine the Patient's BP Stage (Seemingly unused)
-//    private fun diagnosePatient(patientID: String){
-//        var BPStage : String
-//        val db = Firebase.firestore
-//
-//        var docRef = db.collection("patients").document(patientID)
-//
-//        // Gets all past bp records for corresponding patient from db
-//        db.collection("patients").document(patientID).collection("visits").get()
-//            .addOnSuccessListener{ documents ->
-//                if (documents.isEmpty) {
-//                    BPStage = "N/A"
-//                    binding.bpStage.text = BPStage
-//                }
-//                else {
-//                    // Add all BP readings into array
-//                    val arr = ArrayList<Diag>()
-//                    val inputDateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")
-//                    for (document in documents) {
-//                        val dateTimeString = document.get("date") as? String
-//                        val dateTime = LocalDateTime.parse(dateTimeString, inputDateFormatter)
-//                        val SysBP = document.get("averageSysBP") as? Long
-//                        val DiaBP = document.get("averageDiaBP") as? Long
-//                        arr.add(Diag(
-//                            dateTime.toString(),
-//                            SysBP,
-//                            DiaBP)
-//                        )
-//                    }
-//                    // Sort array by date in descending order
-//                    val sortedArr = arr.sortedByDescending { it.date }
-//
-//                    // Get the first item in the array (most recent reading)
-//                    val recentSys = sortedArr[0].avgSysBP
-//                    val recentDia = sortedArr[0].avgDiaBP
-//                    val recentDate = sortedArr[0].date
-//
-//                    // Determine BP Stage
-//                    if (recentSys != null && recentDia != null) {
-//                        println("Date: $recentDate, Most Recent Sys: $recentSys, Most Recent Dia: $recentDia")
-//                        if (recentSys <= 120 && recentDia <= 80) {
-//                            BPStage = "(Normal BP)"
-//                        }
-//                        else if (recentSys >= 160 || recentDia >= 100) {
-//                            BPStage = "(Stage 2 Hypertension)"
-//                        }
-//                        else if (recentSys >= 140 || recentDia >= 90) {
-//                            BPStage = "(Stage 1 Hypertension)"
-//                        }
-//                        else if (recentSys > 120 || recentDia > 80) {
-//                            BPStage = "(High Normal BP)"
-//                        }
-//                        else {
-//                            BPStage = "N/A"
-//                        }
-//                        binding.bpStage.text = BPStage
-//
-//                        // Update db to store recent BP Stage
-//                        val data = hashMapOf("bpStage" to BPStage)
-//                        docRef.set(data, SetOptions.merge())
-//                    }
-//                    else {
-//                        println("Sys or Dia is null")
-//                    }
-//                }
-//            }
-//            .addOnFailureListener{
-//                    e -> println("Error getting documents: $e")
-//            }
-//    }
-
     private fun retrievePatient(patientID: String) {
         progressDialog.setTitle(getString(R.string.profile_retrieve_data))
         progressDialog.setMessage(getString(R.string.profile_retrieve_data_caption))
         progressDialog.show()
+
 
         val docRef = db.collection("patients").document(patientID)
 
@@ -228,12 +173,11 @@ class ProfileActivity : AppCompatActivity() {
                     // P1 2024 Addition: Determine BP Stage
                     // Gets all past bp records for corresponding patient from db
                     db.collection("patients").document(patientID).collection("visits").get()
-                        .addOnSuccessListener{ documents ->
+                        .addOnSuccessListener { documents ->
                             // For new patients with no records, set the BP Stage as N/A
                             if (documents.isEmpty) {
                                 binding.bpStage.text = "N/A"
-                            }
-                            else {
+                            } else {
                                 // Call sorting function to sort previous visits
                                 val sortedArr = sortPatientVisits(documents)
                                 // Get the first item in the array (most recent reading)
@@ -245,27 +189,37 @@ class ProfileActivity : AppCompatActivity() {
                                 val targetHomeDia = sortedArr[0].targetHomeDia as Long
                                 val recentDate = sortedArr[0].date as String
                                 // Determine BP Stage based on most recent readings
-                                val bpStage = hypertensionStatus(this, recentSys, recentDia, recentClinicSys, recentClinicDia, targetHomeSys, targetHomeDia)
+                                val bpStage = hypertensionStatus(
+                                    this,
+                                    recentSys,
+                                    recentDia,
+                                    recentClinicSys,
+                                    recentClinicDia,
+                                    targetHomeSys,
+                                    targetHomeDia
+                                )
 
                                 // Set UI BP Stage
                                 binding.bpStage.text = bpStage
 
                                 // If current BP stage is not the same as stored BP stage, update db
-                                if (binding.bpStage.text != document.getString("bpStage")){
+                                if (binding.bpStage.text != document.getString("bpStage")) {
                                     // Update db to store recent BP Stage
                                     val data = hashMapOf("bpStage" to bpStage)
                                     docRef.set(data, SetOptions.merge())
                                 }
                             }
-
+                            binding.profileLL.visibility = View.VISIBLE
+                            progressDialog.dismiss()
                         }
-                        .addOnFailureListener{ e ->
-                            errorDialogBuilder(this, getString(R.string.profile_document_error_header), getString(R.string.profile_document_error_body, e))
+                        .addOnFailureListener { e ->
+                            errorDialogBuilder(
+                                this,
+                                getString(R.string.profile_document_error_header),
+                                getString(R.string.profile_document_error_body, e)
+                            )
                             println("Error getting documents: $e")
                         }
-
-                    binding.profileLL.visibility = View.VISIBLE
-                    progressDialog.dismiss()
                 }
             }
             .addOnFailureListener { e ->
@@ -280,52 +234,59 @@ class ProfileActivity : AppCompatActivity() {
             loadImageFromUrl(imageUrl)
         }
 
-        //binding.legalNameTV.text = document.getString("legalName").toString()
         val legalName = document.getString("legalName")
         if (legalName != null) {
             val decryptedLegalName = AESEncryption().decrypt(legalName)
             binding.legalNameTV.text = decryptedLegalName
 
-            // Store the decrypted legalName in SecureSharedPreferences
             SecureSharedPreferences.getSharedPreferences(applicationContext)
                 .edit()
                 .putString("legalName", decryptedLegalName)
                 .apply()
-            }
-
+        }
 
         binding.nricTV.text = AESEncryption().decrypt(patientID)
 
-        //binding.dobTV.text = document.getString("dateOfBirth").toString()
         binding.dobTV.text = AESEncryption().decrypt(document.getString("dateOfBirth").toString())
 
-        // Comment out when database info is decrypted
         when (document.getLong("gender")?.toInt()) {
             1 -> binding.genderTV.text = getString(R.string.profile_gender_male)
             2 -> binding.genderTV.text = getString(R.string.profile_gender_female)
         }
 
-        // Comment out when database info is encrypted
-        //binding.genderTV.text = document.getString("gender")
-
-        //binding.weightTV.text = "${document.getString("weight").toString()} kg"
         binding.weightTV.text = getString(
             R.string.profile_patient_weight,
             AESEncryption().decrypt(document.getString("weight").toString())
         )
 
-        //binding.heightTV.text = "${document.getString("height").toString()} cm"
         binding.heightTV.text = getString(
             R.string.profile_patient_height,
             AESEncryption().decrypt(document.getString("height").toString())
         )
 
-        if (AESEncryption().decrypt(document.getString("targetSys").toString()) == "" || AESEncryption().decrypt(document.getString("targetDia").toString()) == "") {
-            binding.profileTargetBP.text = ResourcesHelper.getString(this, R.string.profile_patient_target_bp, 0.toString(), 0.toString())
-        } else {
-            binding.profileTargetBP.text = ResourcesHelper.getString(this, R.string.profile_patient_target_bp, AESEncryption().decrypt(document.getString("targetSys").toString()), AESEncryption().decrypt(document.getString("targetDia").toString()))
-        }
+        // Decrypt targetSys and targetDia, and handle empty values
+        val targetSys = document.getString("targetSys")?.let {
+            AESEncryption().decrypt(it)
+        } ?: "0"
+
+        val targetDia = document.getString("targetDia")?.let {
+            AESEncryption().decrypt(it)
+        } ?: "0"
+
+        SecureSharedPreferences.getSharedPreferences(applicationContext)
+            .edit()
+            .putString("targetSysBP", targetSys)
+            .putString("targetDiaBP", targetDia)
+            .apply()
+
+        binding.profileTargetBP.text = ResourcesHelper.getString(
+            this,
+            R.string.profile_patient_target_bp,
+            targetSys,
+            targetDia
+        )
     }
+
 
     private fun loadImageFromUrl(imageUrl: String) {
         val imageRef = storage.getReferenceFromUrl(imageUrl)
@@ -339,4 +300,51 @@ class ProfileActivity : AppCompatActivity() {
                 firebaseErrorDialog(this, e, ::loadImageFromUrl, imageUrl)
             }
     }
+
+    // Method to show the delete confirmation dialog
+    private fun showDeleteConfirmationDialog() {
+        MaterialAlertDialogBuilder(this)
+            .setTitle(getString(R.string.delete_confirmation_title))
+            .setMessage(getString(R.string.delete_confirmation_message))
+            .setNegativeButton(getString(R.string.cancel)) { dialog, _ ->
+                dialog.dismiss()
+            }
+            .setPositiveButton(getString(R.string.delete)) { dialog, _ ->
+                dialog.dismiss()
+                deletePatient()
+            }
+            .show()
+    }
+
+    // Method to delete patient from Firebase
+    private fun deletePatient() {
+        val patientID = SecureSharedPreferences.getSharedPreferences(applicationContext).getString("patientID", null)
+        if (patientID.isNullOrEmpty()) {
+            patientNotFoundInSessionErrorDialog(this)
+            return
+        }
+
+        progressDialog.setTitle(getString(R.string.deleting))
+        progressDialog.setMessage(getString(R.string.please_wait))
+        progressDialog.show()
+
+        // Delete patient document from Firestore
+        db.collection("patients").document(patientID)
+            .delete()
+            .addOnSuccessListener {
+                progressDialog.dismiss()
+                Toast.makeText(this, getString(R.string.patient_deleted_success), Toast.LENGTH_SHORT).show()
+
+                // Navigate to MainActivity after deletion
+                val intent = Intent(this, MainActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
+                startActivity(intent)
+                finish()
+            }
+            .addOnFailureListener { e ->
+                progressDialog.dismiss()
+                firebaseErrorDialog(this, e, db.collection("patients").document(patientID))
+            }
+    }
+
 }

@@ -1,9 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name" tools:ignore="Typos" translatable="false">ENHANCe1</string>
 
-    <!-- AuthenticationActivity strings -->
-    <string name="resend_verification_code">Tap to resend verification code.</string>
-
     <!-- LoginActivity strings -->
     <string name="good_morning">Good Morning!</string>
     <string name="good_afternoon">Good Afternoon!</string>
@@ -15,7 +12,7 @@
     <string name="dashboard_no_records_found">No records found.</string>
 
     <!-- ScanActivity strings -->
-    <string name="ocr_instructions">Please ensure that only the blood pressure values are seen and exclude all headers when cropping.</string>
+    <string name="ocr_instructions">IMPORTANT: Please ensure that only the blood pressure values are seen and exclude all headers when cropping.</string>
     <string name="ocr_app_permissions_header">Enable app permissions</string>
     <string name="ocr_app_permissions_body">To use the OCR functionality, you need to allow access to your camera, gallery and external storage.</string>
     <string name="ocr_image_error_header">Error processing image</string>
@@ -39,8 +36,9 @@
     <string name="verify_scan_discard_body">Do you want to discard all progress and start over?</string>
     <string name="verify_scan_empty_field">Field is empty.</string>
     <string name="verify_scan_whole_number">Field must only contain whole number.</string>
-    <string name="verify_scan_valid_value">Value cannot be below $%1d or above $%2d.</string>
+    <string name="verify_scan_valid_value">Value cannot be below %1d or above %2d.</string>
     <string name="verify_scan_invalid_value">Invalid value.</string>
+    <string name="verify_scan_replace_value">Replace the value</string>
     <string name="verify_scan_abnormal_value">Abnormal value.</string>
     <string name="verify_scan_erroneous_header">Too many erroneous results</string>
     <string name="verify_scan_erroneous_body">Do you want to rescan the current records to achieve a better accuracy?\n\n(note: your previously scanned records will be saved)</string>
@@ -57,6 +55,16 @@
     <string name="profile_patient_weight">%1$s kg</string>
     <string name="profile_patient_height">%1$s cm</string>
     <string name="profile_patient_target_bp" translatable="false">%1$s / %2$s</string>
+    <string name="profile_edit_button">Edit</string>
+    <string name="profile_delete_button">Delete</string>
+    <string name="delete_confirmation_title">Delete Profile</string>
+    <string name="delete_confirmation_message">Are you sure you want to delete this profile?</string>
+    <string name="cancel">Cancel</string>
+    <string name="delete">Delete</string>
+    <string name="deleting">Deleting</string>
+    <string name="please_wait">Please wait...</string>
+    <string name="patient_deleted_success">Patient profile deleted successfully.</string>
+
 
     <!-- RegistrationActivity strings -->
     <string name="register_gender_male">Male</string>
@@ -232,9 +240,29 @@
     <string name="enhance_register_height">Height</string>
     <string name="enhance_register_button">Register</string>
 
+    <!-- activity_edit_patient.xml -->
+    <string name="enhance_edit_photo">Edit Photo</string>
+    <string name="enhance_edit_upload_photo">Tap to change profile picture</string>
+    <string name="enhance_edit_particulars">Edit Particulars</string>
+    <string name="enhance_edit_legal_name">Legal Name</string>
+    <string name="enhance_edit_patient_id">Patient ID</string>
+    <string name="enhance_edit_dob">Date of Birth</string>
+    <string name="enhance_edit_gender">Gender</string>
+    <string name="enhance_edit_health_info">Edit Health Info</string>
+    <string name="enhance_edit_weight">Weight</string>
+    <string name="enhance_edit_height">Height</string>
+    <string name="enhance_edit_target_sys">Target Systolic BP</string>
+    <string name="enhance_edit_target_dia">Target Diastolic BP</string>
+    <string name="enhance_update_button">Update</string>
+    <string name="update_successful">Profile updated successfully</string>
+    <string name="loading_patient_data">Loading patient data...</string>
+    <string name="update_loading_dialog">Updating profile...</string>
+    <string name="update_error_header">Update Error</string>
+    <string name="update_error_body">Unable to update profile. Please try again.</string>
+
     <!-- activity_scan.xml -->
-    <string name="enhance_scan_patient_id">Patient ID:</string>
-    <string name="enhance_scan_name">Name:</string>
+    <string name="enhance_scan_patient_id"> Patient ID: </string>
+    <string name="enhance_scan_name"> Name: </string>
     <string name="enhance_general_scan">General Scan</string>
     <string name="enhance_7_day_scan">7 Day Scan</string>
 
