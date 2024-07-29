@@ -59,6 +59,7 @@ dependencies {
     implementation("aws.smithy.kotlin:http-client-engine-okhttp:1.0.1")
     implementation("aws.smithy.kotlin:http-client-engine-crt:0.30.0")
     implementation("com.google.code.gson:gson:2.10")
+    implementation("androidx.drawerlayout:drawerlayout:1.2.0")
     testImplementation("org.junit.jupiter:junit-jupiter:5.9.0")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
 
@@ -126,4 +127,7 @@ dependencies {
 
     // Dependency for WebView
     implementation("androidx.webkit:webkit:1.8.0")
+
+    // Localisation
+    implementation ("com.github.YarikSOffice:lingver:1.3.0")
 }
