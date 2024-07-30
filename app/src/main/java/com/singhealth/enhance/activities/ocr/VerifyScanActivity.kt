@@ -1,6 +1,7 @@
 package com.singhealth.enhance.activities.ocr
 
 import android.annotation.SuppressLint
+import android.app.ProgressDialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -54,6 +55,8 @@ object ResourcesHelper {
 
 class VerifyScanActivity : AppCompatActivity() {
     private lateinit var binding: ActivityVerifyScanBinding
+
+    private lateinit var progressDialog: ProgressDialog
 
     private lateinit var patientID: String
 
@@ -109,6 +112,15 @@ class VerifyScanActivity : AppCompatActivity() {
         }
 
         val scanBundle = intent.extras
+
+        progressDialog = ProgressDialog(this)
+        progressDialog.setCanceledOnTouchOutside(false)
+
+        if (intent.getBooleanExtra("showProgressDialog", true)) {
+            progressDialog.setTitle("Processing image")
+            progressDialog.setMessage("Please wait a moment...")
+            progressDialog.show()
+        }
 
         targetSysBP = patientSharedPreferences.getString("targetSysBP", null).toString()
         targetDiaBP = patientSharedPreferences.getString("targetDiaBP", null).toString()
@@ -353,6 +365,7 @@ class VerifyScanActivity : AppCompatActivity() {
             override fun afterTextChanged(s: Editable?) {}
         })
 
+        progressDialog.dismiss()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

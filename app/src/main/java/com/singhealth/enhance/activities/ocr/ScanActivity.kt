@@ -328,6 +328,7 @@ class ScanActivity : AppCompatActivity() {
             putStringArrayList("sysBPList", ArrayList(sysBPList))
             putStringArrayList("diaBPList", ArrayList(diaBPList))
             putBoolean("sevenDay", sevenDay)
+            putBoolean("showProgressDialog", true)
             intent.extras?.let {
                 it.getString("homeSysBPTarget")?.let { target -> putString("homeSysBPTarget", target) }
                 it.getString("homeDiaBPTarget")?.let { target -> putString("homeDiaBPTarget", target) }
@@ -337,8 +338,6 @@ class ScanActivity : AppCompatActivity() {
                 putStringArrayList("diaBPListHistory", it.getStringArrayList("diaBPListHistory"))
             }
         }
-
-        progressDialog.dismiss()
 
         val verifyScanIntent = Intent(this, VerifyScanActivity::class.java).apply { putExtras(bundle) }
         startActivity(verifyScanIntent)

@@ -479,7 +479,7 @@ class SimpleDashboardActivity : AppCompatActivity() {
                 println("Page Height: ${pageInfo.pageHeight}")
                 val headingHeight = 100
                 val chartSpacing = 50
-                val padding = 2f
+                val padding = 10f
 
                 // Draw the text fields
                 canvas.drawText("Today's Recommendation", padding, (80).toFloat(), paint)
@@ -490,18 +490,19 @@ class SimpleDashboardActivity : AppCompatActivity() {
 
                 // Draw the first chart
                 val bitmap1 = getBitmapFromView(chart1)
-                val scaledBitmap1 = Bitmap.createScaledBitmap(bitmap1, chart1.width/5*4, chart1.height/5*4 , true)
-                canvas.drawBitmap(scaledBitmap1, 101f, headingHeight.toFloat()+150, paint)
+                val scaledBitmap1 = Bitmap.createScaledBitmap(bitmap1, chart1.width/3*2 , chart1.height/3*2  , true)
+                canvas.drawBitmap(scaledBitmap1, 169f, headingHeight.toFloat()+150, paint)
 
                 // Draw the second heading
-                canvas.drawText("Diastolic Comparison Chart", padding, (scaledBitmap1.height + headingHeight + 200 + chartSpacing - 20).toFloat(), paint)
+                canvas.drawText("Diastolic Comparison Chart", padding, (scaledBitmap1.height + headingHeight + 200 + chartSpacing - 35).toFloat(), paint)
 
                 // Draw the second chart
                 val bitmap2 = getBitmapFromView(chart2)
-                println("chart width ${chart2.width/5*4}")
-                val scaledBitmap2 = Bitmap.createScaledBitmap(bitmap2, chart2.width/5*4 , chart2.height/5*4 , true)
-                val spacing = scaledBitmap1.height + headingHeight + chartSpacing + 200 - 20
-                canvas.drawBitmap(scaledBitmap2, 101f, spacing.toFloat(), paint)
+                println("chart height ${chart2.height/3*2}")
+                println("chart width ${chart2.width/3*2}")
+                val scaledBitmap2 = Bitmap.createScaledBitmap(bitmap2, chart2.width/3*2 , chart2.height/3*2  , true)
+                val spacing = scaledBitmap1.height + headingHeight + chartSpacing + 200 - 35
+                canvas.drawBitmap(scaledBitmap2, 169f, spacing.toFloat(), paint)
             }
 
             private fun getBitmapFromView(view: View): Bitmap {
@@ -513,13 +514,14 @@ class SimpleDashboardActivity : AppCompatActivity() {
         }
 
         val printAttributes = PrintAttributes.Builder()
-            .setMediaSize(PrintAttributes.MediaSize.NA_LETTER)
+            .setMediaSize(PrintAttributes.MediaSize.ISO_A4)
             .setResolution(PrintAttributes.Resolution("default", "default", 300, 300))
             .setMinMargins(PrintAttributes.Margins.NO_MARGINS)
             .build()
 
         printManager.print(jobName, printAdapter, printAttributes)
     }
+
 
     private fun drawMultilineText(text: String, canvas: Canvas, paint: Paint, x: Float, y: Float, pageWidth: Int) {
         val textPaint = TextPaint(paint)
