@@ -90,7 +90,9 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:layout_below="@id/patientInfoContainer"
-            android:padding="16dp">
+            android:paddingBottom="16sp"
+            android:paddingLeft="16sp"
+            android:paddingRight="16sp">
 
             <com.google.android.material.card.MaterialCardView
                 style="?attr/materialCardViewFilledStyle"

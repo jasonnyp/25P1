@@ -12,7 +12,7 @@
     <string name="dashboard_no_records_found">No records found.</string>
 
     <!-- ScanActivity strings -->
-    <string name="ocr_instructions">IMPORTANT: Please ensure that only the blood pressure values (Systolic and Diastolic) are seen and exclude all text/headers when cropping.</string>
+    <string name="ocr_instructions">IMPORTANT: \nPlease ensure that only the blood pressure values (Systolic and Diastolic) are seen and exclude all text/headers when cropping.</string>
     <string name="ocr_app_permissions_header">Enable app permissions</string>
     <string name="ocr_app_permissions_body">To use the OCR functionality, you need to allow access to your camera, gallery and external storage.</string>
     <string name="ocr_image_error_header">Error processing image</string>

@@ -9,7 +9,7 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/bottomNavigationView">
+        >
 
 
     <LinearLayout
@@ -22,7 +22,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/enhance_recco_header"
-            android:textSize="25sp"
+            android:textSize="20sp"
+            android:textStyle="bold"
             android:paddingTop="16dp"
             android:paddingStart="16dp"
             android:paddingEnd="16dp"/>
@@ -298,11 +299,4 @@
 
 </ScrollView>
 
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/bottomNavigationView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        app:labelVisibilityMode="labeled"
-        app:menu="@menu/navigation_bar" />
 </RelativeLayout>

@@ -112,65 +112,71 @@ class HistoryActivity : AppCompatActivity(), HistoryAdapter.OnItemClickListener 
         }
 
         // Check if patient information exist in session
-        val patientSharedPreferences = SecureSharedPreferences.getSharedPreferences(applicationContext)
+        val patientSharedPreferences =
+            SecureSharedPreferences.getSharedPreferences(applicationContext)
         if (patientSharedPreferences.getString("patientID", null).isNullOrEmpty()) {
             patientNotFoundInSessionErrorDialog(this)
         } else {
             patientID = patientSharedPreferences.getString("patientID", null).toString()
-        }
 
-        db.collection("patients").document(patientID).collection("visits").get()
-            .addOnSuccessListener { documents ->
-                if (documents.isEmpty) {
-                    binding.noRecordsTV.visibility = View.VISIBLE
-                } else {
-                    binding.noRecordsTV.visibility = View.GONE
+            db.collection("patients").document(patientID).collection("visits").get()
+                .addOnSuccessListener { documents ->
+                    if (documents.isEmpty) {
+                        binding.noRecordsTV.visibility = View.VISIBLE
+                    } else {
+                        binding.noRecordsTV.visibility = View.GONE
 
-                    val inputDateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")
-                    val outputDateFormatter = DateTimeFormatter.ofPattern(getString(R.string.date_format))
+                        val inputDateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")
+                        val outputDateFormatter =
+                            DateTimeFormatter.ofPattern(getString(R.string.date_format))
 
-                    for (document in documents) {
-                        val dateTimeString = document.get("date") as? String
-                        val dateTime = LocalDateTime.parse(dateTimeString, inputDateFormatter)
-                        val dateTimeFormatted = dateTime.format(outputDateFormatter)
-                        val avgSysBP = document.get("averageSysBP") as? Long
-                        val avgDiaBP = document.get("averageDiaBP") as? Long
-                        val homeSysBPTarget = document.get("homeSysBPTarget") as? Long
-                        val homeDiaBPTarget = document.get("homeDiaBPTarget") as? Long
-                        val clinicSysBPTarget = document.get("clinicSysBPTarget") as? Long
-                        val clinicDiaBPTarget = document.get("clinicDiaBPTarget") as? Long
-                        val clinicSysBP = document.get("clinicSysBP") as? Long
-                        val clinicDiaBP = document.get("clinicDiaBP") as? Long
-                        history.add(
-                            HistoryData(
-                                dateTime.toString(),
-                                dateTimeFormatted,
-                                avgSysBP,
-                                avgDiaBP,
-                                homeSysBPTarget,
-                                homeDiaBPTarget,
-                                clinicSysBPTarget,
-                                clinicDiaBPTarget,
-                                clinicSysBP,
-                                clinicDiaBP,
+                        for (document in documents) {
+                            val dateTimeString = document.get("date") as? String
+                            val dateTime = LocalDateTime.parse(dateTimeString, inputDateFormatter)
+                            val dateTimeFormatted = dateTime.format(outputDateFormatter)
+                            val avgSysBP = document.get("averageSysBP") as? Long
+                            val avgDiaBP = document.get("averageDiaBP") as? Long
+                            val homeSysBPTarget = document.get("homeSysBPTarget") as? Long
+                            val homeDiaBPTarget = document.get("homeDiaBPTarget") as? Long
+                            val clinicSysBPTarget = document.get("clinicSysBPTarget") as? Long
+                            val clinicDiaBPTarget = document.get("clinicDiaBPTarget") as? Long
+                            val clinicSysBP = document.get("clinicSysBP") as? Long
+                            val clinicDiaBP = document.get("clinicDiaBP") as? Long
+                            history.add(
+                                HistoryData(
+                                    dateTime.toString(),
+                                    dateTimeFormatted,
+                                    avgSysBP,
+                                    avgDiaBP,
+                                    homeSysBPTarget,
+                                    homeDiaBPTarget,
+                                    clinicSysBPTarget,
+                                    clinicDiaBPTarget,
+                                    clinicSysBP,
+                                    clinicDiaBP,
+                                )
                             )
-                        )
+                        }
+
+                        sortedHistory = history.sortedByDescending { it.date }
+                        println("Sorted History$sortedHistory")
+                        println("Sorted History 1st" + sortedHistory[0])
+                        println("Sorted History 1st SYS DATA" + sortedHistory[0].avgSysBP)
+
+                        val adapter = HistoryAdapter(sortedHistory, this)
+
+                        binding.recyclerView.adapter = adapter
+                        binding.recyclerView.layoutManager = LinearLayoutManager(this)
                     }
-
-                    sortedHistory = history.sortedByDescending { it.date }
-                    println("Sorted History$sortedHistory")
-                    println("Sorted History 1st" + sortedHistory[0])
-                    println("Sorted History 1st SYS DATA" + sortedHistory[0].avgSysBP)
-
-                    val adapter = HistoryAdapter(sortedHistory, this)
-
-                    binding.recyclerView.adapter = adapter
-                    binding.recyclerView.layoutManager = LinearLayoutManager(this)
                 }
-            }
-            .addOnFailureListener { e ->
-                errorDialogBuilder(this, getString(R.string.patient_history_not_found_error_header), getString(R.string.patient_history_not_found_error_body, e))
-            }
+                .addOnFailureListener { e ->
+                    errorDialogBuilder(
+                        this,
+                        getString(R.string.patient_history_not_found_error_header),
+                        getString(R.string.patient_history_not_found_error_body, e)
+                    )
+                }
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

@@ -61,38 +61,6 @@ class RecommendationActivity : AppCompatActivity() {
             patientID= patientSharedPreferences.getString("patientID", null)
         }
 
-        binding.bottomNavigationView.setOnItemSelectedListener { menuItem ->
-            when (menuItem.itemId) {
-                R.id.item_profile -> {
-                    startActivity(Intent(this, ProfileActivity::class.java))
-                    finish()
-                    false
-                }
-
-                R.id.item_scan -> {
-                    startActivity(Intent(this, ScanActivity::class.java))
-                    finish()
-                    false
-                }
-
-                R.id.item_history -> {
-                    startActivity(Intent(this, HistoryActivity::class.java))
-                    finish()
-                    false
-                }
-
-                R.id.item_dashboard -> {
-                    startActivity(Intent(this, SimpleDashboardActivity::class.java))
-                    finish()
-                    false
-                }
-
-                else -> {
-                    false
-                }
-            }
-        }
-
         val avgBPBundle = intent.extras
         avgSysBP = avgBPBundle!!.getInt("avgSysBP").toLong()
         avgDiaBP = avgBPBundle.getInt("avgDiaBP").toLong()
