@@ -81,6 +81,7 @@ class VerifyScanActivity : AppCompatActivity() {
     private var avgDiaBP = 0
 
     private val undoStack = mutableListOf<Pair<MutableList<String>, MutableList<String>>>()
+    private val maxUndoStackSize = 1
 
     private val db = Firebase.firestore
 
@@ -478,8 +479,14 @@ class VerifyScanActivity : AppCompatActivity() {
             ResourcesHelper.getString(this, R.string.verify_scan_discard_body), ScanActivity::class.java, R.drawable.ic_delete)
     }
 
-    fun saveStateForUndo() {
-        undoStack.add(Pair(sysBPList.toMutableList(), diaBPList.toMutableList()))
+    private fun saveStateForUndo() {
+        if (undoStack.isEmpty() || undoStack.last().first != sysBPList || undoStack.last().second != diaBPList) {
+            if (undoStack.size >= maxUndoStackSize) {
+                undoStack.removeAt(0)
+            } else {
+                undoStack.add(Pair(sysBPList.toMutableList(), diaBPList.toMutableList()))
+            }
+        }
     }
 
     fun undo() {
@@ -1059,7 +1066,6 @@ class VerifyScanActivity : AppCompatActivity() {
     @SuppressLint("SetTextI18n")
     private fun addRow(sysBP: String?, diaBP: String?, isSevenDayCheck: Boolean = false, day: Int = -1, time: Int = -1, showHeader: Boolean = false) {
         println("Adding row: sysBP=$sysBP, diaBP=$diaBP, isSevenDayCheck=$isSevenDayCheck, day=$day, time=$time, showHeader=$showHeader")
-        saveStateForUndo()
 
         val rowBPRecordLayout = layoutInflater.inflate(R.layout.row_bp_record, null, false)
 
@@ -1086,9 +1092,11 @@ class VerifyScanActivity : AppCompatActivity() {
 
         // Add TextWatchers to update the lists
         sysBPTIET.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
             override fun afterTextChanged(s: Editable?) {
+                saveStateForUndo()
                 val index = sysBPFields.indexOf(sysBPTIET)
                 if (index != -1) {
                     sysBPList[index] = s.toString()
@@ -1097,9 +1105,11 @@ class VerifyScanActivity : AppCompatActivity() {
         })
 
         diaBPTIET.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
             override fun afterTextChanged(s: Editable?) {
+                saveStateForUndo()
                 val index = diaBPFields.indexOf(diaBPTIET)
                 if (index != -1) {
                     diaBPList[index] = s.toString()
@@ -1113,6 +1123,7 @@ class VerifyScanActivity : AppCompatActivity() {
 
         val swapValuesIV = rowBPRecordLayout.findViewById<View>(R.id.swapValuesIV) as ImageView
         swapValuesIV.setOnClickListener {
+            saveStateForUndo()
             val tempValue = sysBPTIET.text.toString()
             sysBPTIET.setText(diaBPTIET.text.toString())
             diaBPTIET.setText(tempValue)
@@ -1126,10 +1137,21 @@ class VerifyScanActivity : AppCompatActivity() {
                 .setMessage(ResourcesHelper.getString(this, R.string.verify_scan_remove_row_body))
                 .setNegativeButton(ResourcesHelper.getString(this, R.string.cancel_dialog)) { dialog, _ -> dialog.dismiss() }
                 .setPositiveButton(ResourcesHelper.getString(this, R.string.ok_dialog)) { dialog, _ ->
+                    saveStateForUndo()
+                    val diaIndex = diaBPFields.indexOf(diaBPTIET)
+                    if (diaIndex != -1) {
+                        diaBPList.removeAt(diaIndex)
+                    }
+                    val sysIndex = sysBPFields.indexOf(sysBPTIET)
+                    if (sysIndex != -1) {
+                        sysBPList.removeAt(sysIndex)
+                    }
                     sysBPFields.remove(sysBPTIET)
                     diaBPFields.remove(diaBPTIET)
-                    binding.rowBPRecordLL.removeView(rowBPRecordLayout)
-                    checkAddRowButtonStatus()
+                    binding.rowBPRecordLL.removeAllViews()
+                    sysBPFields.clear()
+                    diaBPFields.clear()
+                    sevenDayCheck()
                     dialog.dismiss()
                 }
                 .show()
@@ -1148,11 +1170,11 @@ class VerifyScanActivity : AppCompatActivity() {
                 println("Button disabled: max row limit reached")
             } else {
                 // Adding new row
+                saveStateForUndo()
                 val newRow = layoutInflater.inflate(R.layout.row_bp_record, null, false)
                 binding.rowBPRecordLL.addView(newRow, currentRowIndex)
                 sysBPList.add(currentRowIndex, "")
                 diaBPList.add(currentRowIndex, "")
-
                 // Refresh the view
                 binding.rowBPRecordLL.removeAllViews()
                 sysBPFields.clear()
@@ -1173,7 +1195,6 @@ class VerifyScanActivity : AppCompatActivity() {
         println("Updated diaBPList: $diaBPList")
 
     }
-
 
     // Add divider to separate old and new records
     private fun addDivider() {

@@ -338,6 +338,8 @@ class ScanActivity : AppCompatActivity() {
             }
         }
 
+        progressDialog.dismiss()
+
         val verifyScanIntent = Intent(this, VerifyScanActivity::class.java).apply { putExtras(bundle) }
         startActivity(verifyScanIntent)
         finish()
@@ -358,13 +360,6 @@ class ScanActivity : AppCompatActivity() {
         return if (actionBarDrawerToggle.onOptionsItemSelected(item)) {
             true
         } else super.onOptionsItemSelected(item)
-    }
-
-    override fun onPause() {
-        super.onPause()
-        if (progressDialog.isShowing) {
-            progressDialog.dismiss()
-        }
     }
 
     private fun navigateTo(activityClass: Class<*>) {

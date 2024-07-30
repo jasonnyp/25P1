@@ -39,6 +39,7 @@ import com.singhealth.enhance.activities.patient.ProfileActivity
 import com.singhealth.enhance.activities.patient.RegistrationActivity
 import com.singhealth.enhance.activities.settings.SettingsActivity
 import com.singhealth.enhance.databinding.ActivitySimpleDashboardBinding
+import com.singhealth.enhance.security.AESEncryption
 import com.singhealth.enhance.security.SecureSharedPreferences
 import java.io.FileOutputStream
 import java.io.IOException
@@ -55,6 +56,7 @@ class SimpleDashboardActivity : AppCompatActivity() {
     private lateinit var actionBarDrawerToggle: ActionBarDrawerToggle
 
     private lateinit var patientID: String
+    private lateinit var decryptedPatientID: String
 
     private lateinit var sortedHistory: List<HistoryData>
 
@@ -148,6 +150,7 @@ class SimpleDashboardActivity : AppCompatActivity() {
             finish()
         } else {
             patientID = patientSharedPreferences.getString("patientID", null).toString()
+            decryptedPatientID = AESEncryption().decrypt(patientID)
         }
 
         binding.printSourceBtn.setOnClickListener {
@@ -200,7 +203,6 @@ class SimpleDashboardActivity : AppCompatActivity() {
                         Toast.LENGTH_SHORT
                     ).show()
                 } else {
-                    println("BIG BALLer")
 
                     println("Sorted History" + sortedHistory)
                     println("Sorted History 1st" + sortedHistory[0])
@@ -363,7 +365,9 @@ class SimpleDashboardActivity : AppCompatActivity() {
 
     private fun printCharts() {
         val printManager = getSystemService(PRINT_SERVICE) as PrintManager
-        val jobName = "${getString(R.string.app_name)}_Charts"
+        val formatter = DateTimeFormatter.ofPattern("ddMMyy_HHmmss")
+        val current = LocalDateTime.now().format(formatter)
+        val jobName = "${decryptedPatientID}_${current}_Charts"
 
         val printAdapter = object : PrintDocumentAdapter() {
             private var currentPrintAttributes: PrintAttributes? = null
