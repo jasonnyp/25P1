@@ -15,6 +15,9 @@ import android.print.PrintDocumentAdapter
 import android.print.PrintDocumentInfo
 import android.print.PrintManager
 import android.print.pdf.PrintedPdfDocument
+import android.text.Layout
+import android.text.StaticLayout
+import android.text.TextPaint
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
@@ -28,10 +31,14 @@ import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.utils.EntryXComparator
+import com.github.mikephil.charting.utils.Utils.drawMultilineText
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.singhealth.enhance.R
 import com.singhealth.enhance.activities.MainActivity
+import com.singhealth.enhance.activities.diagnosis.bpControlStatus
+import com.singhealth.enhance.activities.diagnosis.hypertensionStatus
+import com.singhealth.enhance.activities.diagnosis.showRecommendation
 import com.singhealth.enhance.activities.history.HistoryActivity
 import com.singhealth.enhance.activities.history.HistoryData
 import com.singhealth.enhance.activities.ocr.ScanActivity
@@ -57,6 +64,9 @@ class SimpleDashboardActivity : AppCompatActivity() {
 
     private lateinit var patientID: String
     private lateinit var decryptedPatientID: String
+    private lateinit var bpHypertensionStatus: String
+    private lateinit var bpHomeControlStatus: String
+    private lateinit var bpReccomendation: String
 
     private lateinit var sortedHistory: List<HistoryData>
 
@@ -177,6 +187,7 @@ class SimpleDashboardActivity : AppCompatActivity() {
                         val clinicDiaBPTarget = document.get("clinicDiaBPTarget") as? Long
                         val clinicSysBP = document.get("clinicSysBP") as? Long
                         val clinicDiaBP = document.get("clinicDiaBP") as? Long
+
                         history.add(
                             HistoryData(
                                 dateTime.toString(),
@@ -207,6 +218,27 @@ class SimpleDashboardActivity : AppCompatActivity() {
                     println("Sorted History" + sortedHistory)
                     println("Sorted History 1st" + sortedHistory[0])
                     println("Sorted History 1st SYS DATA" + sortedHistory[0].avgSysBP)
+                    bpHypertensionStatus = hypertensionStatus(
+                        this,
+                        sortedHistory[0].avgSysBP ?: 0L,
+                        sortedHistory[0].avgDiaBP ?: 0L,
+                        sortedHistory[0].clinicSysBP ?: 0L,
+                        sortedHistory[0].clinicDiaBP ?: 0L,
+                        sortedHistory[0].homeSysBPTarget ?: 0L,
+                        sortedHistory[0].homeDiaBPTarget ?: 0L
+                    )
+                    bpHomeControlStatus = bpControlStatus(
+                        this,
+                        bpHypertensionStatus
+                    )
+                    bpReccomendation = showRecommendation(
+                        this,
+                        bpHomeControlStatus
+                    )
+
+                    println("Hypertension Status: $bpHypertensionStatus")
+                    println("Home Control Status: $bpHomeControlStatus")
+                    println("Recommendation: $bpReccomendation")
 
                     lineChart = findViewById(R.id.syslineChart)
                     setupLineChart()
@@ -362,7 +394,6 @@ class SimpleDashboardActivity : AppCompatActivity() {
         }
     }
 
-
     private fun printCharts() {
         val printManager = getSystemService(PRINT_SERVICE) as PrintManager
         val formatter = DateTimeFormatter.ofPattern("ddMMyy_HHmmss")
@@ -404,14 +435,14 @@ class SimpleDashboardActivity : AppCompatActivity() {
                     val pdfDocument = PrintedPdfDocument(this@SimpleDashboardActivity, printAttributes)
 
                     // Create a page description
-                    val totalHeight = lineChart.height + diastolicLineChart.height + 200 // Adding extra space for headings
+                    val totalHeight = lineChart.height / 2 + diastolicLineChart.height / 2 + 600 // Adding extra space for headings and text
                     val pageInfo = PdfDocument.PageInfo.Builder(lineChart.width, totalHeight, 1).create()
 
                     // Start a page
                     val page = pdfDocument.startPage(pageInfo)
 
-                    // Draw the charts on the page with headings
-                    drawChartsOnPage(page, lineChart, diastolicLineChart)
+                    // Draw the charts and text on the page
+                    drawChartsAndTextOnPage(page, lineChart, diastolicLineChart)
                     pdfDocument.finishPage(page)
 
                     try {
@@ -433,32 +464,45 @@ class SimpleDashboardActivity : AppCompatActivity() {
                 }
             }
 
-            private fun drawChartsOnPage(page: PdfDocument.Page, chart1: LineChart, chart2: LineChart) {
+            private fun drawChartsAndTextOnPage(page: PdfDocument.Page, chart1: LineChart, chart2: LineChart) {
                 val canvas = page.canvas
                 val paint = Paint().apply {
                     textSize = 45f
                     isFakeBoldText = true
                 }
+                val smallPaint = Paint().apply {
+                    textSize = 35f
+                }
 
-                val headingHeight = 50 // Height reserved for headings
-                val chartSpacing = 50 // Spacing between the charts
+                val pageInfo = page.info
+                println("Page Width: ${pageInfo.pageWidth}")
+                println("Page Height: ${pageInfo.pageHeight}")
+                val headingHeight = 100
+                val chartSpacing = 50
+                val padding = 2f
+
+                // Draw the text fields
+                canvas.drawText("Today's Recommendation", padding, (80).toFloat(), paint)
+                drawMultilineText(bpReccomendation, canvas, smallPaint, padding, (100).toFloat(), pageInfo.pageWidth)
 
                 // Draw headings
-                canvas.drawText("Systolic Comparison Chart", 0f,
-                    (headingHeight + 20).toFloat(), paint)
+                canvas.drawText("Systolic Comparison Chart", padding, (headingHeight + 150).toFloat(), paint)
 
                 // Draw the first chart
                 val bitmap1 = getBitmapFromView(chart1)
-                canvas.drawBitmap(bitmap1, 0f, headingHeight.toFloat(), paint)
+                val scaledBitmap1 = Bitmap.createScaledBitmap(bitmap1, chart1.width/5*4, chart1.height/5*4 , true)
+                canvas.drawBitmap(scaledBitmap1, 101f, headingHeight.toFloat()+150, paint)
 
                 // Draw the second heading
-                canvas.drawText("Diastolic Comparison Chart", 0f,
-                    (bitmap1.height + headingHeight + 50 + chartSpacing).toFloat(), paint)
+                canvas.drawText("Diastolic Comparison Chart", padding, (scaledBitmap1.height + headingHeight + 200 + chartSpacing - 20).toFloat(), paint)
 
                 // Draw the second chart
                 val bitmap2 = getBitmapFromView(chart2)
-                val spacing = bitmap1.height + headingHeight + chartSpacing + 50
-                canvas.drawBitmap(bitmap2, 0f, spacing.toFloat(), paint)            }
+                println("chart width ${chart2.width/5*4}")
+                val scaledBitmap2 = Bitmap.createScaledBitmap(bitmap2, chart2.width/5*4 , chart2.height/5*4 , true)
+                val spacing = scaledBitmap1.height + headingHeight + chartSpacing + 200 - 20
+                canvas.drawBitmap(scaledBitmap2, 101f, spacing.toFloat(), paint)
+            }
 
             private fun getBitmapFromView(view: View): Bitmap {
                 val bitmap = Bitmap.createBitmap(view.width, view.height, Bitmap.Config.ARGB_8888)
@@ -469,7 +513,7 @@ class SimpleDashboardActivity : AppCompatActivity() {
         }
 
         val printAttributes = PrintAttributes.Builder()
-            .setMediaSize(PrintAttributes.MediaSize.NA_LETTER) // or any size that fits your requirement
+            .setMediaSize(PrintAttributes.MediaSize.NA_LETTER)
             .setResolution(PrintAttributes.Resolution("default", "default", 300, 300))
             .setMinMargins(PrintAttributes.Margins.NO_MARGINS)
             .build()
@@ -477,5 +521,20 @@ class SimpleDashboardActivity : AppCompatActivity() {
         printManager.print(jobName, printAdapter, printAttributes)
     }
 
+    private fun drawMultilineText(text: String, canvas: Canvas, paint: Paint, x: Float, y: Float, pageWidth: Int) {
+        val textPaint = TextPaint(paint)
+        val textWidth = pageWidth - x.toInt()
+
+        val staticLayout = StaticLayout.Builder.obtain(text, 0, text.length, textPaint, textWidth)
+            .setAlignment(Layout.Alignment.ALIGN_NORMAL)
+            .setLineSpacing(0f, 1f)
+            .setIncludePad(false)
+            .build()
+
+        canvas.save()
+        canvas.translate(x, y)
+        staticLayout.draw(canvas)
+        canvas.restore()
+    }
 
 }
