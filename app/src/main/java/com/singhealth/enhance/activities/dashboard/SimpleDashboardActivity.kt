@@ -18,7 +18,6 @@ import android.print.pdf.PrintedPdfDocument
 import android.text.Layout
 import android.text.StaticLayout
 import android.text.TextPaint
-import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
@@ -30,8 +29,6 @@ import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.ValueFormatter
-import com.github.mikephil.charting.utils.EntryXComparator
-import com.github.mikephil.charting.utils.Utils.drawMultilineText
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.singhealth.enhance.R
@@ -53,7 +50,6 @@ import java.io.IOException
 import java.text.SimpleDateFormat
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
-import java.util.Collections
 import java.util.Locale
 
 class SimpleDashboardActivity : AppCompatActivity() {
@@ -233,7 +229,8 @@ class SimpleDashboardActivity : AppCompatActivity() {
                     )
                     bpReccomendation = showRecommendation(
                         this,
-                        bpHomeControlStatus
+                        bpHomeControlStatus,
+                        "en"
                     )
 
                     println("Hypertension Status: $bpHypertensionStatus")

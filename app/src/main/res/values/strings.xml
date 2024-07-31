@@ -140,7 +140,7 @@
     <string name="firebase_error_body">The app is having trouble communicating with the Firestore Database.\n\nIf the issue persists, contact IT support with the following error code: %1$s</string>
     <string name="firebase_error_return_to_main">Back to Main</string>
 
-    <string name="reconnect_dialog_button" translatable="false">RECONNECT</string>
+    <string name="reconnect_dialog_button">RECONNECT</string>
     <string name="reconnect_error_header">No Internet Connection</string>
     <string name="reconnect_error_body">You are not connected to the internet. Many app functions depend on internet connections, and your progress may not be saved. \n\nIf the issue persists, contact IT helpdesk for further assistance.</string>
 

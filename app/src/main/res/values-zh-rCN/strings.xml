@@ -136,6 +136,7 @@
     <string name="firebase_error_body">应用程序在与 Firestore 数据库通信时遇到问题。\n\n如果问题仍然存在，请联系 IT 支持并提供以下错误代码：%1$s</string>
     <string name="firebase_error_return_to_main">返回主页</string>
 
+    <string name="reconnect_dialog_button">重新连接</string>
     <string name="reconnect_error_header">没有网络连接</string>
     <string name="reconnect_error_body">您未连接到互联网。许多应用功能依赖于互联网连接，您的进度可能不会保存。\n\n如果问题仍然存在，请联系 IT 帮助台寻求进一步帮助。</string>
 

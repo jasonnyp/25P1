@@ -1,11 +1,14 @@
 package com.singhealth.enhance.activities.diagnosis
 
 import android.content.Context
+import android.content.res.Configuration
+import android.content.res.Resources
 import androidx.core.content.ContextCompat
 import com.google.firebase.firestore.QuerySnapshot
 import com.singhealth.enhance.R
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import java.util.Locale
 
 // Determine patient's BP Stage based on the given Systolic and Diastolic values. Set recentDate to null if not necessary
 // recentDate param is just for confirmation that the data is most recent (for profile updates)
@@ -70,6 +73,33 @@ fun showRecommendation(context: Context, optimal: String): String{
         }
         else -> {
             ResourcesHelper.getString(context, R.string.no_recommendations)
+        }
+    }
+}
+fun showRecommendation(context: Context, optimal: String, locale: String): String {
+    fun getLocalizedResources(context: Context, desiredLocale: Locale): Resources {
+        val conf = Configuration(context.resources.configuration)
+        conf.setLocale(desiredLocale)
+        val localizedContext = context.createConfigurationContext(conf)
+        return localizedContext.resources
+    }
+
+    var localLocale = Locale.getDefault()
+
+    if (locale == "en") {
+        localLocale = Locale.ENGLISH
+    }
+    val localisedResources = getLocalizedResources(context, localLocale)
+
+    return when (optimal) {
+        ResourcesHelper.getString(context, R.string.well_controlled) -> {
+            localisedResources.getString(R.string.well_controlled_bp_recommendation_medical)
+        }
+        ResourcesHelper.getString(context, R.string.suboptimum) -> {
+            localisedResources.getString(R.string.suboptimum_bp_recommendation_medical)
+        }
+        else -> {
+            localisedResources.getString(R.string.no_recommendations)
         }
     }
 }
