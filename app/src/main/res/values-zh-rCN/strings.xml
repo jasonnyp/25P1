@@ -252,6 +252,7 @@
     <string name="enhance_settings_logout">登出</string>
     <string name="enhance_settings_help_support">帮助与支持</string>
     <string name="enhance_settings_user_guide">用户指南</string>
+    <string name="enhance_settings_language">语言选项</string>
     <string name="enhance_settings_contact_helpdesk">联系帮助台</string>
     <string name="enhance_settings_about">关于ENHANCe</string>
     <string name="enhance_settings_terms_of_use">使用条款</string>
@@ -302,7 +303,4 @@
     <string name="enhance_history_item_clinicbp">诊所血压：</string>
     <string name="enhance_history_item_target_homebp">家庭血压目标：</string>
     <string name="enhance_history_item_target_clinicbp">诊所血压目标：</string>
-
-
-
 </resources>
