@@ -62,7 +62,7 @@
     <string name="cancel">Cancel</string>
     <string name="delete">Delete</string>
     <string name="deleting">Deleting</string>
-    <string name="please_wait">Please wait...</string>
+    <string name="please_wait">Please wait…</string>
     <string name="patient_deleted_success">Patient profile deleted successfully.</string>
 
 
@@ -218,10 +218,10 @@
     <string name="enhance_recco_do">Do:</string>
     <string name="enhance_recco_dont">Don\'t:</string>
     <string name="bpDivider" translatable="false">/</string>
-    <string name="enhance_recco_target_home_bp"> Target HBP</string>
-    <string name="enhance_recco_target_office_bp"> Target OBP</string>
+    <string name="enhance_recco_target_home_bp"> Target Home BP</string>
+    <string name="enhance_recco_target_clinic_bp"> Target Clinic BP</string>
     <string name="enhance_recco_average_home_bp"> Average Home BP</string>
-    <string name="enhance_recco_office_bp"> Office BP</string>
+    <string name="enhance_recco_clinic_bp"> Clinic BP</string>
     <string name="enhance_recco_hypertension_status"> Hypertension Status</string>
     <string name="enhance_recco_recommendation">Recommendations</string>
 
@@ -255,8 +255,8 @@
     <string name="enhance_edit_target_dia">Target Diastolic BP</string>
     <string name="enhance_update_button">Update</string>
     <string name="update_successful">Profile updated successfully</string>
-    <string name="loading_patient_data">Loading patient data...</string>
-    <string name="update_loading_dialog">Updating profile...</string>
+    <string name="loading_patient_data">Loading patient data…</string>
+    <string name="update_loading_dialog">Updating profile…</string>
     <string name="update_error_header">Update Error</string>
     <string name="update_error_body">Unable to update profile. Please try again.</string>
 
@@ -323,8 +323,9 @@
 
     <!-- history_item.xml -->
     <string name="enhance_history_item_avgbp">Average BP:</string>
-    <string name="enhance_history_item_homebp">Home BP Target:</string>
-    <string name="enhance_history_item_clinicbp">Clinic BP Target:</string>
+    <string name="enhance_history_item_clinicbp">Clinic BP:</string>
+    <string name="enhance_history_item_target_homebp">Home BP Target:</string>
+    <string name="enhance_history_item_target_clinicbp">Clinic BP Target:</string>
 
     <!-- row_bp_record.xml -->
     <string name="enhance_row_bp_divider" translatable="false">/</string>

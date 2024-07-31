@@ -110,19 +110,19 @@ fun bpControlStatus(context: Context, hypertensionLevel: String):String {
 fun hypertensionStatus(
     context: Context,
     avgHomeSys: Long, avgHomeDia: Long,
-    officeSys: Long, officeDia: Long,
+    clinicSys: Long, clinicDia: Long,
     targetHomeSys: Long, targetHomeDia: Long,
 ):String {
-    val targetOfficeSys = targetHomeSys + 5
-    val targetOfficeDia = targetHomeDia + 5
+    val targetClinicSys = targetHomeSys + 5
+    val targetClinicDia = targetHomeDia + 5
 
     val controlledHomeBP: Boolean = (avgHomeSys < targetHomeSys && avgHomeDia < targetHomeDia)
-    val controlledOfficeBP: Boolean = (officeSys < targetOfficeSys && officeDia < targetOfficeDia)
+    val controlledClinicBP: Boolean = (clinicSys < targetClinicSys && clinicDia < targetClinicDia)
 
     val hypertensionStatus: String = when {
-        controlledHomeBP && controlledOfficeBP -> ResourcesHelper.getString(context, R.string.well_controlled_hypertension)
-        controlledHomeBP && !controlledOfficeBP -> ResourcesHelper.getString(context, R.string.white_coat_uncontrolled_hypertension)
-        !controlledHomeBP && controlledOfficeBP -> ResourcesHelper.getString(context, R.string.masked_hypertension)
+        controlledHomeBP && controlledClinicBP -> ResourcesHelper.getString(context, R.string.well_controlled_hypertension)
+        controlledHomeBP && !controlledClinicBP -> ResourcesHelper.getString(context, R.string.white_coat_uncontrolled_hypertension)
+        !controlledHomeBP && controlledClinicBP -> ResourcesHelper.getString(context, R.string.masked_hypertension)
         else -> ResourcesHelper.getString(context, R.string.uncontrolled_hypertension)
     }
     return hypertensionStatus

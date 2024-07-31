@@ -156,8 +156,10 @@ class VerifyScanActivity : AppCompatActivity() {
 
                     binding.verifyHomeSys.text = homeSysBPTarget.toString()
                     binding.verifyHomeDia.text = homeDiaBPTarget.toString()
+                    binding.homeBPTargetTV.text = String.format("%s / %s", homeSysBPTarget.toString(), homeDiaBPTarget.toString())
                     binding.verifyClinicTargetSys.text = clinicSysBPTarget.toString()
                     binding.verifyClinicTargetDia.text = clinicDiaBPTarget.toString()
+                    binding.clinicBPTargetTV.text = String.format("%s / %s", clinicSysBPTarget.toString(), clinicDiaBPTarget.toString())
                 }
             }
             .addOnFailureListener { e ->
@@ -177,6 +179,13 @@ class VerifyScanActivity : AppCompatActivity() {
             }
             if (scanBundle.containsKey("clinicDiaBPTarget")) {
                 binding.verifyClinicTargetDia.text = scanBundle.getString("clinicDiaBPTarget")
+            }
+
+            if (scanBundle.containsKey("homeSysBPTarget") && scanBundle.containsKey("homeDiaBPTarget")) {
+                binding.homeBPTargetTV.text = String.format("%s / %s", scanBundle.getString("homeSysBPTarget"), scanBundle.getString("homeDiaBPTarget"))
+            }
+            if (scanBundle.containsKey("clinicSysBPTarget") && scanBundle.containsKey("clinicDiaBPTarget")) {
+                binding.homeBPTargetTV.text = String.format("%s / %s", scanBundle.getString("clinicSysBPTarget"), scanBundle.getString("clinicDiaBPTarget"))
             }
 
             if (scanBundle.containsKey("sysBPListHistory") && scanBundle.containsKey("diaBPListHistory")) {
@@ -783,6 +792,8 @@ class VerifyScanActivity : AppCompatActivity() {
         } else if (!binding.verifyClinicSys.text!!.isDigitsOnly()) {
             valid = false
             setError(binding.verifyClinicSys.parent.parent as TextInputLayout, ResourcesHelper.getString(this, R.string.verify_scan_whole_number))
+        } else if (binding.verifyClinicSys.text.toString().toInt() > 209 || binding.verifyClinicSys.text.toString().toInt() < 91) {
+            valid = false
         }
 
         if (binding.verifyClinicDia.text.isNullOrEmpty()) {
@@ -791,6 +802,8 @@ class VerifyScanActivity : AppCompatActivity() {
         } else if (!binding.verifyClinicDia.text!!.isDigitsOnly()) {
             valid = false
             setError(binding.verifyClinicDia.parent.parent as TextInputLayout, ResourcesHelper.getString(this, R.string.verify_scan_whole_number))
+        } else if (binding.verifyClinicDia.text.toString().toInt() > 119 || binding.verifyClinicDia.text.toString().toInt() < 61) {
+            valid = false
         }
 
         if (!sevenDay) {

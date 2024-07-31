@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!-- AuthenticationActivity strings -->
-    <string name="resend_verification_code">點擊重新發送驗證碼</string>
-
     <!-- LoginActivity strings -->
     <string name="good_morning">早上好！</string>
     <string name="good_afternoon">下午好！</string>
@@ -41,6 +38,7 @@
     <string name="verify_scan_whole_number">字段必須只包含整數。</string>
     <string name="verify_scan_valid_value">值不能超過200或低於0。</string>
     <string name="verify_scan_invalid_value">無效值。</string>
+    <string name="verify_scan_replace_value">替換值</string>
     <string name="verify_scan_abnormal_value">異常值。</string>
     <string name="verify_scan_erroneous_header">錯誤結果過多</string>
     <string name="verify_scan_erroneous_body">您要重新掃描當前記錄以獲得更高的準確性嗎？\n\n（注意：您之前掃描的記錄將會被保存）</string>
@@ -56,6 +54,15 @@
     <string name="profile_document_error_body">獲取患者信息時出錯。\n\n如果問題仍然存在，請聯繫 IT 支援並提供以下錯誤代碼：%1$s</string>
     <string name="profile_patient_weight">%1$s 公斤</string>
     <string name="profile_patient_height">%1$s 厘米</string>
+    <string name="profile_edit_button">編輯</string>
+    <string name="profile_delete_button">刪除</string>
+    <string name="delete_confirmation_title">刪除檔案</string>
+    <string name="delete_confirmation_message">您確定要刪除此檔案嗎？</string>
+    <string name="cancel">取消</string>
+    <string name="delete">刪除</string>
+    <string name="deleting">正在刪除</string>
+    <string name="please_wait">請稍候…</string>
+    <string name="patient_deleted_success">病人檔案已成功刪除。</string>
 
     <!-- RegistrationActivity strings -->
     <string name="register_gender_male">男性</string>
@@ -193,9 +200,9 @@
     <string name="enhance_recco_do">醫學：</string>
     <string name="enhance_recco_dont">飲食：</string>
     <string name="enhance_recco_target_home_bp"> 目標家庭血壓</string>
-    <string name="enhance_recco_target_office_bp"> 目標辦公室血壓</string>
+    <string name="enhance_recco_target_clinic_bp"> 目標辦公室血壓</string>
     <string name="enhance_recco_average_home_bp"> 平均家庭血壓</string>
-    <string name="enhance_recco_office_bp"> 辦公室血壓</string>
+    <string name="enhance_recco_clinic_bp"> 辦公室血壓</string>
     <string name="enhance_recco_hypertension_status"> 高血壓狀態</string>
     <string name="enhance_recco_recommendation">建議</string>
 
@@ -213,6 +220,26 @@
     <string name="enhance_register_weight">體重</string>
     <string name="enhance_register_height">身高</string>
     <string name="enhance_register_button">註冊</string>
+
+    <!-- activity_edit_patient.xml -->
+    <string name="enhance_edit_photo">編輯照片</string>
+    <string name="enhance_edit_upload_photo">點擊更換個人資料圖片</string>
+    <string name="enhance_edit_particulars">編輯詳細資料</string>
+    <string name="enhance_edit_legal_name">法定姓名</string>
+    <string name="enhance_edit_patient_id">病人ID</string>
+    <string name="enhance_edit_dob">出生日期</string>
+    <string name="enhance_edit_gender">性別</string>
+    <string name="enhance_edit_health_info">編輯健康信息</string>
+    <string name="enhance_edit_weight">體重</string>
+    <string name="enhance_edit_height">身高</string>
+    <string name="enhance_edit_target_sys">目標收縮壓</string>
+    <string name="enhance_edit_target_dia">目標舒張壓</string>
+    <string name="enhance_update_button">更新</string>
+    <string name="update_successful">檔案更新成功</string>
+    <string name="loading_patient_data">正在加載病人數據…</string>
+    <string name="update_loading_dialog">正在更新檔案…</string>
+    <string name="update_error_header">更新錯誤</string>
+    <string name="update_error_body">無法更新檔案。請重試。</string>
 
     <!-- activity_scan.xml -->
     <string name="enhance_scan_patient_id">患者身份證號：</string>
@@ -271,6 +298,8 @@
 
     <!-- history_item.xml -->
     <string name="enhance_history_item_avgbp">平均血壓：</string>
-    <string name="enhance_history_item_homebp">家庭血壓目標：</string>
-    <string name="enhance_history_item_clinicbp">診所血壓目標：</string>
+    <string name="enhance_history_item_clinicbp">診所血壓：</string>
+    <string name="enhance_history_item_target_homebp">家庭血壓目標：</string>
+    <string name="enhance_history_item_target_clinicbp">診所血壓目標：</string>
+
 </resources>

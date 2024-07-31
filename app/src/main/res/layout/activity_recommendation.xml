@@ -41,102 +41,6 @@
             android:textColor="@color/white"
             android:textSize="22sp"
             android:padding="8dp"
-            android:text="@string/enhance_recco_target_home_bp" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="16dp"
-            android:layout_marginBottom="10dp"
-            >
-
-            <TextView
-                android:id="@+id/targetHomeSysBPTV"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="20sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="8dp"
-                android:text="@string/bpDivider"
-                android:textSize="20sp" />
-
-            <TextView
-                android:id="@+id/targetHomeDiaBPTV"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="20sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/targetHomebpStage"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="20sp"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-        </LinearLayout>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="6dp"
-            android:background="@color/black"
-            android:textColor="@color/white"
-            android:textSize="22sp"
-            android:padding="8dp"
-            android:text="@string/enhance_recco_target_office_bp" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="16dp"
-            android:layout_marginBottom="10dp"
-            >
-
-            <TextView
-                android:id="@+id/targetOfficeSysBPTV"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="20sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="8dp"
-                android:text="@string/bpDivider"
-                android:textSize="20sp" />
-
-            <TextView
-                android:id="@+id/targetOfficeDiaBPTV"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="20sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/targetOfficebpStage"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="20sp"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-        </LinearLayout>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="6dp"
-            android:background="@color/black"
-            android:textColor="@color/white"
-            android:textSize="22sp"
-            android:padding="8dp"
             android:text="@string/enhance_recco_average_home_bp" />
 
         <LinearLayout
@@ -185,7 +89,7 @@
             android:textColor="@color/white"
             android:textSize="22sp"
             android:padding="8dp"
-            android:text="@string/enhance_recco_office_bp" />
+            android:text="@string/enhance_recco_clinic_bp" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -196,7 +100,7 @@
             >
 
             <TextView
-                android:id="@+id/officeSysBPTV"
+                android:id="@+id/clinicSysBPTV"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="20sp"
@@ -210,18 +114,98 @@
                 android:textSize="20sp" />
 
             <TextView
-                android:id="@+id/officeDiaBPTV"
+                android:id="@+id/clinicDiaBPTV"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="20sp"
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/officeBPControl"
+                android:id="@+id/clinicBPControl"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20sp"
                 android:textSize="18sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="6dp"
+            android:background="@color/black"
+            android:textColor="@color/white"
+            android:textSize="22sp"
+            android:padding="8dp"
+            android:text="@string/enhance_recco_target_home_bp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="16dp"
+            android:layout_marginBottom="10dp"
+            >
+
+            <TextView
+                android:id="@+id/targetHomeSysBPTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="8dp"
+                android:text="@string/bpDivider"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/targetHomeDiaBPTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="6dp"
+            android:background="@color/black"
+            android:textColor="@color/white"
+            android:textSize="22sp"
+            android:padding="8dp"
+            android:text="@string/enhance_recco_target_clinic_bp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="16dp"
+            android:layout_marginBottom="10dp"
+            >
+
+            <TextView
+                android:id="@+id/targetClinicSysBPTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="8dp"
+                android:text="@string/bpDivider"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/targetClinicDiaBPTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
                 android:textStyle="bold" />
         </LinearLayout>
 

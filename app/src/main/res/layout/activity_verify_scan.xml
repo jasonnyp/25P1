@@ -40,7 +40,7 @@
                     android:layout_height="wrap_content"
                     android:textAppearance="?attr/textAppearanceBodyLarge"
                     android:textStyle="bold"
-                    android:textSize="16sp" />
+                    android:textSize="18sp" />
 
                 <com.google.android.material.divider.MaterialDivider
                     android:layout_width="match_parent"
@@ -75,6 +75,19 @@
                             android:weightSum="2">
 
                             <TextView
+                                android:id="@+id/homeBPTargetTV"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="18sp"
+                                android:textStyle="bold"
+                                android:textAppearance="?attr/textAppearanceBodyLarge" />
+
+                            <!-- The following text views are set to invisible
+                            as the code seemingly requires them for VerifyScanActivity.kt
+                            Change when convenient, as I'm not sure what is going on
+                            inside VerifyScanActivity -->
+
+                            <TextView
                                 android:id="@+id/verifyHomeSys"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
@@ -82,7 +95,8 @@
                                 android:textSize="16sp"
                                 android:layout_marginBottom="12dp"
                                 android:textStyle="bold"
-                                android:textAppearance="?attr/textAppearanceBodyLarge" />
+                                android:textAppearance="?attr/textAppearanceBodyLarge"
+                                android:visibility="invisible" />
 
                             <TextView
                                 android:layout_width="wrap_content"
@@ -92,7 +106,8 @@
                                 android:gravity="center"
                                 android:text="@string/enhance_verify_home_divider"
                                 android:textAppearance="?attr/textAppearanceBodyLarge"
-                                android:textSize="16sp" />
+                                android:textSize="16sp"
+                                android:visibility="invisible"/>
 
                             <TextView
                                 android:id="@+id/verifyHomeDia"
@@ -103,7 +118,8 @@
                                 android:layout_marginBottom="12dp"
                                 android:layout_marginStart="1dp"
                                 android:textStyle="bold"
-                                android:textAppearance="?attr/textAppearanceBodyLarge" />
+                                android:textAppearance="?attr/textAppearanceBodyLarge"
+                                android:visibility="invisible"/>
                         </LinearLayout>
                     </LinearLayout>
 
@@ -129,6 +145,19 @@
                             android:weightSum="2">
 
                             <TextView
+                                android:id="@+id/clinicBPTargetTV"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="18sp"
+                                android:textStyle="bold"
+                                android:textAppearance="?attr/textAppearanceBodyLarge" />
+
+                            <!-- The following text views are set to invisible
+                            as the code seemingly requires them for VerifyScanActivity.kt
+                            Change when convenient, as I'm not sure what is going on
+                            inside VerifyScanActivity -->
+
+                            <TextView
                                 android:id="@+id/verifyClinicTargetSys"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
@@ -136,7 +165,9 @@
                                 android:textSize="16sp"
                                 android:layout_marginBottom="12dp"
                                 android:textStyle="bold"
-                                android:textAppearance="?attr/textAppearanceBodyLarge" />
+                                android:textAppearance="?attr/textAppearanceBodyLarge"
+                                android:visibility="invisible"
+                                />
 
                             <TextView
                                 android:layout_width="wrap_content"
@@ -146,7 +177,8 @@
                                 android:gravity="center"
                                 android:text="@string/enhance_verify_clinic_divider"
                                 android:textAppearance="?attr/textAppearanceBodyLarge"
-                                android:textSize="16sp" />
+                                android:textSize="16sp"
+                                android:visibility="invisible"/>
 
                             <TextView
                                 android:id="@+id/verifyClinicTargetDia"
@@ -157,7 +189,8 @@
                                 android:layout_marginBottom="12dp"
                                 android:layout_marginStart="1dp"
                                 android:textStyle="bold"
-                                android:textAppearance="?attr/textAppearanceBodyLarge" />
+                                android:textAppearance="?attr/textAppearanceBodyLarge"
+                                android:visibility="invisible"/>
                         </LinearLayout>
                     </LinearLayout>
                 </LinearLayout>
