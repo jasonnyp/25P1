@@ -53,26 +53,19 @@ class LoginActivity : AppCompatActivity() {
 
         binding.loginBtn.setOnClickListener {
             if (validateFields()) {
-
                 val email = binding.staffIDTIET.text.toString() + "@enhance.com"
                 val password = binding.passwordTIET.text.toString()
-
-
                 auth.signInWithEmailAndPassword(email, password)
                     .addOnCompleteListener(this) { task ->
                         if (task.isSuccessful) {
-
                             startActivity(Intent(this, MainActivity::class.java))
                             finish()
                         } else {
                             errorDialogBuilder(this, getString(R.string.login_error_header), getString(R.string.login_error_body))
                         }
                     }
-                    .addOnFailureListener{ e ->
-                        firebaseErrorDialog(this, e, null)
-                    }
+                }
             }
-        }
     }
 
     private fun setGreeting() {

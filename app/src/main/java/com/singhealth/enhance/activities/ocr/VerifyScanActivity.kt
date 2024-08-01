@@ -1101,19 +1101,29 @@ class VerifyScanActivity : AppCompatActivity() {
         val headerRowContainer = rowBPRecordLayout.findViewById<View>(R.id.headerRowContainer) as LinearLayout
         val bpRowContainer = rowBPRecordLayout.findViewById<View>(R.id.bpRowContainer) as LinearLayout
 
-        if (sysBP == null && diaBP == null) {
-            bpRowContainer.visibility = View.GONE
+        if (isSevenDayCheck) {
+            if (sysBP == null && diaBP == null) {
+                bpRowContainer.visibility = View.GONE
+            } else {
+                bpRowContainer.visibility = View.VISIBLE
+                sysBPTIET.setText(sysBP)
+                diaBPTIET.setText(diaBP)
+            }
+            if (day != -1 && time != -1 && showHeader) {
+                headerRowContainer.visibility = View.VISIBLE
+                dayTV.text = if (time == 0) "Day $day - Morning" else "Day $day - Evening"
+            } else {
+                dayTV.visibility = View.GONE
+            }
         } else {
             bpRowContainer.visibility = View.VISIBLE
             sysBPTIET.setText(sysBP)
             diaBPTIET.setText(diaBP)
-        }
+            if (sysBP == null && diaBP == null) {
+                sysBPList.add("")
+                diaBPList.add("")
+            }
 
-        if (day != -1 && time != -1 && showHeader) {
-            headerRowContainer.visibility = View.VISIBLE
-            dayTV.text = if (time == 0) "Day $day - Morning" else "Day $day - Evening"
-        } else {
-            dayTV.visibility = View.GONE
         }
 
         // Add TextWatchers to update the lists
@@ -1174,10 +1184,15 @@ class VerifyScanActivity : AppCompatActivity() {
                     }
                     sysBPFields.remove(sysBPTIET)
                     diaBPFields.remove(diaBPTIET)
-                    binding.rowBPRecordLL.removeAllViews()
-                    sysBPFields.clear()
-                    diaBPFields.clear()
-                    sevenDayCheck()
+
+                    if (sevenDay){
+                        binding.rowBPRecordLL.removeAllViews()
+                        sysBPFields.clear()
+                        diaBPFields.clear()
+                        sevenDayCheck()
+                    } else {
+                        binding.rowBPRecordLL.removeView(rowBPRecordLayout)
+                    }
                     dialog.dismiss()
                 }
                 .show()
