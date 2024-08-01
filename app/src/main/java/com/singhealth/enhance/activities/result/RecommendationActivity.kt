@@ -11,7 +11,6 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.singhealth.enhance.R
 import com.singhealth.enhance.activities.MainActivity
-import com.singhealth.enhance.activities.dashboard.SimpleDashboardActivity
 import com.singhealth.enhance.activities.diagnosis.bpControlStatus
 import com.singhealth.enhance.activities.diagnosis.colourSet
 import com.singhealth.enhance.activities.diagnosis.hypertensionStatus
@@ -19,8 +18,6 @@ import com.singhealth.enhance.activities.diagnosis.showRecommendation
 import com.singhealth.enhance.activities.error.firebaseErrorDialog
 import com.singhealth.enhance.activities.history.HistoryActivity
 import com.singhealth.enhance.activities.history.HistoryData
-import com.singhealth.enhance.activities.ocr.ScanActivity
-import com.singhealth.enhance.activities.patient.ProfileActivity
 import com.singhealth.enhance.databinding.ActivityRecommendationBinding
 import com.singhealth.enhance.security.SecureSharedPreferences
 import java.time.LocalDateTime
@@ -65,38 +62,6 @@ class RecommendationActivity : AppCompatActivity() {
             finish()
         } else {
             patientID= patientSharedPreferences.getString("patientID", null)
-        }
-
-        binding.bottomNavigationView.setOnItemSelectedListener { menuItem ->
-            when (menuItem.itemId) {
-                R.id.item_profile -> {
-                    startActivity(Intent(this, ProfileActivity::class.java))
-                    finish()
-                    false
-                }
-
-                R.id.item_scan -> {
-                    startActivity(Intent(this, ScanActivity::class.java))
-                    finish()
-                    false
-                }
-
-                R.id.item_history -> {
-                    startActivity(Intent(this, HistoryActivity::class.java))
-                    finish()
-                    false
-                }
-
-                R.id.item_dashboard -> {
-                    startActivity(Intent(this, SimpleDashboardActivity::class.java))
-                    finish()
-                    false
-                }
-
-                else -> {
-                    false
-                }
-            }
         }
 
         val avgBPBundle = intent.extras
@@ -156,8 +121,8 @@ class RecommendationActivity : AppCompatActivity() {
 
                         binding.targetHomeSysBPTV.text = patientTargetSys.toString()
                         binding.targetHomeDiaBPTV.text = patientTargetDia.toString()
-                        binding.targetOfficeSysBPTV.text = clinicTargetSys.toString()
-                        binding.targetOfficeDiaBPTV.text = clinicTargetDia.toString()
+                        binding.targetClinicSysBPTV.text = clinicTargetSys.toString()
+                        binding.targetClinicDiaBPTV.text = clinicTargetDia.toString()
 
                         binding.avgHomeSysBPTV.text = avgSysBP.toString()
                         binding.avgHomeDiaBPTV.text = avgDiaBP.toString()
@@ -165,11 +130,11 @@ class RecommendationActivity : AppCompatActivity() {
                         binding.avgHomeDiaBPTV.setTextColor(colourSet(this, avgDiaBP, patientTargetDia))
                         binding.avgHomeBPControl.text = bpControlStatus(this, avgSysBP, avgDiaBP, patientTargetSys, patientTargetDia)
 
-                        binding.officeSysBPTV.text = clinicSysBP.toString()
-                        binding.officeDiaBPTV.text = clinicDiaBP.toString()
-                        binding.officeSysBPTV.setTextColor(colourSet(this, clinicSysBP, clinicTargetSys))
-                        binding.officeDiaBPTV.setTextColor(colourSet(this, clinicDiaBP, clinicTargetDia))
-                        binding.officeBPControl.text = bpControlStatus(this, clinicSysBP, clinicDiaBP, clinicTargetSys, clinicTargetDia)
+                        binding.clinicSysBPTV.text = clinicSysBP.toString()
+                        binding.clinicDiaBPTV.text = clinicDiaBP.toString()
+                        binding.clinicSysBPTV.setTextColor(colourSet(this, clinicSysBP, clinicTargetSys))
+                        binding.clinicDiaBPTV.setTextColor(colourSet(this, clinicDiaBP, clinicTargetDia))
+                        binding.clinicBPControl.text = bpControlStatus(this, clinicSysBP, clinicDiaBP, clinicTargetSys, clinicTargetDia)
 
                         hypertension = hypertensionStatus(this, avgSysBP, avgDiaBP, clinicSysBP, clinicDiaBP, patientTargetSys, patientTargetDia)
                         binding.recommendationBpPhenotype.text = hypertension
