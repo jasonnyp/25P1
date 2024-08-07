@@ -249,11 +249,16 @@
     <string name="enhance_scan_error_desc">错误</string>
     <string name="enhance_scan_patient_id">患者身份證號：</string>
     <string name="enhance_scan_name">姓名：</string>
+    <string name="enhance_general_scan">常規掃描</string>
+    <string name="enhance_7_day_scan">七天掃描</string>
+
 
     <!-- activity_settings.xml -->
     <string name="enhance_settings_account">帳戶</string>
     <string name="enhance_settings_logout">登出</string>
     <string name="enhance_settings_help_support">幫助與支持</string>
+    <string name="enhance_settings_app">應用程式設定</string>
+    <string name="enhance_settings_theme">主題</string>
     <string name="enhance_settings_user_guide">用戶指南</string>
     <string name="enhance_settings_language">語言選項</string>
     <string name="enhance_settings_contact_helpdesk">聯繫幫助台</string>
@@ -269,6 +274,11 @@
 
     <!-- activity_terms_of_use.xml -->
     <string name="enhance_terms_header">這是使用條款頁面。</string>
+
+    <!-- activity_theme.xml -->
+    <string name="enhance_theme_light">淺色（預設）</string>
+    <string name="enhance_theme_dark">深色</string>
+    <string name="enhance_theme_system">使用系統主題</string>
 
     <!-- activity_user_guide.xml -->
     <string name="enhance_user_patient"><![CDATA[患者註冊與搜索]]></string>
