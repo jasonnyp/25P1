@@ -18,7 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
-            app:cardBackgroundColor="@color/theme_primary_variant">
+            app:cardBackgroundColor="@color/profile_background">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -51,7 +51,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:weightSum="2">
+                    android:weightSum="2"
+                    android:baselineAligned="false">
 
                     <!-- Home BP Section -->
                     <LinearLayout
@@ -205,7 +206,7 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="0dp"
                     android:layout_weight="6"
                     android:orientation="horizontal">
 
@@ -276,7 +277,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
-                android:orientation="vertical"></LinearLayout>
+                android:orientation="vertical" />
 
             <com.google.android.material.divider.MaterialDivider
                 android:layout_width="match_parent"
@@ -295,15 +296,19 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="8dp"
                     android:text="@string/enhance_verify_add_row"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    android:textColor="@color/text_color"
+                    android:backgroundTint="@color/setting_option_background" />
 
                 <Button
                     android:id="@+id/moreOptionsBtn"
-                    style="@style/Widget.Material3.Button.ElevatedButton"
+                    style="?attr/materialButtonOutlinedStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/enhance_verify_more_options"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    android:textColor="@color/text_color"
+                    android:backgroundTint="@color/setting_option_background" />
             </LinearLayout>
 
             <com.google.android.material.divider.MaterialDivider
@@ -321,11 +326,14 @@
 
             <Button
                 android:id="@+id/calculateAvgBPBtn"
+                style="?attr/materialButtonOutlinedStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/enhance_verify_calculate_bp"
                 android:textAllCaps="true"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:textColor="@color/white"
+                android:backgroundTint="@color/primary_button_color" />
         </LinearLayout>
     </LinearLayout>
 </ScrollView>

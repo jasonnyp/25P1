@@ -31,7 +31,8 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:adjustViewBounds="true"
-                    android:src="@drawable/app_enhance_logo" />
+                    android:src="@drawable/app_enhance_logo"
+                    android:contentDescription="@string/enhance_login_icon_desc"/>
 
                 <TextView
                     android:id="@+id/greetingTV"
@@ -81,7 +82,8 @@
                     android:text="@string/enhance_login_login"
                     android:textAllCaps="true"
                     android:textSize="18sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:backgroundTint="@color/primary_button_color_light" />
             </LinearLayout>
         </ScrollView>
     </androidx.cardview.widget.CardView>

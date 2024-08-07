@@ -135,6 +135,12 @@
             android:exported="false"
             android:label="@string/enhance_settings_terms_of_use"
             android:parentActivityName=".activities.settings.SettingsActivity" />
+        <activity
+            android:name=".activities.settings.ThemeActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:exported="false"
+            android:label="@string/enhance_settings_theme"
+            android:parentActivityName=".activities.settings.ThemeActivity" />
 
         <!-- MainActivity and SplashScreenActivity -->
         <activity

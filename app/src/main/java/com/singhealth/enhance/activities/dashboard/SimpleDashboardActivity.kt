@@ -150,7 +150,7 @@ class SimpleDashboardActivity : AppCompatActivity() {
         if (patientSharedPreferences.getString("patientID", null).isNullOrEmpty()) {
             Toast.makeText(
                 this,
-                "Patient information could not be found in current session. Please try again.",
+                getString(R.string.patient_info_not_found),
                 Toast.LENGTH_LONG
             ).show()
             startActivity(Intent(this, MainActivity::class.java))
@@ -161,7 +161,19 @@ class SimpleDashboardActivity : AppCompatActivity() {
         }
 
         binding.printSourceBtn.setOnClickListener {
-            printCharts()
+            db.collection("patients").document(patientID).collection("visits").get()
+                .addOnSuccessListener { documents ->
+                    if (documents.isEmpty) {
+                        Toast.makeText(
+                            this,
+                            getString(R.string.dashboard_no_records_found),
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                    else {
+                        printCharts()
+                    }
+                }
         }
 
         db.collection("patients").document(patientID).collection("visits").get()
@@ -212,7 +224,7 @@ class SimpleDashboardActivity : AppCompatActivity() {
                     ).show()
                 } else {
 
-                    println("Sorted History" + sortedHistory)
+                    println("Sorted History $sortedHistory")
                     println("Sorted History 1st" + sortedHistory[0])
                     println("Sorted History 1st SYS DATA" + sortedHistory[0].avgSysBP)
                     bpHypertensionStatus = hypertensionStatus(
@@ -253,7 +265,7 @@ class SimpleDashboardActivity : AppCompatActivity() {
         val inputDateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault())
         val outputDateFormat = SimpleDateFormat("dd/MM/yy", Locale.getDefault())
         val limitedHistory = sortedHistory
-            .sortedBy { historyData -> inputDateFormat.parse(historyData.date) }
+            .sortedBy { historyData -> inputDateFormat.parse(historyData.date.toString()) }
             .takeLast(3)
 
         val dateToIndexMap = limitedHistory.map { it.date }
@@ -299,7 +311,7 @@ class SimpleDashboardActivity : AppCompatActivity() {
 
                     override fun getAxisLabel(value: Float, axis: AxisBase?): String {
                         return indexToDateMap[value]?.let {
-                            outputDateFormat.format(inputDateFormat.parse(it))
+                            outputDateFormat.format(inputDateFormat.parse(it)!!)
                         } ?: ""
                     }
                 }
@@ -326,7 +338,7 @@ class SimpleDashboardActivity : AppCompatActivity() {
         val inputDateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm", Locale.getDefault())
         val outputDateFormat = SimpleDateFormat("dd/MM/yy", Locale.getDefault())
         val limitedHistory = sortedHistory
-            .sortedBy { historyData -> inputDateFormat.parse(historyData.date) }
+            .sortedBy { historyData -> inputDateFormat.parse(historyData.date.toString()) }
             .takeLast(3)
 
         val dateToIndexMap = limitedHistory.map { it.date }
@@ -372,7 +384,7 @@ class SimpleDashboardActivity : AppCompatActivity() {
 
                     override fun getAxisLabel(value: Float, axis: AxisBase?): String {
                         return indexToDateMap[value]?.let {
-                            outputDateFormat.format(inputDateFormat.parse(it))
+                            outputDateFormat.format(inputDateFormat.parse(it)!!)
                         } ?: ""
                     }
                 }
