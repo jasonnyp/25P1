@@ -32,7 +32,7 @@
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="4">
+            android:layout_weight="6">
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -97,33 +97,6 @@
                 android:orientation="vertical">
 
                 <ImageView
-                    android:id="@+id/sysLeftIV"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_marginStart="12dp"
-                    android:rotation="180"
-                    android:src="@drawable/ic_right_arrow" />
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="2"
-                android:orientation="vertical">
-
-                <ImageView
-                    android:id="@+id/diaRightIV"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_marginStart="12dp"
-                    android:src="@drawable/ic_right_arrow" />
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="2"
-                android:orientation="vertical">
-
-                <ImageView
                     android:id="@+id/swapValuesIV"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
@@ -150,11 +123,11 @@
                 android:orientation="vertical">
 
                 <ImageView
-                    android:id="@+id/addRowIV"
+                    android:id="@+id/moreIV"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_marginStart="12dp"
-                    android:src="@drawable/ic_add_row" />
+                    android:src="@drawable/baseline_more_vert_24" />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
