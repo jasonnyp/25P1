@@ -94,6 +94,8 @@
     <string name="unknown_hypertension_status">（未知）</string>
 
     <!-- RecommendationActivity.kt -->
+    <string name="insufficient_records">（此記錄的血壓是基於不足的家庭血壓讀數計算得出的。）</string>
+    <string name="old_scan_records">（此記錄已經掃描過，在記錄計數前已考慮在內。）</string>
     <string name="no_recommendations">目前沒有建議。\n</string>
     <string name="well_controlled_bp_recommendation_medical">- 強調藥物依從性，並繼續維持健康的生活方式。\n</string>
     <string name="suboptimum_bp_recommendation_medical">- 評估藥物依從性，考慮生活方式改變和升級抗高血壓藥物。\n</string>
@@ -198,7 +200,7 @@
     <string name="enhance_profile_target_bp">目標血壓</string>
 
     <!-- activity_recommendation.xml -->
-    <string name="enhance_recco_header">以下是基於掃描的血壓記錄的建議：</string>
+    <string name="enhance_recco_header">以下是根據 %1$s 掃描的血壓記錄所提供的建議：</string>
     <string name="enhance_recco_do">醫學：</string>
     <string name="enhance_recco_dont">飲食：</string>
     <string name="enhance_recco_target_home_bp"> 目標家庭血壓</string>

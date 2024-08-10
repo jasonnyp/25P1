@@ -291,6 +291,7 @@ class VerifyScanActivity : AppCompatActivity() {
         binding.calculateAvgBPBtn.setOnClickListener {
             if (validateFields()) {
                 getBPTarget()
+                val finalRows = maxOf(sysBPList.size, diaBPList.size)
                 if (sevenDay){
                     calcSevenDayAvgBP()
                 } else {
@@ -310,7 +311,8 @@ class VerifyScanActivity : AppCompatActivity() {
                     "averageSysBP" to avgSysBP,
                     "averageDiaBP" to avgDiaBP,
                     "clinicSysBP" to clinicSysBP,
-                    "clinicDiaBP" to clinicDiaBP
+                    "clinicDiaBP" to clinicDiaBP,
+                    "scanRecordCount" to finalRows
                 )
 
                 db.collection("patients").document(patientID).collection("visits").add(visit)
@@ -324,6 +326,7 @@ class VerifyScanActivity : AppCompatActivity() {
                         bundle.putInt("avgDiaBP", avgDiaBP)
                         bundle.putInt("clinicSysBP", clinicSysBP)
                         bundle.putInt("clinicDiaBP", clinicDiaBP)
+                        bundle.putInt("scanRecordCount", finalRows)
                         bundle.putString("Source", "Scan")
 
                         val recommendationIntent = Intent(this, RecommendationActivity::class.java)

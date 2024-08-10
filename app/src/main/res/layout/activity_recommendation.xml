@@ -17,14 +17,25 @@
             >
 
             <TextView
+                android:id="@+id/recommendationHeader"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
+                android:paddingStart="16dp"
+                android:paddingTop="16dp"
+                android:paddingEnd="16dp"
                 android:text="@string/enhance_recco_header"
                 android:textSize="20sp"
-                android:textStyle="bold"
-                android:paddingTop="16dp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/insufficientRecordMessage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:paddingStart="16dp"
-                android:paddingEnd="16dp"/>
+                android:paddingTop="16dp"
+                android:paddingEnd="16dp"
+                android:textSize="20sp"
+                android:textStyle="bold" />
 
             <com.google.android.material.divider.MaterialDivider
                 android:layout_width="match_parent"

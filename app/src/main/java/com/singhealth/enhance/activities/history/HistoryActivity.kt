@@ -142,6 +142,11 @@ class HistoryActivity : AppCompatActivity(), HistoryAdapter.OnItemClickListener 
                             val clinicDiaBPTarget = document.get("clinicDiaBPTarget") as? Long
                             val clinicSysBP = document.get("clinicSysBP") as? Long
                             val clinicDiaBP = document.get("clinicDiaBP") as? Long
+                            val scanRecordCount = if (document.get("scanRecordCount") != null) {
+                                (document.get("scanRecordCount") as Long).toInt()
+                            } else {
+                                0
+                            }
                             history.add(
                                 HistoryData(
                                     dateTime.toString(),
@@ -154,6 +159,7 @@ class HistoryActivity : AppCompatActivity(), HistoryAdapter.OnItemClickListener 
                                     clinicDiaBPTarget,
                                     clinicSysBP,
                                     clinicDiaBP,
+                                    scanRecordCount
                                 )
                             )
                         }
@@ -192,6 +198,7 @@ class HistoryActivity : AppCompatActivity(), HistoryAdapter.OnItemClickListener 
         val clinicSysBP = clickedItem.clinicSysBP.toString()
         val clinicDiaBP = clickedItem.clinicDiaBP.toString()
         val date = clickedItem.date.toString()
+        val recordCount = clickedItem.scanRecordCount.toString()
 
         val bundle = Bundle()
 
@@ -201,6 +208,7 @@ class HistoryActivity : AppCompatActivity(), HistoryAdapter.OnItemClickListener 
         bundle.putInt("clinicDiaBP", clinicDiaBP.toInt())
         bundle.putString("date", date)
         bundle.putInt("historyItemPosition", position)
+        bundle.putInt("scanRecordCount", recordCount.toInt())
         println(date)
         bundle.putString("Source", "History")
 

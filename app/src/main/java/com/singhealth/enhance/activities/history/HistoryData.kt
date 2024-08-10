@@ -10,5 +10,6 @@ data class HistoryData(
     val clinicSysBPTarget: Long?,
     val clinicDiaBPTarget: Long?,
     val clinicSysBP: Long?,
-    val clinicDiaBP: Long?
+    val clinicDiaBP: Long?,
+    val scanRecordCount: Int?
 )

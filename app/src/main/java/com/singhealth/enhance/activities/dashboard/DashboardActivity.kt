@@ -162,6 +162,7 @@ class DashboardActivity : AppCompatActivity() {
                         val clinicDiaBPTarget = document.get("clinicDiaBPTarget") as? Long
                         val clinicSysBP = document.get("clinicSysBP") as? Long
                         val clinicDiaBP = document.get("clinicDiaBP") as? Long
+                        val scanRecordCount = document.get("scanRecordCount") as? Int
                         history.add(
                             HistoryData(
                                 dateTime.toString(),
@@ -173,7 +174,8 @@ class DashboardActivity : AppCompatActivity() {
                                 clinicSysBPTarget,
                                 clinicDiaBPTarget,
                                 clinicSysBP,
-                                clinicDiaBP
+                                clinicDiaBP,
+                                scanRecordCount
                             )
                         )
                     }

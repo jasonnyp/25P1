@@ -1,11 +1,14 @@
 package com.singhealth.enhance.activities.result
 
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
+import android.view.View
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
+import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -23,6 +26,12 @@ import com.singhealth.enhance.security.SecureSharedPreferences
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
+object ResourcesHelper {
+    fun getString(context: Context, @StringRes resId: Int, vararg formatArgs: Any): String {
+        return context.getString(resId, *formatArgs)
+    }
+}
+
 class RecommendationActivity : AppCompatActivity() {
     private lateinit var binding: ActivityRecommendationBinding
 
@@ -34,6 +43,7 @@ class RecommendationActivity : AppCompatActivity() {
     private var clinicDiaBP: Long = 0
     private var bundlePosition: Int = 0
     private var bundleDate: String = ""
+    private var bundleRecordCount: Int = 0
     private val history = ArrayList<HistoryData>()
     private lateinit var sortedHistory: List<HistoryData>
 
@@ -80,7 +90,7 @@ class RecommendationActivity : AppCompatActivity() {
         var hypertension: String
 
         docRef.get()
-            .addOnSuccessListener { document ->
+            .addOnSuccessListener {
                 docRef.collection("visits").get()
                     .addOnSuccessListener { documents ->
                         val inputDateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")
@@ -98,6 +108,7 @@ class RecommendationActivity : AppCompatActivity() {
                             val clinicDiaBPTarget = d.get("clinicDiaBPTarget") as? Long
                             val clinicSysBP = d.get("clinicSysBP") as? Long
                             val clinicDiaBP = d.get("clinicDiaBP") as? Long
+                            val scanRecordCount = d.get("scanRecordCount") as? Int
                             history.add(
                                 HistoryData(
                                     dateTime.toString(),
@@ -110,6 +121,7 @@ class RecommendationActivity : AppCompatActivity() {
                                     clinicDiaBPTarget,
                                     clinicSysBP,
                                     clinicDiaBP,
+                                    scanRecordCount,
                                 )
                             )
                         }
@@ -118,6 +130,17 @@ class RecommendationActivity : AppCompatActivity() {
                         patientTargetDia = sortedHistory[bundlePosition].homeDiaBPTarget!!
                         clinicTargetSys = sortedHistory[bundlePosition].clinicSysBPTarget!!
                         clinicTargetDia = sortedHistory[bundlePosition].clinicDiaBPTarget!!
+                        bundleRecordCount = avgBPBundle.getInt("scanRecordCount")
+
+                        binding.recommendationHeader.text = ResourcesHelper.getString(this, R.string.enhance_recco_header, bundleRecordCount)
+                        binding.insufficientRecordMessage.text = when {
+                            bundleRecordCount == 0 -> getString(R.string.old_scan_records)
+                            bundleRecordCount < 12 -> getString(R.string.insufficient_records)
+                            else -> ""
+                        }
+                        if (binding.insufficientRecordMessage.text == "") {
+                            binding.insufficientRecordMessage.visibility = View.GONE
+                        }
 
                         binding.targetHomeSysBPTV.text = patientTargetSys.toString()
                         binding.targetHomeDiaBPTV.text = patientTargetDia.toString()
