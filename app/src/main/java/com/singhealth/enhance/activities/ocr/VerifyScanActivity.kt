@@ -383,8 +383,8 @@ class VerifyScanActivity : AppCompatActivity() {
         binding.calculateAvgBPBtn.setOnClickListener {
             if (validateFields()) {
                 getBPTarget()
-                val filteredSysBPList = sysBPList.filter { it != "-1" }
-                val filteredDiaBPList = diaBPList.filter { it != "-1" }
+                val filteredSysBPList = sysBPList.filter { it.isNotBlank() && it != "-1" }
+                val filteredDiaBPList = diaBPList.filter { it.isNotBlank() && it != "-1" }
                 val finalRows = maxOf(filteredSysBPList.size, filteredDiaBPList.size)
                 if (sevenDay) {
                     calcSevenDayAvgBP()
@@ -1101,8 +1101,17 @@ class VerifyScanActivity : AppCompatActivity() {
         println("Final SysBPList: $filteredSysBPList")
         println("Final DiaBPList: $filteredDiaBPList")
 
-        val finalSysBPList = filteredSysBPList.drop(2).takeLast(6).toMutableList()
-        val finalDiaBPList = filteredDiaBPList.drop(2).takeLast(6).toMutableList()
+        val finalSysBPList = if (filteredSysBPList.size < 8) {
+            filteredSysBPList.toMutableList()
+        } else {
+            filteredSysBPList.drop(2).takeLast(6).toMutableList()
+        }
+
+        val finalDiaBPList = if (filteredDiaBPList.size < 8) {
+            filteredDiaBPList.toMutableList()
+        } else {
+            filteredDiaBPList.drop(2).takeLast(6).toMutableList()
+        }
 
         println("AFTER")
         println("Final SysBPList: $finalSysBPList")
@@ -1172,6 +1181,18 @@ class VerifyScanActivity : AppCompatActivity() {
             ) // Evening BP2
 
             recordIndex += 4
+        }
+
+        while (recordIndex < sysBPList.size && recordIndex < diaBPList.size) {
+            addRow(
+                sysBPList.getOrElse(recordIndex) { "-1" },
+                diaBPList.getOrElse(recordIndex) { "-1" },
+                true,
+                0,
+                0,
+                false
+            )
+            recordIndex++
         }
     }
 
@@ -1361,17 +1382,9 @@ class VerifyScanActivity : AppCompatActivity() {
                 val currentRowIndex = binding.rowBPRecordLL.indexOfChild(rowBPRecordLayout)
                 val nextRowIndex = currentRowIndex + 1
 
-                val validSysBPCount = sysBPList.count { it != "-1" }
-                val validDiaBPCount = diaBPList.count { it != "-1" }
-
-                if (validSysBPCount >= 28 && validDiaBPCount >= 28) {
-                    val toast = Toast.makeText(this, "Unable to add more rows", Toast.LENGTH_SHORT)
-                    toast.show()
-                    return@setOnClickListener
-                }
-
                 println("addRowIV clicked. Current Row Index: $currentRowIndex")
-                println("addRowIV SysBPList before modification: $sysBPList\n")
+                println("sysBPList before modification: $sysBPList\n")
+                println("diaBPList before modification: $diaBPList\n")
 
                 // Check if the next row index is within bounds
                 if (nextRowIndex < binding.rowBPRecordLL.childCount) {
@@ -1387,17 +1400,17 @@ class VerifyScanActivity : AppCompatActivity() {
                     if (nextSysBPTIET.text.toString() != "-1" && nextDiaBPTIET.text.toString() != "-1") {
                         sysBPList.add(currentRowIndex + 1, "")
                         diaBPList.add(currentRowIndex + 1, "")
-                        if (sysBPList.size > 28) {
-                            removeFirstOccurrenceFromEnd(sysBPList, "-1")
-                        }
-                        if (diaBPList.size > 28) {
-                            removeFirstOccurrenceFromEnd(diaBPList, "-1")
-                        }
                     } else {
                         sysBPList[currentRowIndex + 1] = ""
                         diaBPList[currentRowIndex + 1] = ""
                     }
+                } else {
+                    sysBPList.add(currentRowIndex + 1,"")
+                    diaBPList.add(currentRowIndex + 1,"")
                 }
+                println("sysBPList after modification: $sysBPList\n")
+                println("diaBPList after modification: $diaBPList\n")
+
             }
 
             // Refresh the view

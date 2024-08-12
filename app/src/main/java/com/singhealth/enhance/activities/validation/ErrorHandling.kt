@@ -85,13 +85,13 @@ fun errorDialogBuilder(context: Context, title: String, message: String, activit
         .setIcon(R.drawable.ic_error)
         .setTitle(title)
         .setMessage(message)
-        .setNegativeButton(ResourcesHelper.getString(context, R.string.no_dialog)) { dialog, _ -> dialog.dismiss() }
         .setPositiveButton(ResourcesHelper.getString(context, R.string.yes_dialog)) { _, _ ->
             context.startActivity(Intent(context, activity))
             if (context is Activity) {
                 context.finish()
             }
         }
+        .setNegativeButton(ResourcesHelper.getString(context, R.string.no_dialog)) { dialog, _ -> dialog.dismiss() }
         .show()
 }
 
