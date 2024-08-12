@@ -132,8 +132,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="12dp"
                         android:background="@drawable/shape_settings_ic"
-                        android:src="@drawable/ic_settings"
-                        app:tint="@color/white"
+                        android:src="@drawable/ic_settings_menu"
                         />
 
                     <TextView
