@@ -157,3 +157,25 @@ fun hypertensionStatus(
     }
     return hypertensionStatus
 }
+
+fun dateLocale(context: Context, dateTime: String, locale: String): String {
+    fun getLocalizedResources(context: Context, desiredLocale: Locale): Resources {
+        val conf = Configuration(context.resources.configuration)
+        conf.setLocale(desiredLocale)
+        val localizedContext = context.createConfigurationContext(conf)
+        return localizedContext.resources
+    }
+
+    var localLocale = Locale.getDefault()
+
+    if (locale == "en") {
+        localLocale = Locale.ENGLISH
+    }
+    val localisedResources = getLocalizedResources(context, localLocale)
+    val isoFormat = DateTimeFormatter.ISO_LOCAL_DATE_TIME
+    val dateTimeFormat = LocalDateTime.parse(dateTime, isoFormat)
+    val dateFormat = DateTimeFormatter.ofPattern(localisedResources.getString(R.string.date_format), localLocale)
+
+    return dateTimeFormat.format(dateFormat)
+
+}

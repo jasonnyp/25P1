@@ -168,7 +168,7 @@
     <string name="dialog_positive_ok">OK</string>
     <string name="bp_stage">BP Stage</string>
 
-    <string name="date_format">dd/MM/yyyy HH:mm:ss</string>
+    <string name="date_format">dd MMM yyyy, HH:mm:ss</string>
 
     <!-- activity_about.xml -->
     <string name="enhance_about_info">ENHANCe is a digital clinical decision support tool for capturing high blood pressure records from paper and digital diary and supports primary care physicians’ clinical decision-making when managing patients on home blood pressure monitoring.</string>

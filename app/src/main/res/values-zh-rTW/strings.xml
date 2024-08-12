@@ -157,7 +157,7 @@
     <string name="dialog_positive_ok">確定</string>
     <string name="bp_stage">血壓階段</string>
 
-    <string name="date_format">dd日MM月yyyy年 HH:mm:ss</string>
+    <string name="date_format">dd日MM月yyyy年, HH:mm:ss</string>
 
     <!-- activity_about.xml -->
     <string name="enhance_about_enhance">Enhance 標誌</string>

@@ -35,6 +35,7 @@ import com.google.firebase.ktx.Firebase
 import com.singhealth.enhance.R
 import com.singhealth.enhance.activities.MainActivity
 import com.singhealth.enhance.activities.diagnosis.bpControlStatus
+import com.singhealth.enhance.activities.diagnosis.dateLocale
 import com.singhealth.enhance.activities.diagnosis.hypertensionStatus
 import com.singhealth.enhance.activities.diagnosis.showRecommendation
 import com.singhealth.enhance.activities.history.HistoryActivity
@@ -179,7 +180,7 @@ class SimpleDashboardActivity : AppCompatActivity() {
         db.collection("patients").document(patientID).collection("visits").get()
             .addOnSuccessListener { documents ->
                 val inputDateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")
-                val outputDateFormatter = DateTimeFormatter.ofPattern("dd MMM yyyy, HH:mm:ss")
+                val outputDateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy, HH:mm:ss")
 
                 for (document in documents) {
                     val dateTimeString = document.get("date") as? String
@@ -223,7 +224,7 @@ class SimpleDashboardActivity : AppCompatActivity() {
                     println("Sorted History 1st" + sortedHistory[0])
                     println("Sorted History 1st SYS DATA" + sortedHistory[0].avgSysBP)
                     avgBP = "${sortedHistory[0].avgSysBP}/${sortedHistory[0].avgDiaBP}"
-                    dateTime = "${sortedHistory[0].dateFormatted}"
+                    dateTime = "${sortedHistory[0].date}"
 
                     bpHypertensionStatus = hypertensionStatus(
                         this,
@@ -497,7 +498,7 @@ class SimpleDashboardActivity : AppCompatActivity() {
                 canvas.drawText("Average BP:", padding, startY + lineHeight, smallNormalPaint)
                 canvas.drawText(avgBP, padding + 200f, startY + lineHeight, smallBoldPaint) // Adjust x offset as needed
                 canvas.drawText("Date & Time:", padding + columnSpacing, startY + lineHeight, smallNormalPaint)
-                canvas.drawText(dateTime, padding + columnSpacing + 200f, startY + lineHeight, smallBoldPaint) // Adjust x offset as needed
+                canvas.drawText(dateLocale(this@SimpleDashboardActivity, dateTime, "en"), padding + columnSpacing + 200f, startY + lineHeight, smallBoldPaint) // Adjust x offset as needed
 
                 // Today's Recommendation
                 val recommendationStartY = startY + 2 * lineHeight + 40f
