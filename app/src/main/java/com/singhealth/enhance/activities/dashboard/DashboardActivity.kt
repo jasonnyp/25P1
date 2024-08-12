@@ -296,10 +296,7 @@ class DashboardActivity : AppCompatActivity() {
             val diastolicTargetValue = historyData.homeDiaBPTarget?.toFloat() ?: 0f
             val diastolicValue = historyData.avgDiaBP?.toFloat() ?: 0f
 
-//            val dateString = historyData.date // Assuming this is a String
-//            val date = inputDateFormat.parse(dateString) // Parse the date string
-//            val dateFloat = date.time.toFloat() // Convert date to float for the x-axis
-            val index = dateToIndexMap[historyData.date] ?: 0f // Get the index for the date
+            val index = dateToIndexMap[historyData.date] ?: 0f
 
 
             println("Target" + diastolicTargetValue)
@@ -316,20 +313,18 @@ class DashboardActivity : AppCompatActivity() {
         diastolicLineChart.description.text = ""
         diastolicLineChart.xAxis.labelRotationAngle = -90f
 
-        // Customize the data sets appearance (Optional)
         diastolicTargetDataSet.color = Color.RED
-        diastolicLineChart.axisLeft.textSize = 15f // Set your desired text size
+        diastolicLineChart.axisLeft.textSize = 15f
         diastolicDataSet.color = Color.BLUE
-        diastolicDataSet.valueTextSize = 15f // Set your desired text size
+        diastolicDataSet.valueTextSize = 15f
 
         // Create LineData with the data sets
         val lineData = LineData(diastolicDataSet, diastolicTargetDataSet)
 
-        diastolicLineChart.xAxis.textSize = 13f // Set your desired text size
-        diastolicLineChart.axisLeft.textSize = 15f // Set your desired text size
-        diastolicLineChart.axisRight.textSize = 15f // Set your desired text size
-        diastolicLineChart.legend.textSize = 15f // Set your desired t
-        // Set the custom ValueFormatter for x-axis
+        diastolicLineChart.xAxis.textSize = 13f
+        diastolicLineChart.axisLeft.textSize = 15f
+        diastolicLineChart.axisRight.textSize = 15f
+        diastolicLineChart.legend.textSize = 15f
         diastolicLineChart.xAxis.valueFormatter = object : ValueFormatter() {
             private val indexToDateMap = dateToIndexMap.entries.associateBy({ it.value }) { it.key }
 

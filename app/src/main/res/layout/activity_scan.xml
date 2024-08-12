@@ -108,25 +108,55 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/patientInfoContainer"
                     android:layout_margin="8dp"
-                    android:orientation="horizontal"
+                    android:orientation="vertical"
                     android:padding="16dp">
 
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="8dp"
+                            android:src="@drawable/baseline_error_24"
+                            app:tint="#D32F2F" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/ocr_instructions"
+                            android:textColor="#D32F2F"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                <LinearLayout
+                    android:id ="@+id/scanStatusContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:visibility="gone">
+
                     <ImageView
+                        android:layout_marginTop="8dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="8dp"
-                        android:src="@drawable/baseline_error_24"
-                        app:tint="@color/warning_text_color"
+                        android:src="@drawable/baseline_star_rate_24"
+                        app:tint="@color/warning_text_color" />
                         android:contentDescription="@string/enhance_scan_error_desc" />
 
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/ocr_instructions"
-                        android:textColor="@color/warning_text_color"
-                        android:textStyle="bold" />
 
+                    <TextView
+                        android:id="@+id/scanStatusTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/resuming_scan"
+                        android:textColor="@color/warning_text_color"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        android:layout_marginTop="8dp" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
         </LinearLayout>
@@ -136,10 +166,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_above="@+id/buttonsContainer"
+            android:layout_below="@id/patientInfoContainer"
             android:layout_marginStart="32dp"
-            android:layout_marginTop="96dp"
             android:layout_marginEnd="32dp"
-            android:layout_marginBottom="32dp" />
+            android:layout_marginBottom="16dp"
+            android:paddingTop="16dp"/>
 
         <!-- Buttons Container -->
         <LinearLayout
@@ -164,6 +195,7 @@
                 android:backgroundTint="@color/primary_button_color" />
 
             <Space
+                android:id="@+id/spaceBetweenButtons"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.1" />

@@ -64,6 +64,9 @@ class SimpleDashboardActivity : AppCompatActivity() {
     private lateinit var bpHypertensionStatus: String
     private lateinit var bpHomeControlStatus: String
     private lateinit var bpReccomendation: String
+    private lateinit var dateTime: String
+    private lateinit var patientName: String
+    private lateinit var avgBP: String
 
     private lateinit var sortedHistory: List<HistoryData>
 
@@ -158,6 +161,7 @@ class SimpleDashboardActivity : AppCompatActivity() {
         } else {
             patientID = patientSharedPreferences.getString("patientID", null).toString()
             decryptedPatientID = AESEncryption().decrypt(patientID)
+            patientName = patientSharedPreferences.getString("legalName", null).toString()
         }
 
         binding.printSourceBtn.setOnClickListener {
@@ -218,6 +222,8 @@ class SimpleDashboardActivity : AppCompatActivity() {
                     println("Sorted History $sortedHistory")
                     println("Sorted History 1st" + sortedHistory[0])
                     println("Sorted History 1st SYS DATA" + sortedHistory[0].avgSysBP)
+                    avgBP = "${sortedHistory[0].avgSysBP}/${sortedHistory[0].avgDiaBP}"
+                    dateTime = "${sortedHistory[0].dateFormatted}"
 
                     bpHypertensionStatus = hypertensionStatus(
                         this,
@@ -462,44 +468,65 @@ class SimpleDashboardActivity : AppCompatActivity() {
 
             private fun drawChartsAndTextOnPage(page: PdfDocument.Page, chart1: LineChart, chart2: LineChart) {
                 val canvas = page.canvas
-                val paint = Paint().apply {
+                val boldPaint = Paint().apply {
                     textSize = 45f
                     isFakeBoldText = true
                 }
-                val smallPaint = Paint().apply {
+                val normalPaint = Paint().apply {
+                    textSize = 45f
+                }
+                val smallBoldPaint = Paint().apply {
+                    textSize = 35f
+                    isFakeBoldText = true
+                }
+                val smallNormalPaint = Paint().apply {
                     textSize = 35f
                 }
 
                 val pageInfo = page.info
-                println("Page Width: ${pageInfo.pageWidth}")
-                println("Page Height: ${pageInfo.pageHeight}")
-                val headingHeight = 100
-                val chartSpacing = 50
                 val padding = 10f
+                val startY = 80f
+                val lineHeight = 50f
+                val columnSpacing = 350f
 
-                // Draw the text fields
-                canvas.drawText("Today's Recommendation", padding, (80).toFloat(), paint)
-                drawMultilineText(bpReccomendation, canvas, smallPaint, padding, (100).toFloat(), pageInfo.pageWidth)
+                // Draw patient information with bold values
+                canvas.drawText("ID:", padding, startY, smallNormalPaint)
+                canvas.drawText(decryptedPatientID, padding + 50f, startY, smallBoldPaint) // Adjust x offset as needed
+                canvas.drawText("Name:", padding + columnSpacing, startY, smallNormalPaint)
+                canvas.drawText(patientName, padding + columnSpacing + 110f, startY, smallBoldPaint) // Adjust x offset as needed
+                canvas.drawText("Average BP:", padding, startY + lineHeight, smallNormalPaint)
+                canvas.drawText(avgBP, padding + 200f, startY + lineHeight, smallBoldPaint) // Adjust x offset as needed
+                canvas.drawText("Date & Time:", padding + columnSpacing, startY + lineHeight, smallNormalPaint)
+                canvas.drawText(dateTime, padding + columnSpacing + 200f, startY + lineHeight, smallBoldPaint) // Adjust x offset as needed
 
-                // Draw headings
-                canvas.drawText("Systolic Comparison Chart", padding, (headingHeight + 150).toFloat(), paint)
+                // Today's Recommendation
+                val recommendationStartY = startY + 2 * lineHeight + 40f
+                canvas.drawText("Today's Recommendation", padding, recommendationStartY, boldPaint)
+                drawMultilineText(bpReccomendation, canvas, smallNormalPaint, padding, recommendationStartY + 10f, pageInfo.pageWidth)
+
+                // Draw headings and charts
+                val headingHeight = 200
+                val chartSpacing = 50
+
+                // Draw the first chart heading
+                val chart1HeadingY = recommendationStartY + 170
+                canvas.drawText("Systolic BP Chart", padding, chart1HeadingY, boldPaint)
 
                 // Draw the first chart
                 val bitmap1 = getBitmapFromView(chart1)
-                val scaledBitmap1 = Bitmap.createScaledBitmap(bitmap1, chart1.width/3*2 , chart1.height/3*2  , true)
-                canvas.drawBitmap(scaledBitmap1, 169f, headingHeight.toFloat()+150, paint)
+                val scaledBitmap1 = Bitmap.createScaledBitmap(bitmap1, chart1.width / 3 * 2, chart1.height / 3 * 2, true)
+                canvas.drawBitmap(scaledBitmap1, 169f, chart1HeadingY, normalPaint)
 
-                // Draw the second heading
-                canvas.drawText("Diastolic Comparison Chart", padding, (scaledBitmap1.height + headingHeight + 200 + chartSpacing - 35).toFloat(), paint)
+                // Draw the second chart heading
+                val chart2HeadingY = chart1HeadingY + scaledBitmap1.height + chartSpacing + 30f
+                canvas.drawText("Diastolic BP Chart", padding, chart2HeadingY, boldPaint)
 
                 // Draw the second chart
                 val bitmap2 = getBitmapFromView(chart2)
-                println("chart height ${chart2.height/3*2}")
-                println("chart width ${chart2.width/3*2}")
-                val scaledBitmap2 = Bitmap.createScaledBitmap(bitmap2, chart2.width/3*2 , chart2.height/3*2  , true)
-                val spacing = scaledBitmap1.height + headingHeight + chartSpacing + 200 - 35
-                canvas.drawBitmap(scaledBitmap2, 169f, spacing.toFloat(), paint)
+                val scaledBitmap2 = Bitmap.createScaledBitmap(bitmap2, chart2.width / 3 * 2, chart2.height / 3 * 2, true)
+                canvas.drawBitmap(scaledBitmap2, 169f, chart2HeadingY, normalPaint)
             }
+
 
             private fun getBitmapFromView(view: View): Bitmap {
                 val bitmap = Bitmap.createBitmap(view.width, view.height, Bitmap.Config.ARGB_8888)

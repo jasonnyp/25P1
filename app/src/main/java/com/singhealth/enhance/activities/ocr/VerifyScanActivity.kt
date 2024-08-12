@@ -36,6 +36,7 @@ import com.singhealth.enhance.security.AESEncryption
 import com.singhealth.enhance.security.SecureSharedPreferences
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import kotlin.math.max
 import kotlin.math.roundToInt
 
 object ResourcesHelper {
@@ -43,10 +44,12 @@ object ResourcesHelper {
     fun getString(context: Context, resId: Int): String {
         return context.getString(resId)
     }
+
     // Same as above, but includes a single input of any type
     fun getString(context: Context, @StringRes resId: Int, vararg formatArgs: Any): String {
         return context.getString(resId, *formatArgs)
     }
+
     // Same as above, but includes 2 integer values
     fun getString(context: Context, @StringRes resId: Int, int1: Int, int2: Int): String {
         return context.getString(resId, int1, int2)
@@ -103,7 +106,8 @@ class VerifyScanActivity : AppCompatActivity() {
             }
         })
 
-        val patientSharedPreferences = SecureSharedPreferences.getSharedPreferences(applicationContext)
+        val patientSharedPreferences =
+            SecureSharedPreferences.getSharedPreferences(applicationContext)
         if (patientSharedPreferences.getString("patientID", null).isNullOrEmpty()) {
             patientNotFoundInSessionErrorDialog(this)
         } else {
@@ -135,12 +139,21 @@ class VerifyScanActivity : AppCompatActivity() {
         docRef.get()
             .addOnSuccessListener { document ->
                 if (document.exists()) {
-                    if (AESEncryption().decrypt(document.getString("targetSys").toString()) == "" || AESEncryption().decrypt(document.getString("targetDia").toString()) == "") {
+                    if (AESEncryption().decrypt(
+                            document.getString("targetSys").toString()
+                        ) == "" || AESEncryption().decrypt(
+                            document.getString("targetDia").toString()
+                        ) == ""
+                    ) {
                         homeSysBPTarget = 0
                         homeDiaBPTarget = 0
                     } else {
-                        homeSysBPTarget = AESEncryption().decrypt(document.getString("targetSys").toString()).toInt()
-                        homeDiaBPTarget = AESEncryption().decrypt(document.getString("targetDia").toString()).toInt()
+                        homeSysBPTarget =
+                            AESEncryption().decrypt(document.getString("targetSys").toString())
+                                .toInt()
+                        homeDiaBPTarget =
+                            AESEncryption().decrypt(document.getString("targetDia").toString())
+                                .toInt()
                     }
 
                     clinicSysBPTarget = if (homeSysBPTarget == 0) {
@@ -156,10 +169,18 @@ class VerifyScanActivity : AppCompatActivity() {
 
                     binding.verifyHomeSys.text = homeSysBPTarget.toString()
                     binding.verifyHomeDia.text = homeDiaBPTarget.toString()
-                    binding.homeBPTargetTV.text = String.format("%s / %s", homeSysBPTarget.toString(), homeDiaBPTarget.toString())
+                    binding.homeBPTargetTV.text = String.format(
+                        "%s / %s",
+                        homeSysBPTarget.toString(),
+                        homeDiaBPTarget.toString()
+                    )
                     binding.verifyClinicTargetSys.text = clinicSysBPTarget.toString()
                     binding.verifyClinicTargetDia.text = clinicDiaBPTarget.toString()
-                    binding.clinicBPTargetTV.text = String.format("%s / %s", clinicSysBPTarget.toString(), clinicDiaBPTarget.toString())
+                    binding.clinicBPTargetTV.text = String.format(
+                        "%s / %s",
+                        clinicSysBPTarget.toString(),
+                        clinicDiaBPTarget.toString()
+                    )
                 }
             }
             .addOnFailureListener { e ->
@@ -182,10 +203,18 @@ class VerifyScanActivity : AppCompatActivity() {
             }
 
             if (scanBundle.containsKey("homeSysBPTarget") && scanBundle.containsKey("homeDiaBPTarget")) {
-                binding.homeBPTargetTV.text = String.format("%s / %s", scanBundle.getString("homeSysBPTarget"), scanBundle.getString("homeDiaBPTarget"))
+                binding.homeBPTargetTV.text = String.format(
+                    "%s / %s",
+                    scanBundle.getString("homeSysBPTarget"),
+                    scanBundle.getString("homeDiaBPTarget")
+                )
             }
             if (scanBundle.containsKey("clinicSysBPTarget") && scanBundle.containsKey("clinicDiaBPTarget")) {
-                binding.homeBPTargetTV.text = String.format("%s / %s", scanBundle.getString("clinicSysBPTarget"), scanBundle.getString("clinicDiaBPTarget"))
+                binding.homeBPTargetTV.text = String.format(
+                    "%s / %s",
+                    scanBundle.getString("clinicSysBPTarget"),
+                    scanBundle.getString("clinicDiaBPTarget")
+                )
             }
 
             if (scanBundle.containsKey("sysBPListHistory") && scanBundle.containsKey("diaBPListHistory")) {
@@ -205,7 +234,7 @@ class VerifyScanActivity : AppCompatActivity() {
             }
         }
 
-        if (sevenDay){
+        if (sevenDay) {
             findViewById<Button>(R.id.addRowBtn).visibility = View.GONE
             sevenDayCheck()
         } else {
@@ -220,19 +249,24 @@ class VerifyScanActivity : AppCompatActivity() {
                     for (i in 0 until minOf(sysBPList.size, diaBPList.size)) {
                         addRow(sysBPList[i], diaBPList[i])
                     }
+
                 }
-            }}
+            }
+        }
         println("sysBPList after adding new scans: $sysBPList")
         println("diaBPList after adding new scans: $diaBPList")
 
-        // Calculate total rows (inclusive of currently detected rows)
-        var totalRows = maxOf(sysBPList.size, diaBPList.size)
+        val validSysBPList = sysBPList.filter { it != "-1" }
+        val validDiaBPList = diaBPList.filter { it != "-1" }
+
+        var totalRows = maxOf(validSysBPList.size, validDiaBPList.size)
         if (sysBPListHistory.isNotEmpty() && diaBPListHistory.isNotEmpty()) {
-            totalRows += maxOf(sysBPListHistory.size, diaBPListHistory.size)
+            val validSysBPListHistory = sysBPListHistory.filter { it != "-1" }
+            val validDiaBPListHistory = diaBPListHistory.filter { it != "-1" }
+            totalRows += maxOf(validSysBPListHistory.size, validDiaBPListHistory.size)
         }
 
-        // Calculate currently detected rows
-        var currentRows = maxOf(sysBPList.size, diaBPList.size)
+        val currentRows = maxOf(validSysBPList.size, validDiaBPList.size)
 
         println("Total rows: $totalRows")
         println("Current rows: $currentRows")
@@ -245,34 +279,92 @@ class VerifyScanActivity : AppCompatActivity() {
         // Display toast for current number of records detected
         if (currentRows > 1 && totalRows <= 1) {
             MaterialAlertDialogBuilder(this)
-                .setMessage(ResourcesHelper.getString(this, R.string.verify_scan_rows, currentRows, totalRows))
-                .setPositiveButton(ResourcesHelper.getString(this, R.string.ok_dialog)) { dialog, _ -> dialog.dismiss() }
+                .setMessage(
+                    ResourcesHelper.getString(
+                        this,
+                        R.string.verify_scan_rows,
+                        currentRows,
+                        totalRows
+                    )
+                )
+                .setPositiveButton(
+                    ResourcesHelper.getString(
+                        this,
+                        R.string.ok_dialog
+                    )
+                ) { dialog, _ -> dialog.dismiss() }
                 .show()
         } else if (currentRows > 1 && totalRows > 1) {
             MaterialAlertDialogBuilder(this)
-                .setMessage(ResourcesHelper.getString(this, R.string.verify_scan_rows, currentRows, totalRows))
-                .setPositiveButton(ResourcesHelper.getString(this, R.string.ok_dialog)) { dialog, _ -> dialog.dismiss() }
+                .setMessage(
+                    ResourcesHelper.getString(
+                        this,
+                        R.string.verify_scan_rows,
+                        currentRows,
+                        totalRows
+                    )
+                )
+                .setPositiveButton(
+                    ResourcesHelper.getString(
+                        this,
+                        R.string.ok_dialog
+                    )
+                ) { dialog, _ -> dialog.dismiss() }
                 .show()
         } else if (currentRows == 1 && totalRows <= 1) {
             MaterialAlertDialogBuilder(this)
-                .setMessage(ResourcesHelper.getString(this, R.string.verify_scan_rows, currentRows, totalRows))
-                .setPositiveButton(ResourcesHelper.getString(this, R.string.ok_dialog)) { dialog, _ -> dialog.dismiss() }
+                .setMessage(
+                    ResourcesHelper.getString(
+                        this,
+                        R.string.verify_scan_rows,
+                        currentRows,
+                        totalRows
+                    )
+                )
+                .setPositiveButton(
+                    ResourcesHelper.getString(
+                        this,
+                        R.string.ok_dialog
+                    )
+                ) { dialog, _ -> dialog.dismiss() }
                 .show()
         } else if (currentRows == 1 && totalRows > 1) {
             MaterialAlertDialogBuilder(this)
-                .setMessage(ResourcesHelper.getString(this, R.string.verify_scan_rows, currentRows, totalRows))
-                .setPositiveButton(ResourcesHelper.getString(this, R.string.ok_dialog)) { dialog, _ -> dialog.dismiss() }
+                .setMessage(
+                    ResourcesHelper.getString(
+                        this,
+                        R.string.verify_scan_rows,
+                        currentRows,
+                        totalRows
+                    )
+                )
+                .setPositiveButton(
+                    ResourcesHelper.getString(
+                        this,
+                        R.string.ok_dialog
+                    )
+                ) { dialog, _ -> dialog.dismiss() }
                 .show()
         } else {
             MaterialAlertDialogBuilder(this)
                 .setMessage(ResourcesHelper.getString(this, R.string.verify_scan_no_records))
-                .setPositiveButton(ResourcesHelper.getString(this, R.string.ok_dialog)) { dialog, _ -> dialog.dismiss() }
+                .setPositiveButton(
+                    ResourcesHelper.getString(
+                        this,
+                        R.string.ok_dialog
+                    )
+                ) { dialog, _ -> dialog.dismiss() }
                 .show()
         }
 
         // Prompt user if total records captured is less than 12
         if (totalRows < 12) {
-            errorDialogBuilder(this, getString(R.string.verify_scan_inadequate_reading_header), getString(R.string.verify_scan_inadequate_reading_body), ScanActivity::class.java)
+            errorDialogBuilder(
+                this,
+                getString(R.string.verify_scan_inadequate_reading_header),
+                getString(R.string.verify_scan_inadequate_reading_body),
+                ScanActivity::class.java
+            )
         }
 
         // Check BP records for errors
@@ -317,7 +409,14 @@ class VerifyScanActivity : AppCompatActivity() {
 
                 db.collection("patients").document(patientID).collection("visits").add(visit)
                     .addOnSuccessListener {
-                        Toast.makeText(this, ResourcesHelper.getString(this, R.string.verify_scan_calculation_successful), Toast.LENGTH_SHORT)
+                        Toast.makeText(
+                            this,
+                            ResourcesHelper.getString(
+                                this,
+                                R.string.verify_scan_calculation_successful
+                            ),
+                            Toast.LENGTH_SHORT
+                        )
                             .show()
 
                         val bundle = Bundle()
@@ -336,10 +435,18 @@ class VerifyScanActivity : AppCompatActivity() {
                         startActivity(recommendationIntent)
                     }
                     .addOnFailureListener { e ->
-                        errorDialogBuilder(this, ResourcesHelper.getString(this, R.string.verify_scan_saving_header), ResourcesHelper.getString(this, R.string.verify_scan_saving_body, e))
+                        errorDialogBuilder(
+                            this,
+                            ResourcesHelper.getString(this, R.string.verify_scan_saving_header),
+                            ResourcesHelper.getString(this, R.string.verify_scan_saving_body, e)
+                        )
                     }
             } else {
-                errorDialogBuilder(this, ResourcesHelper.getString(this, R.string.verify_scan_error_header), ResourcesHelper.getString(this, R.string.verify_scan_error_body))
+                errorDialogBuilder(
+                    this,
+                    ResourcesHelper.getString(this, R.string.verify_scan_error_header),
+                    ResourcesHelper.getString(this, R.string.verify_scan_error_body)
+                )
             }
         }
 
@@ -353,7 +460,15 @@ class VerifyScanActivity : AppCompatActivity() {
                     setError(binding.verifyClinicSysBox, null)
                 } else {
                     // Invalid range, set an error message and icon
-                    setError(binding.verifyClinicSysBox, ResourcesHelper.getString(this@VerifyScanActivity, R.string.verify_scan_valid_value, 91, 209))
+                    setError(
+                        binding.verifyClinicSysBox,
+                        ResourcesHelper.getString(
+                            this@VerifyScanActivity,
+                            R.string.verify_scan_valid_value,
+                            91,
+                            209
+                        )
+                    )
                 }
             }
 
@@ -370,7 +485,15 @@ class VerifyScanActivity : AppCompatActivity() {
                     setError(binding.verifyClinicDiaBox, null)
                 } else {
                     // Invalid range, set an error message and icon
-                    setError(binding.verifyClinicDiaBox, ResourcesHelper.getString(this@VerifyScanActivity, R.string.verify_scan_valid_value, 61, 119))
+                    setError(
+                        binding.verifyClinicDiaBox,
+                        ResourcesHelper.getString(
+                            this@VerifyScanActivity,
+                            R.string.verify_scan_valid_value,
+                            61,
+                            119
+                        )
+                    )
                 }
             }
 
@@ -431,6 +554,8 @@ class VerifyScanActivity : AppCompatActivity() {
             scanIntent.putStringArrayListExtra("diaBPListHistory", ArrayList(diaBPListHistory))
         }
 
+        scanIntent.putExtra("showContinueScan", true)
+
         startActivity(scanIntent)
         finish()
     }
@@ -439,7 +564,12 @@ class VerifyScanActivity : AppCompatActivity() {
         MaterialAlertDialogBuilder(this)
             .setTitle(ResourcesHelper.getString(this, R.string.verify_scan_rescan_header))
             .setMessage(ResourcesHelper.getString(this, R.string.verify_scan_rescan_body))
-            .setNegativeButton(ResourcesHelper.getString(this, R.string.no_dialog)) { dialog, _ -> dialog.dismiss() }
+            .setNegativeButton(
+                ResourcesHelper.getString(
+                    this,
+                    R.string.no_dialog
+                )
+            ) { dialog, _ -> dialog.dismiss() }
             .setPositiveButton(ResourcesHelper.getString(this, R.string.yes_dialog)) { _, _ ->
                 val scanIntent = Intent(this, ScanActivity::class.java)
 
@@ -500,8 +630,13 @@ class VerifyScanActivity : AppCompatActivity() {
     }
 
     fun discardProgress() {
-        errorDialogBuilder(this, ResourcesHelper.getString(this, R.string.verify_scan_discard_header),
-            ResourcesHelper.getString(this, R.string.verify_scan_discard_body), ScanActivity::class.java, R.drawable.ic_delete)
+        errorDialogBuilder(
+            this,
+            ResourcesHelper.getString(this, R.string.verify_scan_discard_header),
+            ResourcesHelper.getString(this, R.string.verify_scan_discard_body),
+            ScanActivity::class.java,
+            R.drawable.ic_delete
+        )
     }
 
     private fun saveStateForUndo() {
@@ -535,39 +670,51 @@ class VerifyScanActivity : AppCompatActivity() {
         binding.rowBPRecordLL.removeAllViews()
         sysBPFields.clear()
         diaBPFields.clear()
-        if (sevenDay){
+        if (sevenDay) {
             sevenDayCheck()
         } else {
-            for (i in 0 until minOf(sysBPList.size, diaBPList.size)) {
+            for (i in 0 until maxOf(sysBPList.size, diaBPList.size)) {
                 addRow(sysBPList[i], diaBPList[i])
             }
         }
+        postScanValidation()
+        println("sysBPList after adding updating scans: $sysBPList")
+        println("diaBPList after adding updating scans: $diaBPList")
     }
 
     private fun postScanValidation() {
         var errorCount = 0
 
-        if (sevenDay){
-            for (i in 0 until sysBPList.size) {
+        if (sevenDay) {
+            println("sysBPlist size is ${sysBPList.size}")
+            println("sysBPFields size is ${sysBPFields.size}")
+
+            for (i in 0 until sysBPFields.size) {
 
                 if (sysBPFields[i].text.isNullOrEmpty()) {
                     continue
                 } else if (!sysBPFields[i].text!!.isDigitsOnly()) {
                     errorCount += 1
-                    setError(sysBPFields[i].parent.parent as TextInputLayout, ResourcesHelper.getString(this, R.string.verify_scan_whole_number))
+                    setError(
+                        sysBPFields[i].parent.parent as TextInputLayout,
+                        ResourcesHelper.getString(this, R.string.verify_scan_whole_number)
+                    )
                 } else if (sysBPFields[i].text!!.toString().toInt() == 999) {
                     errorCount++
                     sysBPFields[i].error = "Replace value."
                 }
             }
 
-            for (i in 0 until diaBPList.size) {
+            for (i in 0 until diaBPFields.size) {
 
                 if (diaBPFields[i].text.isNullOrEmpty()) {
                     continue
                 } else if (!diaBPFields[i].text!!.isDigitsOnly()) {
                     errorCount += 1
-                    setError(diaBPFields[i].parent.parent as TextInputLayout, ResourcesHelper.getString(this, R.string.verify_scan_whole_number))
+                    setError(
+                        diaBPFields[i].parent.parent as TextInputLayout,
+                        ResourcesHelper.getString(this, R.string.verify_scan_whole_number)
+                    )
                 } else if (diaBPFields[i].text!!.toString().toInt() == 999) {
                     errorCount++
                     diaBPFields[i].error = "Replace value."
@@ -579,6 +726,7 @@ class VerifyScanActivity : AppCompatActivity() {
             // With reference from MOH clinical practice guidelines 1/2017 @ https://www.moh.gov.sg/docs/librariesprovider4/guidelines/cpg_hypertension-booklet---nov-2017.pdf
             for (i in 0 until sysBPList.size) {
                 val currentValueLength = sysBPFields[i].text.toString().length
+
 
                 if (sysBPFields[i].text.isNullOrEmpty()) {
                     errorCount += 1
@@ -714,7 +862,12 @@ class VerifyScanActivity : AppCompatActivity() {
                 .setIcon(R.drawable.ic_error)
                 .setTitle(ResourcesHelper.getString(this, R.string.verify_scan_erroneous_header))
                 .setMessage(ResourcesHelper.getString(this, R.string.verify_scan_erroneous_body))
-                .setNegativeButton(ResourcesHelper.getString(this, R.string.no_dialog)) { dialog, _ -> dialog.dismiss() }
+                .setNegativeButton(
+                    ResourcesHelper.getString(
+                        this,
+                        R.string.no_dialog
+                    )
+                ) { dialog, _ -> dialog.dismiss() }
                 .setPositiveButton(ResourcesHelper.getString(this, R.string.yes_dialog)) { _, _ ->
                     val scanIntent = Intent(this, ScanActivity::class.java)
 
@@ -785,27 +938,42 @@ class VerifyScanActivity : AppCompatActivity() {
         }
     }
 
-
     private fun validateFields(): Boolean {
         var valid = true
 
         if (binding.verifyClinicSys.text.isNullOrEmpty()) {
             valid = false
-            setError(binding.verifyClinicSys.parent.parent as TextInputLayout, ResourcesHelper.getString(this, R.string.verify_scan_empty_field))
+            setError(
+                binding.verifyClinicSys.parent.parent as TextInputLayout,
+                ResourcesHelper.getString(this, R.string.verify_scan_empty_field)
+            )
         } else if (!binding.verifyClinicSys.text!!.isDigitsOnly()) {
             valid = false
-            setError(binding.verifyClinicSys.parent.parent as TextInputLayout, ResourcesHelper.getString(this, R.string.verify_scan_whole_number))
-        } else if (binding.verifyClinicSys.text.toString().toInt() > 209 || binding.verifyClinicSys.text.toString().toInt() < 91) {
+            setError(
+                binding.verifyClinicSys.parent.parent as TextInputLayout,
+                ResourcesHelper.getString(this, R.string.verify_scan_whole_number)
+            )
+        } else if (binding.verifyClinicSys.text.toString()
+                .toInt() > 209 || binding.verifyClinicSys.text.toString().toInt() < 91
+        ) {
             valid = false
         }
 
         if (binding.verifyClinicDia.text.isNullOrEmpty()) {
             valid = false
-            setError(binding.verifyClinicDia.parent.parent as TextInputLayout, ResourcesHelper.getString(this, R.string.verify_scan_empty_field))
+            setError(
+                binding.verifyClinicDia.parent.parent as TextInputLayout,
+                ResourcesHelper.getString(this, R.string.verify_scan_empty_field)
+            )
         } else if (!binding.verifyClinicDia.text!!.isDigitsOnly()) {
             valid = false
-            setError(binding.verifyClinicDia.parent.parent as TextInputLayout, ResourcesHelper.getString(this, R.string.verify_scan_whole_number))
-        } else if (binding.verifyClinicDia.text.toString().toInt() > 119 || binding.verifyClinicDia.text.toString().toInt() < 61) {
+            setError(
+                binding.verifyClinicDia.parent.parent as TextInputLayout,
+                ResourcesHelper.getString(this, R.string.verify_scan_whole_number)
+            )
+        } else if (binding.verifyClinicDia.text.toString()
+                .toInt() > 119 || binding.verifyClinicDia.text.toString().toInt() < 61
+        ) {
             valid = false
         }
 
@@ -876,7 +1044,7 @@ class VerifyScanActivity : AppCompatActivity() {
                     )
                 }
             }
-        }else {
+        } else {
             for (sysField in sysBPFields) {
                 val sysText = sysField.text!!.toString()
                 println("Checking sysField: $sysText")
@@ -901,9 +1069,9 @@ class VerifyScanActivity : AppCompatActivity() {
             }
 
             for (diaField in diaBPFields) {
-                val diaText = diaField.text!!.toString()
+                var diaText = diaField.text!!.toString()
                 println("Checking diaField: $diaText")
-                if (diaText.isEmpty()) {
+                if (diaText.isEmpty() || diaText == "nul") {
                     println("diaText is empty")
                     continue
                 } else if (!diaText.isDigitsOnly()) {
@@ -927,7 +1095,6 @@ class VerifyScanActivity : AppCompatActivity() {
 
         return valid
     }
-
 
     private fun getBPTarget() {
         homeSysBPTarget = if (binding.verifyHomeSys.text.toString().isEmpty()) {
@@ -959,6 +1126,14 @@ class VerifyScanActivity : AppCompatActivity() {
         totalSysBP = 0
         totalDiaBP = 0
 
+        // Convert the values from sysBPFields and diaBPFields into lists
+        val sysBPValues = sysBPFields.map { it.text.toString() }
+        val diaBPValues = diaBPFields.map { it.text.toString() }
+
+        // Print the lists
+        println("sysBPFields values: $sysBPValues")
+        println("diaBPFields values: $diaBPValues")
+
         for (field in sysBPFields) {
             totalSysBP += field.text.toString().toInt()
         }
@@ -966,6 +1141,7 @@ class VerifyScanActivity : AppCompatActivity() {
         for (field in diaBPFields) {
             totalDiaBP += field.text.toString().toInt()
         }
+
 
         avgSysBP = (totalSysBP.toFloat() / sysBPFields.size).roundToInt()
         avgDiaBP = (totalDiaBP.toFloat() / diaBPFields.size).roundToInt()
@@ -975,8 +1151,11 @@ class VerifyScanActivity : AppCompatActivity() {
         val dayReadings = mutableListOf<List<Pair<String, String>>>()
         var currentDayReadings = mutableListOf<Pair<String, String>>()
 
+        sysBPList = sysBPList.subList(0, 28).toMutableList()
+        diaBPList = diaBPList.subList(0, 28).toMutableList()
+
         for (i in sysBPList.indices) {
-            if (sysBPList[i].isNotBlank() && diaBPList[i].isNotBlank()) {
+            if (sysBPList[i].isNotBlank() && sysBPList[i] != "-1" && diaBPList[i].isNotBlank() && diaBPList[i] != "-1") {
                 currentDayReadings.add(Pair(sysBPList[i], diaBPList[i]))
             }
 
@@ -1005,27 +1184,31 @@ class VerifyScanActivity : AppCompatActivity() {
             println("Morning Readings: $morningSysBP1, $morningDiaBP1; $morningSysBP2, $morningDiaBP2")
             println("Evening Readings: $eveningSysBP1, $eveningDiaBP1; $eveningSysBP2, $eveningDiaBP2")
 
-            val chosenMorningSysBP = if (morningSysBP1.toIntOrNull() ?: 0 >= targetSysBP.toInt() || morningDiaBP1.toIntOrNull() ?: 0 >= targetDiaBP.toInt()) {
-                morningSysBP2
-            } else {
-                morningSysBP1
-            }
-            val chosenMorningDiaBP = if (morningSysBP1.toIntOrNull() ?: 0 >= targetSysBP.toInt() || morningDiaBP1.toIntOrNull() ?: 0 >= targetDiaBP.toInt()) {
-                morningDiaBP2
-            } else {
-                morningDiaBP1
-            }
+            val chosenMorningSysBP =
+                if (morningSysBP1.toIntOrNull() ?: 0 >= targetSysBP.toInt() || morningDiaBP1.toIntOrNull() ?: 0 >= targetDiaBP.toInt()) {
+                    morningSysBP2
+                } else {
+                    morningSysBP1
+                }
+            val chosenMorningDiaBP =
+                if (morningSysBP1.toIntOrNull() ?: 0 >= targetSysBP.toInt() || morningDiaBP1.toIntOrNull() ?: 0 >= targetDiaBP.toInt()) {
+                    morningDiaBP2
+                } else {
+                    morningDiaBP1
+                }
 
-            val chosenEveningSysBP = if (eveningSysBP1.toIntOrNull() ?: 0 >= targetSysBP.toInt() || eveningDiaBP1.toIntOrNull() ?: 0 >= targetDiaBP.toInt()) {
-                eveningSysBP2
-            } else {
-                eveningSysBP1
-            }
-            val chosenEveningDiaBP = if (eveningSysBP1.toIntOrNull() ?: 0 >= targetSysBP.toInt() || eveningDiaBP1.toIntOrNull() ?: 0 >= targetDiaBP.toInt()) {
-                eveningDiaBP2
-            } else {
-                eveningDiaBP1
-            }
+            val chosenEveningSysBP =
+                if (eveningSysBP1.toIntOrNull() ?: 0 >= targetSysBP.toInt() || eveningDiaBP1.toIntOrNull() ?: 0 >= targetDiaBP.toInt()) {
+                    eveningSysBP2
+                } else {
+                    eveningSysBP1
+                }
+            val chosenEveningDiaBP =
+                if (eveningSysBP1.toIntOrNull() ?: 0 >= targetSysBP.toInt() || eveningDiaBP1.toIntOrNull() ?: 0 >= targetDiaBP.toInt()) {
+                    eveningDiaBP2
+                } else {
+                    eveningDiaBP1
+                }
 
             filteredSysBPList.add(chosenMorningSysBP)
             filteredDiaBPList.add(chosenMorningDiaBP)
@@ -1065,35 +1248,69 @@ class VerifyScanActivity : AppCompatActivity() {
         avgDiaBP = (totalDiaBP.toFloat() / finalDiaBPList.size).roundToInt()
     }
 
-
     private fun sevenDayCheck() {
+        // Ensure sysBPList and diaBPList have at least 28 elements
+        ensureListSize(sysBPList, 28)
+        ensureListSize(diaBPList, 28)
+
         var recordIndex = 0
 
         for (day in 1..7) {
             // Morning
-            addRow(sysBPList.getOrNull(recordIndex), diaBPList.getOrNull(recordIndex), true, day, 0, showHeader = true) // Morning BP1 with header
-            addRow(sysBPList.getOrNull(recordIndex + 1), diaBPList.getOrNull(recordIndex + 1), true, day, 0) // Morning BP2
+            addRow(
+                sysBPList.getOrElse(recordIndex) { "-1" },
+                diaBPList.getOrElse(recordIndex) { "-1" },
+                true,
+                day,
+                0,
+                showHeader = true
+            ) // Morning BP1 with header
+
+            addRow(
+                sysBPList.getOrElse(recordIndex + 1) { "-1" },
+                diaBPList.getOrElse(recordIndex + 1) { "-1" },
+                true,
+                day,
+                0
+            ) // Morning BP2
 
             // Evening
-            addRow(sysBPList.getOrNull(recordIndex + 2), diaBPList.getOrNull(recordIndex + 2), true, day, 1, showHeader = true) // Evening BP1 with header
-            addRow(sysBPList.getOrNull(recordIndex + 3), diaBPList.getOrNull(recordIndex + 3), true, day, 1) // Evening BP2
+            addRow(
+                sysBPList.getOrElse(recordIndex + 2) { "-1" },
+                diaBPList.getOrElse(recordIndex + 2) { "-1" },
+                true,
+                day,
+                1,
+                showHeader = true
+            ) // Evening BP1 with header
+
+            addRow(
+                sysBPList.getOrElse(recordIndex + 3) { "-1" },
+                diaBPList.getOrElse(recordIndex + 3) { "-1" },
+                true,
+                day,
+                1
+            ) // Evening BP2
 
             recordIndex += 4
         }
-
-        checkAddRowButtonStatus()
-
-        println("sevenDayCheck sysBPList: $sysBPList")
-        println("sevenDayCheck diaBPList: $diaBPList")
     }
 
-    private fun checkAddRowButtonStatus() {
-        val addRowBtn = findViewById<Button>(R.id.addOneRowBtn)
-        addRowBtn.isEnabled = (sysBPList.size < 28 && diaBPList.size < 28)
+    private fun ensureListSize(list: MutableList<String>, targetSize: Int) {
+        while (list.size < targetSize) {
+            list.add("-1")
+        }
     }
 
     @SuppressLint("SetTextI18n")
-    private fun addRow(sysBP: String?, diaBP: String?, isSevenDayCheck: Boolean = false, day: Int = -1, time: Int = -1, showHeader: Boolean = false) {
+    private fun addRow(
+        sysBP: String?,
+        diaBP: String?,
+        isSevenDayCheck: Boolean = false,
+        day: Int = -1,
+        time: Int = -1,
+        showHeader: Boolean = false
+    ) {
         println("Adding row: sysBP=$sysBP, diaBP=$diaBP, isSevenDayCheck=$isSevenDayCheck, day=$day, time=$time, showHeader=$showHeader")
 
         val rowBPRecordLayout = layoutInflater.inflate(R.layout.row_bp_record, null, false)
@@ -1101,28 +1318,43 @@ class VerifyScanActivity : AppCompatActivity() {
         val sysBPTIET = rowBPRecordLayout.findViewById<View>(R.id.sysBPTIET) as TextInputEditText
         val diaBPTIET = rowBPRecordLayout.findViewById<View>(R.id.diaBPTIET) as TextInputEditText
         val dayTV = rowBPRecordLayout.findViewById<View>(R.id.headerTextView) as TextView
-        val headerRowContainer = rowBPRecordLayout.findViewById<View>(R.id.headerRowContainer) as LinearLayout
-        val bpRowContainer = rowBPRecordLayout.findViewById<View>(R.id.bpRowContainer) as LinearLayout
+        val headerRowContainer =
+            rowBPRecordLayout.findViewById<View>(R.id.headerRowContainer) as LinearLayout
+        val bpRowContainer =
+            rowBPRecordLayout.findViewById<View>(R.id.bpRowContainer) as LinearLayout
+        val addOneRowBtn = rowBPRecordLayout.findViewById<View>(R.id.addOneRowBtn) as Button
 
-        if (sysBP == null && diaBP == null) {
-            bpRowContainer.visibility = View.GONE
+        if (isSevenDayCheck) {
+            if ((sysBP == null || sysBP == "-1") && (diaBP == null || diaBP == "-1")) {
+                bpRowContainer.visibility = View.GONE
+            } else {
+                bpRowContainer.visibility = View.VISIBLE
+                addOneRowBtn.visibility = View.GONE
+                sysBPTIET.setText(sysBP)
+                diaBPTIET.setText(diaBP)
+            }
+            if (day != -1 && time != -1 && showHeader) {
+                headerRowContainer.visibility = View.VISIBLE
+                dayTV.text = if (time == 0) "Day $day - Morning" else "Day $day - Evening"
+            } else {
+                dayTV.visibility = View.GONE
+            }
         } else {
             bpRowContainer.visibility = View.VISIBLE
             sysBPTIET.setText(sysBP)
             diaBPTIET.setText(diaBP)
-        }
+            if (sysBP == null && diaBP == null) {
+                sysBPList.add("")
+                diaBPList.add("")
+            }
 
-        if (day != -1 && time != -1 && showHeader) {
-            headerRowContainer.visibility = View.VISIBLE
-            dayTV.text = if (time == 0) "Day $day - Morning" else "Day $day - Evening"
-        } else {
-            dayTV.visibility = View.GONE
         }
 
         // Add TextWatchers to update the lists
         sysBPTIET.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
             }
+
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
             override fun afterTextChanged(s: Editable?) {
                 saveStateForUndo()
@@ -1136,6 +1368,7 @@ class VerifyScanActivity : AppCompatActivity() {
         diaBPTIET.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
             }
+
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
             override fun afterTextChanged(s: Editable?) {
                 saveStateForUndo()
@@ -1156,6 +1389,8 @@ class VerifyScanActivity : AppCompatActivity() {
             val tempValue = sysBPTIET.text.toString()
             sysBPTIET.setText(diaBPTIET.text.toString())
             diaBPTIET.setText(tempValue)
+            val toast = Toast.makeText(this, "Values swapped", Toast.LENGTH_SHORT)
+            toast.show()
         }
 
         val removeRowIV = rowBPRecordLayout.findViewById<View>(R.id.removeRowIV) as ImageView
@@ -1164,9 +1399,24 @@ class VerifyScanActivity : AppCompatActivity() {
                 .setIcon(R.drawable.ic_remove_circle)
                 .setTitle(ResourcesHelper.getString(this, R.string.verify_scan_remove_row_header))
                 .setMessage(ResourcesHelper.getString(this, R.string.verify_scan_remove_row_body))
-                .setNegativeButton(ResourcesHelper.getString(this, R.string.cancel_dialog)) { dialog, _ -> dialog.dismiss() }
-                .setPositiveButton(ResourcesHelper.getString(this, R.string.ok_dialog)) { dialog, _ ->
+                .setNegativeButton(
+                    ResourcesHelper.getString(
+                        this,
+                        R.string.cancel_dialog
+                    )
+                ) { dialog, _ -> dialog.dismiss() }
+                .setPositiveButton(
+                    ResourcesHelper.getString(
+                        this,
+                        R.string.ok_dialog
+                    )
+                ) { dialog, _ ->
                     saveStateForUndo()
+
+                    // Print lists before removal
+                    println("sysBPList before removal: $sysBPList")
+                    println("diaBPList before removal: $diaBPList")
+
                     val diaIndex = diaBPFields.indexOf(diaBPTIET)
                     if (diaIndex != -1) {
                         diaBPList.removeAt(diaIndex)
@@ -1177,64 +1427,243 @@ class VerifyScanActivity : AppCompatActivity() {
                     }
                     sysBPFields.remove(sysBPTIET)
                     diaBPFields.remove(diaBPTIET)
-                    binding.rowBPRecordLL.removeAllViews()
-                    sysBPFields.clear()
-                    diaBPFields.clear()
-                    sevenDayCheck()
+
+                    if (sevenDay) {
+                        binding.rowBPRecordLL.removeAllViews()
+                        sysBPFields.clear()
+                        diaBPFields.clear()
+                        sevenDayCheck()
+                    } else {
+                        binding.rowBPRecordLL.removeView(rowBPRecordLayout)
+                    }
+
+                    // Print lists after removal
+                    println("sysBPList after removal: $sysBPList")
+                    println("diaBPList after removal: $diaBPList")
+
                     dialog.dismiss()
+                    val toast = Toast.makeText(this, "Row removed", Toast.LENGTH_SHORT)
+                    toast.show()
                 }
                 .show()
         }
 
-        val addRowBtn = rowBPRecordLayout.findViewById<View>(R.id.addOneRowBtn) as Button
-        addRowBtn.setOnClickListener {
+
+        addOneRowBtn.setOnClickListener {
+            saveStateForUndo()
+
             val currentRowIndex = binding.rowBPRecordLL.indexOfChild(rowBPRecordLayout)
-            val dayIndex = currentRowIndex / 4
+            val newRow = layoutInflater.inflate(R.layout.row_bp_record, null, false)
+            binding.rowBPRecordLL.addView(newRow, currentRowIndex)
+            sysBPList[currentRowIndex] = ""
+            diaBPList[currentRowIndex] = ""
 
-            println("Current Row Index: $currentRowIndex")
-            println("Day Index: $dayIndex")
+            binding.rowBPRecordLL.removeAllViews()
+            sysBPFields.clear()
+            diaBPFields.clear()
+            refreshViews()
 
-            if (sysBPList.size >= 28 || diaBPList.size >= 28) {
-                addRowBtn.isEnabled = false
-                println("Button disabled: max row limit reached")
+            val toast = Toast.makeText(this, "Row added", Toast.LENGTH_SHORT)
+            toast.show()
+        }
+
+        val addRowBtn = rowBPRecordLayout.findViewById<View>(R.id.addRowIV) as ImageView
+        addRowBtn.setOnClickListener {
+            saveStateForUndo()
+            if (!sevenDay) {
+                addRow(null, null)
             } else {
-                // Adding new row
-                saveStateForUndo()
-                val newRow = layoutInflater.inflate(R.layout.row_bp_record, null, false)
-                binding.rowBPRecordLL.addView(newRow, currentRowIndex)
-                sysBPList.add(currentRowIndex, "")
-                diaBPList.add(currentRowIndex, "")
+                val currentRowIndex = binding.rowBPRecordLL.indexOfChild(rowBPRecordLayout)
+                val nextRowIndex = currentRowIndex + 1
+
+                val validSysBPCount = sysBPList.count { it != "-1" }
+                val validDiaBPCount = diaBPList.count { it != "-1" }
+
+                if (validSysBPCount >= 28 && validDiaBPCount >= 28) {
+                    val toast = Toast.makeText(this, "Unable to add more rows", Toast.LENGTH_SHORT)
+                    toast.show()
+                    return@setOnClickListener
+                }
+
+                println("addRowIV clicked. Current Row Index: $currentRowIndex")
+                println("addRowIV SysBPList before modification: $sysBPList\n")
+
+                // Check if the next row index is within bounds
+                if (nextRowIndex < binding.rowBPRecordLL.childCount) {
+                    // Get the next row from the LinearLayout
+                    val nextRowLayout = binding.rowBPRecordLL.getChildAt(nextRowIndex)
+
+                    // Find the TextInputEditText elements in the next row
+                    val nextSysBPTIET =
+                        nextRowLayout.findViewById<TextInputEditText>(R.id.sysBPTIET)
+                    val nextDiaBPTIET =
+                        nextRowLayout.findViewById<TextInputEditText>(R.id.diaBPTIET)
+
+                    if (nextSysBPTIET.text.toString() != "-1" && nextDiaBPTIET.text.toString() != "-1") {
+                        sysBPList.add(currentRowIndex, "")
+                        diaBPList.add(currentRowIndex, "")
+                        if (sysBPList.size > 28) {
+                            removeFirstOccurrenceFromEnd(sysBPList, "-1")
+                        }
+                        if (diaBPList.size > 28) {
+                            removeFirstOccurrenceFromEnd(diaBPList, "-1")
+                        }
+                    } else {
+                        sysBPList[currentRowIndex + 1] = ""
+                        diaBPList[currentRowIndex + 1] = ""
+                    }
+                }
+
                 // Refresh the view
                 binding.rowBPRecordLL.removeAllViews()
                 sysBPFields.clear()
                 diaBPFields.clear()
-                sevenDayCheck()
+                refreshViews()
+
+                val toast = Toast.makeText(this, "Row added", Toast.LENGTH_SHORT)
+                toast.show()
             }
         }
 
-        // Adding to layout
-        binding.rowBPRecordLL.addView(rowBPRecordLayout)
+        val sysLeftIV = rowBPRecordLayout.findViewById<View>(R.id.sysLeftIV) as ImageView
+        sysLeftIV.setOnClickListener {
+            saveStateForUndo()
+            val currentRowIndex = binding.rowBPRecordLL.indexOfChild(rowBPRecordLayout)
 
-        if (sysBPList.size >= 28 || diaBPList.size >= 28) {
-            addRowBtn.isEnabled = false
-            println("Button disabled: max row limit reached")
+            // Print the current index of the row
+            println("sysLeftIV clicked. Current Row Index: $currentRowIndex")
+
+            println("sysLeftIV SysBPList before modification: $sysBPList\n")
+            println("sysLeftIV DiaBPList before modification: $diaBPList\n")
+
+            // Insert an empty string at the systolic index
+            sysBPList.add(currentRowIndex, "")
+
+            // Print lists after adding an empty string
+            println("sysLeftIV SysBPList after adding empty string: $sysBPList\n")
+
+            if (currentRowIndex != -1 && currentRowIndex < sysBPList.size && currentRowIndex < diaBPList.size) {
+                // Extract parts to swap
+                val systolicPartToSwap =
+                    sysBPList.subList(currentRowIndex + 1, sysBPList.size).toMutableList()
+                val diastolicPartToSwap =
+                    diaBPList.subList(currentRowIndex, diaBPList.size).toMutableList()
+
+                // Print parts to swap
+                println("sysLeftIV Systolic part to swap: $systolicPartToSwap")
+                println("sysLeftIV Diastolic part to swap: $diastolicPartToSwap")
+
+                // Update lists with swapped elements
+                sysBPList.subList(currentRowIndex + 1, sysBPList.size).clear()
+                diaBPList.subList(currentRowIndex, diaBPList.size).clear()
+                println("cleared sysBPList $sysBPList")
+                println("cleared diabplist $diaBPList")
+
+
+                sysBPList.addAll(currentRowIndex + 1, diastolicPartToSwap)
+                diaBPList.addAll(currentRowIndex, systolicPartToSwap)
+
+                // Print lists after swapping
+                println("sysLeftIV SysBPList after swapping: $sysBPList\n")
+                println("sysLeftIV DiaBPList after swapping: $diaBPList\n")
+            } else {
+                println("sysLeftIV Invalid index or lists size mismatch. No swapping performed.")
+            }
+
+            while (diaBPList.size != sysBPList.size) {
+                if (diaBPList.size > sysBPList.size) {
+                    sysBPList.add("")
+                } else {
+                    diaBPList.add("")
+                }
+            }
+            // Clear the views and fields, then refresh
+            binding.rowBPRecordLL.removeAllViews()
+            sysBPFields.clear()
+            diaBPFields.clear()
+            refreshViews()
+
+            // Show toast message
+            val toast = Toast.makeText(this, "Empty Systolic Added", Toast.LENGTH_SHORT)
+            toast.show()
         }
 
-        println("Row added. Updated sysBPList: $sysBPList")
-        println("Updated diaBPList: $diaBPList")
 
+        val diaRightIV = rowBPRecordLayout.findViewById<View>(R.id.diaRightIV) as ImageView
+        diaRightIV.setOnClickListener {
+            saveStateForUndo()
+            val currentRowIndex = binding.rowBPRecordLL.indexOfChild(rowBPRecordLayout)
+            println("diaRightIV clicked. Current Row Index: $currentRowIndex")
+            println("diaLeftIV SysBPList: $sysBPList\n")
+            println("diaLeftIV DiaBPList: $diaBPList\n")
+
+            diaBPList.add(currentRowIndex, "")
+
+            if (currentRowIndex != -1 && currentRowIndex < diaBPList.size && currentRowIndex < sysBPList.size) {
+                val systolicPartToSwap =
+                    sysBPList.subList(currentRowIndex + 1, sysBPList.size).toMutableList()
+                val diastolicPartToSwap =
+                    diaBPList.subList(currentRowIndex + 1, diaBPList.size).toMutableList()
+
+                // Print parts to swap
+                println("diaLeftIV Systolic part to swap: $systolicPartToSwap")
+                println("diaLeftIV Diastolic part to swap: $diastolicPartToSwap")
+
+                sysBPList.subList(currentRowIndex + 1, sysBPList.size).clear()
+                diaBPList.subList(currentRowIndex + 1, diaBPList.size).clear()
+                println("cleared sysBPList $sysBPList")
+                println("cleared diabplist $diaBPList")
+
+                sysBPList.addAll(currentRowIndex + 1, diastolicPartToSwap)
+                diaBPList.addAll(currentRowIndex + 1, systolicPartToSwap)
+            }
+            println("diaBPsize: ${diaBPList.size}")
+            println("sysBPsize: ${sysBPList.size}")
+
+            while (diaBPList.size != sysBPList.size) {
+                if (diaBPList.size > sysBPList.size) {
+                    sysBPList.add("")
+                } else {
+                    diaBPList.add("")
+                }
+            }
+
+            println("diaLeftIV SysBPList after swapping: $sysBPList\n")
+            println("diaLeftIV DiaBPList after swapping: $diaBPList\n")
+
+            binding.rowBPRecordLL.removeAllViews()
+            sysBPFields.clear()
+            diaBPFields.clear()
+            refreshViews()
+
+            val toast = Toast.makeText(this, "Empty Diastolic Added", Toast.LENGTH_SHORT)
+            toast.show()
+        }
+
+        binding.rowBPRecordLL.addView(rowBPRecordLayout)
     }
 
-    // Add divider to separate old and new records
     private fun addDivider() {
         val dividerOldNewRecordLayout =
             layoutInflater.inflate(R.layout.divider_old_new_record, null, false)
         binding.rowBPRecordLL.addView(dividerOldNewRecordLayout)
     }
+
+    private fun removeFirstOccurrenceFromEnd(list: MutableList<String>, value: String) {
+        for (i in list.indices.reversed()) {
+            if (list[i] == value) {
+                list.removeAt(i)
+                break
+            }
+        }
+    }
 }
 
 
-class ModalBottomSheet(private val activity: VerifyScanActivity, private val isSevenDay: Boolean = false) : BottomSheetDialogFragment() {
+class ModalBottomSheet(
+    private val activity: VerifyScanActivity,
+    private val isSevenDay: Boolean = false
+) : BottomSheetDialogFragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -1245,7 +1674,6 @@ class ModalBottomSheet(private val activity: VerifyScanActivity, private val isS
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Continue scanning
         val continueBS = view.findViewById<LinearLayout>(R.id.continueBS)
         val rescanBS = view.findViewById<LinearLayout>(R.id.rescanBS)
         val undoBS = view.findViewById<LinearLayout>(R.id.undoBS)
@@ -1265,7 +1693,6 @@ class ModalBottomSheet(private val activity: VerifyScanActivity, private val isS
                 dismiss()
             }
 
-            // Rescan current records
             rescanBS.setOnClickListener {
                 activity.rescanRecords()
                 dismiss()
@@ -1277,7 +1704,6 @@ class ModalBottomSheet(private val activity: VerifyScanActivity, private val isS
             }
         }
 
-        // Discard progress
         val discardBS = view.findViewById<LinearLayout>(R.id.discardBS)
         discardBS.setOnClickListener {
             activity.discardProgress()

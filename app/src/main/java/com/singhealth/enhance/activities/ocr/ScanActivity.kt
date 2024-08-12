@@ -45,6 +45,7 @@ class ScanActivity : AppCompatActivity() {
     private lateinit var outputUri: Uri
     private lateinit var patientID: String
     private var sevenDay: Boolean = false
+    private var showContinueScan: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -62,12 +63,21 @@ class ScanActivity : AppCompatActivity() {
         progressDialog = ProgressDialog(this)
         progressDialog.setCanceledOnTouchOutside(false)
 
+        if (intent.extras != null) {
+            showContinueScan = intent.extras?.getBoolean("showContinueScan") ?: false
+            if (showContinueScan) {
+                binding.scanStatusContainer.visibility = View.VISIBLE
+                binding.sevenDaySourceBtn.visibility = View.GONE
+                binding.spaceBetweenButtons.visibility = View.GONE
+            }
+        }
+
         binding.generalSourceBtn.setOnClickListener {
+            sevenDay = false
             onClickRequestPermission()
         }
         binding.sevenDaySourceBtn.setOnClickListener {
             sevenDay = true
-            println("sevenDay: $sevenDay")
             onClickRequestPermission()
         }
     }
