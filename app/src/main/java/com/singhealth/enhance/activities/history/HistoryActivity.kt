@@ -3,7 +3,6 @@ package com.singhealth.enhance.activities.history
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
-import android.view.View
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -12,14 +11,13 @@ import com.google.firebase.ktx.Firebase
 import com.singhealth.enhance.R
 import com.singhealth.enhance.activities.MainActivity
 import com.singhealth.enhance.activities.dashboard.SimpleDashboardActivity
-import com.singhealth.enhance.activities.error.errorDialogBuilder
-import com.singhealth.enhance.activities.error.internetConnectionCheck
-import com.singhealth.enhance.activities.error.patientNotFoundInSessionErrorDialog
 import com.singhealth.enhance.activities.ocr.ScanActivity
 import com.singhealth.enhance.activities.patient.ProfileActivity
 import com.singhealth.enhance.activities.patient.RegistrationActivity
 import com.singhealth.enhance.activities.result.RecommendationActivity
 import com.singhealth.enhance.activities.settings.SettingsActivity
+import com.singhealth.enhance.activities.validation.internetConnectionCheck
+import com.singhealth.enhance.activities.validation.patientNotFoundInSessionErrorDialog
 import com.singhealth.enhance.databinding.ActivityHistoryBinding
 import com.singhealth.enhance.security.SecureSharedPreferences
 import java.time.LocalDateTime
@@ -35,7 +33,7 @@ class HistoryActivity : AppCompatActivity(), HistoryAdapter.OnItemClickListener 
     private lateinit var sortedHistory: List<HistoryData>
 
     private val db = Firebase.firestore
-    private val history = ArrayList<HistoryData>()
+    private var history = ArrayList<HistoryData>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -121,66 +119,52 @@ class HistoryActivity : AppCompatActivity(), HistoryAdapter.OnItemClickListener 
 
             db.collection("patients").document(patientID).collection("visits").get()
                 .addOnSuccessListener { documents ->
-                    if (documents.isEmpty) {
-                        binding.noRecordsTV.visibility = View.VISIBLE
-                    } else {
-                        binding.noRecordsTV.visibility = View.GONE
+                    val inputDateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")
+                    val outputDateFormatter = DateTimeFormatter.ofPattern("dd MMM yyyy, HH:mm:ss")
 
-                        val inputDateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")
-                        val outputDateFormatter =
-                            DateTimeFormatter.ofPattern(getString(R.string.date_format))
-
-                        for (document in documents) {
-                            val dateTimeString = document.get("date") as? String
-                            val dateTime = LocalDateTime.parse(dateTimeString, inputDateFormatter)
-                            val dateTimeFormatted = dateTime.format(outputDateFormatter)
-                            val avgSysBP = document.get("averageSysBP") as? Long
-                            val avgDiaBP = document.get("averageDiaBP") as? Long
-                            val homeSysBPTarget = document.get("homeSysBPTarget") as? Long
-                            val homeDiaBPTarget = document.get("homeDiaBPTarget") as? Long
-                            val clinicSysBPTarget = document.get("clinicSysBPTarget") as? Long
-                            val clinicDiaBPTarget = document.get("clinicDiaBPTarget") as? Long
-                            val clinicSysBP = document.get("clinicSysBP") as? Long
-                            val clinicDiaBP = document.get("clinicDiaBP") as? Long
-                            val scanRecordCount = if (document.get("scanRecordCount") != null) {
-                                (document.get("scanRecordCount") as Long).toInt()
-                            } else {
-                                0
-                            }
-                            history.add(
-                                HistoryData(
-                                    dateTime.toString(),
-                                    dateTimeFormatted,
-                                    avgSysBP,
-                                    avgDiaBP,
-                                    homeSysBPTarget,
-                                    homeDiaBPTarget,
-                                    clinicSysBPTarget,
-                                    clinicDiaBPTarget,
-                                    clinicSysBP,
-                                    clinicDiaBP,
-                                    scanRecordCount
-                                )
-                            )
+                    for (document in documents) {
+                        val dateTimeString = document.get("date") as? String
+                        val dateTime = LocalDateTime.parse(dateTimeString, inputDateFormatter)
+                        val dateTimeFormatted = dateTime.format(outputDateFormatter)
+                        val avgSysBP = document.get("averageSysBP") as? Long
+                        val avgDiaBP = document.get("averageDiaBP") as? Long
+                        val homeSysBPTarget = document.get("homeSysBPTarget") as? Long
+                        val homeDiaBPTarget = document.get("homeDiaBPTarget") as? Long
+                        val clinicSysBPTarget = document.get("clinicSysBPTarget") as? Long
+                        val clinicDiaBPTarget = document.get("clinicDiaBPTarget") as? Long
+                        val clinicSysBP = document.get("clinicSysBP") as? Long
+                        val clinicDiaBP = document.get("clinicDiaBP") as? Long
+                        var scanRecordCount = document.get("scanRecordCount") as? Long
+                        if (scanRecordCount == null) {
+                            scanRecordCount = 0
                         }
-
-                        sortedHistory = history.sortedByDescending { it.date }
-                        println("Sorted History$sortedHistory")
-                        println("Sorted History 1st" + sortedHistory[0])
-                        println("Sorted History 1st SYS DATA" + sortedHistory[0].avgSysBP)
-
-                        val adapter = HistoryAdapter(sortedHistory, this)
-
-                        binding.recyclerView.adapter = adapter
-                        binding.recyclerView.layoutManager = LinearLayoutManager(this)
+                        history.add(
+                            HistoryData(
+                                dateTime.toString(),
+                                dateTimeFormatted,
+                                avgSysBP,
+                                avgDiaBP,
+                                homeSysBPTarget,
+                                homeDiaBPTarget,
+                                clinicSysBPTarget,
+                                clinicDiaBPTarget,
+                                clinicSysBP,
+                                clinicDiaBP,
+                                scanRecordCount
+                            )
+                        )
                     }
-                }
-                .addOnFailureListener { e ->
-                    errorDialogBuilder(
-                        this,
-                        getString(R.string.patient_history_not_found_error_header),
-                        getString(R.string.patient_history_not_found_error_body, e)
-                    )
+
+                    sortedHistory = history.sortedByDescending { it.date }
+
+                    println("Sorted History$sortedHistory")
+                    println("Sorted History 1st" + sortedHistory[0])
+                    println("Sorted History 1st SYS DATA" + sortedHistory[0].avgSysBP)
+
+                    val adapter = HistoryAdapter(sortedHistory, this)
+
+                    binding.recyclerView.adapter = adapter
+                    binding.recyclerView.layoutManager = LinearLayoutManager(this)
                 }
         }
     }

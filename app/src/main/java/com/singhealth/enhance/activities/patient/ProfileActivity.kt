@@ -22,9 +22,9 @@ import com.singhealth.enhance.activities.MainActivity
 import com.singhealth.enhance.activities.dashboard.SimpleDashboardActivity
 import com.singhealth.enhance.activities.diagnosis.hypertensionStatus
 import com.singhealth.enhance.activities.diagnosis.sortPatientVisits
-import com.singhealth.enhance.activities.error.errorDialogBuilder
-import com.singhealth.enhance.activities.error.firebaseErrorDialog
-import com.singhealth.enhance.activities.error.patientNotFoundInSessionErrorDialog
+import com.singhealth.enhance.activities.validation.errorDialogBuilder
+import com.singhealth.enhance.activities.validation.firebaseErrorDialog
+import com.singhealth.enhance.activities.validation.patientNotFoundInSessionErrorDialog
 import com.singhealth.enhance.activities.history.HistoryActivity
 import com.singhealth.enhance.activities.ocr.ScanActivity
 import com.singhealth.enhance.activities.settings.SettingsActivity

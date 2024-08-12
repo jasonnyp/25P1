@@ -25,9 +25,9 @@ import com.google.firebase.ml.vision.document.FirebaseVisionDocumentText
 import com.singhealth.enhance.R
 import com.singhealth.enhance.activities.MainActivity
 import com.singhealth.enhance.activities.dashboard.SimpleDashboardActivity
-import com.singhealth.enhance.activities.error.internetConnectionCheck
-import com.singhealth.enhance.activities.error.ocrTextErrorDialog
-import com.singhealth.enhance.activities.error.patientNotFoundInSessionErrorDialog
+import com.singhealth.enhance.activities.validation.internetConnectionCheck
+import com.singhealth.enhance.activities.validation.ocrTextErrorDialog
+import com.singhealth.enhance.activities.validation.patientNotFoundInSessionErrorDialog
 import com.singhealth.enhance.activities.history.HistoryActivity
 import com.singhealth.enhance.activities.patient.ProfileActivity
 import com.singhealth.enhance.activities.patient.RegistrationActivity

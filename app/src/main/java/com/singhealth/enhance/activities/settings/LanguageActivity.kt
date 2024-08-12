@@ -7,7 +7,7 @@ import android.view.MenuItem
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import com.singhealth.enhance.R
-import com.singhealth.enhance.activities.error.errorDialogBuilder
+import com.singhealth.enhance.activities.validation.errorDialogBuilder
 import com.singhealth.enhance.databinding.ActivityLanguageBinding
 import com.yariksoffice.lingver.Lingver
 

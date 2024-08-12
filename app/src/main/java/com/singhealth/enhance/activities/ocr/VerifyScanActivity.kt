@@ -27,9 +27,9 @@ import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.singhealth.enhance.R
-import com.singhealth.enhance.activities.error.errorDialogBuilder
-import com.singhealth.enhance.activities.error.firebaseErrorDialog
-import com.singhealth.enhance.activities.error.patientNotFoundInSessionErrorDialog
+import com.singhealth.enhance.activities.validation.errorDialogBuilder
+import com.singhealth.enhance.activities.validation.firebaseErrorDialog
+import com.singhealth.enhance.activities.validation.patientNotFoundInSessionErrorDialog
 import com.singhealth.enhance.activities.result.RecommendationActivity
 import com.singhealth.enhance.databinding.ActivityVerifyScanBinding
 import com.singhealth.enhance.security.AESEncryption

@@ -23,13 +23,13 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.singhealth.enhance.R
 import com.singhealth.enhance.activities.MainActivity
-import com.singhealth.enhance.activities.error.patientNotFoundInSessionErrorDialog
 import com.singhealth.enhance.activities.history.HistoryActivity
 import com.singhealth.enhance.activities.history.HistoryData
 import com.singhealth.enhance.activities.ocr.ScanActivity
 import com.singhealth.enhance.activities.patient.ProfileActivity
 import com.singhealth.enhance.activities.patient.RegistrationActivity
 import com.singhealth.enhance.activities.settings.SettingsActivity
+import com.singhealth.enhance.activities.validation.patientNotFoundInSessionErrorDialog
 import com.singhealth.enhance.databinding.DashboardBinding
 import com.singhealth.enhance.security.SecureSharedPreferences
 import java.text.SimpleDateFormat
@@ -50,7 +50,7 @@ class DashboardActivity : AppCompatActivity() {
     private lateinit var sortedHistory: List<HistoryData>
 
     private val db = Firebase.firestore
-    private val history = ArrayList<HistoryData>()
+    private var history = ArrayList<HistoryData>()
 
     private lateinit var lineChart: LineChart
     private lateinit var diastolicLineChart: LineChart
@@ -144,75 +144,62 @@ class DashboardActivity : AppCompatActivity() {
 
         db.collection("patients").document(patientID).collection("visits").get()
             .addOnSuccessListener { documents ->
-                if (documents.isEmpty) {
-                    println("Empty Collection: 'visits'")
-                } else {
-                    val inputDateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")
-                    val outputDateFormatter = DateTimeFormatter.ofPattern(getString(R.string.date_format))
+                val inputDateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")
+                val outputDateFormatter = DateTimeFormatter.ofPattern("dd MMM yyyy, HH:mm:ss")
 
-                    for (document in documents) {
-                        val dateTimeString = document.get("date") as? String
-                        val dateTime = LocalDateTime.parse(dateTimeString, inputDateFormatter)
-                        val dateTimeFormatted = dateTime.format(outputDateFormatter)
-                        val avgSysBP = document.get("averageSysBP") as? Long
-                        val avgDiaBP = document.get("averageDiaBP") as? Long
-                        val homeSysBPTarget = document.get("homeSysBPTarget") as? Long
-                        val homeDiaBPTarget = document.get("homeDiaBPTarget") as? Long
-                        val clinicSysBPTarget = document.get("clinicSysBPTarget") as? Long
-                        val clinicDiaBPTarget = document.get("clinicDiaBPTarget") as? Long
-                        val clinicSysBP = document.get("clinicSysBP") as? Long
-                        val clinicDiaBP = document.get("clinicDiaBP") as? Long
-                        val scanRecordCount = document.get("scanRecordCount") as? Int
-                        history.add(
-                            HistoryData(
-                                dateTime.toString(),
-                                dateTimeFormatted,
-                                avgSysBP,
-                                avgDiaBP,
-                                homeSysBPTarget,
-                                homeDiaBPTarget,
-                                clinicSysBPTarget,
-                                clinicDiaBPTarget,
-                                clinicSysBP,
-                                clinicDiaBP,
-                                scanRecordCount
-                            )
-                        )
+                for (document in documents) {
+                    val dateTimeString = document.get("date") as? String
+                    val dateTime = LocalDateTime.parse(dateTimeString, inputDateFormatter)
+                    val dateTimeFormatted = dateTime.format(outputDateFormatter)
+                    val avgSysBP = document.get("averageSysBP") as? Long
+                    val avgDiaBP = document.get("averageDiaBP") as? Long
+                    val homeSysBPTarget = document.get("homeSysBPTarget") as? Long
+                    val homeDiaBPTarget = document.get("homeDiaBPTarget") as? Long
+                    val clinicSysBPTarget = document.get("clinicSysBPTarget") as? Long
+                    val clinicDiaBPTarget = document.get("clinicDiaBPTarget") as? Long
+                    val clinicSysBP = document.get("clinicSysBP") as? Long
+                    val clinicDiaBP = document.get("clinicDiaBP") as? Long
+                    var scanRecordCount = document.get("scanRecordCount") as? Long
+                    if (scanRecordCount == null) {
+                        scanRecordCount = 0
                     }
-
-                    sortedHistory = history.sortedByDescending { it.date }
-                    println("Sorted History$sortedHistory")
-                    println("Sorted History 1st" + sortedHistory[0])
-                    println("Sorted History 1st SYS DATA" + sortedHistory[0].avgSysBP)
-
-                    /*
-                    lineChart = findViewById(R.id.syslineChart)
-                    setupLineChart()
-                    diastolicLineChart = findViewById(R.id.diastolicLineChart)
-                    setupDiastolicLineChart()
-                    */
-
-                    // WebView (Does not work in emulator, but works on physical device)
-                    // Correction to above: It does not work on older versions, but on more modern android sdks
-                    val myWebView : WebView = binding.WB
-                    myWebView.webViewClient = WebViewClient()
-                    myWebView.webChromeClient = WebChromeClient()
-                    myWebView.settings.javaScriptEnabled = true
-                    myWebView.settings.allowContentAccess = true
-                    myWebView.settings.domStorageEnabled = true
-                    myWebView.settings.loadsImagesAutomatically = true
-                    myWebView.settings.mixedContentMode = WebSettings.MIXED_CONTENT_ALWAYS_ALLOW
-                    myWebView.settings.setSupportMultipleWindows(true)
-                    myWebView.loadUrl("https://enhance-bdc3f.web.app/?params=%7B%22ds14.documentid%22%3A%22${patientID}%22%7D")
-                    println("https://enhance-bdc3f.web.app/?params={'ds14.documentid':'${patientID}'}")
-
+                    history.add(
+                        HistoryData(
+                            dateTime.toString(),
+                            dateTimeFormatted,
+                            avgSysBP,
+                            avgDiaBP,
+                            homeSysBPTarget,
+                            homeDiaBPTarget,
+                            clinicSysBPTarget,
+                            clinicDiaBPTarget,
+                            clinicSysBP,
+                            clinicDiaBP,
+                            scanRecordCount
+                        )
+                    )
                 }
-            }
-            .addOnFailureListener { e ->
-                println("Error getting documents: $e")
-            }
 
+                sortedHistory = history.sortedByDescending { it.date }
 
+                println("Sorted History$sortedHistory")
+                println("Sorted History 1st" + sortedHistory[0])
+                println("Sorted History 1st SYS DATA" + sortedHistory[0].avgSysBP)
+
+                // WebView (Does not work in emulator, but works on physical device)
+                // Correction to above: It does not work on older versions, but on more modern android sdks
+                val myWebView : WebView = binding.WB
+                myWebView.webViewClient = WebViewClient()
+                myWebView.webChromeClient = WebChromeClient()
+                myWebView.settings.javaScriptEnabled = true
+                myWebView.settings.allowContentAccess = true
+                myWebView.settings.domStorageEnabled = true
+                myWebView.settings.loadsImagesAutomatically = true
+                myWebView.settings.mixedContentMode = WebSettings.MIXED_CONTENT_ALWAYS_ALLOW
+                myWebView.settings.setSupportMultipleWindows(true)
+                myWebView.loadUrl("https://enhance-bdc3f.web.app/?params=%7B%22ds14.documentid%22%3A%22${patientID}%22%7D")
+                println("https://enhance-bdc3f.web.app/?params={'ds14.documentid':'${patientID}'}")
+            }
     }
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return if (actionBarDrawerToggle.onOptionsItemSelected(item)) {

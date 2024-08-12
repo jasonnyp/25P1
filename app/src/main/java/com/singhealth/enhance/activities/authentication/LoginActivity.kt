@@ -12,7 +12,7 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.singhealth.enhance.R
 import com.singhealth.enhance.activities.MainActivity
-import com.singhealth.enhance.activities.error.errorDialogBuilder
+import com.singhealth.enhance.activities.validation.errorDialogBuilder
 import com.singhealth.enhance.databinding.ActivityLoginBinding
 import java.util.Calendar
 
