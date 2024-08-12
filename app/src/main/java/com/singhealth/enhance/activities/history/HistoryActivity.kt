@@ -120,7 +120,7 @@ class HistoryActivity : AppCompatActivity(), HistoryAdapter.OnItemClickListener 
             db.collection("patients").document(patientID).collection("visits").get()
                 .addOnSuccessListener { documents ->
                     val inputDateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")
-                    val outputDateFormatter = DateTimeFormatter.ofPattern("dd MMM yyyy, HH:mm:ss")
+                    val outputDateFormatter = DateTimeFormatter.ofPattern(getString(R.string.date_format))
 
                     for (document in documents) {
                         val dateTimeString = document.get("date") as? String
