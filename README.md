@@ -16,3 +16,5 @@ All patient scan history is stored into the database, with Average Home BP, Clin
 Every patient has a dashboard native to their individual records, allowing doctors and clinics to see the progress of the patient, and print out physical graphs for their own reference.
 ### Localisation 
 In order to improve the readability and accessibility of the app, the app offers different languages other than English.
+### Themes
+The app offers a dark and light theme to keep in line with modern UI standards.
