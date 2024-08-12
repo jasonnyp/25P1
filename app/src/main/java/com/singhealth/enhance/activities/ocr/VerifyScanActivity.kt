@@ -36,6 +36,7 @@ import com.singhealth.enhance.security.AESEncryption
 import com.singhealth.enhance.security.SecureSharedPreferences
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import kotlin.math.max
 import kotlin.math.roundToInt
 
 object ResourcesHelper {
@@ -248,20 +249,24 @@ class VerifyScanActivity : AppCompatActivity() {
                     for (i in 0 until minOf(sysBPList.size, diaBPList.size)) {
                         addRow(sysBPList[i], diaBPList[i])
                     }
+
                 }
             }
         }
         println("sysBPList after adding new scans: $sysBPList")
         println("diaBPList after adding new scans: $diaBPList")
 
-        // Calculate total rows (inclusive of currently detected rows)
-        var totalRows = maxOf(sysBPList.size, diaBPList.size)
+        val validSysBPList = sysBPList.filter { it != "-1" }
+        val validDiaBPList = diaBPList.filter { it != "-1" }
+
+        var totalRows = maxOf(validSysBPList.size, validDiaBPList.size)
         if (sysBPListHistory.isNotEmpty() && diaBPListHistory.isNotEmpty()) {
-            totalRows += maxOf(sysBPListHistory.size, diaBPListHistory.size)
+            val validSysBPListHistory = sysBPListHistory.filter { it != "-1" }
+            val validDiaBPListHistory = diaBPListHistory.filter { it != "-1" }
+            totalRows += maxOf(validSysBPListHistory.size, validDiaBPListHistory.size)
         }
 
-        // Calculate currently detected rows
-        var currentRows = maxOf(sysBPList.size, diaBPList.size)
+        val currentRows = maxOf(validSysBPList.size, validDiaBPList.size)
 
         println("Total rows: $totalRows")
         println("Current rows: $currentRows")
@@ -546,6 +551,8 @@ class VerifyScanActivity : AppCompatActivity() {
             scanIntent.putStringArrayListExtra("diaBPListHistory", ArrayList(diaBPListHistory))
         }
 
+        scanIntent.putExtra("showContinueScan", true)
+
         startActivity(scanIntent)
         finish()
     }
@@ -663,17 +670,23 @@ class VerifyScanActivity : AppCompatActivity() {
         if (sevenDay) {
             sevenDayCheck()
         } else {
-            for (i in 0 until minOf(sysBPList.size, diaBPList.size)) {
+            for (i in 0 until maxOf(sysBPList.size, diaBPList.size)) {
                 addRow(sysBPList[i], diaBPList[i])
             }
         }
+        postScanValidation()
+        println("sysBPList after adding updating scans: $sysBPList")
+        println("diaBPList after adding updating scans: $diaBPList")
     }
 
     private fun postScanValidation() {
         var errorCount = 0
 
         if (sevenDay) {
-            for (i in 0 until sysBPList.size) {
+            println("sysBPlist size is ${sysBPList.size}")
+            println("sysBPFields size is ${sysBPFields.size}")
+
+            for (i in 0 until sysBPFields.size) {
 
                 if (sysBPFields[i].text.isNullOrEmpty()) {
                     continue
@@ -689,7 +702,7 @@ class VerifyScanActivity : AppCompatActivity() {
                 }
             }
 
-            for (i in 0 until diaBPList.size) {
+            for (i in 0 until diaBPFields.size) {
 
                 if (diaBPFields[i].text.isNullOrEmpty()) {
                     continue
@@ -710,6 +723,7 @@ class VerifyScanActivity : AppCompatActivity() {
             // With reference from MOH clinical practice guidelines 1/2017 @ https://www.moh.gov.sg/docs/librariesprovider4/guidelines/cpg_hypertension-booklet---nov-2017.pdf
             for (i in 0 until sysBPList.size) {
                 val currentValueLength = sysBPFields[i].text.toString().length
+
 
                 if (sysBPFields[i].text.isNullOrEmpty()) {
                     errorCount += 1
@@ -1109,6 +1123,14 @@ class VerifyScanActivity : AppCompatActivity() {
         totalSysBP = 0
         totalDiaBP = 0
 
+        // Convert the values from sysBPFields and diaBPFields into lists
+        val sysBPValues = sysBPFields.map { it.text.toString() }
+        val diaBPValues = diaBPFields.map { it.text.toString() }
+
+        // Print the lists
+        println("sysBPFields values: $sysBPValues")
+        println("diaBPFields values: $diaBPValues")
+
         for (field in sysBPFields) {
             totalSysBP += field.text.toString().toInt()
         }
@@ -1116,6 +1138,7 @@ class VerifyScanActivity : AppCompatActivity() {
         for (field in diaBPFields) {
             totalDiaBP += field.text.toString().toInt()
         }
+
 
         avgSysBP = (totalSysBP.toFloat() / sysBPFields.size).roundToInt()
         avgDiaBP = (totalDiaBP.toFloat() / diaBPFields.size).roundToInt()
@@ -1125,8 +1148,11 @@ class VerifyScanActivity : AppCompatActivity() {
         val dayReadings = mutableListOf<List<Pair<String, String>>>()
         var currentDayReadings = mutableListOf<Pair<String, String>>()
 
+        sysBPList = sysBPList.subList(0, 28).toMutableList()
+        diaBPList = diaBPList.subList(0, 28).toMutableList()
+
         for (i in sysBPList.indices) {
-            if ((sysBPList[i].isNotBlank() || sysBPList[i] == "-1") && (diaBPList[i].isNotBlank() || sysBPList[i] == "-1")) {
+            if (sysBPList[i].isNotBlank() && sysBPList[i] != "-1" && diaBPList[i].isNotBlank() && diaBPList[i] != "-1") {
                 currentDayReadings.add(Pair(sysBPList[i], diaBPList[i]))
             }
 
@@ -1220,21 +1246,26 @@ class VerifyScanActivity : AppCompatActivity() {
     }
 
     private fun sevenDayCheck() {
+        // Ensure sysBPList and diaBPList have at least 28 elements
+        ensureListSize(sysBPList, 28)
+        ensureListSize(diaBPList, 28)
+
         var recordIndex = 0
 
         for (day in 1..7) {
             // Morning
             addRow(
-                sysBPList.getOrNull(recordIndex),
-                diaBPList.getOrNull(recordIndex),
+                sysBPList.getOrElse(recordIndex) { "-1" },
+                diaBPList.getOrElse(recordIndex) { "-1" },
                 true,
                 day,
                 0,
                 showHeader = true
             ) // Morning BP1 with header
+
             addRow(
-                sysBPList.getOrNull(recordIndex + 1),
-                diaBPList.getOrNull(recordIndex + 1),
+                sysBPList.getOrElse(recordIndex + 1) { "-1" },
+                diaBPList.getOrElse(recordIndex + 1) { "-1" },
                 true,
                 day,
                 0
@@ -1242,16 +1273,17 @@ class VerifyScanActivity : AppCompatActivity() {
 
             // Evening
             addRow(
-                sysBPList.getOrNull(recordIndex + 2),
-                diaBPList.getOrNull(recordIndex + 2),
+                sysBPList.getOrElse(recordIndex + 2) { "-1" },
+                diaBPList.getOrElse(recordIndex + 2) { "-1" },
                 true,
                 day,
                 1,
                 showHeader = true
             ) // Evening BP1 with header
+
             addRow(
-                sysBPList.getOrNull(recordIndex + 3),
-                diaBPList.getOrNull(recordIndex + 3),
+                sysBPList.getOrElse(recordIndex + 3) { "-1" },
+                diaBPList.getOrElse(recordIndex + 3) { "-1" },
                 true,
                 day,
                 1
@@ -1259,12 +1291,13 @@ class VerifyScanActivity : AppCompatActivity() {
 
             recordIndex += 4
         }
-
-
-        println("sevenDayCheck sysBPList: $sysBPList")
-        println("sevenDayCheck diaBPList: $diaBPList")
     }
 
+    private fun ensureListSize(list: MutableList<String>, targetSize: Int) {
+        while (list.size < targetSize) {
+            list.add("-1")
+        }
+    }
 
     @SuppressLint("SetTextI18n")
     private fun addRow(
@@ -1286,14 +1319,14 @@ class VerifyScanActivity : AppCompatActivity() {
             rowBPRecordLayout.findViewById<View>(R.id.headerRowContainer) as LinearLayout
         val bpRowContainer =
             rowBPRecordLayout.findViewById<View>(R.id.bpRowContainer) as LinearLayout
+        val addOneRowBtn = rowBPRecordLayout.findViewById<View>(R.id.addOneRowBtn) as Button
 
         if (isSevenDayCheck) {
             if ((sysBP == null || sysBP == "-1") && (diaBP == null || diaBP == "-1")) {
                 bpRowContainer.visibility = View.GONE
-                println("sysBPList: $sysBPList")
-                println("diaBPList: $diaBPList")
             } else {
                 bpRowContainer.visibility = View.VISIBLE
+                addOneRowBtn.visibility = View.GONE
                 sysBPTIET.setText(sysBP)
                 diaBPTIET.setText(diaBP)
             }
@@ -1376,6 +1409,11 @@ class VerifyScanActivity : AppCompatActivity() {
                     )
                 ) { dialog, _ ->
                     saveStateForUndo()
+
+                    // Print lists before removal
+                    println("sysBPList before removal: $sysBPList")
+                    println("diaBPList before removal: $diaBPList")
+
                     val diaIndex = diaBPFields.indexOf(diaBPTIET)
                     if (diaIndex != -1) {
                         diaBPList.removeAt(diaIndex)
@@ -1395,6 +1433,11 @@ class VerifyScanActivity : AppCompatActivity() {
                     } else {
                         binding.rowBPRecordLL.removeView(rowBPRecordLayout)
                     }
+
+                    // Print lists after removal
+                    println("sysBPList after removal: $sysBPList")
+                    println("diaBPList after removal: $diaBPList")
+
                     dialog.dismiss()
                     val toast = Toast.makeText(this, "Row removed", Toast.LENGTH_SHORT)
                     toast.show()
@@ -1402,34 +1445,86 @@ class VerifyScanActivity : AppCompatActivity() {
                 .show()
         }
 
-        val addRowBtn = rowBPRecordLayout.findViewById<View>(R.id.addRowIV) as ImageView
-        addRowBtn.setOnClickListener {
-            val currentRowIndex = binding.rowBPRecordLL.indexOfChild(rowBPRecordLayout)
 
-            while (sysBPList.size <= 27) {
-                sysBPList.add("-1")
-            }
-            while (diaBPList.size <= 27) {
-                diaBPList.add("-1")
-            }
-
-            // Adding new row
+        addOneRowBtn.setOnClickListener {
             saveStateForUndo()
+
+            val currentRowIndex = binding.rowBPRecordLL.indexOfChild(rowBPRecordLayout)
             val newRow = layoutInflater.inflate(R.layout.row_bp_record, null, false)
             binding.rowBPRecordLL.addView(newRow, currentRowIndex)
-            sysBPList.add(currentRowIndex, "")
-            diaBPList.add(currentRowIndex, "")
-            // Refresh the view
+            sysBPList[currentRowIndex] = ""
+            diaBPList[currentRowIndex] = ""
+
             binding.rowBPRecordLL.removeAllViews()
             sysBPFields.clear()
             diaBPFields.clear()
-            sevenDayCheck()
+            refreshViews()
+
             val toast = Toast.makeText(this, "Row added", Toast.LENGTH_SHORT)
             toast.show()
         }
 
+        val addRowBtn = rowBPRecordLayout.findViewById<View>(R.id.addRowIV) as ImageView
+        addRowBtn.setOnClickListener {
+            saveStateForUndo()
+            if (!sevenDay) {
+                addRow(null, null)
+            } else {
+                val currentRowIndex = binding.rowBPRecordLL.indexOfChild(rowBPRecordLayout)
+                val nextRowIndex = currentRowIndex + 1
+
+                val validSysBPCount = sysBPList.count { it != "-1" }
+                val validDiaBPCount = diaBPList.count { it != "-1" }
+
+                if (validSysBPCount >= 28 && validDiaBPCount >= 28) {
+                    val toast = Toast.makeText(this, "Unable to add more rows", Toast.LENGTH_SHORT)
+                    toast.show()
+                    return@setOnClickListener
+                }
+
+                println("addRowIV clicked. Current Row Index: $currentRowIndex")
+                println("addRowIV SysBPList before modification: $sysBPList\n")
+
+                // Check if the next row index is within bounds
+                if (nextRowIndex < binding.rowBPRecordLL.childCount) {
+                    // Get the next row from the LinearLayout
+                    val nextRowLayout = binding.rowBPRecordLL.getChildAt(nextRowIndex)
+
+                    // Find the TextInputEditText elements in the next row
+                    val nextSysBPTIET =
+                        nextRowLayout.findViewById<TextInputEditText>(R.id.sysBPTIET)
+                    val nextDiaBPTIET =
+                        nextRowLayout.findViewById<TextInputEditText>(R.id.diaBPTIET)
+
+                    if (nextSysBPTIET.text.toString() != "-1" && nextDiaBPTIET.text.toString() != "-1") {
+                        sysBPList.add(currentRowIndex, "")
+                        diaBPList.add(currentRowIndex, "")
+                        if (sysBPList.size > 28) {
+                            removeFirstOccurrenceFromEnd(sysBPList, "-1")
+                        }
+                        if (diaBPList.size > 28) {
+                            removeFirstOccurrenceFromEnd(diaBPList, "-1")
+                        }
+                    } else {
+                        sysBPList[currentRowIndex + 1] = ""
+                        diaBPList[currentRowIndex + 1] = ""
+                    }
+                }
+
+                // Refresh the view
+                binding.rowBPRecordLL.removeAllViews()
+                sysBPFields.clear()
+                diaBPFields.clear()
+                refreshViews()
+
+                val toast = Toast.makeText(this, "Row added", Toast.LENGTH_SHORT)
+                toast.show()
+            }
+        }
+
         val sysLeftIV = rowBPRecordLayout.findViewById<View>(R.id.sysLeftIV) as ImageView
         sysLeftIV.setOnClickListener {
+            saveStateForUndo()
             val currentRowIndex = binding.rowBPRecordLL.indexOfChild(rowBPRecordLayout)
 
             // Print the current index of the row
@@ -1446,8 +1541,10 @@ class VerifyScanActivity : AppCompatActivity() {
 
             if (currentRowIndex != -1 && currentRowIndex < sysBPList.size && currentRowIndex < diaBPList.size) {
                 // Extract parts to swap
-                val systolicPartToSwap = sysBPList.subList(currentRowIndex + 1, sysBPList.size).toMutableList()
-                val diastolicPartToSwap = diaBPList.subList(currentRowIndex, diaBPList.size).toMutableList()
+                val systolicPartToSwap =
+                    sysBPList.subList(currentRowIndex + 1, sysBPList.size).toMutableList()
+                val diastolicPartToSwap =
+                    diaBPList.subList(currentRowIndex, diaBPList.size).toMutableList()
 
                 // Print parts to swap
                 println("sysLeftIV Systolic part to swap: $systolicPartToSwap")
@@ -1470,11 +1567,18 @@ class VerifyScanActivity : AppCompatActivity() {
                 println("sysLeftIV Invalid index or lists size mismatch. No swapping performed.")
             }
 
+            while (diaBPList.size != sysBPList.size) {
+                if (diaBPList.size > sysBPList.size) {
+                    sysBPList.add("")
+                } else {
+                    diaBPList.add("")
+                }
+            }
             // Clear the views and fields, then refresh
             binding.rowBPRecordLL.removeAllViews()
             sysBPFields.clear()
             diaBPFields.clear()
-            sevenDayCheck()
+            refreshViews()
 
             // Show toast message
             val toast = Toast.makeText(this, "Empty Systolic Added", Toast.LENGTH_SHORT)
@@ -1484,17 +1588,19 @@ class VerifyScanActivity : AppCompatActivity() {
 
         val diaRightIV = rowBPRecordLayout.findViewById<View>(R.id.diaRightIV) as ImageView
         diaRightIV.setOnClickListener {
+            saveStateForUndo()
             val currentRowIndex = binding.rowBPRecordLL.indexOfChild(rowBPRecordLayout)
             println("diaRightIV clicked. Current Row Index: $currentRowIndex")
             println("diaLeftIV SysBPList: $sysBPList\n")
             println("diaLeftIV DiaBPList: $diaBPList\n")
 
-            // Insert an empty string at the diastolic index
             diaBPList.add(currentRowIndex, "")
 
             if (currentRowIndex != -1 && currentRowIndex < diaBPList.size && currentRowIndex < sysBPList.size) {
-                val systolicPartToSwap = sysBPList.subList(currentRowIndex + 1, sysBPList.size).toMutableList()
-                val diastolicPartToSwap = diaBPList.subList(currentRowIndex + 1, diaBPList.size).toMutableList()
+                val systolicPartToSwap =
+                    sysBPList.subList(currentRowIndex + 1, sysBPList.size).toMutableList()
+                val diastolicPartToSwap =
+                    diaBPList.subList(currentRowIndex + 1, diaBPList.size).toMutableList()
 
                 // Print parts to swap
                 println("diaLeftIV Systolic part to swap: $systolicPartToSwap")
@@ -1508,34 +1614,45 @@ class VerifyScanActivity : AppCompatActivity() {
                 sysBPList.addAll(currentRowIndex + 1, diastolicPartToSwap)
                 diaBPList.addAll(currentRowIndex + 1, systolicPartToSwap)
             }
+            println("diaBPsize: ${diaBPList.size}")
+            println("sysBPsize: ${sysBPList.size}")
 
-            // Print lists after swapping
+            while (diaBPList.size != sysBPList.size) {
+                if (diaBPList.size > sysBPList.size) {
+                    sysBPList.add("")
+                } else {
+                    diaBPList.add("")
+                }
+            }
+
             println("diaLeftIV SysBPList after swapping: $sysBPList\n")
             println("diaLeftIV DiaBPList after swapping: $diaBPList\n")
 
             binding.rowBPRecordLL.removeAllViews()
             sysBPFields.clear()
             diaBPFields.clear()
-            sevenDayCheck()
+            refreshViews()
 
             val toast = Toast.makeText(this, "Empty Diastolic Added", Toast.LENGTH_SHORT)
             toast.show()
         }
 
-
-        // Adding to layout
         binding.rowBPRecordLL.addView(rowBPRecordLayout)
-
-        println("Row added. Updated sysBPList: $sysBPList")
-        println("Updated diaBPList: $diaBPList")
-
     }
 
-    // Add divider to separate old and new records
     private fun addDivider() {
         val dividerOldNewRecordLayout =
             layoutInflater.inflate(R.layout.divider_old_new_record, null, false)
         binding.rowBPRecordLL.addView(dividerOldNewRecordLayout)
+    }
+
+    private fun removeFirstOccurrenceFromEnd(list: MutableList<String>, value: String) {
+        for (i in list.indices.reversed()) {
+            if (list[i] == value) {
+                list.removeAt(i)
+                break
+            }
+        }
     }
 }
 
@@ -1554,7 +1671,6 @@ class ModalBottomSheet(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Continue scanning
         val continueBS = view.findViewById<LinearLayout>(R.id.continueBS)
         val rescanBS = view.findViewById<LinearLayout>(R.id.rescanBS)
         val undoBS = view.findViewById<LinearLayout>(R.id.undoBS)
@@ -1574,7 +1690,6 @@ class ModalBottomSheet(
                 dismiss()
             }
 
-            // Rescan current records
             rescanBS.setOnClickListener {
                 activity.rescanRecords()
                 dismiss()
@@ -1586,7 +1701,6 @@ class ModalBottomSheet(
             }
         }
 
-        // Discard progress
         val discardBS = view.findViewById<LinearLayout>(R.id.discardBS)
         discardBS.setOnClickListener {
             activity.discardProgress()

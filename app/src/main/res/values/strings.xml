@@ -12,15 +12,22 @@
     <string name="dashboard_no_records_found">No records found.</string>
 
     <!-- ScanActivity strings -->
-    <string name="ocr_instructions">IMPORTANT: \nPlease ensure that only the blood pressure values (Systolic and Diastolic) are seen and exclude all text/headers when cropping.</string>
+    <string name="ocr_instructions">IMPORTANT: \nPlease ensure that only the blood pressure values (Systolic/Diastolic) are visible, and exclude all text and headers when cropping.</string>
     <string name="ocr_app_permissions_header">Enable app permissions</string>
     <string name="ocr_app_permissions_body">To use the OCR functionality, you need to allow access to your camera, gallery and external storage.</string>
     <string name="ocr_image_error_header">Error processing image</string>
     <string name="ocr_image_error_body">The image cannot be processed due to an error.\n\nContact IT support with the following error code if issue persists: %1$s</string>
     <string name="ocr_text_error_header">Nothing to process</string>
     <string name="ocr_text_error_body">We couldn\'t find any handwriting or text to process.\n\nTip: Ensure the image is clear and cropped to only the values, and exclude any headers (such as \'Systolic\' and \'Diastolic\').</string>
+    <string name="resuming_scan">Click on “General Scan” to add more scans</string>
 
     <!-- VerifyScanActivity.kt -->
+    <string name="add_empty_column_left">Add an empty column to the left</string>
+    <string name="add_empty_column_right">Add an empty column to the right</string>
+    <string name="swap_values">Swap the Systolic and Diastolic values</string>
+    <string name="remove_row">Remove the row</string>
+    <string name="add_new_row">Add a new row</string>
+    <string name="functionality">Function: </string>
     <string name="verify_scan_rows">%1$d records have been detected.\n\nTotal records: %2$d</string>
     <string name="verify_scan_no_records">No records detected. Rescan or manually insert them by adding a new row.</string>
     <string name="verify_scan_inadequate_reading_header">Inadequate number of readings</string>
