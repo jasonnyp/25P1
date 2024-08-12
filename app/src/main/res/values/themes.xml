@@ -1,5 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
+    <!-- General Theme -->
     <style name="Theme.ENHANCe" parent="Theme.Material3.Light">
         <!-- Primary brand colour -->
         <item name="colorPrimary">@color/theme_primary</item>
@@ -20,4 +21,20 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
+
+    <!-- Settings Menu Colours -->
+    <color name="setting_background">#F8E8D8</color>
+    <color name="setting_option_background">#ffffff</color>
+
+    <!-- Patient Profile/Verify Scan Background -->
+    <color name="profile_background">#F8E8D8</color>
+    <color name="text_color">@color/theme_primary</color>
+    <color name="text_black_white">#000000</color>
+
+    <!-- Scan Menu -->
+    <color name="warning_text_color">#D32F2F</color>
+
+    <!-- Button color -->
+    <color name="primary_button_color">@color/theme_primary</color>
+    <color name="primary_button_color_light">@color/theme_primary</color>
 </resources>

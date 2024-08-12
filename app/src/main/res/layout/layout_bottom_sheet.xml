@@ -16,7 +16,7 @@
         android:textStyle="bold" />
 
     <LinearLayout
-        android:id="@+id/continueBS"
+        android:id="@+id/addSystolicLeftBtn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:clickable="true"
@@ -37,7 +37,7 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/rescanBS"
+        android:id="@+id/addDiastolicRightBtn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -54,45 +54,5 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text="@string/enhance_verify_bottom_rescan" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/undoBS"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingVertical="16dp">
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:src="@drawable/ic_undo" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="@string/enhance_verify_bottom_undo" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/discardBS"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingVertical="16dp">
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:src="@drawable/ic_delete" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="@string/enhance_verify_bottom_discard" />
     </LinearLayout>
 </LinearLayout>

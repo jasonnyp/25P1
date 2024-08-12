@@ -37,7 +37,7 @@
                         android:layout_marginBottom="8dp"
                         android:text="@string/enhance_edit_photo"
                         android:textAllCaps="true"
-                        android:textSize="18dp"
+                        android:textSize="18sp"
                         android:textStyle="bold" />
 
                     <LinearLayout
@@ -53,7 +53,8 @@
                             android:layout_weight="3"
                             android:adjustViewBounds="true"
                             android:clickable="true"
-                            android:src="@drawable/ic_file_upload" />
+                            android:src="@drawable/ic_file_upload"
+                            android:contentDescription="@string/enhance_edit_photo_desc"/>
 
                         <TextView
                             android:id="@+id/editPhotoTV"
@@ -61,7 +62,8 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
                             android:layout_weight="7"
-                            android:text="@string/enhance_edit_upload_photo" />
+                            android:text="@string/enhance_edit_upload_photo"
+                            android:contentDescription="@string/enhance_edit_photo_desc"/>
                     </LinearLayout>
 
                     <com.google.android.material.divider.MaterialDivider
@@ -75,7 +77,7 @@
                         android:layout_marginBottom="8dp"
                         android:text="@string/enhance_edit_particulars"
                         android:textAllCaps="true"
-                        android:textSize="18dp"
+                        android:textSize="18sp"
                         android:textStyle="bold" />
 
                     <com.google.android.material.textfield.TextInputLayout
@@ -146,7 +148,7 @@
                         android:layout_marginBottom="8dp"
                         android:text="@string/enhance_edit_health_info"
                         android:textAllCaps="true"
-                        android:textSize="18dp"
+                        android:textSize="18sp"
                         android:textStyle="bold" />
 
                     <com.google.android.material.textfield.TextInputLayout
@@ -219,7 +221,8 @@
                         android:text="@string/enhance_update_button"
                         android:textAllCaps="true"
                         android:textSize="18sp"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"
+                        android:backgroundTint="@color/primary_button_color" />
                 </LinearLayout>
             </LinearLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>

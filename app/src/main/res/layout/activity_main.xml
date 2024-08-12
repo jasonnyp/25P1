@@ -35,7 +35,8 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:adjustViewBounds="true"
-                        android:src="@drawable/app_enhance_logo" />
+                        android:src="@drawable/app_enhance_logo"
+                        android:contentDescription="@string/enhance_login_icon_desc"/>
 
                     <TextView
                         android:layout_width="match_parent"
@@ -55,7 +56,8 @@
                         android:text="@string/enhance_main_register_patient"
                         android:textAllCaps="true"
                         android:textSize="18sp"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"
+                        android:backgroundTint="@color/primary_button_color_light" />
 
                     <com.google.android.material.divider.MaterialDivider
                         android:layout_width="match_parent"

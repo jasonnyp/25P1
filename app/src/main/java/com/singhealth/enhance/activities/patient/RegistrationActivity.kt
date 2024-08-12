@@ -21,9 +21,9 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 import com.singhealth.enhance.R
 import com.singhealth.enhance.activities.MainActivity
-import com.singhealth.enhance.activities.error.errorDialogBuilder
-import com.singhealth.enhance.activities.error.firebaseErrorDialog
-import com.singhealth.enhance.activities.error.internetConnectionCheck
+import com.singhealth.enhance.activities.validation.errorDialogBuilder
+import com.singhealth.enhance.activities.validation.firebaseErrorDialog
+import com.singhealth.enhance.activities.validation.internetConnectionCheck
 import com.singhealth.enhance.activities.settings.SettingsActivity
 import com.singhealth.enhance.databinding.ActivityRegistrationBinding
 import com.singhealth.enhance.security.AESEncryption

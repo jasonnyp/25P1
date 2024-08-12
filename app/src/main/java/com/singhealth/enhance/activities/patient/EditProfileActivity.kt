@@ -12,20 +12,19 @@ import android.text.TextWatcher
 import android.view.MenuItem
 import android.widget.ArrayAdapter
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.GravityCompat
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 import com.singhealth.enhance.R
 import com.singhealth.enhance.activities.MainActivity
-import com.singhealth.enhance.activities.error.errorDialogBuilder
-import com.singhealth.enhance.activities.error.firebaseErrorDialog
-import com.singhealth.enhance.activities.error.internetConnectionCheck
-import com.singhealth.enhance.activities.settings.SettingsActivity
+import com.singhealth.enhance.activities.validation.errorDialogBuilder
+import com.singhealth.enhance.activities.validation.firebaseErrorDialog
+import com.singhealth.enhance.activities.validation.internetConnectionCheck
 import com.singhealth.enhance.databinding.ActivityEditPatientBinding
 import com.singhealth.enhance.security.AESEncryption
 import com.singhealth.enhance.security.SecureSharedPreferences
@@ -53,40 +52,14 @@ class EditProfileActivity : AppCompatActivity() {
 
         internetConnectionCheck(this)
 
-        // Navigation drawer
-        actionBarDrawerToggle = ActionBarDrawerToggle(this, binding.drawerLayout, 0, 0)
-        binding.drawerLayout.addDrawerListener(actionBarDrawerToggle)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        actionBarDrawerToggle.syncState()
-
-        // Need to add to the navigation drawer
-        // binding.navigationView.setCheckedItem(R.id.item_patient_profile)
-
-        binding.navigationView.setNavigationItemSelectedListener { menuItem ->
-            when (menuItem.itemId) {
-                R.id.item_home -> {
-                    startActivity(Intent(this, MainActivity::class.java))
-                    finish()
-                    true
-                }
-
-                R.id.item_patient_registration -> {
-                    binding.drawerLayout.closeDrawer(GravityCompat.START)
-                    true
-                }
-
-                R.id.item_settings -> {
-                    startActivity(Intent(this, SettingsActivity::class.java))
-                    finish()
-                    true
-                }
-
-                else -> {
-                    false
-                }
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                startActivity(Intent(this@EditProfileActivity, EditProfileActivity::class.java))
+                finish()
             }
-        }
+        })
 
         // Upload photo
         binding.editPhotoIV.setOnClickListener { uploadPhoto() }
@@ -215,9 +188,15 @@ class EditProfileActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return if (actionBarDrawerToggle.onOptionsItemSelected(item)) {
-            true
-        } else super.onOptionsItemSelected(item)
+        return when (item.itemId) {
+            android.R.id.home -> {
+                startActivity(Intent(this, ProfileActivity::class.java))
+                finish()
+                true
+            }
+
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 
     private fun uploadPhoto() {

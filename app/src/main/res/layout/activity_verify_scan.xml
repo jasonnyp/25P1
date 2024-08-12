@@ -18,7 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
-            app:cardBackgroundColor="@color/theme_primary_variant">
+            app:cardBackgroundColor="@color/profile_background">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -40,7 +40,7 @@
                     android:layout_height="wrap_content"
                     android:textAppearance="?attr/textAppearanceBodyLarge"
                     android:textStyle="bold"
-                    android:textSize="16sp" />
+                    android:textSize="18sp" />
 
                 <com.google.android.material.divider.MaterialDivider
                     android:layout_width="match_parent"
@@ -51,7 +51,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:weightSum="2">
+                    android:weightSum="2"
+                    android:baselineAligned="false">
 
                     <!-- Home BP Section -->
                     <LinearLayout
@@ -75,33 +76,51 @@
                             android:weightSum="2">
 
                             <TextView
+                                android:id="@+id/homeBPTargetTV"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="18sp"
+                                android:textStyle="bold"
+                                android:textAppearance="?attr/textAppearanceBodyLarge" />
+
+                            <!-- The following text views are set to invisible
+                            as the code seemingly requires them for VerifyScanActivity.kt
+                            Change when convenient, as I'm not sure what is going on
+                            inside VerifyScanActivity -->
+
+                            <TextView
                                 android:id="@+id/verifyHomeSys"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
-                                android:layout_weight="0.7"
+                                android:layout_weight="0.9"
                                 android:textSize="16sp"
                                 android:layout_marginBottom="12dp"
                                 android:textStyle="bold"
-                                android:textAppearance="?attr/textAppearanceBodyLarge" />
+                                android:textAppearance="?attr/textAppearanceBodyLarge"
+                                android:visibility="gone" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginHorizontal="6dp"
+                                android:layout_weight="0.2"
+                                android:gravity="center"
                                 android:text="@string/enhance_verify_home_divider"
                                 android:textAppearance="?attr/textAppearanceBodyLarge"
-                                android:textSize="16sp" />
+                                android:textSize="16sp"
+                                android:visibility="gone"/>
 
                             <TextView
                                 android:id="@+id/verifyHomeDia"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
-                                android:layout_weight="1"
+                                android:layout_weight="0.9"
                                 android:textSize="16sp"
                                 android:layout_marginBottom="12dp"
                                 android:layout_marginStart="1dp"
                                 android:textStyle="bold"
-                                android:textAppearance="?attr/textAppearanceBodyLarge" />
+                                android:textAppearance="?attr/textAppearanceBodyLarge"
+                                android:visibility="gone"/>
                         </LinearLayout>
                     </LinearLayout>
 
@@ -127,33 +146,52 @@
                             android:weightSum="2">
 
                             <TextView
+                                android:id="@+id/clinicBPTargetTV"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="18sp"
+                                android:textStyle="bold"
+                                android:textAppearance="?attr/textAppearanceBodyLarge" />
+
+                            <!-- The following text views are set to invisible
+                            as the code seemingly requires them for VerifyScanActivity.kt
+                            Change when convenient, as I'm not sure what is going on
+                            inside VerifyScanActivity -->
+
+                            <TextView
                                 android:id="@+id/verifyClinicTargetSys"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
-                                android:layout_weight="0.7"
+                                android:layout_weight="0.9"
                                 android:textSize="16sp"
                                 android:layout_marginBottom="12dp"
                                 android:textStyle="bold"
-                                android:textAppearance="?attr/textAppearanceBodyLarge" />
+                                android:textAppearance="?attr/textAppearanceBodyLarge"
+                                android:visibility="gone"
+                                />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginHorizontal="6dp"
+                                android:layout_weight="0.2"
+                                android:gravity="center"
                                 android:text="@string/enhance_verify_clinic_divider"
                                 android:textAppearance="?attr/textAppearanceBodyLarge"
-                                android:textSize="16sp" />
+                                android:textSize="16sp"
+                                android:visibility="gone"/>
 
                             <TextView
                                 android:id="@+id/verifyClinicTargetDia"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
-                                android:layout_weight="1"
+                                android:layout_weight="0.9"
                                 android:textSize="16sp"
                                 android:layout_marginBottom="12dp"
                                 android:layout_marginStart="1dp"
                                 android:textStyle="bold"
-                                android:textAppearance="?attr/textAppearanceBodyLarge" />
+                                android:textAppearance="?attr/textAppearanceBodyLarge"
+                                android:visibility="gone"/>
                         </LinearLayout>
                     </LinearLayout>
                 </LinearLayout>
@@ -161,6 +199,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
                     android:layout_marginBottom="4dp"
                     android:text="@string/enhance_verify_clinic_bp"
                     android:textAppearance="?attr/textAppearanceBodyMedium"
@@ -168,7 +207,7 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="0dp"
                     android:layout_weight="6"
                     android:orientation="horizontal">
 
@@ -229,6 +268,134 @@
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
+        <com.google.android.material.card.MaterialCardView
+            style="?attr/materialCardViewFilledStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            app:cardBackgroundColor="@color/profile_background">
+
+            <!-- Functionality Descriptions -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="4dp"
+                    android:text="@string/functionality"
+                    android:textStyle="bold"
+                    android:textAppearance="?attr/textAppearanceBodyMedium"
+                    android:textSize="16sp" />
+
+
+                <!-- Add an empty column to the left -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingBottom="8dp">
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="8dp"
+                        android:rotation="180"
+                        android:src="@drawable/ic_right_arrow"
+                        android:contentDescription="@string/add_empty_column_left" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/add_empty_column_left"
+                        android:textAppearance="?attr/textAppearanceBodyMedium"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <!-- Add an empty column to the right -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingBottom="8dp">
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="8dp"
+                        android:src="@drawable/ic_right_arrow"
+                        android:contentDescription="@string/add_empty_column_right" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?attr/textAppearanceBodyMedium"
+                        android:text="@string/add_empty_column_right"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <!-- Swap the Systolic and Diastolic values -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingBottom="8dp">
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="8dp"
+                        android:src="@drawable/ic_swap_horizontal_circle"
+                        android:contentDescription="@string/swap_values" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?attr/textAppearanceBodyMedium"
+                        android:text="@string/swap_values"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <!-- Remove the row -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingBottom="8dp">
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="8dp"
+                        android:src="@drawable/ic_remove_circle"
+                        android:contentDescription="@string/remove_row" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?attr/textAppearanceBodyMedium"
+                        android:text="@string/remove_row"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <!-- Add a new row -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="8dp"
+                        android:src="@drawable/ic_add_row"
+                        android:contentDescription="@string/add_new_row" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?attr/textAppearanceBodyMedium"
+                        android:text="@string/add_new_row"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -239,7 +406,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
-                android:orientation="vertical"></LinearLayout>
+                android:orientation="vertical" />
 
             <com.google.android.material.divider.MaterialDivider
                 android:layout_width="match_parent"
@@ -258,15 +425,19 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="8dp"
                     android:text="@string/enhance_verify_add_row"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    android:textColor="@color/text_color"
+                    android:backgroundTint="@color/setting_option_background" />
 
                 <Button
                     android:id="@+id/moreOptionsBtn"
-                    style="@style/Widget.Material3.Button.ElevatedButton"
+                    style="?attr/materialButtonOutlinedStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/enhance_verify_more_options"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    android:textColor="@color/text_color"
+                    android:backgroundTint="@color/setting_option_background" />
             </LinearLayout>
 
             <com.google.android.material.divider.MaterialDivider
@@ -284,11 +455,14 @@
 
             <Button
                 android:id="@+id/calculateAvgBPBtn"
+                style="?attr/materialButtonOutlinedStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/enhance_verify_calculate_bp"
                 android:textAllCaps="true"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:textColor="@color/white"
+                android:backgroundTint="@color/primary_button_color" />
         </LinearLayout>
     </LinearLayout>
 </ScrollView>

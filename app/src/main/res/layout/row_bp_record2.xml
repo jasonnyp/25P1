@@ -21,33 +21,18 @@
             android:padding="8dp"
             android:textSize="18sp" />
 
-        <Space
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.1" />
-
-        <Button
-            android:id="@+id/addOneRowBtn"
-            style="?attr/materialButtonOutlinedStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:text="@string/enhance_row_bp_add_row"
-            android:textSize="16sp" />
-
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/bpRowContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:baselineAligned="false"
         android:orientation="horizontal">
 
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="4">
+            android:layout_weight="6">
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -73,7 +58,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_marginHorizontal="5dp"
+                android:layout_marginHorizontal="12dp"
                 android:gravity="center"
                 android:text="@string/enhance_row_bp_divider"
                 android:textSize="20sp" />
@@ -103,50 +88,21 @@
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="4"
-            android:baselineAligned="false">
+            android:layout_weight="4">
 
+<!--            <LinearLayout-->
+<!--                android:layout_width="0dp"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:layout_weight="2"-->
+<!--                android:orientation="vertical">-->
 
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="2"
-                android:orientation="vertical">
-
-                <ImageView
-                    android:id="@+id/sysLeftIV"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_marginStart="12dp"
-                    android:rotation="180"
-                    android:src="@drawable/ic_right_arrow" />
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="2"
-                android:orientation="vertical">
-
-                <ImageView
-                    android:id="@+id/diaRightIV"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_marginStart="12dp"
-                    android:src="@drawable/ic_right_arrow" />
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="2"
-                android:orientation="vertical">
-
-                <ImageView
-                    android:id="@+id/swapValuesIV"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_marginStart="12dp"
-                    android:src="@drawable/ic_swap_horizontal_circle" />
-            </LinearLayout>
+<!--                <ImageView-->
+<!--                    android:id="@+id/swapValuesIV"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="match_parent"-->
+<!--                    android:layout_marginStart="12dp"-->
+<!--                    android:src="@drawable/ic_swap_horizontal_circle" />-->
+<!--            </LinearLayout>-->
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
@@ -172,6 +128,19 @@
                     android:layout_height="match_parent"
                     android:layout_marginStart="12dp"
                     android:src="@drawable/ic_add_row" />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/moreIV"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="12dp"
+                    android:src="@drawable/baseline_more_vert_24" />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

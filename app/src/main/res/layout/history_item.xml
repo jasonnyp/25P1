@@ -15,12 +15,12 @@
             android:id="@+id/dateTV"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/theme_primary"
+            android:background="@color/primary_button_color"
             android:padding="12dp"
             android:textColor="@color/white"
             android:textSize="20sp"
             android:textStyle="bold"
-            android:text="@string/date_format" />/>
+            android:text="@string/date_format" />
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -54,7 +54,29 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:text="@string/enhance_history_item_homebp" />
+                android:text="@string/enhance_history_item_clinicbp" />
+
+            <TextView
+                android:id="@+id/clinicTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="12dp"
+            android:paddingVertical="8dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:text="@string/enhance_history_item_target_homebp" />
 
             <TextView
                 android:id="@+id/homeBPTargetTV"
@@ -76,7 +98,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:text="@string/enhance_history_item_clinicbp" />
+                android:text="@string/enhance_history_item_target_clinicbp" />
 
             <TextView
                 android:id="@+id/clinicBPTargetTV"

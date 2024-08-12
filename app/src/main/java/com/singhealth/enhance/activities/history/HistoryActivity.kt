@@ -3,7 +3,6 @@ package com.singhealth.enhance.activities.history
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
-import android.view.View
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -12,14 +11,13 @@ import com.google.firebase.ktx.Firebase
 import com.singhealth.enhance.R
 import com.singhealth.enhance.activities.MainActivity
 import com.singhealth.enhance.activities.dashboard.SimpleDashboardActivity
-import com.singhealth.enhance.activities.error.errorDialogBuilder
-import com.singhealth.enhance.activities.error.internetConnectionCheck
-import com.singhealth.enhance.activities.error.patientNotFoundInSessionErrorDialog
 import com.singhealth.enhance.activities.ocr.ScanActivity
 import com.singhealth.enhance.activities.patient.ProfileActivity
 import com.singhealth.enhance.activities.patient.RegistrationActivity
 import com.singhealth.enhance.activities.result.RecommendationActivity
 import com.singhealth.enhance.activities.settings.SettingsActivity
+import com.singhealth.enhance.activities.validation.internetConnectionCheck
+import com.singhealth.enhance.activities.validation.patientNotFoundInSessionErrorDialog
 import com.singhealth.enhance.databinding.ActivityHistoryBinding
 import com.singhealth.enhance.security.SecureSharedPreferences
 import java.time.LocalDateTime
@@ -35,7 +33,7 @@ class HistoryActivity : AppCompatActivity(), HistoryAdapter.OnItemClickListener 
     private lateinit var sortedHistory: List<HistoryData>
 
     private val db = Firebase.firestore
-    private val history = ArrayList<HistoryData>()
+    private var history = ArrayList<HistoryData>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -112,22 +110,17 @@ class HistoryActivity : AppCompatActivity(), HistoryAdapter.OnItemClickListener 
         }
 
         // Check if patient information exist in session
-        val patientSharedPreferences = SecureSharedPreferences.getSharedPreferences(applicationContext)
+        val patientSharedPreferences =
+            SecureSharedPreferences.getSharedPreferences(applicationContext)
         if (patientSharedPreferences.getString("patientID", null).isNullOrEmpty()) {
             patientNotFoundInSessionErrorDialog(this)
         } else {
             patientID = patientSharedPreferences.getString("patientID", null).toString()
-        }
 
-        db.collection("patients").document(patientID).collection("visits").get()
-            .addOnSuccessListener { documents ->
-                if (documents.isEmpty) {
-                    binding.noRecordsTV.visibility = View.VISIBLE
-                } else {
-                    binding.noRecordsTV.visibility = View.GONE
-
+            db.collection("patients").document(patientID).collection("visits").get()
+                .addOnSuccessListener { documents ->
                     val inputDateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")
-                    val outputDateFormatter = DateTimeFormatter.ofPattern(getString(R.string.date_format))
+                    val outputDateFormatter = DateTimeFormatter.ofPattern("dd MMM yyyy, HH:mm:ss")
 
                     for (document in documents) {
                         val dateTimeString = document.get("date") as? String
@@ -141,6 +134,10 @@ class HistoryActivity : AppCompatActivity(), HistoryAdapter.OnItemClickListener 
                         val clinicDiaBPTarget = document.get("clinicDiaBPTarget") as? Long
                         val clinicSysBP = document.get("clinicSysBP") as? Long
                         val clinicDiaBP = document.get("clinicDiaBP") as? Long
+                        var scanRecordCount = document.get("scanRecordCount") as? Long
+                        if (scanRecordCount == null) {
+                            scanRecordCount = 0
+                        }
                         history.add(
                             HistoryData(
                                 dateTime.toString(),
@@ -153,11 +150,13 @@ class HistoryActivity : AppCompatActivity(), HistoryAdapter.OnItemClickListener 
                                 clinicDiaBPTarget,
                                 clinicSysBP,
                                 clinicDiaBP,
+                                scanRecordCount
                             )
                         )
                     }
 
                     sortedHistory = history.sortedByDescending { it.date }
+
                     println("Sorted History$sortedHistory")
                     println("Sorted History 1st" + sortedHistory[0])
                     println("Sorted History 1st SYS DATA" + sortedHistory[0].avgSysBP)
@@ -167,10 +166,7 @@ class HistoryActivity : AppCompatActivity(), HistoryAdapter.OnItemClickListener 
                     binding.recyclerView.adapter = adapter
                     binding.recyclerView.layoutManager = LinearLayoutManager(this)
                 }
-            }
-            .addOnFailureListener { e ->
-                errorDialogBuilder(this, getString(R.string.patient_history_not_found_error_header), getString(R.string.patient_history_not_found_error_body, e))
-            }
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -186,6 +182,7 @@ class HistoryActivity : AppCompatActivity(), HistoryAdapter.OnItemClickListener 
         val clinicSysBP = clickedItem.clinicSysBP.toString()
         val clinicDiaBP = clickedItem.clinicDiaBP.toString()
         val date = clickedItem.date.toString()
+        val recordCount = clickedItem.scanRecordCount.toString()
 
         val bundle = Bundle()
 
@@ -194,6 +191,9 @@ class HistoryActivity : AppCompatActivity(), HistoryAdapter.OnItemClickListener 
         bundle.putInt("clinicSysBP", clinicSysBP.toInt())
         bundle.putInt("clinicDiaBP", clinicDiaBP.toInt())
         bundle.putString("date", date)
+        bundle.putInt("historyItemPosition", position)
+        bundle.putInt("scanRecordCount", recordCount.toInt())
+        println(date)
         bundle.putString("Source", "History")
 
         val recommendationIntent = Intent(this, RecommendationActivity::class.java)

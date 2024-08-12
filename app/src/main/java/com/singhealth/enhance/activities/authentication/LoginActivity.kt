@@ -1,18 +1,18 @@
 package com.singhealth.enhance.activities.authentication
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
-import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.singhealth.enhance.R
 import com.singhealth.enhance.activities.MainActivity
-import com.singhealth.enhance.activities.error.errorDialogBuilder
-import com.singhealth.enhance.activities.error.firebaseErrorDialog
+import com.singhealth.enhance.activities.validation.errorDialogBuilder
 import com.singhealth.enhance.databinding.ActivityLoginBinding
 import java.util.Calendar
 
@@ -20,11 +20,13 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLoginBinding
     private lateinit var auth: FirebaseAuth
 
-
-    private val db = Firebase.firestore
-
     override fun onCreate(savedInstanceState: Bundle?) {
         auth = Firebase.auth
+        if (isDarkMode()) {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+        } else {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+        }
         super.onCreate(savedInstanceState)
 
         binding = ActivityLoginBinding.inflate(layoutInflater)
@@ -53,26 +55,19 @@ class LoginActivity : AppCompatActivity() {
 
         binding.loginBtn.setOnClickListener {
             if (validateFields()) {
-
                 val email = binding.staffIDTIET.text.toString() + "@enhance.com"
                 val password = binding.passwordTIET.text.toString()
-
-
                 auth.signInWithEmailAndPassword(email, password)
                     .addOnCompleteListener(this) { task ->
                         if (task.isSuccessful) {
-
                             startActivity(Intent(this, MainActivity::class.java))
                             finish()
                         } else {
                             errorDialogBuilder(this, getString(R.string.login_error_header), getString(R.string.login_error_body))
                         }
                     }
-                    .addOnFailureListener{ e ->
-                        firebaseErrorDialog(this, e, null)
-                    }
+                }
             }
-        }
     }
 
     private fun setGreeting() {
@@ -96,5 +91,10 @@ class LoginActivity : AppCompatActivity() {
         }
 
         return valid
+    }
+
+    private fun isDarkMode(): Boolean {
+        val sharedPref = getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+        return sharedPref.getBoolean("is_dark_mode", false) // default to light mode
     }
 }

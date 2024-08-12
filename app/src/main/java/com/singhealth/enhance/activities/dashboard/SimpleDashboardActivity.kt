@@ -15,6 +15,9 @@ import android.print.PrintDocumentAdapter
 import android.print.PrintDocumentInfo
 import android.print.PrintManager
 import android.print.pdf.PrintedPdfDocument
+import android.text.Layout
+import android.text.StaticLayout
+import android.text.TextPaint
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
@@ -27,11 +30,13 @@ import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.ValueFormatter
-import com.github.mikephil.charting.utils.EntryXComparator
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.singhealth.enhance.R
 import com.singhealth.enhance.activities.MainActivity
+import com.singhealth.enhance.activities.diagnosis.bpControlStatus
+import com.singhealth.enhance.activities.diagnosis.hypertensionStatus
+import com.singhealth.enhance.activities.diagnosis.showRecommendation
 import com.singhealth.enhance.activities.history.HistoryActivity
 import com.singhealth.enhance.activities.history.HistoryData
 import com.singhealth.enhance.activities.ocr.ScanActivity
@@ -39,13 +44,13 @@ import com.singhealth.enhance.activities.patient.ProfileActivity
 import com.singhealth.enhance.activities.patient.RegistrationActivity
 import com.singhealth.enhance.activities.settings.SettingsActivity
 import com.singhealth.enhance.databinding.ActivitySimpleDashboardBinding
+import com.singhealth.enhance.security.AESEncryption
 import com.singhealth.enhance.security.SecureSharedPreferences
 import java.io.FileOutputStream
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
-import java.util.Collections
 import java.util.Locale
 
 class SimpleDashboardActivity : AppCompatActivity() {
@@ -55,11 +60,18 @@ class SimpleDashboardActivity : AppCompatActivity() {
     private lateinit var actionBarDrawerToggle: ActionBarDrawerToggle
 
     private lateinit var patientID: String
+    private lateinit var decryptedPatientID: String
+    private lateinit var bpHypertensionStatus: String
+    private lateinit var bpHomeControlStatus: String
+    private lateinit var bpReccomendation: String
+    private lateinit var dateTime: String
+    private lateinit var patientName: String
+    private lateinit var avgBP: String
 
     private lateinit var sortedHistory: List<HistoryData>
 
     private val db = Firebase.firestore
-    private val history = ArrayList<HistoryData>()
+    private var history = ArrayList<HistoryData>()
 
     private lateinit var lineChart: LineChart
     private lateinit var diastolicLineChart: LineChart
@@ -141,76 +153,100 @@ class SimpleDashboardActivity : AppCompatActivity() {
         if (patientSharedPreferences.getString("patientID", null).isNullOrEmpty()) {
             Toast.makeText(
                 this,
-                "Patient information could not be found in current session. Please try again.",
+                getString(R.string.patient_info_not_found),
                 Toast.LENGTH_LONG
             ).show()
             startActivity(Intent(this, MainActivity::class.java))
             finish()
         } else {
             patientID = patientSharedPreferences.getString("patientID", null).toString()
+            decryptedPatientID = AESEncryption().decrypt(patientID)
+            patientName = patientSharedPreferences.getString("legalName", null).toString()
         }
 
         binding.printSourceBtn.setOnClickListener {
-            printCharts()
+            db.collection("patients").document(patientID).collection("visits").get()
+                .addOnSuccessListener { documents ->
+                    if (documents.isEmpty) {
+                        Toast.makeText(this, getString(R.string.dashboard_no_records_found), Toast.LENGTH_SHORT).show()
+                    }
+                    else {
+                        printCharts()
+                    }
+                }
         }
 
         db.collection("patients").document(patientID).collection("visits").get()
             .addOnSuccessListener { documents ->
-                if (documents.isEmpty) {
-                    println("Empty Collection: 'visits'")
-                } else {
-                    val inputDateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")
-                    val outputDateFormatter = DateTimeFormatter.ofPattern("dd MMM yyyy, HH:mm:ss")
+                val inputDateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")
+                val outputDateFormatter = DateTimeFormatter.ofPattern("dd MMM yyyy, HH:mm:ss")
 
-                    for (document in documents) {
-                        val dateTimeString = document.get("date") as? String
-                        val dateTime = LocalDateTime.parse(dateTimeString, inputDateFormatter)
-                        val dateTimeFormatted = dateTime.format(outputDateFormatter)
-                        val avgSysBP = document.get("averageSysBP") as? Long
-                        val avgDiaBP = document.get("averageDiaBP") as? Long
-                        val homeSysBPTarget = document.get("homeSysBPTarget") as? Long
-                        val homeDiaBPTarget = document.get("homeDiaBPTarget") as? Long
-                        val clinicSysBPTarget = document.get("clinicSysBPTarget") as? Long
-                        val clinicDiaBPTarget = document.get("clinicDiaBPTarget") as? Long
-                        val clinicSysBP = document.get("clinicSysBP") as? Long
-                        val clinicDiaBP = document.get("clinicDiaBP") as? Long
-                        history.add(
-                            HistoryData(
-                                dateTime.toString(),
-                                dateTimeFormatted,
-                                avgSysBP,
-                                avgDiaBP,
-                                homeSysBPTarget,
-                                homeDiaBPTarget,
-                                clinicSysBPTarget,
-                                clinicDiaBPTarget,
-                                clinicSysBP,
-                                clinicDiaBP,
-                            )
-                        )
+                for (document in documents) {
+                    val dateTimeString = document.get("date") as? String
+                    val dateTime = LocalDateTime.parse(dateTimeString, inputDateFormatter)
+                    val dateTimeFormatted = dateTime.format(outputDateFormatter)
+                    val avgSysBP = document.get("averageSysBP") as? Long
+                    val avgDiaBP = document.get("averageDiaBP") as? Long
+                    val homeSysBPTarget = document.get("homeSysBPTarget") as? Long
+                    val homeDiaBPTarget = document.get("homeDiaBPTarget") as? Long
+                    val clinicSysBPTarget = document.get("clinicSysBPTarget") as? Long
+                    val clinicDiaBPTarget = document.get("clinicDiaBPTarget") as? Long
+                    val clinicSysBP = document.get("clinicSysBP") as? Long
+                    val clinicDiaBP = document.get("clinicDiaBP") as? Long
+                    var scanRecordCount = document.get("scanRecordCount") as? Long
+                    if (scanRecordCount == null) {
+                        scanRecordCount = 0
                     }
+                    history.add(
+                        HistoryData(
+                            dateTime.toString(),
+                            dateTimeFormatted,
+                            avgSysBP,
+                            avgDiaBP,
+                            homeSysBPTarget,
+                            homeDiaBPTarget,
+                            clinicSysBPTarget,
+                            clinicDiaBPTarget,
+                            clinicSysBP,
+                            clinicDiaBP,
+                            scanRecordCount
+                        )
+                    )
                 }
 
                 sortedHistory = history.sortedByDescending { it.date }
 
                 if (sortedHistory.isEmpty()) {
-                    Toast.makeText(
-                        this,
-                        getString(R.string.dashboard_no_records_found),
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    Toast.makeText(this, getString(R.string.dashboard_no_records_found), Toast.LENGTH_SHORT).show()
                 } else {
-                    println("BIG BALLer")
-
-                    println("Sorted History" + sortedHistory)
+                    println("Sorted History $sortedHistory")
                     println("Sorted History 1st" + sortedHistory[0])
                     println("Sorted History 1st SYS DATA" + sortedHistory[0].avgSysBP)
+                    avgBP = "${sortedHistory[0].avgSysBP}/${sortedHistory[0].avgDiaBP}"
+                    dateTime = "${sortedHistory[0].dateFormatted}"
+
+                    bpHypertensionStatus = hypertensionStatus(
+                        this,
+                        sortedHistory[0].avgSysBP ?: 0L,
+                        sortedHistory[0].avgDiaBP ?: 0L,
+                        sortedHistory[0].clinicSysBP ?: 0L,
+                        sortedHistory[0].clinicDiaBP ?: 0L,
+                        sortedHistory[0].homeSysBPTarget ?: 0L,
+                        sortedHistory[0].homeDiaBPTarget ?: 0L
+                    )
+                    bpHomeControlStatus = bpControlStatus(this, bpHypertensionStatus)
+                    bpReccomendation = showRecommendation(this, bpHomeControlStatus, "en")
+
+                    println("Hypertension Status: $bpHypertensionStatus")
+                    println("Home Control Status: $bpHomeControlStatus")
+                    println("Recommendation: $bpReccomendation")
 
                     lineChart = findViewById(R.id.syslineChart)
                     setupLineChart()
                     diastolicLineChart = findViewById(R.id.diastolicLineChart)
                     setupDiastolicLineChart()
                 }
+
             }
     }
 
@@ -221,7 +257,7 @@ class SimpleDashboardActivity : AppCompatActivity() {
         val inputDateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault())
         val outputDateFormat = SimpleDateFormat("dd/MM/yy", Locale.getDefault())
         val limitedHistory = sortedHistory
-            .sortedBy { historyData -> inputDateFormat.parse(historyData.date) }
+            .sortedBy { historyData -> inputDateFormat.parse(historyData.date.toString()) }
             .takeLast(3)
 
         val dateToIndexMap = limitedHistory.map { it.date }
@@ -267,7 +303,7 @@ class SimpleDashboardActivity : AppCompatActivity() {
 
                     override fun getAxisLabel(value: Float, axis: AxisBase?): String {
                         return indexToDateMap[value]?.let {
-                            outputDateFormat.format(inputDateFormat.parse(it))
+                            outputDateFormat.format(inputDateFormat.parse(it)!!)
                         } ?: ""
                     }
                 }
@@ -294,7 +330,7 @@ class SimpleDashboardActivity : AppCompatActivity() {
         val inputDateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm", Locale.getDefault())
         val outputDateFormat = SimpleDateFormat("dd/MM/yy", Locale.getDefault())
         val limitedHistory = sortedHistory
-            .sortedBy { historyData -> inputDateFormat.parse(historyData.date) }
+            .sortedBy { historyData -> inputDateFormat.parse(historyData.date.toString()) }
             .takeLast(3)
 
         val dateToIndexMap = limitedHistory.map { it.date }
@@ -340,7 +376,7 @@ class SimpleDashboardActivity : AppCompatActivity() {
 
                     override fun getAxisLabel(value: Float, axis: AxisBase?): String {
                         return indexToDateMap[value]?.let {
-                            outputDateFormat.format(inputDateFormat.parse(it))
+                            outputDateFormat.format(inputDateFormat.parse(it)!!)
                         } ?: ""
                     }
                 }
@@ -360,10 +396,11 @@ class SimpleDashboardActivity : AppCompatActivity() {
         }
     }
 
-
     private fun printCharts() {
         val printManager = getSystemService(PRINT_SERVICE) as PrintManager
-        val jobName = "${getString(R.string.app_name)}_Charts"
+        val formatter = DateTimeFormatter.ofPattern("ddMMyy_HHmmss")
+        val current = LocalDateTime.now().format(formatter)
+        val jobName = "${decryptedPatientID}_${current}_Charts"
 
         val printAdapter = object : PrintDocumentAdapter() {
             private var currentPrintAttributes: PrintAttributes? = null
@@ -400,14 +437,14 @@ class SimpleDashboardActivity : AppCompatActivity() {
                     val pdfDocument = PrintedPdfDocument(this@SimpleDashboardActivity, printAttributes)
 
                     // Create a page description
-                    val totalHeight = lineChart.height + diastolicLineChart.height + 200 // Adding extra space for headings
+                    val totalHeight = lineChart.height / 2 + diastolicLineChart.height / 2 + 600 // Adding extra space for headings and text
                     val pageInfo = PdfDocument.PageInfo.Builder(lineChart.width, totalHeight, 1).create()
 
                     // Start a page
                     val page = pdfDocument.startPage(pageInfo)
 
-                    // Draw the charts on the page with headings
-                    drawChartsOnPage(page, lineChart, diastolicLineChart)
+                    // Draw the charts and text on the page
+                    drawChartsAndTextOnPage(page, lineChart, diastolicLineChart)
                     pdfDocument.finishPage(page)
 
                     try {
@@ -429,32 +466,67 @@ class SimpleDashboardActivity : AppCompatActivity() {
                 }
             }
 
-            private fun drawChartsOnPage(page: PdfDocument.Page, chart1: LineChart, chart2: LineChart) {
+            private fun drawChartsAndTextOnPage(page: PdfDocument.Page, chart1: LineChart, chart2: LineChart) {
                 val canvas = page.canvas
-                val paint = Paint().apply {
+                val boldPaint = Paint().apply {
                     textSize = 45f
                     isFakeBoldText = true
                 }
+                val normalPaint = Paint().apply {
+                    textSize = 45f
+                }
+                val smallBoldPaint = Paint().apply {
+                    textSize = 35f
+                    isFakeBoldText = true
+                }
+                val smallNormalPaint = Paint().apply {
+                    textSize = 35f
+                }
 
-                val headingHeight = 50 // Height reserved for headings
-                val chartSpacing = 50 // Spacing between the charts
+                val pageInfo = page.info
+                val padding = 10f
+                val startY = 80f
+                val lineHeight = 50f
+                val columnSpacing = 350f
 
-                // Draw headings
-                canvas.drawText("Systolic Comparison Chart", 0f,
-                    (headingHeight + 20).toFloat(), paint)
+                // Draw patient information with bold values
+                canvas.drawText("ID:", padding, startY, smallNormalPaint)
+                canvas.drawText(decryptedPatientID, padding + 50f, startY, smallBoldPaint) // Adjust x offset as needed
+                canvas.drawText("Name:", padding + columnSpacing, startY, smallNormalPaint)
+                canvas.drawText(patientName, padding + columnSpacing + 110f, startY, smallBoldPaint) // Adjust x offset as needed
+                canvas.drawText("Average BP:", padding, startY + lineHeight, smallNormalPaint)
+                canvas.drawText(avgBP, padding + 200f, startY + lineHeight, smallBoldPaint) // Adjust x offset as needed
+                canvas.drawText("Date & Time:", padding + columnSpacing, startY + lineHeight, smallNormalPaint)
+                canvas.drawText(dateTime, padding + columnSpacing + 200f, startY + lineHeight, smallBoldPaint) // Adjust x offset as needed
+
+                // Today's Recommendation
+                val recommendationStartY = startY + 2 * lineHeight + 40f
+                canvas.drawText("Today's Recommendation", padding, recommendationStartY, boldPaint)
+                drawMultilineText(bpReccomendation, canvas, smallNormalPaint, padding, recommendationStartY + 10f, pageInfo.pageWidth)
+
+                // Draw headings and charts
+                val headingHeight = 200
+                val chartSpacing = 50
+
+                // Draw the first chart heading
+                val chart1HeadingY = recommendationStartY + 170
+                canvas.drawText("Systolic BP Chart", padding, chart1HeadingY, boldPaint)
 
                 // Draw the first chart
                 val bitmap1 = getBitmapFromView(chart1)
-                canvas.drawBitmap(bitmap1, 0f, headingHeight.toFloat(), paint)
+                val scaledBitmap1 = Bitmap.createScaledBitmap(bitmap1, chart1.width / 3 * 2, chart1.height / 3 * 2, true)
+                canvas.drawBitmap(scaledBitmap1, 169f, chart1HeadingY, normalPaint)
 
-                // Draw the second heading
-                canvas.drawText("Diastolic Comparison Chart", 0f,
-                    (bitmap1.height + headingHeight + 50 + chartSpacing).toFloat(), paint)
+                // Draw the second chart heading
+                val chart2HeadingY = chart1HeadingY + scaledBitmap1.height + chartSpacing + 30f
+                canvas.drawText("Diastolic BP Chart", padding, chart2HeadingY, boldPaint)
 
                 // Draw the second chart
                 val bitmap2 = getBitmapFromView(chart2)
-                val spacing = bitmap1.height + headingHeight + chartSpacing + 50
-                canvas.drawBitmap(bitmap2, 0f, spacing.toFloat(), paint)            }
+                val scaledBitmap2 = Bitmap.createScaledBitmap(bitmap2, chart2.width / 3 * 2, chart2.height / 3 * 2, true)
+                canvas.drawBitmap(scaledBitmap2, 169f, chart2HeadingY, normalPaint)
+            }
+
 
             private fun getBitmapFromView(view: View): Bitmap {
                 val bitmap = Bitmap.createBitmap(view.width, view.height, Bitmap.Config.ARGB_8888)
@@ -465,7 +537,7 @@ class SimpleDashboardActivity : AppCompatActivity() {
         }
 
         val printAttributes = PrintAttributes.Builder()
-            .setMediaSize(PrintAttributes.MediaSize.NA_LETTER) // or any size that fits your requirement
+            .setMediaSize(PrintAttributes.MediaSize.ISO_A4)
             .setResolution(PrintAttributes.Resolution("default", "default", 300, 300))
             .setMinMargins(PrintAttributes.Margins.NO_MARGINS)
             .build()
@@ -473,5 +545,27 @@ class SimpleDashboardActivity : AppCompatActivity() {
         printManager.print(jobName, printAdapter, printAttributes)
     }
 
+
+    private fun drawMultilineText(text: String, canvas: Canvas, paint: Paint, x: Float, y: Float, pageWidth: Int) {
+        val textPaint = TextPaint(paint)
+        val textWidth = pageWidth - x.toInt()
+
+        val staticLayout = StaticLayout.Builder.obtain(text, 0, text.length, textPaint, textWidth)
+            .setAlignment(Layout.Alignment.ALIGN_NORMAL)
+            .setLineSpacing(0f, 1f)
+            .setIncludePad(false)
+            .build()
+
+        canvas.save()
+        canvas.translate(x, y)
+        staticLayout.draw(canvas)
+        canvas.restore()
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return if (actionBarDrawerToggle.onOptionsItemSelected(item)) {
+            true
+        } else super.onOptionsItemSelected(item)
+    }
 
 }

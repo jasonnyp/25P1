@@ -22,6 +22,7 @@ class HistoryAdapter(
 
         holder.dateTV.text = currentItem.dateFormatted.toString()
         holder.avgBPTV.text = String.format("%s / %s", currentItem.avgSysBP, currentItem.avgDiaBP)
+        holder.clinicTV.text = String.format("%s / %s", currentItem.clinicSysBP, currentItem.clinicDiaBP)
         holder.homeBPTargetTV.text = String.format("%s / %s", currentItem.homeSysBPTarget, currentItem.homeDiaBPTarget)
         holder.clinicBPTargetTV.text = String.format("%s / %s", currentItem.clinicSysBPTarget, currentItem.clinicDiaBPTarget)
     }
@@ -32,6 +33,7 @@ class HistoryAdapter(
         View.OnClickListener {
         val dateTV: TextView = itemView.findViewById(R.id.dateTV)
         val avgBPTV: TextView = itemView.findViewById(R.id.avgBPTV)
+        val clinicTV: TextView = itemView.findViewById(R.id.clinicTV)
         val homeBPTargetTV: TextView = itemView.findViewById(R.id.homeBPTargetTV)
         val clinicBPTargetTV: TextView = itemView.findViewById(R.id.clinicBPTargetTV)
 

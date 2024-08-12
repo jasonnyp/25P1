@@ -1,28 +1,35 @@
 package com.singhealth.enhance.activities.result
 
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
+import android.view.View
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
+import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.singhealth.enhance.R
 import com.singhealth.enhance.activities.MainActivity
-import com.singhealth.enhance.activities.dashboard.SimpleDashboardActivity
 import com.singhealth.enhance.activities.diagnosis.bpControlStatus
 import com.singhealth.enhance.activities.diagnosis.colourSet
 import com.singhealth.enhance.activities.diagnosis.hypertensionStatus
 import com.singhealth.enhance.activities.diagnosis.showRecommendation
-import com.singhealth.enhance.activities.error.firebaseErrorDialog
 import com.singhealth.enhance.activities.history.HistoryActivity
-import com.singhealth.enhance.activities.ocr.ScanActivity
-import com.singhealth.enhance.activities.patient.ProfileActivity
+import com.singhealth.enhance.activities.history.HistoryData
 import com.singhealth.enhance.databinding.ActivityRecommendationBinding
-import com.singhealth.enhance.security.AESEncryption
 import com.singhealth.enhance.security.SecureSharedPreferences
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+
+object ResourcesHelper {
+    fun getString(context: Context, @StringRes resId: Int, vararg formatArgs: Any): String {
+        return context.getString(resId, *formatArgs)
+    }
+}
 
 class RecommendationActivity : AppCompatActivity() {
     private lateinit var binding: ActivityRecommendationBinding
@@ -33,6 +40,11 @@ class RecommendationActivity : AppCompatActivity() {
     private var avgDiaBP: Long = 0
     private var clinicSysBP: Long = 0
     private var clinicDiaBP: Long = 0
+    private var bundlePosition: Int = 0
+    private var bundleDate: String = ""
+    private var bundleRecordCount: Int = 0
+    private var history = ArrayList<HistoryData>()
+    private lateinit var sortedHistory: List<HistoryData>
 
     private val db = Firebase.firestore
 
@@ -51,46 +63,16 @@ class RecommendationActivity : AppCompatActivity() {
             }
         })
 
-        val patientSharedPreferences = SecureSharedPreferences.getSharedPreferences(applicationContext)
+        val patientSharedPreferences =
+            SecureSharedPreferences.getSharedPreferences(applicationContext)
         if (patientSharedPreferences.getString("patientID", null).isNullOrEmpty()) {
             val mainIntent = Intent(this, MainActivity::class.java)
-            Toast.makeText(this, getString(R.string.patient_info_not_found), Toast.LENGTH_LONG).show()
+            Toast.makeText(this, getString(R.string.patient_info_not_found), Toast.LENGTH_LONG)
+                .show()
             startActivity(mainIntent)
             finish()
         } else {
-            patientID= patientSharedPreferences.getString("patientID", null)
-        }
-
-        binding.bottomNavigationView.setOnItemSelectedListener { menuItem ->
-            when (menuItem.itemId) {
-                R.id.item_profile -> {
-                    startActivity(Intent(this, ProfileActivity::class.java))
-                    finish()
-                    false
-                }
-
-                R.id.item_scan -> {
-                    startActivity(Intent(this, ScanActivity::class.java))
-                    finish()
-                    false
-                }
-
-                R.id.item_history -> {
-                    startActivity(Intent(this, HistoryActivity::class.java))
-                    finish()
-                    false
-                }
-
-                R.id.item_dashboard -> {
-                    startActivity(Intent(this, SimpleDashboardActivity::class.java))
-                    finish()
-                    false
-                }
-
-                else -> {
-                    false
-                }
-            }
+            patientID = patientSharedPreferences.getString("patientID", null)
         }
 
         val avgBPBundle = intent.extras
@@ -98,53 +80,100 @@ class RecommendationActivity : AppCompatActivity() {
         avgDiaBP = avgBPBundle.getInt("avgDiaBP").toLong()
         clinicSysBP = avgBPBundle.getInt("clinicSysBP").toLong()
         clinicDiaBP = avgBPBundle.getInt("clinicDiaBP").toLong()
+        bundlePosition = avgBPBundle.getInt("historyItemPosition")
+        bundleDate = avgBPBundle.getString("date").toString()
 
-        val docRef = db.collection("patients").document(patientID.toString())
-        var patientTargetSys: Long
-        var patientTargetDia: Long
-        var clinicTargetSys: Long
-        var clinicTargetDia: Long
         var hypertension: String
 
-        docRef.get()
-            .addOnSuccessListener { document ->
-                docRef.collection("visits").get()
-                if (AESEncryption().decrypt(document.getString("targetSys").toString()) == "" || AESEncryption().decrypt(document.getString("targetDia").toString()) == "") {
-                    patientTargetSys = 0
-                    patientTargetDia = 0
-                    clinicTargetSys = 0
-                    clinicTargetDia = 0
-                } else {
-                    patientTargetSys = AESEncryption().decrypt(document.getString("targetSys").toString()).toLong()
-                    patientTargetDia = AESEncryption().decrypt(document.getString("targetDia").toString()).toLong()
-                    clinicTargetSys = patientTargetSys + 5
-                    clinicTargetDia = patientTargetDia + 5
+        db.collection("patients").document(patientID.toString()).collection("visits").get()
+            .addOnSuccessListener { documents ->
+                val inputDateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")
+                val outputDateFormatter = DateTimeFormatter.ofPattern("dd MMM yyyy, HH:mm:ss")
+
+                for (document in documents) {
+                    val dateTimeString = document.get("date") as? String
+                    val dateTime = LocalDateTime.parse(dateTimeString, inputDateFormatter)
+                    val dateTimeFormatted = dateTime.format(outputDateFormatter)
+                    val avgSysBP = document.get("averageSysBP") as? Long
+                    val avgDiaBP = document.get("averageDiaBP") as? Long
+                    val homeSysBPTarget = document.get("homeSysBPTarget") as? Long
+                    val homeDiaBPTarget = document.get("homeDiaBPTarget") as? Long
+                    val clinicSysBPTarget = document.get("clinicSysBPTarget") as? Long
+                    val clinicDiaBPTarget = document.get("clinicDiaBPTarget") as? Long
+                    val clinicSysBP = document.get("clinicSysBP") as? Long
+                    val clinicDiaBP = document.get("clinicDiaBP") as? Long
+                    var scanRecordCount = document.get("scanRecordCount") as? Long
+                    if (scanRecordCount == null) {
+                        scanRecordCount = 0
+                    }
+                    history.add(
+                        HistoryData(
+                            dateTime.toString(),
+                            dateTimeFormatted,
+                            avgSysBP,
+                            avgDiaBP,
+                            homeSysBPTarget,
+                            homeDiaBPTarget,
+                            clinicSysBPTarget,
+                            clinicDiaBPTarget,
+                            clinicSysBP,
+                            clinicDiaBP,
+                            scanRecordCount
+                        )
+                    )
+                }
+
+                sortedHistory = history.sortedByDescending { it.date }
+
+                val patientTargetSys: Long = sortedHistory[bundlePosition].homeSysBPTarget!!
+                val patientTargetDia: Long = sortedHistory[bundlePosition].homeDiaBPTarget!!
+                val clinicTargetSys: Long = sortedHistory[bundlePosition].clinicSysBPTarget!!
+                val clinicTargetDia: Long = sortedHistory[bundlePosition].clinicDiaBPTarget!!
+                bundleRecordCount = avgBPBundle.getInt("scanRecordCount")
+
+                binding.recommendationHeader.text =
+                    ResourcesHelper.getString(this, R.string.enhance_recco_header, bundleRecordCount)
+                binding.insufficientRecordMessage.text = when {
+                    bundleRecordCount == 0 -> getString(R.string.old_scan_records)
+                    bundleRecordCount < 12 -> getString(R.string.insufficient_records)
+                    else -> ""
+                }
+                if (binding.insufficientRecordMessage.text == "") {
+                    binding.insufficientRecordMessage.visibility = View.GONE
                 }
 
                 binding.targetHomeSysBPTV.text = patientTargetSys.toString()
                 binding.targetHomeDiaBPTV.text = patientTargetDia.toString()
-                binding.targetOfficeSysBPTV.text = clinicTargetSys.toString()
-                binding.targetOfficeDiaBPTV.text = clinicTargetDia.toString()
+                binding.targetClinicSysBPTV.text = clinicTargetSys.toString()
+                binding.targetClinicDiaBPTV.text = clinicTargetDia.toString()
 
                 binding.avgHomeSysBPTV.text = avgSysBP.toString()
                 binding.avgHomeDiaBPTV.text = avgDiaBP.toString()
                 binding.avgHomeSysBPTV.setTextColor(colourSet(this, avgSysBP, patientTargetSys))
                 binding.avgHomeDiaBPTV.setTextColor(colourSet(this, avgDiaBP, patientTargetDia))
-                binding.avgHomeBPControl.text = bpControlStatus(this, avgSysBP, avgDiaBP, patientTargetSys, patientTargetDia)
+                binding.avgHomeBPControl.text =
+                    bpControlStatus(this, avgSysBP, avgDiaBP, patientTargetSys, patientTargetDia)
 
-                binding.officeSysBPTV.text = clinicSysBP.toString()
-                binding.officeDiaBPTV.text = clinicDiaBP.toString()
-                binding.officeSysBPTV.setTextColor(colourSet(this, clinicSysBP, clinicTargetSys))
-                binding.officeDiaBPTV.setTextColor(colourSet(this, clinicDiaBP, clinicTargetDia))
-                binding.officeBPControl.text = bpControlStatus(this, clinicSysBP, clinicDiaBP, clinicTargetSys, clinicTargetDia)
+                binding.clinicSysBPTV.text = clinicSysBP.toString()
+                binding.clinicDiaBPTV.text = clinicDiaBP.toString()
+                binding.clinicSysBPTV.setTextColor(colourSet(this, clinicSysBP, clinicTargetSys))
+                binding.clinicDiaBPTV.setTextColor(colourSet(this, clinicDiaBP, clinicTargetDia))
+                binding.clinicBPControl.text =
+                    bpControlStatus(this, clinicSysBP, clinicDiaBP, clinicTargetSys, clinicTargetDia)
 
-                hypertension = hypertensionStatus(this, avgSysBP, avgDiaBP, clinicSysBP, clinicDiaBP, patientTargetSys, patientTargetDia)
+                hypertension = hypertensionStatus(
+                    this,
+                    avgSysBP,
+                    avgDiaBP,
+                    clinicSysBP,
+                    clinicDiaBP,
+                    patientTargetSys,
+                    patientTargetDia
+                )
                 binding.recommendationBpPhenotype.text = hypertension
                 binding.recommendationBpControl.text = bpControlStatus(this, hypertension)
-                binding.recommendationDo.text = showRecommendation(this, bpControlStatus(this, hypertension))
-            }
-            .addOnFailureListener { e ->
-                firebaseErrorDialog(this, e, docRef)
+                binding.recommendationDo.text =
+                    showRecommendation(this, bpControlStatus(this, hypertension))
             }
     }
 

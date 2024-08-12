@@ -11,7 +11,7 @@ Each individual patient have records specific to them, along with every visit an
 ### OCR Technology
 Using industry-standard OCR scanning technology, the app allows clinics to scan paper records and implements them into the app to swiftly record each relevant record with high accuracy.
 ### Patient History
-All patient scan history is stored into the database, with Average Home BP, Office BP, and simple recommendations for the patient to improve their blood pressure.
+All patient scan history is stored into the database, with Average Home BP, Clinic BP, and simple recommendations for the patient to improve their blood pressure.
 ### Dashboard
 Every patient has a dashboard native to their individual records, allowing doctors and clinics to see the progress of the patient, and print out physical graphs for their own reference.
 ### Localisation 

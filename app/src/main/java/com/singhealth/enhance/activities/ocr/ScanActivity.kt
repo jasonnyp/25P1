@@ -25,9 +25,9 @@ import com.google.firebase.ml.vision.document.FirebaseVisionDocumentText
 import com.singhealth.enhance.R
 import com.singhealth.enhance.activities.MainActivity
 import com.singhealth.enhance.activities.dashboard.SimpleDashboardActivity
-import com.singhealth.enhance.activities.error.internetConnectionCheck
-import com.singhealth.enhance.activities.error.ocrTextErrorDialog
-import com.singhealth.enhance.activities.error.patientNotFoundInSessionErrorDialog
+import com.singhealth.enhance.activities.validation.internetConnectionCheck
+import com.singhealth.enhance.activities.validation.ocrTextErrorDialog
+import com.singhealth.enhance.activities.validation.patientNotFoundInSessionErrorDialog
 import com.singhealth.enhance.activities.history.HistoryActivity
 import com.singhealth.enhance.activities.patient.ProfileActivity
 import com.singhealth.enhance.activities.patient.RegistrationActivity
@@ -45,6 +45,7 @@ class ScanActivity : AppCompatActivity() {
     private lateinit var outputUri: Uri
     private lateinit var patientID: String
     private var sevenDay: Boolean = false
+    private var showContinueScan: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -62,12 +63,21 @@ class ScanActivity : AppCompatActivity() {
         progressDialog = ProgressDialog(this)
         progressDialog.setCanceledOnTouchOutside(false)
 
+        if (intent.extras != null) {
+            showContinueScan = intent.extras?.getBoolean("showContinueScan") ?: false
+            if (showContinueScan) {
+                binding.scanStatusContainer.visibility = View.VISIBLE
+                binding.sevenDaySourceBtn.visibility = View.GONE
+                binding.spaceBetweenButtons.visibility = View.GONE
+            }
+        }
+
         binding.generalSourceBtn.setOnClickListener {
+            sevenDay = false
             onClickRequestPermission()
         }
         binding.sevenDaySourceBtn.setOnClickListener {
             sevenDay = true
-            println("sevenDay: $sevenDay")
             onClickRequestPermission()
         }
     }
@@ -328,6 +338,7 @@ class ScanActivity : AppCompatActivity() {
             putStringArrayList("sysBPList", ArrayList(sysBPList))
             putStringArrayList("diaBPList", ArrayList(diaBPList))
             putBoolean("sevenDay", sevenDay)
+            putBoolean("showProgressDialog", true)
             intent.extras?.let {
                 it.getString("homeSysBPTarget")?.let { target -> putString("homeSysBPTarget", target) }
                 it.getString("homeDiaBPTarget")?.let { target -> putString("homeDiaBPTarget", target) }
@@ -358,13 +369,6 @@ class ScanActivity : AppCompatActivity() {
         return if (actionBarDrawerToggle.onOptionsItemSelected(item)) {
             true
         } else super.onOptionsItemSelected(item)
-    }
-
-    override fun onPause() {
-        super.onPause()
-        if (progressDialog.isShowing) {
-            progressDialog.dismiss()
-        }
     }
 
     private fun navigateTo(activityClass: Class<*>) {
