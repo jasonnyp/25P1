@@ -1,14 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- App theme -->
+    <!-- Light Mode App Theme (Default) -->
     <color name="theme_primary">#F06D1A</color>
     <color name="theme_primary_variant">#F8E8D8</color>
-
     <color name="theme_secondary">#D21243</color>
     <color name="theme_secondary_variant">#F6D3D5</color>
-
     <color name="theme_status_bar">#337AB7</color>
 
+    <!-- Dark primary color -->
+    <color name="theme_primary_dark">#d9d9d6</color>
+    <color name="theme_primary_variant_dark">#757575</color>
+    <color name="theme_secondary_dark">#9E9E9E</color>
+    <color name="theme_secondary_variant_dark">#BDBDBD</color>
+    <color name="theme_status_bar_dark">#000000</color>
+
+    <!-- Other Colours-->
     <color name="black">#000</color>
     <color name="light_grey">#d9d9d6</color>
     <color name="white">#FFF</color>

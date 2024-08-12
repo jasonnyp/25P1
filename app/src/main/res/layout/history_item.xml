@@ -15,7 +15,7 @@
             android:id="@+id/dateTV"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/theme_primary"
+            android:background="@color/primary_button_color"
             android:padding="12dp"
             android:textColor="@color/white"
             android:textSize="20sp"

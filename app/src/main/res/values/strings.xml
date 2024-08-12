@@ -104,6 +104,8 @@
     <string name="unknown_hypertension_status">(Unknown)</string>
 
     <!-- RecommendationActivity.kt -->
+    <string name="insufficient_records">(This record BP was calculated based on inadequate home BP readings.)</string>
+    <string name="old_scan_records">(This record has been scanned before record counts are taken into account.)</string>
     <string name="no_recommendations">No Recomendations.\n</string>
     <string name="well_controlled_bp_recommendation_medical">- Reinforce medication adherence to medications, and continue with lifestyle maintenance. \n</string>
     <string name="suboptimum_bp_recommendation_medical">- Assess adherence to medications, consider lifestyle changes and up titration of antihypertensive medications.\n</string>
@@ -172,8 +174,11 @@
     <string name="enhance_about_info">ENHANCe is a digital clinical decision support tool for capturing high blood pressure records from paper and digital diary and supports primary care physicians’ clinical decision-making when managing patients on home blood pressure monitoring.</string>
     <string name="enhance_about_purpose">The tool incorporates optical character recognition technology to recognise most handwritten blood pressure values, and automatically calculates the average blood pressure. This replaces the laborious process of reading and calculating blood pressure manually, ultimately reducing workload and human error.</string>
     <string name="enhance_about_collab">In collaboration with:</string>
+    <string name="enhance_about_enhance">Enhance Logo</string>
+    <string name="enhance_about_singhealth">Singhealth Logo</string>
+    <string name="enhance_about_nyp">NYP Logo</string>
     <string name="enhance_about_app_ver">App version:</string>
-    <string name="enhance_about_app_cur_ver" translatable="false">1.0</string>
+    <string name="enhance_about_app_cur_ver" translatable="false">1.1</string>
 
     <!-- activity_authentication.xml -->
     <string name="enhance_auth_2fa">Two-Factor Authentication</string>
@@ -197,6 +202,7 @@
     <string name="enhance_language_arrow" translatable="false">Arrow</string>
 
     <!-- activity_login.xml -->
+    <string name="enhance_login_icon_desc">ENHANce Symbol</string>
     <string name="enhance_login_staff_id">Staff ID</string>
     <string name="enhance_login_password">Password</string>
     <string name="enhance_login_login">Login</string>
@@ -208,9 +214,6 @@
     <string name="enhance_main_patient_id">Patient ID</string>
     <string name="enhance_main_search_record">Search Record</string>
 
-    <!-- activity_privacy_statement.xml -->
-    <string name="activity_privacy_statement">This is the Privacy Statement activity.</string>
-
     <!-- activity_profile.xml -->
     <string name="enhance_profile_legal_name">Legal Name</string>
     <string name="enhance_profile_patient_id">Patient ID</string>
@@ -221,7 +224,7 @@
     <string name="enhance_profile_target_bp">Target BP</string>
 
     <!-- activity_recommendation -->
-    <string name="enhance_recco_header">The following are the recommendations based on the scanned BP records:</string>
+    <string name="enhance_recco_header">The following are the recommendations based on the %1$s scanned BP records:</string>
     <string name="enhance_recco_do">Do:</string>
     <string name="enhance_recco_dont">Don\'t:</string>
     <string name="bpDivider" translatable="false">/</string>
@@ -234,6 +237,7 @@
 
     <!-- activity_registration.xml -->
     <string name="enhance_register_photo">Photo</string>
+    <string name="enhance_register_photo_desc">Upload Photo</string>
     <string name="enhance_register_upload_photo">Tap on the file upload icon to select a photo from your gallery.</string>
     <string name="enhance_register_particulars">Personal Particulars</string>
     <string name="enhance_register_legal_name">Legal Name</string>
@@ -249,6 +253,7 @@
 
     <!-- activity_edit_patient.xml -->
     <string name="enhance_edit_photo">Edit Photo</string>
+    <string name="enhance_edit_photo_desc">Upload Photo</string>
     <string name="enhance_edit_upload_photo">Tap to change profile picture</string>
     <string name="enhance_edit_particulars">Edit Particulars</string>
     <string name="enhance_edit_legal_name">Legal Name</string>
@@ -268,6 +273,7 @@
     <string name="update_error_body">Unable to update profile. Please try again.</string>
 
     <!-- activity_scan.xml -->
+    <string name="enhance_scan_error_desc">Error</string>
     <string name="enhance_scan_patient_id"> Patient ID: </string>
     <string name="enhance_scan_name"> Name: </string>
     <string name="enhance_general_scan">General Scan</string>
@@ -277,6 +283,8 @@
     <string name="enhance_settings_account">Account</string>
     <string name="enhance_settings_logout">Logout</string>
     <string name="enhance_settings_help_support">Help &amp; support</string>
+    <string name="enhance_settings_app">App Settings</string>
+    <string name="enhance_settings_theme">Theme</string>
     <string name="enhance_settings_user_guide">User guide</string>
     <string name="enhance_settings_language">Language Options</string>
     <string name="enhance_settings_contact_helpdesk">Contact Helpdesk</string>
@@ -286,9 +294,17 @@
     <string name="enhance_settings_report_vulnerability">Report vulnerability</string>
 
     <!-- activity_simple_dashboard.xml -->
+    <string name="enhance_s_dashboard_systolic_header">Systolic Comparison Chart</string>
+    <string name="enhance_s_dashboard_diastolic_header">Diastolic Comparison Chart</string>
+    <string name="enhance_s_dashboard_print">Print</string>
 
     <!-- activity_terms_of_use.xml -->
     <string name="enhance_terms_header">This is the Terms of Use activity.</string>
+
+    <!-- activity_theme.xml -->
+    <string name="enhance_theme_light">Light (Default)</string>
+    <string name="enhance_theme_dark">Dark</string>
+    <string name="enhance_theme_system">Use System Theme</string>
 
     <!-- activity_user_guide.xml -->
     <string name="enhance_user_patient"><![CDATA[Patient registration & search]]></string>
@@ -320,6 +336,7 @@
     <string name="enhance_verify_bottom_option">Select an option:</string>
     <string name="enhance_verify_bottom_continue_scan">Continue scanning</string>
     <string name="enhance_verify_bottom_rescan">Rescan current records</string>
+    <string name="enhance_verify_bottom_undo">Undo</string>
     <string name="enhance_verify_bottom_discard">Discard all progress</string>
 
     <!-- dashboard.xml -->
@@ -336,4 +353,5 @@
 
     <!-- row_bp_record.xml -->
     <string name="enhance_row_bp_divider" translatable="false">/</string>
+    <string name="enhance_row_bp_add_row">Add Row</string>
 </resources>

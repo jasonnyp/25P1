@@ -71,7 +71,7 @@ class SimpleDashboardActivity : AppCompatActivity() {
     private lateinit var sortedHistory: List<HistoryData>
 
     private val db = Firebase.firestore
-    private val history = ArrayList<HistoryData>()
+    private var history = ArrayList<HistoryData>()
 
     private lateinit var lineChart: LineChart
     private lateinit var diastolicLineChart: LineChart
@@ -153,7 +153,7 @@ class SimpleDashboardActivity : AppCompatActivity() {
         if (patientSharedPreferences.getString("patientID", null).isNullOrEmpty()) {
             Toast.makeText(
                 this,
-                "Patient information could not be found in current session. Please try again.",
+                getString(R.string.patient_info_not_found),
                 Toast.LENGTH_LONG
             ).show()
             startActivity(Intent(this, MainActivity::class.java))
@@ -165,62 +165,66 @@ class SimpleDashboardActivity : AppCompatActivity() {
         }
 
         binding.printSourceBtn.setOnClickListener {
-            printCharts()
+            db.collection("patients").document(patientID).collection("visits").get()
+                .addOnSuccessListener { documents ->
+                    if (documents.isEmpty) {
+                        Toast.makeText(this, getString(R.string.dashboard_no_records_found), Toast.LENGTH_SHORT).show()
+                    }
+                    else {
+                        printCharts()
+                    }
+                }
         }
 
         db.collection("patients").document(patientID).collection("visits").get()
             .addOnSuccessListener { documents ->
-                if (documents.isEmpty) {
-                    println("Empty Collection: 'visits'")
-                } else {
-                    val inputDateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")
-                    val outputDateFormatter = DateTimeFormatter.ofPattern("dd MMM yyyy, HH:mm:ss")
+                val inputDateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")
+                val outputDateFormatter = DateTimeFormatter.ofPattern("dd MMM yyyy, HH:mm:ss")
 
-                    for (document in documents) {
-                        val dateTimeString = document.get("date") as? String
-                        val dateTime = LocalDateTime.parse(dateTimeString, inputDateFormatter)
-                        val dateTimeFormatted = dateTime.format(outputDateFormatter)
-                        val avgSysBP = document.get("averageSysBP") as? Long
-                        val avgDiaBP = document.get("averageDiaBP") as? Long
-                        val homeSysBPTarget = document.get("homeSysBPTarget") as? Long
-                        val homeDiaBPTarget = document.get("homeDiaBPTarget") as? Long
-                        val clinicSysBPTarget = document.get("clinicSysBPTarget") as? Long
-                        val clinicDiaBPTarget = document.get("clinicDiaBPTarget") as? Long
-                        val clinicSysBP = document.get("clinicSysBP") as? Long
-                        val clinicDiaBP = document.get("clinicDiaBP") as? Long
-
-                        history.add(
-                            HistoryData(
-                                dateTime.toString(),
-                                dateTimeFormatted,
-                                avgSysBP,
-                                avgDiaBP,
-                                homeSysBPTarget,
-                                homeDiaBPTarget,
-                                clinicSysBPTarget,
-                                clinicDiaBPTarget,
-                                clinicSysBP,
-                                clinicDiaBP,
-                            )
-                        )
+                for (document in documents) {
+                    val dateTimeString = document.get("date") as? String
+                    val dateTime = LocalDateTime.parse(dateTimeString, inputDateFormatter)
+                    val dateTimeFormatted = dateTime.format(outputDateFormatter)
+                    val avgSysBP = document.get("averageSysBP") as? Long
+                    val avgDiaBP = document.get("averageDiaBP") as? Long
+                    val homeSysBPTarget = document.get("homeSysBPTarget") as? Long
+                    val homeDiaBPTarget = document.get("homeDiaBPTarget") as? Long
+                    val clinicSysBPTarget = document.get("clinicSysBPTarget") as? Long
+                    val clinicDiaBPTarget = document.get("clinicDiaBPTarget") as? Long
+                    val clinicSysBP = document.get("clinicSysBP") as? Long
+                    val clinicDiaBP = document.get("clinicDiaBP") as? Long
+                    var scanRecordCount = document.get("scanRecordCount") as? Long
+                    if (scanRecordCount == null) {
+                        scanRecordCount = 0
                     }
+                    history.add(
+                        HistoryData(
+                            dateTime.toString(),
+                            dateTimeFormatted,
+                            avgSysBP,
+                            avgDiaBP,
+                            homeSysBPTarget,
+                            homeDiaBPTarget,
+                            clinicSysBPTarget,
+                            clinicDiaBPTarget,
+                            clinicSysBP,
+                            clinicDiaBP,
+                            scanRecordCount
+                        )
+                    )
                 }
 
                 sortedHistory = history.sortedByDescending { it.date }
 
                 if (sortedHistory.isEmpty()) {
-                    Toast.makeText(
-                        this,
-                        getString(R.string.dashboard_no_records_found),
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    Toast.makeText(this, getString(R.string.dashboard_no_records_found), Toast.LENGTH_SHORT).show()
                 } else {
-
-                    println("Sorted History" + sortedHistory)
+                    println("Sorted History $sortedHistory")
                     println("Sorted History 1st" + sortedHistory[0])
                     println("Sorted History 1st SYS DATA" + sortedHistory[0].avgSysBP)
                     avgBP = "${sortedHistory[0].avgSysBP}/${sortedHistory[0].avgDiaBP}"
                     dateTime = "${sortedHistory[0].dateFormatted}"
+
                     bpHypertensionStatus = hypertensionStatus(
                         this,
                         sortedHistory[0].avgSysBP ?: 0L,
@@ -230,15 +234,8 @@ class SimpleDashboardActivity : AppCompatActivity() {
                         sortedHistory[0].homeSysBPTarget ?: 0L,
                         sortedHistory[0].homeDiaBPTarget ?: 0L
                     )
-                    bpHomeControlStatus = bpControlStatus(
-                        this,
-                        bpHypertensionStatus
-                    )
-                    bpReccomendation = showRecommendation(
-                        this,
-                        bpHomeControlStatus,
-                        "en"
-                    )
+                    bpHomeControlStatus = bpControlStatus(this, bpHypertensionStatus)
+                    bpReccomendation = showRecommendation(this, bpHomeControlStatus, "en")
 
                     println("Hypertension Status: $bpHypertensionStatus")
                     println("Home Control Status: $bpHomeControlStatus")
@@ -249,6 +246,7 @@ class SimpleDashboardActivity : AppCompatActivity() {
                     diastolicLineChart = findViewById(R.id.diastolicLineChart)
                     setupDiastolicLineChart()
                 }
+
             }
     }
 
@@ -259,7 +257,7 @@ class SimpleDashboardActivity : AppCompatActivity() {
         val inputDateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault())
         val outputDateFormat = SimpleDateFormat("dd/MM/yy", Locale.getDefault())
         val limitedHistory = sortedHistory
-            .sortedBy { historyData -> inputDateFormat.parse(historyData.date) }
+            .sortedBy { historyData -> inputDateFormat.parse(historyData.date.toString()) }
             .takeLast(3)
 
         val dateToIndexMap = limitedHistory.map { it.date }
@@ -305,7 +303,7 @@ class SimpleDashboardActivity : AppCompatActivity() {
 
                     override fun getAxisLabel(value: Float, axis: AxisBase?): String {
                         return indexToDateMap[value]?.let {
-                            outputDateFormat.format(inputDateFormat.parse(it))
+                            outputDateFormat.format(inputDateFormat.parse(it)!!)
                         } ?: ""
                     }
                 }
@@ -332,7 +330,7 @@ class SimpleDashboardActivity : AppCompatActivity() {
         val inputDateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm", Locale.getDefault())
         val outputDateFormat = SimpleDateFormat("dd/MM/yy", Locale.getDefault())
         val limitedHistory = sortedHistory
-            .sortedBy { historyData -> inputDateFormat.parse(historyData.date) }
+            .sortedBy { historyData -> inputDateFormat.parse(historyData.date.toString()) }
             .takeLast(3)
 
         val dateToIndexMap = limitedHistory.map { it.date }
@@ -378,7 +376,7 @@ class SimpleDashboardActivity : AppCompatActivity() {
 
                     override fun getAxisLabel(value: Float, axis: AxisBase?): String {
                         return indexToDateMap[value]?.let {
-                            outputDateFormat.format(inputDateFormat.parse(it))
+                            outputDateFormat.format(inputDateFormat.parse(it)!!)
                         } ?: ""
                     }
                 }

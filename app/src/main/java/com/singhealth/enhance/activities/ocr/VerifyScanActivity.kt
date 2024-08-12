@@ -27,9 +27,9 @@ import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.singhealth.enhance.R
-import com.singhealth.enhance.activities.error.errorDialogBuilder
-import com.singhealth.enhance.activities.error.firebaseErrorDialog
-import com.singhealth.enhance.activities.error.patientNotFoundInSessionErrorDialog
+import com.singhealth.enhance.activities.validation.errorDialogBuilder
+import com.singhealth.enhance.activities.validation.firebaseErrorDialog
+import com.singhealth.enhance.activities.validation.patientNotFoundInSessionErrorDialog
 import com.singhealth.enhance.activities.result.RecommendationActivity
 import com.singhealth.enhance.databinding.ActivityVerifyScanBinding
 import com.singhealth.enhance.security.AESEncryption
@@ -383,7 +383,8 @@ class VerifyScanActivity : AppCompatActivity() {
         binding.calculateAvgBPBtn.setOnClickListener {
             if (validateFields()) {
                 getBPTarget()
-                if (sevenDay) {
+                val finalRows = maxOf(sysBPList.size, diaBPList.size)
+                if (sevenDay){
                     calcSevenDayAvgBP()
                 } else {
                     calcAvgBP()
@@ -402,7 +403,8 @@ class VerifyScanActivity : AppCompatActivity() {
                     "averageSysBP" to avgSysBP,
                     "averageDiaBP" to avgDiaBP,
                     "clinicSysBP" to clinicSysBP,
-                    "clinicDiaBP" to clinicDiaBP
+                    "clinicDiaBP" to clinicDiaBP,
+                    "scanRecordCount" to finalRows
                 )
 
                 db.collection("patients").document(patientID).collection("visits").add(visit)
@@ -423,6 +425,7 @@ class VerifyScanActivity : AppCompatActivity() {
                         bundle.putInt("avgDiaBP", avgDiaBP)
                         bundle.putInt("clinicSysBP", clinicSysBP)
                         bundle.putInt("clinicDiaBP", clinicDiaBP)
+                        bundle.putInt("scanRecordCount", finalRows)
                         bundle.putString("Source", "Scan")
 
                         val recommendationIntent = Intent(this, RecommendationActivity::class.java)

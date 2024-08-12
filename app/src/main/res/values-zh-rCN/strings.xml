@@ -94,6 +94,8 @@
     <string name="unknown_hypertension_status">（未知）</string>
 
     <!-- RecommendationActivity.kt -->
+    <string name="insufficient_records">（此记录的血压是基于不足的家庭血压读数计算得出的。）</string>
+    <string name="old_scan_records">（此记录已经扫描过，在记录计数前已考虑在内。）</string>
     <string name="no_recommendations">没有建议。\n</string>
     <string name="well_controlled_bp_recommendation_medical">- 强调药物依从性，并继续保持健康的生活方式。\n</string>
     <string name="suboptimum_bp_recommendation_medical">- 评估药物依从性，考虑生活方式改变和升级抗高血压药物。\n</string>
@@ -162,6 +164,9 @@
     <string name="enhance_about_app_ver">应用版本：</string>
     <string name="enhance_about_info">ENHANCe 是一个数字临床决策支持工具，用于从纸质和数字日记中捕捉高血压记录，并支持初级保健医生在管理家庭血压监测患者时的临床决策。</string>
     <string name="enhance_about_purpose">该工具结合了光学字符识别技术，可以识别大多数手写的血压值，并自动计算平均血压。这样就取代了手动读取和计算血压的繁琐过程，从而减少了工作量和人为错误。</string>
+    <string name="enhance_about_enhance">Enhance 标志</string>
+    <string name="enhance_about_singhealth">Singhealth 标志</string>
+    <string name="enhance_about_nyp">NYP 标志</string>
 
     <!-- activity_authentication.xml -->
     <string name="enhance_auth_2fa">双因素认证</string>
@@ -173,6 +178,7 @@
     <string name="enhance_history_past">未找到过往记录。</string>
 
     <!-- activity_login.xml -->
+    <string name="enhance_login_icon_desc">ENHANce 标志</string>
     <string name="enhance_login_staff_id">员工身份证明</string>
     <string name="enhance_login_password">密码</string>
     <string name="enhance_login_login">登录</string>
@@ -184,9 +190,6 @@
     <string name="enhance_main_patient_id">患者识别码</string>
     <string name="enhance_main_search_record">搜索记录</string>
 
-    <!-- activity_privacy_statement.xml -->
-    <string name="activity_privacy_statement">这是隐私声明页面。</string>
-
     <!-- activity_profile.xml -->
     <string name="enhance_profile_legal_name">法定姓名</string>
     <string name="enhance_profile_patient_id">患者识别码</string>
@@ -197,7 +200,7 @@
     <string name="enhance_profile_target_bp">目标血压</string>
 
     <!-- activity_recommendation.xml -->
-    <string name="enhance_recco_header">以下是基于扫描的血压记录的建议：</string>
+    <string name="enhance_recco_header">以下是根据 %1$s 扫描的血压记录提供的建议：</string>
     <string name="enhance_recco_do">医学：</string>
     <string name="enhance_recco_dont">饮食：</string>
     <string name="enhance_recco_target_home_bp"> 目标家庭血压</string>
@@ -209,6 +212,7 @@
 
     <!-- activity_registration.xml -->
     <string name="enhance_register_photo">照片</string>
+    <string name="enhance_register_photo_desc">上传照片</string>
     <string name="enhance_register_upload_photo">点击文件上传图标以从您的图库选择照片。</string>
     <string name="enhance_register_particulars">个人详情</string>
     <string name="enhance_register_legal_name">法定姓名</string>
@@ -224,6 +228,7 @@
 
     <!-- activity_edit_patient.xml -->
     <string name="enhance_edit_photo">编辑照片</string>
+    <string name="enhance_edit_photo_desc">上传照片</string>
     <string name="enhance_edit_upload_photo">点击更换个人资料图片</string>
     <string name="enhance_edit_particulars">编辑详细资料</string>
     <string name="enhance_edit_legal_name">法定姓名</string>
@@ -243,15 +248,18 @@
     <string name="update_error_body">无法更新档案。请重试。</string>
 
     <!-- activity_scan.xml -->
+    <string name="enhance_scan_error_desc">错误</string>
     <string name="enhance_scan_patient_id">患者身份证号：</string>
     <string name="enhance_scan_name">姓名：</string>
     <string name="enhance_general_scan">常规扫描</string>
+    <string name="enhance_7_day_scan">七天扫描</string>
 
     <!-- activity_settings.xml -->
-    <string name="enhance_7_day_scan">七天扫描</string>
     <string name="enhance_settings_account">账户</string>
     <string name="enhance_settings_logout">登出</string>
     <string name="enhance_settings_help_support">帮助与支持</string>
+    <string name="enhance_settings_app">应用设置</string>
+    <string name="enhance_settings_theme">主题</string>
     <string name="enhance_settings_user_guide">用户指南</string>
     <string name="enhance_settings_language">语言选项</string>
     <string name="enhance_settings_contact_helpdesk">联系帮助台</string>
@@ -260,8 +268,18 @@
     <string name="enhance_settings_privacy_statement">隐私声明</string>
     <string name="enhance_settings_report_vulnerability">报告漏洞</string>
 
+    <!-- activity_simple_dashboard.xml -->
+    <string name="enhance_s_dashboard_systolic_header">收缩压比较图表</string>
+    <string name="enhance_s_dashboard_diastolic_header">舒张压比较图表</string>
+    <string name="enhance_s_dashboard_print">打印</string>
+
     <!-- activity_terms_of_use.xml -->
     <string name="enhance_terms_header">这是使用条款页面。</string>
+
+    <!-- activity_theme.xml -->
+    <string name="enhance_theme_light">浅色（默认）</string>
+    <string name="enhance_theme_dark">深色</string>
+    <string name="enhance_theme_system">使用系统主题</string>
 
     <!-- activity_user_guide.xml -->
     <string name="enhance_user_patient"><![CDATA[患者注册与搜索]]></string>
@@ -289,6 +307,7 @@
 
     <!-- bottom_sheet_verify_scan.xml -->
     <string name="enhance_verify_bottom_option">选择一个选项：</string>
+    <string name="enhance_verify_bottom_undo">撤销</string>
     <string name="enhance_verify_bottom_continue_scan">继续扫描</string>
     <string name="enhance_verify_bottom_rescan">重新扫描当前记录</string>
     <string name="enhance_verify_bottom_discard">放弃所有进度</string>
@@ -304,4 +323,7 @@
     <string name="enhance_history_item_clinicbp">诊所血压：</string>
     <string name="enhance_history_item_target_homebp">家庭血压目标：</string>
     <string name="enhance_history_item_target_clinicbp">诊所血压目标：</string>
+
+    <!-- row_bp_record.xml -->
+    <string name="enhance_row_bp_add_row">添加行</string>
 </resources>
