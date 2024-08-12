@@ -235,6 +235,7 @@ class ScanActivity : AppCompatActivity() {
                         "川", "!!!", "|||" -> "111"
                         "734" -> "134"
                         "13T" -> "131"
+                        "9/2" -> "92"
                         else -> it.replace(Regex("[^\\d]"), "")
                     }
                 }
@@ -293,20 +294,20 @@ class ScanActivity : AppCompatActivity() {
                     correctedNumbers.add(diastolic)
                     correctedNumbers.add(systolic)
                 } else if (systolic !in 80..230) {
-                    correctedNumbers.add(999)
+                    correctedNumbers.add(-1)
                     correctedNumbers.add(diastolic)
                 } else if (diastolic !in 45..135) {
                     correctedNumbers.add(systolic)
-                    correctedNumbers.add(999)
+                    correctedNumbers.add(-1)
                 } else {
-                    correctedNumbers.add(999)
-                    correctedNumbers.add(999)
+                    correctedNumbers.add(-1)
+                    correctedNumbers.add(-1)
                 }
             } else if (systolic != null) {
                 correctedNumbers.add(systolic)
-                correctedNumbers.add(999)
+                correctedNumbers.add(-1)
             } else if (diastolic != null) {
-                correctedNumbers.add(999)
+                correctedNumbers.add(-1)
                 correctedNumbers.add(diastolic)
             }
 
@@ -314,7 +315,7 @@ class ScanActivity : AppCompatActivity() {
         }
 
         if (correctedNumbers.size % 2 != 0) {
-            correctedNumbers.add(999)
+            correctedNumbers.add(-1)
         }
 
         correctedNumbers.forEachIndexed { index, value ->
