@@ -3,6 +3,7 @@ package com.singhealth.enhance.activities.history
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
+import android.view.View
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -155,16 +156,22 @@ class HistoryActivity : AppCompatActivity(), HistoryAdapter.OnItemClickListener 
                         )
                     }
 
-                    sortedHistory = history.sortedByDescending { it.date }
+                    if (history.isEmpty()) {
+                        binding.noHistoryWarningTV.visibility = View.VISIBLE
+                        binding.recyclerView.visibility = View.GONE
+                    }
+                    else {
+                        sortedHistory = history.sortedByDescending { it.date }
 
-                    println("Sorted History$sortedHistory")
-                    println("Sorted History 1st" + sortedHistory[0])
-                    println("Sorted History 1st SYS DATA" + sortedHistory[0].avgSysBP)
+                        println("Sorted History$sortedHistory")
+                        println("Sorted History 1st" + sortedHistory[0])
+                        println("Sorted History 1st SYS DATA" + sortedHistory[0].avgSysBP)
 
-                    val adapter = HistoryAdapter(sortedHistory, this)
+                        val adapter = HistoryAdapter(sortedHistory, this)
 
-                    binding.recyclerView.adapter = adapter
-                    binding.recyclerView.layoutManager = LinearLayoutManager(this)
+                        binding.recyclerView.adapter = adapter
+                        binding.recyclerView.layoutManager = LinearLayoutManager(this)
+                    }
                 }
         }
     }
