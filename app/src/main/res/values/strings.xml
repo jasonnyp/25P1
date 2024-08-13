@@ -7,6 +7,7 @@
     <string name="good_evening">Good Evening!</string>
     <string name="login_validate_staff">Staff ID cannot be empty!</string>
     <string name="login_validate_password">Password cannot be empty!</string>
+    <string name="login_success_header">Login Successful</string>
 
     <!-- SimpleDashboardActivity strings -->
     <string name="dashboard_no_records_found">No records found.</string>

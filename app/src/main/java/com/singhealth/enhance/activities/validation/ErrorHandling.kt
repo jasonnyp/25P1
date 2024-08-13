@@ -95,6 +95,20 @@ fun errorDialogBuilder(context: Context, title: String, message: String, activit
         .show()
 }
 
+fun errorClinicDialogBuilder(context: Context, title: String, message: String, activity: Class<*>) {
+    MaterialAlertDialogBuilder(context)
+        .setIcon(R.drawable.ic_error)
+        .setTitle(title)
+        .setMessage(message)
+        .setPositiveButton(ResourcesHelper.getString(context, R.string.ok_dialog)) { _, _ ->
+            context.startActivity(Intent(context, activity))
+            if (context is Activity) {
+                context.finish()
+            }
+        }
+        .show()
+}
+
 fun errorDialogBuilder(context: Context, title: String, message: String, activity: Class<*>, icon: Int) {
     MaterialAlertDialogBuilder(context)
         .setIcon(icon)

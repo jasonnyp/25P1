@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import com.google.firebase.auth.FirebaseAuth
@@ -15,6 +16,7 @@ import com.singhealth.enhance.R
 import com.singhealth.enhance.activities.MainActivity
 import com.singhealth.enhance.activities.validation.errorDialogBuilder
 import com.singhealth.enhance.databinding.ActivityLoginBinding
+import com.singhealth.enhance.security.AESEncryption
 import com.singhealth.enhance.security.StaffSharedPreferences
 import java.util.Calendar
 
@@ -80,6 +82,11 @@ class LoginActivity : AppCompatActivity() {
                                                     apply()
                                                 }
                                                 println("Clinic ID successfully saved: ${StaffSharedPreferences.getSharedPreferences(applicationContext).getString("clinicId", "")}")
+                                                Toast.makeText(
+                                                    this,
+                                                    getString(R.string.login_success_header),
+                                                    Toast.LENGTH_SHORT
+                                                ).show()
                                                 startActivity(Intent(this, MainActivity::class.java))
                                                 finish()
                                                 staffFound = true

@@ -22,6 +22,7 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 import com.singhealth.enhance.R
 import com.singhealth.enhance.activities.MainActivity
+import com.singhealth.enhance.activities.validation.errorClinicDialogBuilder
 import com.singhealth.enhance.activities.validation.errorDialogBuilder
 import com.singhealth.enhance.activities.validation.firebaseErrorDialog
 import com.singhealth.enhance.activities.validation.internetConnectionCheck
@@ -417,7 +418,7 @@ class EditProfileActivity : AppCompatActivity() {
                                     val staffClinicId = StaffSharedPreferences.getSharedPreferences(applicationContext).getString("clinicId", "")
 
                                     if (updatedClinicId != staffClinicId) {
-                                        errorDialogBuilder(
+                                        errorClinicDialogBuilder(
                                             this,
                                             getString(R.string.enhance_edit_clinic_id_mismatch),
                                             getString(R.string.enhance_edit_clinic_id_error),
