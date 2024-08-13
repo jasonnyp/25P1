@@ -20,6 +20,7 @@ import com.singhealth.enhance.activities.settings.SettingsActivity
 import com.singhealth.enhance.databinding.ActivityMainBinding
 import com.singhealth.enhance.security.AESEncryption
 import com.singhealth.enhance.security.SecureSharedPreferences
+import com.singhealth.enhance.security.StaffSharedPreferences
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -125,12 +126,31 @@ class MainActivity : AppCompatActivity() {
         docRef.get()
             .addOnSuccessListener { document ->
                 if (document.exists()) {
-                    savePatientData(patientID)
-                    val profileActivityIntent = Intent(this, ProfileActivity::class.java)
-                    profileActivityIntent.putExtra("Source", "MainActivity")
-                    startActivity(profileActivityIntent)
+                    val patientClinicId = document.getString("clinicId")
+                    val staffClinicId = StaffSharedPreferences.getSharedPreferences(applicationContext).getString("clinicId", "")
+                    println("Patient Clinic ID: $patientClinicId")
+                    println("Staff Clinic ID: $staffClinicId")
+
+                    if (staffClinicId != patientClinicId) {
+                        // Clinic ID mismatch, show error dialog
+                        errorDialogBuilder(
+                            this,
+                            getString(R.string.enhance_edit_clinic_id_mismatch),
+                            getString(R.string.enhance_edit_clinic_id_error)
+                        )
+                    } else {
+                        // Clinic ID matches, proceed to save patient data and navigate to ProfileActivity
+                        savePatientData(patientID)
+                        val profileActivityIntent = Intent(this, ProfileActivity::class.java)
+                        profileActivityIntent.putExtra("Source", "MainActivity")
+                        startActivity(profileActivityIntent)
+                    }
                 } else {
-                    errorDialogBuilder(this, getString(R.string.main_activity_patient_header), getString(R.string.main_activity_patient_header))
+                    errorDialogBuilder(
+                        this,
+                        getString(R.string.main_activity_patient_header),
+                        getString(R.string.main_activity_patient_header)
+                    )
                 }
             }
             .addOnFailureListener { e ->

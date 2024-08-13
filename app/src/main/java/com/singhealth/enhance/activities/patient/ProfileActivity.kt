@@ -285,6 +285,8 @@ class ProfileActivity : AppCompatActivity() {
             targetSys,
             targetDia
         )
+
+        binding.clinicId.text = document.getString("clinicId").toString()
     }
 
 

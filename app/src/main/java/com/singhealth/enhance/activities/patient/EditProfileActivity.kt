@@ -22,12 +22,14 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 import com.singhealth.enhance.R
 import com.singhealth.enhance.activities.MainActivity
+import com.singhealth.enhance.activities.validation.errorClinicDialogBuilder
 import com.singhealth.enhance.activities.validation.errorDialogBuilder
 import com.singhealth.enhance.activities.validation.firebaseErrorDialog
 import com.singhealth.enhance.activities.validation.internetConnectionCheck
 import com.singhealth.enhance.databinding.ActivityEditPatientBinding
 import com.singhealth.enhance.security.AESEncryption
 import com.singhealth.enhance.security.SecureSharedPreferences
+import com.singhealth.enhance.security.StaffSharedPreferences
 import java.io.ByteArrayOutputStream
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -40,6 +42,7 @@ class EditProfileActivity : AppCompatActivity() {
     private lateinit var progressDialog: ProgressDialog
 
     private lateinit var photoBA: ByteArray
+    private lateinit var id: String
 
     private val db = Firebase.firestore
     private val storage = Firebase.storage
@@ -104,10 +107,10 @@ class EditProfileActivity : AppCompatActivity() {
             override fun afterTextChanged(s: Editable?) {}
         })
 
-        binding.editIdTIET.addTextChangedListener(object : TextWatcher {
+        binding.editClinicIdTIET.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                binding.editIdTIL.error = null
+                binding.editClinicIdTIET.error = null
             }
 
             override fun afterTextChanged(s: Editable?) {}
@@ -257,9 +260,9 @@ class EditProfileActivity : AppCompatActivity() {
             binding.editLegalNameTIL.error = getString(R.string.register_empty_field_verification)
         }
 
-        if (binding.editIdTIET.text.isNullOrEmpty()) {
+        if (binding.editClinicIdTIET.text.isNullOrEmpty()) {
             valid = false
-            binding.editIdTIL.error = getString(R.string.register_empty_field_verification)
+            binding.editClinicIdTIET.error = getString(R.string.register_empty_field_verification)
         }
 
         if (binding.editDateOfBirthTIET.text.isNullOrEmpty()) {
@@ -319,6 +322,7 @@ class EditProfileActivity : AppCompatActivity() {
 
         val patientSharedPreferences = SecureSharedPreferences.getSharedPreferences(applicationContext)
         val patientId = patientSharedPreferences.getString("patientID", null)
+        id = patientId ?: ""
 
         if (patientId.isNullOrEmpty()) {
             progressDialog.dismiss()
@@ -332,7 +336,7 @@ class EditProfileActivity : AppCompatActivity() {
                     val patientData = documentSnapshot.data ?: return@addOnSuccessListener
 
                     binding.editLegalNameTIET.setText(AESEncryption().decrypt(patientData["legalName"].toString()))
-                    binding.editIdTIET.setText(AESEncryption().decrypt(patientId))
+                    binding.editClinicIdTIET.setText(patientData["clinicId"].toString())
                     binding.editDateOfBirthTIET.setText(AESEncryption().decrypt(patientData["dateOfBirth"].toString()))
                     binding.editGenderACTV.setText(
                         when (patientData["gender"].toString().toInt()) {
@@ -376,8 +380,6 @@ class EditProfileActivity : AppCompatActivity() {
 
         val photo = photoBA
 
-        val id = AESEncryption().encrypt(binding.editIdTIET.text.toString().trim().uppercase())
-
         var gender = 0
         when (binding.editGenderACTV.text.toString()) {
             getString(R.string.register_gender_male) -> gender = 1
@@ -392,6 +394,7 @@ class EditProfileActivity : AppCompatActivity() {
             "height" to AESEncryption().encrypt(binding.editHeightTIET.text.toString()),
             "targetSys" to AESEncryption().encrypt(binding.editRegisterHomeSysInput.text.toString()),
             "targetDia" to AESEncryption().encrypt(binding.editRegisterHomeDiaInput.text.toString()),
+            "clinicId" to binding.editClinicIdTIET.text.toString().trim(),
             "bpStage" to "N/A"
         )
 
@@ -407,28 +410,50 @@ class EditProfileActivity : AppCompatActivity() {
 
                         docRef.update(patient)
                             .addOnSuccessListener {
-                                progressDialog.dismiss()
+                                // Retrieve the document again to check the clinic ID
+                                docRef.get().addOnSuccessListener { updatedSnapshot ->
+                                    val updatedClinicId = updatedSnapshot.getString("clinicId").toString()
 
-                                Toast.makeText(
-                                    this,
-                                    getString(R.string.update_successful, AESEncryption().decrypt(id)),
-                                    Toast.LENGTH_SHORT
-                                ).show()
+                                    // Check if the clinic ID matches the one in StaffSharedPreferences
+                                    val staffClinicId = StaffSharedPreferences.getSharedPreferences(applicationContext).getString("clinicId", "")
 
-                                var profileActivityIntent = Intent(this, ProfileActivity::class.java)
-                                profileActivityIntent.extras?.putString("Source", "EditProfileActivity")
-                                startActivity(Intent(profileActivityIntent))
-                                finish()
+                                    if (updatedClinicId != staffClinicId) {
+                                        errorClinicDialogBuilder(
+                                            this,
+                                            getString(R.string.enhance_edit_clinic_id_mismatch),
+                                            getString(R.string.enhance_edit_clinic_id_error),
+                                            MainActivity::class.java
+                                        )
+                                    } else {
+                                        // If everything is fine, show success toast and navigate to ProfileActivity
+                                        progressDialog.dismiss()
+
+                                        Toast.makeText(
+                                            this,
+                                            getString(R.string.update_successful, AESEncryption().decrypt(id)),
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+
+                                        val profileActivityIntent = Intent(this, ProfileActivity::class.java)
+                                        profileActivityIntent.extras?.putString("Source", "EditProfileActivity")
+                                        startActivity(profileActivityIntent)
+                                        finish()
+                                    }
+                                }.addOnFailureListener { e ->
+                                    progressDialog.dismiss()
+                                    firebaseErrorDialog(this, e, docRef)
+                                }
                             }
                             .addOnFailureListener { e ->
                                 progressDialog.dismiss()
                                 firebaseErrorDialog(this, e, docRef)
-
                             }
+                    }.addOnFailureListener { e ->
+                        progressDialog.dismiss()
+                        firebaseErrorDialog(this, e, storageRef, photo)
                     }
                 }.addOnFailureListener { e ->
                     progressDialog.dismiss()
-
                     firebaseErrorDialog(this, e, storageRef, photo)
                 }
             } else {
@@ -437,4 +462,5 @@ class EditProfileActivity : AppCompatActivity() {
             }
         }
     }
+
 }

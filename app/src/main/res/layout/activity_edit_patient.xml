@@ -94,14 +94,14 @@
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/editIdTIL"
+                        android:id="@+id/editClinicIdTIL"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="@string/enhance_edit_patient_id"
+                        android:hint="@string/enhance_clinic_id"
                         app:errorEnabled="true">
 
                         <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/editIdTIET"
+                            android:id="@+id/editClinicIdTIET"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content" />
                     </com.google.android.material.textfield.TextInputLayout>

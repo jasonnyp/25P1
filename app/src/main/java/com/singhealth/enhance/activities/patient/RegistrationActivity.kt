@@ -28,6 +28,7 @@ import com.singhealth.enhance.activities.settings.SettingsActivity
 import com.singhealth.enhance.databinding.ActivityRegistrationBinding
 import com.singhealth.enhance.security.AESEncryption
 import com.singhealth.enhance.security.SecureSharedPreferences
+import com.singhealth.enhance.security.StaffSharedPreferences
 import java.io.ByteArrayOutputStream
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -351,6 +352,7 @@ class RegistrationActivity : AppCompatActivity() {
             ),
             "dateOfBirth" to AESEncryption().encrypt(binding.dateOfBirthTIET.text.toString()),
             "gender" to gender,
+            "clinicId" to StaffSharedPreferences.getSharedPreferences(applicationContext).getString("clinicId", ""),
 
             "weight" to AESEncryption().encrypt(binding.weightTIET.text.toString()),
             "height" to AESEncryption().encrypt(binding.heightTIET.text.toString()),
