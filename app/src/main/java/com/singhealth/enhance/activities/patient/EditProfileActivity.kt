@@ -335,7 +335,7 @@ class EditProfileActivity : AppCompatActivity() {
                     val patientData = documentSnapshot.data ?: return@addOnSuccessListener
 
                     binding.editLegalNameTIET.setText(AESEncryption().decrypt(patientData["legalName"].toString()))
-                    binding.editClinicIdTIET.setText(AESEncryption().decrypt(patientData["clinicId"].toString()))
+                    binding.editClinicIdTIET.setText(patientData["clinicId"].toString())
                     binding.editDateOfBirthTIET.setText(AESEncryption().decrypt(patientData["dateOfBirth"].toString()))
                     binding.editGenderACTV.setText(
                         when (patientData["gender"].toString().toInt()) {
@@ -393,7 +393,7 @@ class EditProfileActivity : AppCompatActivity() {
             "height" to AESEncryption().encrypt(binding.editHeightTIET.text.toString()),
             "targetSys" to AESEncryption().encrypt(binding.editRegisterHomeSysInput.text.toString()),
             "targetDia" to AESEncryption().encrypt(binding.editRegisterHomeDiaInput.text.toString()),
-            "clinicId" to AESEncryption().encrypt(binding.editClinicIdTIET.text.toString().trim()),
+            "clinicId" to binding.editClinicIdTIET.text.toString().trim(),
             "bpStage" to "N/A"
         )
 
@@ -411,11 +411,10 @@ class EditProfileActivity : AppCompatActivity() {
                             .addOnSuccessListener {
                                 // Retrieve the document again to check the clinic ID
                                 docRef.get().addOnSuccessListener { updatedSnapshot ->
-                                    val updatedClinicId = AESEncryption().decrypt(updatedSnapshot.getString("clinicId").toString())
+                                    val updatedClinicId = updatedSnapshot.getString("clinicId").toString()
 
                                     // Check if the clinic ID matches the one in StaffSharedPreferences
                                     val staffClinicId = StaffSharedPreferences.getSharedPreferences(applicationContext).getString("clinicId", "")
-                                        ?.let { it1 -> AESEncryption().encrypt(it1) }
 
                                     if (updatedClinicId != staffClinicId) {
                                         errorDialogBuilder(

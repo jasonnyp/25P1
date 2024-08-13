@@ -352,8 +352,7 @@ class RegistrationActivity : AppCompatActivity() {
             ),
             "dateOfBirth" to AESEncryption().encrypt(binding.dateOfBirthTIET.text.toString()),
             "gender" to gender,
-            "clinicId" to StaffSharedPreferences.getSharedPreferences(applicationContext).getString("clinicId", "")
-                ?.let { AESEncryption().encrypt(it) },
+            "clinicId" to StaffSharedPreferences.getSharedPreferences(applicationContext).getString("clinicId", ""),
 
             "weight" to AESEncryption().encrypt(binding.weightTIET.text.toString()),
             "height" to AESEncryption().encrypt(binding.heightTIET.text.toString()),
