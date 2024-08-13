@@ -158,10 +158,8 @@ class HistoryActivity : AppCompatActivity(), HistoryAdapter.OnItemClickListener 
 
                     if (history.isEmpty()) {
                         binding.noHistoryWarningTV.visibility = View.VISIBLE
-                        binding.recyclerView.visibility = View.GONE
                     }
                     else {
-                        binding.recyclerView.visibility = View.VISIBLE
                         sortedHistory = history.sortedByDescending { it.date }
 
                         println("Sorted History$sortedHistory")
