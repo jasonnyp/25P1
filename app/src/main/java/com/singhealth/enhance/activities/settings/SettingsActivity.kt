@@ -1,9 +1,11 @@
 package com.singhealth.enhance.activities.settings
 
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.MenuItem
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
@@ -13,9 +15,11 @@ import com.google.firebase.auth.auth
 import com.singhealth.enhance.R
 import com.singhealth.enhance.activities.MainActivity
 import com.singhealth.enhance.activities.authentication.LoginActivity
+import com.singhealth.enhance.activities.patient.ProfileActivity
 import com.singhealth.enhance.activities.patient.RegistrationActivity
 import com.singhealth.enhance.activities.settings.guide.UserGuideActivity
 import com.singhealth.enhance.databinding.ActivitySettingsBinding
+import com.singhealth.enhance.security.SecureSharedPreferences
 
 class SettingsActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySettingsBinding
@@ -109,6 +113,19 @@ class SettingsActivity : AppCompatActivity() {
             startActivity(Intent(this, AboutAppActivity::class.java))
             finish()
         }
+
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                val patientSharedPreferences : SharedPreferences = SecureSharedPreferences.getSharedPreferences(applicationContext)
+                if (patientSharedPreferences.getString("patientID", null).isNullOrEmpty()) {
+                    startActivity(Intent(this@SettingsActivity, MainActivity::class.java))
+                    finish()
+                } else {
+                    startActivity(Intent(this@SettingsActivity, ProfileActivity::class.java))
+                    finish()
+                }
+            }
+        })
     }
 
 
@@ -117,4 +134,5 @@ class SettingsActivity : AppCompatActivity() {
             true
         } else super.onOptionsItemSelected(item)
     }
+
 }

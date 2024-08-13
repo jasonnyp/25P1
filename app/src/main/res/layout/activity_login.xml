@@ -49,13 +49,14 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/enhance_login_staff_id"
                     app:errorEnabled="true"
-                    app:errorIconDrawable="@drawable/ic_error">
+                    app:errorIconDrawable="@drawable/ic_error" >
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/staffIDTIET"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="textNoSuggestions" />
+                        android:inputType="textNoSuggestions"
+                        android:privateImeOptions="nm" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout

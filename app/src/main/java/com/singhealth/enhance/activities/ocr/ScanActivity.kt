@@ -25,13 +25,13 @@ import com.google.firebase.ml.vision.document.FirebaseVisionDocumentText
 import com.singhealth.enhance.R
 import com.singhealth.enhance.activities.MainActivity
 import com.singhealth.enhance.activities.dashboard.SimpleDashboardActivity
-import com.singhealth.enhance.activities.validation.internetConnectionCheck
-import com.singhealth.enhance.activities.validation.ocrTextErrorDialog
-import com.singhealth.enhance.activities.validation.patientNotFoundInSessionErrorDialog
 import com.singhealth.enhance.activities.history.HistoryActivity
 import com.singhealth.enhance.activities.patient.ProfileActivity
 import com.singhealth.enhance.activities.patient.RegistrationActivity
 import com.singhealth.enhance.activities.settings.SettingsActivity
+import com.singhealth.enhance.activities.validation.internetConnectionCheck
+import com.singhealth.enhance.activities.validation.ocrTextErrorDialog
+import com.singhealth.enhance.activities.validation.patientNotFoundInSessionErrorDialog
 import com.singhealth.enhance.databinding.ActivityScanBinding
 import com.singhealth.enhance.security.AESEncryption
 import com.singhealth.enhance.security.SecureSharedPreferences
@@ -363,6 +363,9 @@ class ScanActivity : AppCompatActivity() {
                 .setMessage(getString(R.string.ocr_app_permissions_body))
                 .setPositiveButton(getString(R.string.ok_dialog)) { dialog, _ -> dialog.dismiss() }
                 .show()
+        }
+        else {
+            onClickRequestPermission()
         }
     }
 
