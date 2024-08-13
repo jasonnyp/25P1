@@ -167,6 +167,7 @@
 
     <string name="dialog_positive_ok">OK</string>
     <string name="bp_stage">BP Stage</string>
+    <string name="clinicId">Clinic ID</string>
 
     <string name="date_format">dd MMM yyyy, HH:mm:ss</string>
 
@@ -260,6 +261,9 @@
     <string name="enhance_edit_patient_id">Patient ID</string>
     <string name="enhance_edit_dob">Date of Birth</string>
     <string name="enhance_edit_gender">Gender</string>
+    <string name="enhance_clinic_id">Clinic Id</string>
+    <string name="enhance_edit_clinic_id_mismatch">Clinic Id Mismatch</string>
+    <string name="enhance_edit_clinic_id_error">"The clinic id does not match the one in the staff profile. Please contact the administrator."</string>
     <string name="enhance_edit_health_info">Edit Health Info</string>
     <string name="enhance_edit_weight">Weight</string>
     <string name="enhance_edit_height">Height</string>
