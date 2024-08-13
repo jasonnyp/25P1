@@ -173,6 +173,7 @@ class ScanActivity : AppCompatActivity() {
         outputUri = Uri.parse(uri.replace("file:", "")).also { parsedUri ->
             binding.cropIV.setImageUriAsync(parsedUri)
             binding.ocrInstructionsTextViewValue.visibility = View.GONE
+            binding.scanStatusTextView.visibility = View.GONE
         }
 
         if (outputUri.toString().isNotEmpty()) {

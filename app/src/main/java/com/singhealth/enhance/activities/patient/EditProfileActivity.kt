@@ -59,7 +59,7 @@ class EditProfileActivity : AppCompatActivity() {
 
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                startActivity(Intent(this@EditProfileActivity, EditProfileActivity::class.java))
+                startActivity(Intent(this@EditProfileActivity, ProfileActivity::class.java))
                 finish()
             }
         })

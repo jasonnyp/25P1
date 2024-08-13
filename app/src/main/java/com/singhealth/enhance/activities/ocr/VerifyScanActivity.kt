@@ -5,6 +5,8 @@ import android.app.ProgressDialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
@@ -72,6 +74,7 @@ class VerifyScanActivity : AppCompatActivity() {
     private lateinit var targetSysBP: String
     private lateinit var targetDiaBP: String
     private var sevenDay: Boolean = false
+    private var isSwappingValues = false
 
     private var sysBPList: MutableList<String> = mutableListOf()
     private var diaBPList: MutableList<String> = mutableListOf()
@@ -87,9 +90,12 @@ class VerifyScanActivity : AppCompatActivity() {
     private var avgDiaBP = 0
 
     private val undoStack = mutableListOf<Pair<MutableList<String>, MutableList<String>>>()
-    private val maxUndoStackSize = 1
+    private val maxUndoStackSize = 10
 
     private val db = Firebase.firestore
+
+    private val typingDelayHandler = Handler(Looper.getMainLooper())
+    private var typingRunnable: Runnable? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -385,7 +391,9 @@ class VerifyScanActivity : AppCompatActivity() {
                 getBPTarget()
                 val filteredSysBPList = sysBPList.filter { it.isNotBlank() && it != "-1" }
                 val filteredDiaBPList = diaBPList.filter { it.isNotBlank() && it != "-1" }
-                val finalRows = maxOf(filteredSysBPList.size, filteredDiaBPList.size)
+                val maxFilteredRows = maxOf(filteredSysBPList.size, filteredDiaBPList.size)
+                val maxHistoryRows = maxOf(sysBPListHistory.size, diaBPListHistory.size)
+                val finalRows = maxHistoryRows + maxFilteredRows
                 if (sevenDay) {
                     calcSevenDayAvgBP()
                 } else {
@@ -642,28 +650,49 @@ class VerifyScanActivity : AppCompatActivity() {
     }
 
     private fun saveStateForUndo() {
-        if (undoStack.isEmpty() || undoStack.last().first != sysBPList || undoStack.last().second != diaBPList) {
+        println("Saving state for undo...")
+        println("Current sysBPList: $sysBPList")
+        println("Current diaBPList: $diaBPList")
+
+        // Check if the current state is different from the last saved state
+        if (undoStack.isEmpty() || !listsAreEqual(undoStack.last().first, sysBPList) || !listsAreEqual(undoStack.last().second, diaBPList)) {
             if (undoStack.size >= maxUndoStackSize) {
+                println("Undo stack is full. Removing oldest state.")
                 undoStack.removeAt(0)
-            } else {
-                undoStack.add(Pair(sysBPList.toMutableList(), diaBPList.toMutableList()))
             }
+            println("Adding current state to undo stack.")
+            undoStack.add(Pair(sysBPList.toMutableList(), diaBPList.toMutableList()))
+        } else {
+            println("Current state is the same as the last state in the undo stack. Not adding.")
         }
+        println("Undo stack size after save: ${undoStack.size}")
+    }
+
+    private fun listsAreEqual(list1: MutableList<String>, list2: MutableList<String>): Boolean {
+        return list1.size == list2.size && list1.zip(list2).all { it.first == it.second }
     }
 
     fun undo() {
+        println("Performing undo...")
         if (undoStack.isNotEmpty()) {
-            println("Performing undo")
-            val lastState = undoStack[undoStack.size - 1]
+            // Remove the last state from the undo stack after restoring
+            val lastState = undoStack.removeAt(undoStack.size - 1)
+            println("Restoring state from undo stack...")
+            println("Last saved sysBPList: ${lastState.first}")
+            println("Last saved diaBPList: ${lastState.second}")
+
             sysBPList.clear()
             sysBPList.addAll(lastState.first)
             diaBPList.clear()
             diaBPList.addAll(lastState.second)
+
             println("Restored sysBPList: $sysBPList")
             println("Restored diaBPList: $diaBPList")
+            Toast.makeText(this, "Undo successful", Toast.LENGTH_SHORT).show()
             refreshViews()
         } else {
             println("Undo stack is empty")
+            Toast.makeText(this, "No more undos available", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -1247,34 +1276,47 @@ class VerifyScanActivity : AppCompatActivity() {
                 sysBPList.add("")
                 diaBPList.add("")
             }
-
         }
 
         // Add TextWatchers to update the lists
         sysBPTIET.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-            }
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+
             override fun afterTextChanged(s: Editable?) {
-                saveStateForUndo()
-                val index = sysBPFields.indexOf(sysBPTIET)
-                if (index != -1) {
-                    sysBPList[index] = s.toString()
+                if (!isSwappingValues) {
+                    typingRunnable?.let { typingDelayHandler.removeCallbacks(it) }
+                    typingRunnable = Runnable {
+                        saveStateForUndo()
+                        println("SysBP Text Changed: $s")
+                        val index = sysBPFields.indexOf(sysBPTIET)
+                        if (index != -1) {
+                            sysBPList[index] = s.toString()
+                        }
+                    }
+                    typingDelayHandler.postDelayed(typingRunnable!!, 1000) // 500ms delay
                 }
             }
         })
 
         diaBPTIET.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-            }
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+
             override fun afterTextChanged(s: Editable?) {
-                saveStateForUndo()
-                val index = diaBPFields.indexOf(diaBPTIET)
-                if (index != -1) {
-                    diaBPList[index] = s.toString()
+                if (!isSwappingValues) {
+                    typingRunnable?.let { typingDelayHandler.removeCallbacks(it) }
+                    typingRunnable = Runnable {
+                        saveStateForUndo()
+                        println("DiaBP Text Changed: $s")
+                        val index = diaBPFields.indexOf(diaBPTIET)
+                        if (index != -1) {
+                            diaBPList[index] = s.toString()
+                        }
+                    }
+                    typingDelayHandler.postDelayed(typingRunnable!!, 1000) // 500ms delay
                 }
             }
         })
@@ -1286,9 +1328,17 @@ class VerifyScanActivity : AppCompatActivity() {
         val swapValuesIV = rowBPRecordLayout.findViewById<View>(R.id.swapValuesIV) as ImageView
         swapValuesIV.setOnClickListener {
             saveStateForUndo()
+            println("Swapping values...")
+
+            // Disable TextWatcher during swap
+            isSwappingValues = true
+
             val tempValue = sysBPTIET.text.toString()
             sysBPTIET.setText(diaBPTIET.text.toString())
             diaBPTIET.setText(tempValue)
+
+            isSwappingValues = false
+
             val toast = Toast.makeText(this, "Values swapped", Toast.LENGTH_SHORT)
             toast.show()
         }
@@ -1312,6 +1362,7 @@ class VerifyScanActivity : AppCompatActivity() {
                     )
                 ) { dialog, _ ->
                     saveStateForUndo()
+                    println("Removing row...")
 
                     // Print lists before removal
                     println("sysBPList before removal: $sysBPList")
@@ -1348,9 +1399,9 @@ class VerifyScanActivity : AppCompatActivity() {
                 .show()
         }
 
-
         addOneRowBtn.setOnClickListener {
             saveStateForUndo()
+            println("Adding row... (BUTTON)")
 
             val currentRowIndex = binding.rowBPRecordLL.indexOfChild(rowBPRecordLayout)
             val newRow = layoutInflater.inflate(R.layout.row_bp_record, null, false)
@@ -1370,6 +1421,8 @@ class VerifyScanActivity : AppCompatActivity() {
         val addRowBtn = rowBPRecordLayout.findViewById<View>(R.id.addRowIV) as ImageView
         addRowBtn.setOnClickListener {
             saveStateForUndo()
+            println("Adding row... ")
+
             if (!sevenDay) {
                 val currentRowIndex = binding.rowBPRecordLL.indexOfChild(rowBPRecordLayout)
                 sysBPList.add(currentRowIndex + 1, "")
@@ -1481,15 +1534,6 @@ class VerifyScanActivity : AppCompatActivity() {
         val dividerOldNewRecordLayout =
             layoutInflater.inflate(R.layout.divider_old_new_record, null, false)
         binding.rowBPRecordLL.addView(dividerOldNewRecordLayout)
-    }
-
-    private fun removeFirstOccurrenceFromEnd(list: MutableList<String>, value: String) {
-        for (i in list.indices.reversed()) {
-            if (list[i] == value) {
-                list.removeAt(i)
-                break
-            }
-        }
     }
 }
 
