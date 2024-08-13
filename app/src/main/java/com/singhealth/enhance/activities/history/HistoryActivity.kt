@@ -161,6 +161,7 @@ class HistoryActivity : AppCompatActivity(), HistoryAdapter.OnItemClickListener 
                         binding.recyclerView.visibility = View.GONE
                     }
                     else {
+                        binding.recyclerView.visibility = View.VISIBLE
                         sortedHistory = history.sortedByDescending { it.date }
 
                         println("Sorted History$sortedHistory")
