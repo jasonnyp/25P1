@@ -19,6 +19,7 @@
     <string name="ocr_image_error_body">由於錯誤，無法處理圖像。\n\n如果問題仍然存在，請聯繫 IT 支援並提供以下錯誤代碼：%1$s</string>
     <string name="ocr_text_error_header">沒有可處理的內容</string>
     <string name="ocr_text_error_body">我們找不到任何手寫或文本可以處理。\n\n提示：確保圖像清晰並且僅裁剪到數值部分，排除任何標題（例如“收縮壓”和“舒張壓”）。</string>
+    <string name="resuming_scan">點擊「常規掃描」以添加更多掃描</string>
 
     <!-- VerifyScanActivity.kt -->
     <string name="verify_scan_rows">已檢測到 %1$d 條記錄。\n\n總記錄數：%2$d</string>
@@ -44,6 +45,12 @@
     <string name="verify_scan_erroneous_body">您要重新掃描當前記錄以獲得更高的準確性嗎？\n\n（注意：您之前掃描的記錄將會被保存）</string>
     <string name="verify_scan_remove_row_header">移除行</string>
     <string name="verify_scan_remove_row_body">您要移除選中的行嗎？</string>
+    <string name="add_empty_column_left">在左側添加一個空白列</string>
+    <string name="add_empty_column_right">在右側添加一個空白列</string>
+    <string name="swap_values">交換收縮壓和舒張壓值</string>
+    <string name="remove_row">移除該行</string>
+    <string name="add_new_row">添加新行</string>
+    <string name="functionality">功能：</string>
 
     <!-- ProfileActivity strings -->
     <string name="profile_gender_male">男</string>
