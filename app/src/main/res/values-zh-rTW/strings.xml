@@ -1,12 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!-- AndroidManifest.xml (Some of the strings are in different segments) -->
+    <string name="outcome_and_recommendation">結果與建議</string>
+    <string name="verify_scan_results">驗證掃描結果</string>
+
     <!-- LoginActivity strings -->
     <string name="good_morning">早上好！</string>
     <string name="good_afternoon">下午好！</string>
     <string name="good_evening">晚上好！</string>
     <string name="login_validate_staff">工作人員識別碼不能為空！</string>
     <string name="login_validate_password">密碼不能為空！</string>
+    <string name="login_success_header">登入成功</string>
 
     <!-- SimpleDashboardActivity strings -->
     <string name="dashboard_no_records_found">未找到記錄。</string>
@@ -160,10 +165,9 @@
 
     <!-- Patient error strings -->
     <string name="patient_info_not_found">當前會話中未找到病人信息。請重試。</string>
-
     <string name="dialog_positive_ok">確定</string>
     <string name="bp_stage">血壓階段</string>
-
+    <string name="clinic_id">診所編號</string>
     <string name="date_format">dd日MM月yyyy年, HH:mm:ss</string>
 
     <!-- activity_about.xml -->
@@ -242,6 +246,9 @@
     <string name="enhance_edit_patient_id">病人ID</string>
     <string name="enhance_edit_dob">出生日期</string>
     <string name="enhance_edit_gender">性別</string>
+    <string name="enhance_clinic_id">診所編號</string>
+    <string name="enhance_edit_clinic_id_mismatch">診所編號不匹配</string>
+    <string name="enhance_edit_clinic_id_error">"診所編號與員工檔案中的不匹配。請聯繫管理員。"</string>
     <string name="enhance_edit_health_info">編輯健康信息</string>
     <string name="enhance_edit_weight">體重</string>
     <string name="enhance_edit_height">身高</string>

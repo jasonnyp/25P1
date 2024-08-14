@@ -1,6 +1,10 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name" tools:ignore="Typos" translatable="false">ENHANCe1</string>
 
+    <!-- AndroidManifest.xml (Some of the strings are in different segments) -->
+    <string name="outcome_and_recommendation">Outcome and Recommendation</string>
+    <string name="verify_scan_results">Verify Scan Results</string>
+
     <!-- LoginActivity strings -->
     <string name="good_morning">Good Morning!</string>
     <string name="good_afternoon">Good Afternoon!</string>
@@ -165,11 +169,9 @@
 
     <!-- Patient error strings -->
     <string name="patient_info_not_found">Patient information could not be found in current session. Please try again.</string>
-
     <string name="dialog_positive_ok">OK</string>
     <string name="bp_stage">BP Stage</string>
-    <string name="clinicId">Clinic ID</string>
-
+    <string name="clinic_id">Clinic ID</string>
     <string name="date_format">dd MMM yyyy, HH:mm:ss</string>
 
     <!-- activity_about.xml -->

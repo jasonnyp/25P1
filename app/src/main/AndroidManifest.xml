@@ -69,7 +69,7 @@
             android:name=".activities.ocr.VerifyScanActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:exported="false"
-            android:label="Verify scan results"
+            android:label="@string/verify_scan_results"
             android:parentActivityName=".activities.ocr.ScanActivity"
             android:windowSoftInputMode="adjustResize" />
 
@@ -88,7 +88,7 @@
         <activity android:name=".activities.patient.EditProfileActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:exported="false"
-            android:label="Edit Patient"
+            android:label="@string/enhance_edit_particulars"
             android:parentActivityName=".activities.patient.ProfileActivity"
             android:windowSoftInputMode="adjustResize" />
         <!-- result -->
@@ -96,7 +96,7 @@
             android:name=".activities.result.RecommendationActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:exported="false"
-            android:label="Outcome and recommendation"
+            android:label="@string/outcome_and_recommendation"
             android:parentActivityName=".activities.history.HistoryActivity" />
 
         <!-- settings -->
