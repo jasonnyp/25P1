@@ -54,3 +54,36 @@ class LoginActivity : AppCompatActivity() {
     }
 }
 ```
+#### Gradle (build.gradle.kts (:app))
+- Defines all of the implementations (imports) that make the app work.
+- Defines some of the advanced android options.
+- Highly volatile, avoid changing existing options if possible.
+
+### LoginActivity.kt -> activity_login.xml
+- Handles the login of the user based on the firestore database.
+- Contains a small segment defining the user preferred theme (Defaults to light mode).
+- Validations towards the login and connection towards firebase, and an (unreliable) internet checking function (found in Validations.kt).
+
+### DashboardActivity.kt -> dashboard.xml
+- Inherited from the previous Amazon code segment (P1 batch).
+- Links to a [LookerDocument](https://enhance-bdc3f.web.app/) visible in the Web Application, with blood pressure readings.
+- Not currently used in the application, but maintained for posterity. Requires association to a patientID (Done in the code) to find specifics of the patient recorded.
+- Outdated and needs fixing before use.
+
+### SimpleDashboardActivity.kt -> activity_simple_dashboard.xml
+- Features a simple dashboard stemming from P4 batch.
+- Calls the ```visits``` collection within the respective ```patients``` in firebase, creating a list and sorting the list according to the date, and calls the systolic/diastolic functions to display the 3 most recent records.
+``` kotlin
+    lineChart = findViewById(R.id.syslineChart)
+    setupLineChart()
+    diastolicLineChart = findViewById(R.id.diastolicLineChart)
+    setupDiastolicLineChart()
+```
+- Capable of printing out the records with the print button, sending users to a separate menu to either save the result as a pdf or connect to a printer to print the records.
+- Validations to prevent users from printing with no records, and displaying an error message within the graphs to show no records.
+
+### Diag.kt/HistoryData.kt
+- Classes used to organise and define data.
+- Diag is used to collect the date, average home bp (sys/dia), clinic bp, and the target home bp. Target clinic bp is fetched from adding +5 to the target home bp. Used by DiagnosePatient.kt.
+- HistoryData is used to collect the ```visits``` collection within the respective ```patients``` in firebase, organising the data associated with the record in a list. Used in anywhere that involves visits, namely RecommendationActivity.kt, HistoryActivity.kt, SimpleDashboardActivity.kt, and DashboardActivity.kt.
+- HistoryAdapter uses information from HistoryData, but does not call HistoryData directly.
