@@ -80,7 +80,7 @@ class LoginActivity : AppCompatActivity() {
 
 ![image](https://github.com/user-attachments/assets/24c34858-68ca-46c6-b773-1b89998d8bdb)
 
-In the resource files above, the language is indicated by the first two alphabets (zh) and the region is indicated by a regional tag and the two letter indicator (rCN meaning region-Mainland China). In code, you do not need to indicate the regional tag, and only needing a two letter indicator. Refer to [LanguageActivity](#LanguageActivity) functions to learn more about how to use this to translate your app into more languages.
+In the resource files above, the language is indicated by the first two alphabets (zh) and the region is indicated by a regional tag and the two letter indicator (rCN meaning region-Mainland China). In code, you do not need to indicate the regional tag, and only needing a two letter indicator. Refer to [LanguageActivity](###LanguageActivity) functions to learn more about how to use this to translate your app into more languages.
     - Note: While the system gives an error for not translating the string after adding new strings, the code will still run, defaulting to the normal strings.xml file. You can also continue using hardcoded strings if you wish to maintain a more static system of strings.
 
 ## Primary File Structure
@@ -266,4 +266,4 @@ UserGuideActivity.kt -> activity_user_guide.xml
 - A file that holds a class, likely used in a previous batch (There was some code that created a dynamic user guide with dropdowns in UserGuideActivity, but is long unfunctional).
 - Seemingly safe to remove.
 
-### LanguageActivity.kt -> activity_language.xml {#LanguageActivity}
+### LanguageActivity.kt -> activity_language.xml {###LanguageActivity}
