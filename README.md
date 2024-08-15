@@ -61,7 +61,7 @@ class LoginActivity : AppCompatActivity() {
 #### (Dynamic) Strings and Language Options
 - Every line of text in the file barring some rare exceptions (Seven Day Scan in VerifyScanActivity) all stem from the string.xml file under res/values/strings. This allows for quick translation of strings for multiple languages, but so far there's only two - Simplified/Traditional Chinese.
 - To fetch strings from these files, the primary method is to call the ```getString()``` function, followed up with the resource ID of the string (R.string.app_name where app_name is the name of the string given in the strings.xml file).
-    - Important: the ```getString()``` function only exists in Activity files. In order to use ```getString()``` outside of there, you can either use ResourcesHelper() object, and add in a ```getString()``` function within to get the strings. Refer to the code below, and use them in your .kt files. (Note: In some cases you can still call ```getString()``` normally, but this is likely due to imports from an Activity file. Untested, but if this is proven to be more efficient, I recommend not using ResourcesHelper.)
+    - Important: the ```getString()``` function only exists in Activity files. In order to use ```getString()``` outside of there, you can either use ResourcesHelper() object, and add in a ```getString()``` function within to get the strings. Refer to the code below, and use them in your .kt files. (Note: In some cases you can still call ```getString()``` normally from non-Activity files, but this is likely due to imports from an Activity file. Untested, but if this is proven to be more efficient, I recommend not using ResourcesHelper.)
      ``` kotlin
      // Normal Use Case in Activity
      getString(R.string.app_name)
@@ -71,17 +71,40 @@ class LoginActivity : AppCompatActivity() {
          fun getString(context: Context, resId: Int): String {
              return context.getString(resId)
          }
+
+         // A function that gets a string with a variable within. Takes in any value that can be displayed in a string.
+         // @StringRes ensures that the ID comes from strings.xml (I believe), but is not necessary.
+         fun getString(context: Context, @StringRes resId: Int, vararg formatArgs: Any): String {
+            return context.getString(resId, *formatArgs)
+         }
      }
      
      // Context is always represented by 'this' without quotation marks.
      ResourcesHelper.getString(this, R.string.app_name)
+     // This function is also present in normal getString() functions in activity files. For more specific uses with more inputs, you can change the function as needed.
+     // Note: To add in variables, make sure to add them in your strings.xml string holder. '%1$s' is an example of a string input, but there are many different types that you can use (Personally not familiar with most).
+     // <string name="enhance_recco_header">The following are the recommendations based on the %1$s scanned BP records:</string>
+     ResourcesHelper.getString(this, R.string.app_name, "Hello World!")
      ``` 
 - Translated string files are distinguished by a small flag next to the name of the file, along with a bracketed segment indicating the language, and the region if there's any. strings.xml is always the default language, if you wish to directly change the default language of the app.
 
-![image](https://github.com/user-attachments/assets/24c34858-68ca-46c6-b773-1b89998d8bdb)
+    ![image](https://github.com/user-attachments/assets/24c34858-68ca-46c6-b773-1b89998d8bdb)
 
-In the resource files above, the language is indicated by the first two alphabets (zh) and the region is indicated by a regional tag and the two letter indicator (rCN meaning region-Mainland China). In code, you do not need to indicate the regional tag, and only needing a two letter indicator. Refer to [LanguageActivity](###LanguageActivity) functions to learn more about how to use this to translate your app into more languages.
+    In the resource files above, the language is indicated by the first two alphabets (zh) and the region is indicated by a regional tag and the two letter indicator (rCN meaning region-Mainland China). In code, you do not need to indicate the regional tag, and only needing a two letter indicator. Refer to LanguageActivity functions to learn more about how to use this to translate your app into more languages.
+    - To add more languages, open up the translation editor within any strings.xml file (The popup above), and click on the globe with a plus and pick your language.
     - Note: While the system gives an error for not translating the string after adding new strings, the code will still run, defaulting to the normal strings.xml file. You can also continue using hardcoded strings if you wish to maintain a more static system of strings.
+
+#### Colours and Themes
+- In .xml files, the colour of certain elements can be set through dynamic values within a colors.xml file (Or any other res/values file really).
+- In a similar light, theme files can hold colours of specific elements which change based on the active theme. This means that an element named 'text_light' would fetch from all existing theme files in res/values/themes, and be coloured differently if light theme contained white, and dark theme contained yellow. This concept is crucial in making different themes work well together in a dynamic way.
+- You can always set the colours statically through their hex values, or statically through colors.xml files. color.xml is still useful dynamically, used for definiing the colours of themes, although they can be defined in the theme files themselves.
+- Currently unclear on how to create more themes, but the app comes with a light/dark mode within, which is modified to allow a smooth experience UI wise.
+
+![image](https://github.com/user-attachments/assets/a46014e1-d3dd-4994-8d1e-114a204348b4)
+![image](https://github.com/user-attachments/assets/0dc15b78-3d43-4920-a28d-0f2d60b9b3f9)
+Above, this is one example of the same colour name used in different theme files, with dark theme above, and light theme below. While light theme maintains the same orange for the primary buttons, the dark theme uses grey, with two different shades relevant to different buttons throughout the code. Pretty neat, right? Many more colours are defined through this method to make the theme dynamic, while also depending on a bigger primary colour scheme to fall back on if the element is not statically coded to have a colour.
+
+- While I used 'colour' instead of 'color' in these examples, code wise 'color' is used.
 
 ## Primary File Structure
 
@@ -258,12 +281,96 @@ fun registerPatient()
     - Both groups of data have duplicate values, but the ```visits``` collection takes most of the use cases. The ```intent.extras``` is primarily used for the ```bundlePosition``` variable, to associate the items with the ```sortedHistory``` list created in ```visits```.
     - Editor's note: Only ```bundlePosition``` is used, other data can be removed as they stem from the ```visits``` collection.
  
-### AboutAppActivity.kt -> activity_about.xml
-UserGuideActivity.kt -> activity_user_guide.xml
+### AboutAppActivity.kt -> activity_about.xml, UserGuideActivity.kt -> activity_user_guide.xml
 - Only the .xml is used in the app settings, the .kt file only has a code that redirects users back to settings if the back button is pressed.
 
 ### UserGuides.kt
 - A file that holds a class, likely used in a previous batch (There was some code that created a dynamic user guide with dropdowns in UserGuideActivity, but is long unfunctional).
 - Seemingly safe to remove.
 
-### LanguageActivity.kt -> activity_language.xml {###LanguageActivity}
+### LanguageActivity.kt -> activity_language.xml
+- The main area where languages are managed and set.
+- Lists a bunch of languages and allows the user to pick their preferred choice, with simple validation.
+#### Functions
+``` kotlin
+// Non-regional language setting function. Sets the language based on the 2 letter locale input given.
+fun languageBuilder(context: Context, curLanguage: String, locale: String)
+
+// Regional language setting function. Same as above, but also takes in a 2 letter regional input. Only appropriate for languages with regional variants (eg. Simplified/Traditional Chinese)
+fun languageBuilder(context: Context, curLanguage: String, locale: String, region: String)
+```
+
+### PrivacyStatementActivity.kt -> activity_privacy_statement.xml, TermsOfUseActivity.kt -> activity_terms_of_use.xml
+- Unused in code outside of the AndroidManifest.xml. Safe to delete.
+
+### SettingsActivity.kt -> activity_settings.xml
+- The settings menu that leads to many areas associated to settings, ie. ```ThemeActivity```, ```LanguageActivity```, ```AboutAppActivity```, and ```UserGuideActivity```
+
+### ThemeActivity.kt -> activity_theme.xml
+- Allows the user to change their theme between dark and light mode, where light mode is the default.
+#### Functions
+``` kotlin
+// Uses getSharedPreferences to hold the user's choice, and calls a function within LoginActivity to update the theme.
+// The relevant code segment can be moved to SplashScreenActivity for a more smooth transition, but for now it remains in LoginActivity for ease of access.
+fun saveThemePreference(isDarkMode: Boolean)
+```
+
+### ErrorHandling.kt
+- The primary area where error message dialogs are built in. Mostly used for dynamic coding and allowing users to retry their previous actions.
+``` kotlin
+// Called when internetConnectionCheck in Validations returns a false value.
+fun noInternetErrorDialog(context: Context)
+
+// The overall function is used when firebase is involved. This overload function reruns the inputted function after the user indicates a retry.
+fun firebaseErrorDialog(context: Context, e: Exception, function:(String) -> Unit, string: String)
+
+// Same as above, but calls the .get() function of a document.
+fun firebaseErrorDialog(context: Context, e: Exception, document: DocumentReference)
+
+// Same as above, but calls the StorageReference to fetch an image.
+fun firebaseErrorDialog(context: Context, e: Exception, storage: StorageReference, photo: ByteArray)
+
+// A generic builder for error dialogs, taking a title and message as an input, and returning a 'OK' button. 
+fun errorDialogBuilder(context: Context, title: String, message: String)
+
+// Same as above, but calls an Activity when 'YES' (PositiveButton) is indicated.
+fun errorDialogBuilder(context: Context, title: String, message: String, activity: Class<*>)
+
+// Same as above, but with a unique overload for a special icon.
+fun errorDialogBuilder(context: Context, title: String, message: String, activity: Class<*>, icon: Int)
+
+// Unique error dialog exclusive to EditprofileActivity.
+fun errorClinicDialogBuilder(context: Context, title: String, message: String, activity: Class<*>)
+
+// Self explanatory. Called in most files involving patient ID, but is currently incomplete in some files.
+fun patientNotFoundInSessionErrorDialog(context: Context)
+
+// Self explanatory. Called in ScanActivity.
+fun ocrTextErrorDialog(context: Context)
+```
+
+### Validations.kt
+- Primary area where validations and checks are handled. Incomplete at the moment.
+#### Functions
+``` kotlin
+// Self explanatory. Called in most locations that require a connection to firebase. Functionally wonky, as it does not call on Activity runtime and takes a moment, while also being redundant, having a similar check in firebaseErrorDialog().
+fun internetConnectionCheck(context: Context)
+```
+
+### MainActivity.kt -> activity_main.xml
+- The main page after logging in with credentials. Also defines the patient ID in the session when searched for.
+#### Functions
+``` kotlin
+// Clears patient info in the session, ie. when this page activity is resumed.
+override fun onResume()
+
+// Self explanatory.
+private fun getPatientData(patientID: String)
+
+// Saves patient ID in SecuredSharedPreferences.
+private fun savePatientData(patientID: String)
+```
+
+### SplashScreenActivity.kt -> activity_splash_screen.xml
+- Responsible for initiating the splash screen of the app.
+- The first page to run at runtime, as indicated in AndroidManifest.xml.
