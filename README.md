@@ -35,7 +35,7 @@ The main file structure contains 2 groups of files: Kotlin/Java files, and XML f
 - UI pages (under res/layout)
 - Vector icon files (under res/drawable)
 - Dynamic languages and themes (under res/values)
-XML is vital to the frontend of the webpage, and where much of the dynamic nature of the project has been developed from, particularly affecting languages and themes.
+XML is vital to the frontend of the webpage, and where much of the dynamic nature of the project has been developed from, particularly affecting languages and themes. More details about strings and themes are down below.
 #### Kotlin/Java 
 - Backend functionality
 - Activity files (under com.singhealth.enhance/activities)
@@ -44,7 +44,6 @@ Primarily where most of the app is done through (More specifics are below). The 
 #### AndroidManifest.xml
 - Defining Activity files and permissions the app needs.
 ENHANCe currently requires camera and photo access for the OCR, which is definied in this file. More importantly, Activity files are created through here, and can only be used if defined here. For connecting XML files to the Activity files, copy over some codes from an existing activity file, define the Activity in the Manifest, and ensure that the class file contains ```: AppCompatActivity()``` at the end. Also make sure to check imports and refer to other Activity files.
-
 ``` kotlin
 class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -59,6 +58,32 @@ class LoginActivity : AppCompatActivity() {
 - Defines all of the implementations (imports) that make the app work.
 - Defines some of the advanced android options.
 - Highly volatile, avoid changing existing options if possible.
+#### (Dynamic) Strings and Language Options
+- Every line of text in the file barring some rare exceptions (Seven Day Scan in VerifyScanActivity) all stem from the string.xml file under res/values/strings. This allows for quick translation of strings for multiple languages, but so far there's only two - Simplified/Traditional Chinese.
+- To fetch strings from these files, the primary method is to call the ```getString()``` function, followed up with the resource ID of the string (R.string.app_name where app_name is the name of the string given in the strings.xml file).
+    - Important: the ```getString()``` function only exists in Activity files. In order to use ```getString()``` outside of there, you can either use ResourcesHelper() object, and add in a ```getString()``` function within to get the strings. Refer to the code below, and use them in your .kt files. (Note: In some cases you can still call ```getString()``` normally, but this is likely due to imports from an Activity file. Untested, but if this is proven to be more efficient, I recommend not using ResourcesHelper.)
+     ``` kotlin
+     // Normal Use Case in Activity
+     getString(R.string.app_name)
+
+     // Use Case outside of Activity
+     object ResourcesHelper {
+         fun getString(context: Context, resId: Int): String {
+             return context.getString(resId)
+         }
+     }
+     
+     // Context is always represented by 'this' without quotation marks.
+     ResourcesHelper.getString(this, R.string.app_name)
+     ``` 
+- Translated string files are distinguished by a small flag next to the name of the file, along with a bracketed segment indicating the language, and the region if there's any. strings.xml is always the default language, if you wish to directly change the default language of the app.
+
+![image](https://github.com/user-attachments/assets/24c34858-68ca-46c6-b773-1b89998d8bdb)
+
+In the resource files above, the language is indicated by the first two alphabets (zh) and the region is indicated by a regional tag and the two letter indicator (rCN meaning region-Mainland China). In code, you do not need to indicate the regional tag, and only needing a two letter indicator. Refer to [LanguageActivity](https://github.com/Kurotokai/enhance-singhealth/edit/main/README.md#languageactivitykt) functions to learn more about how to use this to translate your app into more languages.
+    - Note: While the system gives an error for not translating the string after adding new strings, the code will still run, defaulting to the normal strings.xml file. You can also continue using hardcoded strings if you wish to maintain a more static system of strings.
+
+## Primary File Structure
 
 ### LoginActivity.kt -> activity_login.xml
 - Handles the login of the user based on the firestore database.
@@ -217,3 +242,28 @@ fun loadImageFromUrl(imageUrl: String)
 // Self explanatory. Deletes the current patient, and directs the user back to MainActivity.
 fun deletePatient()
 ```
+
+### RegistrationActivity.kt -> activity_registration.xml
+- Registers the patient into firebase.
+- Contains all relevant information to a patient, barring clinic ID which is fetched from the staff that is logged in.
+#### Functions
+``` kotlin
+// Self explanatory. Called after validateFields() returns true.
+fun registerPatient()
+```
+
+### RecommendationActivity.kt -> activity_recommendation.xml
+- Contains all of the functions relating to the recommendation page, accessed through HistoryActivity.
+- Calls ```visits``` collection from ```patients```, as well as calling ```intent.extras``` from HistoryActivity to fetch the values associated with the records.
+    - Both groups of data have duplicate values, but the ```visits``` collection takes most of the use cases. The ```intent.extras``` is primarily used for the ```bundlePosition``` variable, to associate the items with the ```sortedHistory``` list created in ```visits```.
+    - Editor's note: Only ```bundlePosition``` is used, other data can be removed as they stem from the ```visits``` collection.
+ 
+### AboutAppActivity.kt -> activity_about.xml
+UserGuideActivity.kt -> activity_user_guide.xml
+- Only the .xml is used in the app settings, the .kt file only has a code that redirects users back to settings if the back button is pressed.
+
+### UserGuides.kt
+- A file that holds a class, likely used in a previous batch (There was some code that created a dynamic user guide with dropdowns in UserGuideActivity, but is long unfunctional).
+- Seemingly safe to remove.
+
+### LanguageActivity.kt
