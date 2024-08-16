@@ -1,6 +1,17 @@
 ## ENHANCe
 ENHANCe is an application designed to improve manual blood pressure logging with an app based on OCR technology, replacing traditional paper logged patient blood pressure with a online database storage system and a modern and simplistic mobile app.
 
+##Main Changes made to ENHANCe in P2 2024: 
+1. Updated the reccomendation based on clients requirements (Do request from Mr Jason Chung if needed) 
+2. Updated the scans from general scans to 7 day scans and general scans based on clients requirements (Do request from Mr Jason Chung if needed) 
+3. Added EditPatient page to edit patients Target Home BP and details 
+4. Updated the UI for activity_simple_dashboard, activity_verify_scan, activity_scan, row_bp_record, activity_profile.
+5. Added in Authentication using Firebase instead of hard coded username and password in the application
+
+**Note:** Do note that the code changes are listed below 
+<br><br>
+**Note:** Test cases and passwords towards the project are in the provide link: https://docs.google.com/spreadsheets/d/1eyt-5fAPMl-NJQHJk-1Y_YeJh-J8y1TF/edit?usp=sharing&ouid=107358809926173469194&rtpof=true&sd=true
+
 ## Features
 ### Login System and Staff/Admin System
 To facilitate clinic staff, ENHANce includes a login page synced with an online database of users.
@@ -445,3 +456,14 @@ private fun savePatientData(patientID: String)
 ### SplashScreenActivity.kt -> activity_splash_screen.xml
 - Responsible for initiating the splash screen of the app.
 - The first page to run at runtime, as indicated in AndroidManifest.xml.
+
+##Contributions
+
+Do take some time to familiarise yourself with the current codebase.
+
+Please do not hesitate to consult the previous batch(es) of developer(s) if you are unsure of anything:
+
+    Samuel Ong Qi Xin (220367S@mymail.nyp.edu.sg)
+    Wong Jing Yuan (222039P@mymail.nyp.edu.sg)
+
+Alternatively, you may contact us via our mobile number if you happen to have it.
