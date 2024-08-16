@@ -240,12 +240,6 @@ val requestPermissionLauncher = registerForActivityResult(ActivityResultContract
 #### Functions
 ```kotlin
 
-// Initializes the activity, sets up the UI elements, retrieves patient data, and loads any existing scan data.
-override fun onCreate(savedInstanceState: Bundle?)
-
-// Handles the back button press, redirecting the user to ScanActivity.
-override fun onOptionsItemSelected(item: MenuItem): Boolean
-
 // Continues the scan by passing the current data to ScanActivity.
 fun continueScan()
 
@@ -269,9 +263,6 @@ private fun refreshViews()
 
 // Performs validation on the blood pressure readings to identify any errors or anomalies.
 private fun postScanValidation()
-
-// Sets an error message on a TextInputLayout if the validation fails.
-private fun setError(inputLayout: TextInputLayout, message: String?)
 
 // Validates the input fields for systolic and diastolic blood pressure readings.
 private fun validateFields(): Boolean
@@ -301,9 +292,6 @@ private fun addRow(
     time: Int = -1,
     showHeader: Boolean = false
 )
-
-// Adds a divider to visually separate old and new records in the UI.
-private fun addDivider()
 ```
 ### ModalBottomSheet.kt -> bottom_sheet_verify_scan.xml
 - A bottom sheet dialog fragment that provides additional options to the user, such as continuing the scan, re-scanning, undoing the last change, or discarding the progress.
@@ -341,6 +329,14 @@ fun deletePatient()
 ``` kotlin
 // Self explanatory. Called after validateFields() returns true.
 fun registerPatient()
+```
+
+### EditProfileActivity.kt -> activity_edit_patient.xml
+- Edits the patient into firebase.
+#### Functions
+``` kotlin
+// Self explanatory. Called after validateFields() returns true.
+fun updatePatient()
 ```
 
 ### RecommendationActivity.kt -> activity_recommendation.xml
