@@ -22,11 +22,18 @@ In order to improve the readability and accessibility of the app, the app offers
 The app offers a dark and light theme to keep in line with modern UI standards.
 
 ## Implementation 
-Add the project via your Android studio, and wait for the gradle build before running the project. 
+Add the project via your Android studio, and wait for the gradle build before running the project. In the github account associated with the email jason.nyp1@gmail.com , there is a project which can be imported and used for ease of integration. Refer to the spreadsheet below for more information.
 
 **IMPORTANT: AVOID UPDATING THE GRADLE FILE IMPLEMENTATIONS, AS IT MAY BREAK THE WHOLE PROJECT. MAKE A SEPARATE BRANCH TO TEST BEFORE MAKING ANY MAJOR CHANGES.**
 
 (Adding your own implementations won't affect the code.)
+
+[Google Spreadsheet](https://docs.google.com/spreadsheets/d/1eyt-5fAPMl-NJQHJk-1Y_YeJh-J8y1TF/edit?gid=372290461#gid=372290461) with all relevant information.
+
+[Helping article](https://stackoverflow.com/questions/25348339/how-to-import-an-existing-project-from-github-into-android-studio) for adding github projects into android studio.
+
+## Future Improvements
+- Improvement to OCR scanning, to factor in more test cases and filters towards less perfect cases.
 
 ## Technical
 ### Data Structure
