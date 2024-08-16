@@ -234,19 +234,87 @@ fun navigateToVerifyScanActivity(sysBPList: MutableList<String>, diaBPList: Muta
 // Only affects the first time click on scans, unless the user has not granted relevant permissions.
 val requestPermissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission())
 ```
-
-### EditProfileActivity.kt -> activity_edit_patient.xml
-- Allows users to edit the patient information other than their ID.
-- Connection to firebase and relational database systems.
-- Uses many functions present in ProfileActivity.
-    - ```retrievePatient()```, ```updateUIWithPatientData()```, ```loadImageFromUrl()```
+### VerifyScanActivity.kt -> activity_verify_scan.xml
+- The page where users can verify and review their blood pressure readings after being scanned and processed. This activity also handles the calculation and validation of blood pressure records, allows for user interaction with the readings, and provides options to undo, swap, or remove entries.
+- This activity also contains options for re-scanning, continuing the scan, or discarding the progress.
 #### Functions
-``` kotlin
-// Loads the patient data into the fields for editing.
-fun loadPatientData()
+```kotlin
 
-// Updates the patient with the new information, and directs the user back to the profile page.
-fun updatePatient()
+// Initializes the activity, sets up the UI elements, retrieves patient data, and loads any existing scan data.
+override fun onCreate(savedInstanceState: Bundle?)
+
+// Handles the back button press, redirecting the user to ScanActivity.
+override fun onOptionsItemSelected(item: MenuItem): Boolean
+
+// Continues the scan by passing the current data to ScanActivity.
+fun continueScan()
+
+// Prompts the user to rescan the records and passes the existing data back to ScanActivity.
+fun rescanRecords()
+
+// Discards the current progress and prompts the user with an error dialog.
+fun discardProgress()
+
+// Saves the current state of the blood pressure lists to enable the undo functionality.
+private fun saveStateForUndo()
+
+// Compares two lists of strings to check if they are identical.
+private fun listsAreEqual(list1: MutableList<String>, list2: MutableList<String>): Boolean
+
+// Reverts the last change made to the blood pressure lists using the saved undo stack.
+fun undo()
+
+// Refreshes the views to reflect the current state of the blood pressure lists after any changes.
+private fun refreshViews()
+
+// Performs validation on the blood pressure readings to identify any errors or anomalies.
+private fun postScanValidation()
+
+// Sets an error message on a TextInputLayout if the validation fails.
+private fun setError(inputLayout: TextInputLayout, message: String?)
+
+// Validates the input fields for systolic and diastolic blood pressure readings.
+private fun validateFields(): Boolean
+
+// Retrieves the target blood pressure values from the UI.
+private fun getBPTarget()
+
+// Calculates the average blood pressure from the current readings.
+private fun calcAvgBP()
+
+// Calculates the average blood pressure over a seven-day period using specific rules for choosing readings.
+private fun calcSevenDayAvgBP()
+
+// Populates the UI with the existing blood pressure readings for a seven-day scan.
+private fun sevenDayCheck()
+
+// Ensures that the blood pressure lists have a minimum of 28 elements, padding with default values if necessary.
+private fun ensureListSize(list: MutableList<String>, targetSize: Int)
+
+// Adds a new row to the UI for entering or displaying a blood pressure reading.
+@SuppressLint("SetTextI18n")
+private fun addRow(
+    sysBP: String?,
+    diaBP: String?,
+    isSevenDayCheck: Boolean = false,
+    day: Int = -1,
+    time: Int = -1,
+    showHeader: Boolean = false
+)
+
+// Adds a divider to visually separate old and new records in the UI.
+private fun addDivider()
+```
+### ModalBottomSheet.kt -> bottom_sheet_verify_scan.xml
+- A bottom sheet dialog fragment that provides additional options to the user, such as continuing the scan, re-scanning, undoing the last change, or discarding the progress.
+#### Functions
+```kotlin
+// Inflates the bottom sheet view and sets up the click listeners for each option.
+override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
+
+// Sets up the view elements and handles click events for the options in the bottom sheet.
+override fun onViewCreated(view: View, savedInstanceState: Bundle?)
+
 ```
 
 ### ProfileActivity.kt -> activity_profile.xml
