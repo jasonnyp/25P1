@@ -77,7 +77,6 @@
     <string name="please_wait">Please wait…</string>
     <string name="patient_deleted_success">Patient profile deleted successfully.</string>
 
-
     <!-- RegistrationActivity strings -->
     <string name="register_gender_male">Male</string>
     <string name="register_gender_female">Female</string>
@@ -93,7 +92,6 @@
     <string name="register_exist_error_header">Patient already registered</string>
     <string name="register_exist_error_body">Would you like to search the patient instead?</string>
     <string name="register_successful">Successfully registered %1$s into the system.</string>
-
 
     <!-- DiagnosePatient.kt -->
     <string name="controlled_bp">(Controlled BP)</string>
