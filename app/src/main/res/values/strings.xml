@@ -301,6 +301,10 @@
     <!-- activity_simple_dashboard.xml -->
     <string name="enhance_s_dashboard_systolic_header">Systolic Comparison Chart</string>
     <string name="enhance_s_dashboard_diastolic_header">Diastolic Comparison Chart</string>
+    <string name="enhance_s_dashboard_sys_label">Systolic BP</string>
+    <string name="enhance_s_dashboard_dia_label">Diastolic BP</string>
+    <string name="enhance_s_dashboard_sys_target_label">Systolic Target BP</string>
+    <string name="enhance_s_dashboard_dia_target_label">Diastolic Target BP</string>
     <string name="enhance_s_dashboard_print">Print</string>
 
     <!-- activity_terms_of_use.xml -->
