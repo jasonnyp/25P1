@@ -286,6 +286,10 @@
     <!-- activity_simple_dashboard.xml -->
     <string name="enhance_s_dashboard_systolic_header">收縮壓比較圖表</string>
     <string name="enhance_s_dashboard_diastolic_header">舒張壓比較圖表</string>
+    <string name="enhance_s_dashboard_sys_label">收縮壓</string>
+    <string name="enhance_s_dashboard_dia_label">舒張壓</string>
+    <string name="enhance_s_dashboard_sys_target_label">收縮壓目標</string>
+    <string name="enhance_s_dashboard_dia_target_label">舒張壓目標</string>
     <string name="enhance_s_dashboard_print">列印</string>
 
     <!-- activity_terms_of_use.xml -->

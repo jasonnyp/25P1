@@ -278,12 +278,12 @@ class SimpleDashboardActivity : AppCompatActivity() {
         systolicEntries.sortBy { it.x }
         systolicTargetEntries.sortBy { it.x }
 
-        val systolicDataSet = LineDataSet(systolicEntries, "Systolic BP").apply {
+        val systolicDataSet = LineDataSet(systolicEntries, getString(R.string.enhance_s_dashboard_sys_label)).apply {
             color = Color.BLUE
             valueTextSize = 15f
         }
 
-        val systolicTargetDataSet = LineDataSet(systolicTargetEntries, "Systolic Target BP").apply {
+        val systolicTargetDataSet = LineDataSet(systolicTargetEntries, getString(R.string.enhance_s_dashboard_sys_target_label)).apply {
             color = Color.RED
             valueTextSize = 15f
         }
@@ -351,12 +351,12 @@ class SimpleDashboardActivity : AppCompatActivity() {
         diastolicEntries.sortBy { it.x }
         diastolicTargetEntries.sortBy { it.x }
 
-        val diastolicDataSet = LineDataSet(diastolicEntries, "Diastolic BP").apply {
+        val diastolicDataSet = LineDataSet(diastolicEntries, getString(R.string.enhance_s_dashboard_dia_label)).apply {
             color = Color.BLUE
             valueTextSize = 15f
         }
 
-        val diastolicTargetDataSet = LineDataSet(diastolicTargetEntries, "Diastolic Target BP").apply {
+        val diastolicTargetDataSet = LineDataSet(diastolicTargetEntries, getString(R.string.enhance_s_dashboard_dia_target_label)).apply {
             color = Color.RED
             valueTextSize = 15f
         }
@@ -438,7 +438,7 @@ class SimpleDashboardActivity : AppCompatActivity() {
                     val pdfDocument = PrintedPdfDocument(this@SimpleDashboardActivity, printAttributes)
 
                     // Create a page description
-                    val totalHeight = lineChart.height / 2 + diastolicLineChart.height / 2 + 600 // Adding extra space for headings and text
+                    val totalHeight = lineChart.height / 2 + diastolicLineChart.height / 2 + 1000 // Adding extra space for headings and text
                     val pageInfo = PdfDocument.PageInfo.Builder(lineChart.width, totalHeight, 1).create()
 
                     // Start a page
