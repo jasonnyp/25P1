@@ -165,14 +165,14 @@
             android:name=".activities.dashboard.DashboardActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:exported="false"
-            android:label="Dashboard"
+            android:label="@string/dashboard_title"
             >
         </activity>
         <activity
             android:name=".activities.dashboard.SimpleDashboardActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:exported="false"
-            android:label="Dashboard"
+            android:label="@string/dashboard_title"
             >
         </activity>
 
