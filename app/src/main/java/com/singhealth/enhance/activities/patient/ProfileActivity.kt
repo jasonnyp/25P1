@@ -334,19 +334,63 @@ class ProfileActivity : AppCompatActivity() {
         db.collection("patients").document(patientID)
             .delete()
             .addOnSuccessListener {
-                progressDialog.dismiss()
-                Toast.makeText(this, getString(R.string.patient_deleted_success), Toast.LENGTH_SHORT).show()
+                val nricDecrypted = AESEncryption().decrypt(patientID)
+                val storageRef = storage.reference.child("images/$nricDecrypted.jpg")
+                storageRef.delete().addOnSuccessListener {
+                    progressDialog.dismiss()
+                    Toast.makeText(
+                        this,
+                        getString(R.string.patient_deleted_success),
+                        Toast.LENGTH_SHORT
+                    ).show()
 
-                // Navigate to MainActivity after deletion
-                val intent = Intent(this, MainActivity::class.java)
-                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
-                startActivity(intent)
-                finish()
+                    // Navigate to MainActivity after deletion
+                    val intent = Intent(this, MainActivity::class.java)
+                    intent.flags =
+                        Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
+                    startActivity(intent)
+                    finish()
+                }
             }
             .addOnFailureListener { e ->
                 progressDialog.dismiss()
                 firebaseErrorDialog(this, e, db.collection("patients").document(patientID))
             }
-    }
 
+        // Delete patient profile picture from firestore store
+        //Disadvantages: Additional read, delete picture before documents
+        //Deletes by image URL
+//        val docRef = db.collection("patients").document(patientID)
+//        docRef.get()
+//            .addOnSuccessListener { document ->
+//                if (document.exists()) {
+//                    val imageUrl = document.getString("photoUrl")
+//                    if (imageUrl != null) {
+//                        val imageRef = storage.getReferenceFromUrl(imageUrl)
+//                        imageRef.delete().addOnSuccessListener {
+//                            // Delete patient document from Firestore
+//                            docRef
+//                                .delete()
+//                                .addOnSuccessListener {
+//                                    progressDialog.dismiss()
+//                                    Toast.makeText(this, getString(R.string.patient_deleted_success), Toast.LENGTH_SHORT).show()
+//
+//                                    // Navigate to MainActivity after deletion
+//                                    val intent = Intent(this, MainActivity::class.java)
+//                                    intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
+//                                    startActivity(intent)
+//                                    finish()
+//                                }
+//                                .addOnFailureListener { e ->
+//                                    progressDialog.dismiss()
+//                                    firebaseErrorDialog(this, e, db.collection("patients").document(patientID))
+//                                }
+//                        }
+//                    }
+//                }
+//            }
+//            .addOnFailureListener { e ->
+//                firebaseErrorDialog(this, e, docRef)
+//            }
+    }
 }
