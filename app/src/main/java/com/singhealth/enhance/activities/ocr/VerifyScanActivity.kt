@@ -1078,7 +1078,7 @@ class VerifyScanActivity : AppCompatActivity() {
                 currentDayReadings.clear()
             }
         }
-
+        //TESTIS
         println("Grouped Readings: $dayReadings")
 
         val filteredSysBPList = mutableListOf<String>()
