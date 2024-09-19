@@ -71,7 +71,7 @@ class VerifyScanActivity : AppCompatActivity() {
     private var clinicDiaBPTarget = 0
     private var clinicSysBP = 0
     private var clinicDiaBP = 0
-    private var errorCount = 0
+    private var errorchecked = false
     private lateinit var targetSysBP: String
     private lateinit var targetDiaBP: String
     private var sevenDay: Boolean = false
@@ -715,7 +715,7 @@ class VerifyScanActivity : AppCompatActivity() {
     }
 
     private fun postScanValidation() {
-        println("Error Count: $errorCount")
+        var errorCount = 0
         if (sevenDay) {
             println("sysBPlist size is ${sysBPList.size}")
             println("sysBPFields size is ${sysBPFields.size}")
@@ -824,8 +824,10 @@ class VerifyScanActivity : AppCompatActivity() {
                 }
             }
         }
-        if (errorCount == 6) {
+        println("Error Count: $errorCount")
+        if (errorCount == 6 && !errorchecked) {
             println("Error occured $errorCount")
+            errorchecked = true
             MaterialAlertDialogBuilder(this)
                 .setIcon(R.drawable.ic_error)
                 .setTitle(ResourcesHelper.getString(this, R.string.verify_scan_erroneous_header))

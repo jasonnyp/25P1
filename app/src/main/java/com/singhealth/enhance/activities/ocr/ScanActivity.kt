@@ -233,7 +233,7 @@ class ScanActivity : AppCompatActivity() {
                         "T17" -> "117"
                         "+5" -> "75"
                         "+9" -> "79"
-                        "川", "!!!", "|||" -> "111"
+                        "TIT", "川", "!!!", "|||" -> "111"
                         "734" -> "134"
                         "13T" -> "131"
                         "9/2" -> "92"
@@ -262,10 +262,10 @@ class ScanActivity : AppCompatActivity() {
             }
         }
 
-        println("Words before sorting by bounding box:")
-        words.forEachIndexed { index, word ->
-            println("Word ${index + 1}: ${word.text}")
-        }
+//        println("Words before sorting by bounding box:")
+//        words.forEachIndexed { index, word ->
+//            println("Word ${index + 1}: ${word.text}")
+//        }
 
         return words
     }
