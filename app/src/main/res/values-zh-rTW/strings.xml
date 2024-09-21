@@ -208,7 +208,8 @@
     <string name="enhance_profile_gender">性別</string>
     <string name="enhance_profile_weight">體重</string>
     <string name="enhance_profile_height">身高</string>
-    <string name="enhance_profile_target_bp">目標血壓</string>
+    <string name="enhance_profile_target_home_bp">家庭目標血壓</string>
+    <string name="enhance_profile_target_clinic_bp">診所目標血壓</string>
 
     <!-- activity_recommendation.xml -->
     <string name="enhance_recco_header">以下是根據 %1$s 掃描的血壓記錄所提供的建議：</string>
