@@ -405,9 +405,6 @@ class VerifyScanActivity : AppCompatActivity() {
             modalBottomSheet.show(supportFragmentManager, ModalBottomSheet.TAG)
         }
 
-        //To do if submit while editing then do not save changes, when editing another field, do not save changes too
-        //Validate Fields
-
         // Edit button for target home BP to show fields and hide edit button
         binding.editHomeBPLayout.setOnClickListener {
             binding.editHomeBPLayout.visibility = View.GONE
