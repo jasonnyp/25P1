@@ -47,19 +47,17 @@
                     android:layout_height="wrap_content"
                     android:layout_marginVertical="6dp" />
 
-                <LinearLayout
+                <!-- Home BP Section -->
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:weightSum="2"
-                    android:baselineAligned="false">
+                    android:layout_weight="1"
+                    android:orientation="vertical">
 
-                    <!-- Home BP Section -->
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
+                    <RelativeLayout
+                        android:id="@+id/homeBPTargetLabel"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -70,131 +68,432 @@
                             android:textSize="16sp" />
 
                         <LinearLayout
-                            android:layout_width="match_parent"
+                            android:id="@+id/editHomeBPLayout"
+                            android:layout_height="wrap_content"
+                            android:layout_width="wrap_content"
+                            android:layout_marginEnd="8dp"
+                            android:layout_alignParentEnd="true"
+                            android:gravity="center_horizontal"
+                            android:orientation="horizontal"
+                            android:visibility="visible">
+
+                            <ImageView
+                                android:layout_marginEnd="6dp"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:src="@drawable/ic_edit_target_values"
+                                android:contentDescription="@string/enhance_verify_edit"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/enhance_verify_edit"
+                                android:textAppearance="?attr/textAppearanceBodyMedium"
+                                android:textSize="16sp"/>
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/verifyEditHomeBPTarget"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal"
-                            android:weightSum="2">
+                            android:layout_alignParentEnd="true"
+                            android:visibility="gone"
+                            >
 
-                            <TextView
-                                android:id="@+id/homeBPTargetTV"
+                            <LinearLayout
+                                android:id="@+id/verifyEditHomeSave"
+                                android:layout_height="wrap_content"
                                 android:layout_width="wrap_content"
+                                android:layout_marginEnd="8dp">
+
+                                <ImageView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="match_parent"
+                                    app:tint="@color/black"
+                                    android:layout_marginEnd="2dp"
+                                    android:src="@drawable/ic_save"
+                                    android:contentDescription="@string/enhance_verify_update"/>
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/enhance_verify_update"
+                                    android:textAppearance="?attr/textAppearanceBodyMedium"
+                                    android:textSize="16sp"/>
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:id="@+id/verifyEditHomeExit"
                                 android:layout_height="wrap_content"
-                                android:textSize="18sp"
-                                android:textStyle="bold"
-                                android:textAppearance="?attr/textAppearanceBodyLarge" />
-
-                            <!-- The following text views are set to invisible
-                            as the code seemingly requires them for VerifyScanActivity.kt
-                            Change when convenient, as I'm not sure what is going on
-                            inside VerifyScanActivity -->
-
-                            <TextView
-                                android:id="@+id/verifyHomeSys"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="0.9"
-                                android:textSize="16sp"
-                                android:layout_marginBottom="12dp"
-                                android:textStyle="bold"
-                                android:textAppearance="?attr/textAppearanceBodyLarge"
-                                android:visibility="gone" />
-
-                            <TextView
                                 android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginHorizontal="6dp"
-                                android:layout_weight="0.2"
-                                android:gravity="center"
-                                android:text="@string/enhance_verify_home_divider"
-                                android:textAppearance="?attr/textAppearanceBodyLarge"
-                                android:textSize="16sp"
-                                android:visibility="gone"/>
+                                android:layout_marginEnd="8dp">
 
-                            <TextView
-                                android:id="@+id/verifyHomeDia"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="0.9"
-                                android:textSize="16sp"
-                                android:layout_marginBottom="12dp"
-                                android:layout_marginStart="1dp"
-                                android:textStyle="bold"
-                                android:textAppearance="?attr/textAppearanceBodyLarge"
-                                android:visibility="gone"/>
+                                <ImageView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    app:tint="@color/black"
+                                    android:layout_marginEnd="2dp"
+                                    android:src="@drawable/ic_logout"
+                                    android:contentDescription="@string/enhance_verify_exit"/>
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="match_parent"
+                                    android:text="@string/enhance_verify_exit"
+                                    android:textAppearance="?attr/textAppearanceBodyMedium"
+                                    android:textSize="16sp" />
+
+                            </LinearLayout>
+
                         </LinearLayout>
+
+                    </RelativeLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/homeBPTargetLabel"
+                        android:orientation="horizontal"
+                        android:weightSum="2">
+
+                        <TextView
+                            android:id="@+id/homeBPTargetTV"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="18sp"
+                            android:textStyle="bold"
+                            android:textAppearance="?attr/textAppearanceBodyLarge" />
+
+                        <!-- The following text views are set to invisible
+                        as the code seemingly requires them for VerifyScanActivity.kt
+                        Change when convenient, as I'm not sure what is going on
+                        inside VerifyScanActivity -->
+
+                        <TextView
+                            android:id="@+id/verifyHomeTargetSys"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.9"
+                            android:textSize="16sp"
+                            android:layout_marginBottom="12dp"
+                            android:textStyle="bold"
+                            android:textAppearance="?attr/textAppearanceBodyLarge"
+                            android:visibility="gone" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="6dp"
+                            android:layout_weight="0.2"
+                            android:gravity="center"
+                            android:text="@string/enhance_verify_home_divider"
+                            android:textAppearance="?attr/textAppearanceBodyLarge"
+                            android:textSize="16sp"
+                            android:visibility="gone"/>
+
+                        <TextView
+                            android:id="@+id/verifyHomeTargetDia"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.9"
+                            android:textSize="16sp"
+                            android:layout_marginBottom="12dp"
+                            android:layout_marginStart="1dp"
+                            android:textStyle="bold"
+                            android:textAppearance="?attr/textAppearanceBodyLarge"
+                            android:visibility="gone"/>
                     </LinearLayout>
 
-                    <!-- Clinic Target BP Section -->
                     <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
+                        android:id="@+id/verifyEditHomeBPTextFields"
+                        android:layout_below="@id/homeBPTargetLabel"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:weightSum="6"
+                        android:orientation="horizontal"
+                        android:visibility="gone">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="3"
+                            android:orientation="horizontal">
+
+                            <com.google.android.material.textfield.TextInputLayout
+                                android:id="@+id/homeTargetSysBox"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content">
+
+                                <com.google.android.material.textfield.TextInputEditText
+                                    android:id="@+id/homeTargetSys"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:inputType="number"
+                                    android:maxLength="3"
+                                    android:textSize="16sp"
+                                    android:textStyle="bold" />
+                            </com.google.android.material.textfield.TextInputLayout>
+                        </LinearLayout>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_marginHorizontal="6dp"
+                            android:gravity="center"
+                            android:text="@string/enhance_verify_clinic_divider"
+                            android:textAppearance="?attr/textAppearanceBodyLarge"
+                            android:textSize="16sp" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="3"
+                            android:orientation="horizontal">
+
+                            <com.google.android.material.textfield.TextInputLayout
+                                android:id="@+id/homeTargetDiaBox"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent">
+
+                                <com.google.android.material.textfield.TextInputEditText
+                                    android:id="@+id/homeTargetDia"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:inputType="number"
+                                    android:maxLength="3"
+                                    android:textSize="16sp"
+                                    android:textStyle="bold" />
+                            </com.google.android.material.textfield.TextInputLayout>
+                        </LinearLayout>
+                    </LinearLayout>
+                </RelativeLayout>
+
+                <!-- Clinic Target BP Section -->
+                <RelativeLayout
+                    android:layout_marginTop="6dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <RelativeLayout
+                        android:id="@+id/clinicBPTargetLabel"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="4dp"
-                            android:text="@string/enhance_verify_clinic_target_bp"
+                            android:text="@string/enhance_verify_clinic_bp"
                             android:textAppearance="?attr/textAppearanceBodyMedium"
                             android:textSize="16sp" />
 
                         <LinearLayout
-                            android:layout_width="match_parent"
+                            android:id="@+id/editClinicBPLayout"
                             android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:weightSum="2">
+                            android:layout_width="wrap_content"
+                            android:gravity="center_horizontal"
+                            android:layout_marginEnd="8dp"
+                            android:layout_alignParentEnd="true"
+                            android:visibility="visible">
 
-                            <TextView
-                                android:id="@+id/clinicBPTargetTV"
+                            <ImageView
+                                android:layout_marginEnd="6dp"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:textSize="18sp"
-                                android:textStyle="bold"
-                                android:textAppearance="?attr/textAppearanceBodyLarge" />
-
-                            <!-- The following text views are set to invisible
-                            as the code seemingly requires them for VerifyScanActivity.kt
-                            Change when convenient, as I'm not sure what is going on
-                            inside VerifyScanActivity -->
-
-                            <TextView
-                                android:id="@+id/verifyClinicTargetSys"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="0.9"
-                                android:textSize="16sp"
-                                android:layout_marginBottom="12dp"
-                                android:textStyle="bold"
-                                android:textAppearance="?attr/textAppearanceBodyLarge"
-                                android:visibility="gone"
-                                />
+                                android:src="@drawable/ic_edit_target_values"
+                                android:contentDescription="@string/enhance_verify_edit"/>
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginHorizontal="6dp"
-                                android:layout_weight="0.2"
-                                android:gravity="center"
-                                android:text="@string/enhance_verify_clinic_divider"
-                                android:textAppearance="?attr/textAppearanceBodyLarge"
-                                android:textSize="16sp"
-                                android:visibility="gone"/>
+                                android:text="@string/enhance_verify_edit"
+                                android:textAppearance="?attr/textAppearanceBodyMedium"
+                                android:textSize="16sp" />
 
-                            <TextView
-                                android:id="@+id/verifyClinicTargetDia"
-                                android:layout_width="0dp"
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/verifyEditClinicBPTarget"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:visibility="gone">
+
+                            <LinearLayout
+                                android:id="@+id/verifyEditClinicSave"
                                 android:layout_height="wrap_content"
-                                android:layout_weight="0.9"
-                                android:textSize="16sp"
-                                android:layout_marginBottom="12dp"
-                                android:layout_marginStart="1dp"
-                                android:textStyle="bold"
-                                android:textAppearance="?attr/textAppearanceBodyLarge"
-                                android:visibility="gone"/>
+                                android:layout_width="wrap_content"
+                                android:layout_marginEnd="8dp">
+
+                                <ImageView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="match_parent"
+                                    app:tint="@color/black"
+                                    android:layout_marginEnd="2dp"
+                                    android:src="@drawable/ic_save"
+                                    android:contentDescription="@string/enhance_verify_update"/>
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/enhance_verify_update"
+                                    android:textAppearance="?attr/textAppearanceBodyMedium"
+                                    android:textSize="16sp"/>
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:id="@+id/verifyEditClinicExit"
+                                android:layout_height="wrap_content"
+                                android:layout_width="wrap_content"
+                                android:layout_marginEnd="8dp">
+
+                                <ImageView
+                                    android:id="@+id/editClientBPIV"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    app:tint="@color/black"
+                                    android:layout_marginEnd="2dp"
+                                    android:src="@drawable/ic_logout"
+                                    android:contentDescription="@string/enhance_verify_exit"/>
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/enhance_verify_exit"
+                                    android:textAppearance="?attr/textAppearanceBodyMedium"
+                                    android:textSize="16sp"/>
+
+                            </LinearLayout>
+
+                        </LinearLayout>
+
+                    </RelativeLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/clinicBPTargetLabel"
+                        android:orientation="horizontal"
+                        android:weightSum="2">
+
+                        <TextView
+                            android:id="@+id/clinicBPTargetTV"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="18sp"
+                            android:textStyle="bold"
+                            android:textAppearance="?attr/textAppearanceBodyLarge" />
+
+                        <!-- The following text views are set to invisible
+                        as the code seemingly requires them for VerifyScanActivity.kt
+                        Change when convenient, as I'm not sure what is going on
+                        inside VerifyScanActivity -->
+
+                        <TextView
+                            android:id="@+id/verifyClinicTargetSys"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.9"
+                            android:textSize="16sp"
+                            android:layout_marginBottom="12dp"
+                            android:textStyle="bold"
+                            android:textAppearance="?attr/textAppearanceBodyLarge"
+                            android:visibility="gone"
+                            />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="6dp"
+                            android:layout_weight="0.2"
+                            android:gravity="center"
+                            android:text="@string/enhance_verify_clinic_divider"
+                            android:textAppearance="?attr/textAppearanceBodyLarge"
+                            android:textSize="16sp"
+                            android:visibility="gone"/>
+
+                        <TextView
+                            android:id="@+id/verifyClinicTargetDia"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.9"
+                            android:textSize="16sp"
+                            android:layout_marginBottom="12dp"
+                            android:layout_marginStart="1dp"
+                            android:textStyle="bold"
+                            android:textAppearance="?attr/textAppearanceBodyLarge"
+                            android:visibility="gone"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/verifyEditClinicBPTextFields"
+                        android:layout_below="@id/clinicBPTargetLabel"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:weightSum="6"
+                        android:orientation="horizontal"
+                        android:visibility="gone">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="3"
+                            android:orientation="horizontal">
+
+                            <com.google.android.material.textfield.TextInputLayout
+                                android:id="@+id/clinicTargetSysBox"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content">
+
+                                <com.google.android.material.textfield.TextInputEditText
+                                    android:id="@+id/clinicTargetSys"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:inputType="number"
+                                    android:maxLength="3"
+                                    android:textSize="16sp"
+                                    android:textStyle="bold" />
+                            </com.google.android.material.textfield.TextInputLayout>
+                        </LinearLayout>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_marginHorizontal="6dp"
+                            android:gravity="center"
+                            android:text="@string/enhance_verify_clinic_divider"
+                            android:textAppearance="?attr/textAppearanceBodyLarge"
+                            android:textSize="16sp" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="3"
+                            android:orientation="horizontal">
+
+                            <com.google.android.material.textfield.TextInputLayout
+                                android:id="@+id/clinicTargetDiaBox"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent">
+
+                                <com.google.android.material.textfield.TextInputEditText
+                                    android:id="@+id/clinicTargetDia"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:inputType="number"
+                                    android:maxLength="3"
+                                    android:textSize="16sp"
+                                    android:textStyle="bold" />
+                            </com.google.android.material.textfield.TextInputLayout>
                         </LinearLayout>
                     </LinearLayout>
-                </LinearLayout>
+                </RelativeLayout>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -207,8 +506,8 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="6"
+                    android:layout_height="wrap_content"
+                    android:weightSum="6"
                     android:orientation="horizontal">
 
                     <LinearLayout

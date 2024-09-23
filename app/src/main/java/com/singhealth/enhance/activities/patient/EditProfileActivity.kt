@@ -170,6 +170,24 @@ class EditProfileActivity : AppCompatActivity() {
             override fun afterTextChanged(s: Editable?) {}
         })
 
+        binding.editRegisterClinicSysInput.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                binding.editRegisterClinicSys.error = null
+            }
+
+            override fun afterTextChanged(s: Editable?) {}
+        })
+
+        binding.editRegisterClinicDiaInput.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                binding.editRegisterClinicDia.error = null
+            }
+
+            override fun afterTextChanged(s: Editable?) {}
+        })
+
         progressDialog = ProgressDialog(this)
         progressDialog.setCanceledOnTouchOutside(false)
 
@@ -313,6 +331,28 @@ class EditProfileActivity : AppCompatActivity() {
             binding.editRegisterHomeDia.error = getString(R.string.register_invalid_number_verification)
         }
 
+        if (binding.editRegisterClinicSysInput.text.isNullOrEmpty()) {
+            valid = false
+            binding.editRegisterClinicSys.error = getString(R.string.register_empty_bp_verification, 135)
+        } else if (binding.editRegisterClinicSysInput.text.toString().toFloatOrNull() == null) {
+            valid = false
+            binding.editRegisterClinicSys.error = getString(R.string.register_invalid_value_verification)
+        } else if (binding.editRegisterClinicSysInput.text.toString().toInt() > 200 || binding.editRegisterClinicSysInput.text.toString().toInt() < 0) {
+            valid = false
+            binding.editRegisterClinicSys.error = getString(R.string.register_invalid_number_verification)
+        }
+
+        if (binding.editRegisterClinicDiaInput.text.isNullOrEmpty()) {
+            valid = false
+            binding.editRegisterClinicDia.error = getString(R.string.register_empty_bp_verification, 85)
+        } else if (binding.editRegisterClinicDiaInput.text.toString().toFloatOrNull() == null) {
+            valid = false
+            binding.editRegisterClinicDia.error = getString(R.string.register_invalid_value_verification)
+        } else if (binding.editRegisterClinicDiaInput.text.toString().toInt() > 200 || binding.editRegisterClinicDiaInput.text.toString().toInt() < 0) {
+            valid = false
+            binding.editRegisterClinicDia.error = getString(R.string.register_invalid_number_verification)
+        }
+
         return valid
     }
 
@@ -348,8 +388,10 @@ class EditProfileActivity : AppCompatActivity() {
                     )
                     binding.editWeightTIET.setText(AESEncryption().decrypt(patientData["weight"].toString()))
                     binding.editHeightTIET.setText(AESEncryption().decrypt(patientData["height"].toString()))
-                    binding.editRegisterHomeSysInput.setText(AESEncryption().decrypt(patientData["targetSys"].toString()))
-                    binding.editRegisterHomeDiaInput.setText(AESEncryption().decrypt(patientData["targetDia"].toString()))
+                    binding.editRegisterHomeSysInput.setText(AESEncryption().decrypt(patientData["targetHomeSys"].toString()))
+                    binding.editRegisterHomeDiaInput.setText(AESEncryption().decrypt(patientData["targetHomeDia"].toString()))
+                    binding.editRegisterClinicSysInput.setText(AESEncryption().decrypt(patientData["targetClinicSys"].toString()))
+                    binding.editRegisterClinicDiaInput.setText(AESEncryption().decrypt(patientData["targetClinicDia"].toString()))
 
                     val photoUrl = patientData["photoUrl"].toString()
                     if (photoUrl.isNotEmpty()) {
@@ -392,8 +434,10 @@ class EditProfileActivity : AppCompatActivity() {
             "gender" to gender,
             "weight" to AESEncryption().encrypt(binding.editWeightTIET.text.toString()),
             "height" to AESEncryption().encrypt(binding.editHeightTIET.text.toString()),
-            "targetSys" to AESEncryption().encrypt(binding.editRegisterHomeSysInput.text.toString()),
-            "targetDia" to AESEncryption().encrypt(binding.editRegisterHomeDiaInput.text.toString()),
+            "targetHomeSys" to AESEncryption().encrypt(binding.editRegisterHomeSysInput.text.toString()),
+            "targetHomeDia" to AESEncryption().encrypt(binding.editRegisterHomeDiaInput.text.toString()),
+            "targetClinicSys" to AESEncryption().encrypt(binding.editRegisterClinicSysInput.text.toString()),
+            "targetClinicDia" to AESEncryption().encrypt(binding.editRegisterClinicDiaInput.text.toString()),
             "clinicId" to binding.editClinicIdTIET.text.toString().trim(),
             "bpStage" to "N/A"
         )

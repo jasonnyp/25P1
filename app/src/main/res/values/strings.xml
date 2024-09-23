@@ -1,5 +1,5 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="app_name" tools:ignore="Typos" translatable="false">ENHANCe2</string>
+    <string name="app_name" tools:ignore="Typos" translatable="false">ENHANCe</string>
 
     <!-- AndroidManifest.xml (Some of the strings are in different segments) -->
     <string name="outcome_and_recommendation">Outcome and Recommendation</string>
@@ -27,6 +27,21 @@
     <string name="resuming_scan">Click on “General Scan” to add more scans</string>
 
     <!-- VerifyScanActivity.kt -->
+    <string name="verify_scan_update_target_home_header">Update Target Home BP</string>
+    <string name="verify_scan_update_target_home_body">Are you sure you want to update the patient\'s target home BP?</string>
+    <string name="verify_scan_exit_target_home_header">Discard Changes</string>
+    <string name="verify_scan_exit_target_home_body">Are you sure you want to discard any changes to the target home BP you made?</string>
+    <string name="verify_scan_update_target_clinic_header">Update Target Home BP</string>
+    <string name="verify_scan_update_target_clinic_body">Are you sure you want to update the patient\'s target clinic BP?</string>
+    <string name="verify_scan_exit_target_clinic_header">Discard Changes</string>
+    <string name="verify_scan_exit_target_clinic_body">Are you sure you want to discard any changes to the target clinic BP you made?</string>
+    <string name="verify_scan_update_data">Updating BP target data</string>
+    <string name="verify_scan_update_data_caption">Please wait a moment…</string>
+    <string name="update">Update</string>
+    <string name="exit">Exit</string>
+    <string name="verify_scan_no_update">No changes were made</string>
+    <string name="verify_scan_no_update_caption">This is due to the values being the same as the current BP target</string>
+    <string name="ok">OK</string>
     <string name="add_empty_column_left">Add an empty column to the left</string>
     <string name="add_empty_column_right">Add an empty column to the right</string>
     <string name="swap_values">Swap the Systolic and Diastolic values</string>
@@ -223,7 +238,8 @@
     <string name="enhance_profile_gender">Gender</string>
     <string name="enhance_profile_weight">Weight</string>
     <string name="enhance_profile_height">Height</string>
-    <string name="enhance_profile_target_bp">Target BP</string>
+    <string name="enhance_profile_target_home_bp">Target Home BP</string>
+    <string name="enhance_profile_target_clinic_bp">Target Clinic BP</string>
 
     <!-- activity_recommendation -->
     <string name="enhance_recco_header">The following are the recommendations based on the %1$s scanned BP records:</string>
@@ -246,8 +262,11 @@
     <string name="enhance_register_patient_id">Patient ID No.</string>
     <string name="enhance_register_dob">Date of Birth</string>
     <string name="enhance_register_gender">Gender</string>
-    <string name="enhance_register_target_sys">Target Systolic</string>
-    <string name="enhance_register_target_dia">Target Diastolic</string>
+    <string name="enhance_register_target_home_bp">Target Home BP</string>
+    <string name="enhance_register_target_clinic_bp">Target Clinic BP</string>
+    <string name="enhance_register_input_divider" translatable="false">/</string>
+    <string name="enhance_register_target_sys">Systolic BP</string>
+    <string name="enhance_register_target_dia">Diastolic BP</string>
     <string name="enhance_register_health_info">Health Information</string>
     <string name="enhance_register_weight">Weight</string>
     <string name="enhance_register_height">Height</string>
@@ -268,8 +287,11 @@
     <string name="enhance_edit_health_info">Edit Health Info</string>
     <string name="enhance_edit_weight">Weight</string>
     <string name="enhance_edit_height">Height</string>
-    <string name="enhance_edit_target_sys">Target Systolic BP</string>
-    <string name="enhance_edit_target_dia">Target Diastolic BP</string>
+    <string name="enhance_edit_target_home_bp">Target Home BP</string>
+    <string name="enhance_edit_target_clinic_bp">Target Clinic BP</string>
+    <string name="enhance_edit_input_divider" translatable="false">/</string>
+    <string name="enhance_edit_target_sys">Systolic BP</string>
+    <string name="enhance_edit_target_dia">Diastolic BP</string>
     <string name="enhance_update_button">Update</string>
     <string name="update_successful">Profile updated successfully</string>
     <string name="loading_patient_data">Loading patient data…</string>
@@ -331,6 +353,9 @@
 
     <!-- activity_verify_scan.xml -->
     <string name="enhance_verify_patient_id">Patient\'s ID:</string>
+    <string name="enhance_verify_edit">Edit</string>
+    <string name="enhance_verify_update">Update</string>
+    <string name="enhance_verify_exit">Exit</string>
     <string name="enhance_verify_home_bp">Home BP Target:</string>
     <string name="enhance_verify_home_divider" translatable="false">/</string>
     <string name="enhance_verify_clinic_target_bp">Clinic BP Target:</string>
@@ -340,6 +365,8 @@
     <string name="enhance_verify_more_options">More Options</string>
     <string name="enhance_verify_disclaimer">Disclaimer: The scanner is not perfect and may yield erroneous results at times. The onus is on you to ensure the accuracy of these results before calculating the average blood pressure for this patient.</string>
     <string name="enhance_verify_calculate_bp">Calculate Average BP</string>
+    <string name="update_bp_error_header">Update Error</string>
+    <string name="update_bp_error_body">Unable to update target BP. Please try again.</string>
 
     <!-- bottom_sheet_verify_scan.xml -->
     <string name="enhance_verify_bottom_option">Select an option:</string>

@@ -265,25 +265,46 @@ class ProfileActivity : AppCompatActivity() {
         )
 
         // Decrypt targetSys and targetDia, and handle empty values
-        val targetSys = document.getString("targetSys")?.let {
+        val targetHomeSys = document.getString("targetHomeSys")?.let {
             AESEncryption().decrypt(it)
         } ?: "0"
 
-        val targetDia = document.getString("targetDia")?.let {
+        val targetHomeDia = document.getString("targetHomeDia")?.let {
             AESEncryption().decrypt(it)
         } ?: "0"
 
         SecureSharedPreferences.getSharedPreferences(applicationContext)
             .edit()
-            .putString("targetSysBP", targetSys)
-            .putString("targetDiaBP", targetDia)
+            .putString("targetHomeSysBP", targetHomeSys)
+            .putString("targetHomeDiaBP", targetHomeDia)
             .apply()
 
-        binding.profileTargetBP.text = ResourcesHelper.getString(
+        binding.profileTargetHomeBP.text = ResourcesHelper.getString(
             this,
             R.string.profile_patient_target_bp,
-            targetSys,
-            targetDia
+            targetHomeSys,
+            targetHomeDia
+        )
+
+        val targetClinicSys = document.getString("targetClinicSys")?.let {
+            AESEncryption().decrypt(it)
+        } ?: "0"
+
+        val targetClinicDia = document.getString("targetClinicDia")?.let {
+            AESEncryption().decrypt(it)
+        } ?: "0"
+
+        SecureSharedPreferences.getSharedPreferences(applicationContext)
+            .edit()
+            .putString("targetClinicSysBP", targetClinicSys)
+            .putString("targetClinicDiaBP", targetClinicDia)
+            .apply()
+
+        binding.profileTargetClinicBP.text = ResourcesHelper.getString(
+            this,
+            R.string.profile_patient_target_bp,
+            targetClinicSys,
+            targetClinicDia
         )
 
         binding.clinicId.text = document.getString("clinicId").toString()
