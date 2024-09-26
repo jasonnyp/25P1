@@ -205,6 +205,7 @@ class ScanActivity : AppCompatActivity() {
             }
     }
 
+    //Old Algorithm
     private fun processDocumentTextBlock(result: FirebaseVisionDocumentText) {
         val sysBPList = mutableListOf<String>()
         val diaBPList = mutableListOf<String>()
@@ -335,6 +336,8 @@ class ScanActivity : AppCompatActivity() {
         }
     }
 
+    // New Algorithm
+
     private fun navigateToVerifyScanActivity(sysBPList: MutableList<String>, diaBPList: MutableList<String>, sevenDay: Boolean) {
         val bundle = Bundle().apply {
             putStringArrayList("sysBPList", ArrayList(sysBPList))
@@ -346,8 +349,10 @@ class ScanActivity : AppCompatActivity() {
                 it.getString("homeDiaBPTarget")?.let { target -> putString("homeDiaBPTarget", target) }
                 it.getString("clinicSysBPTarget")?.let { target -> putString("clinicSysBPTarget", target) }
                 it.getString("clinicDiaBPTarget")?.let { target -> putString("clinicDiaBPTarget", target) }
-                putStringArrayList("sysBPListHistory", it.getStringArrayList("sysBPListHistory"))
-                putStringArrayList("diaBPListHistory", it.getStringArrayList("diaBPListHistory"))
+                it.getString("clinicSysBP")?.let { target -> putString("clinicSysBP", target) }
+                it.getString("clinicDiaBP")?.let { target -> putString("clinicDiaBP", target) }
+                it.getStringArrayList("sysBPListHistory")?.let{ target -> putStringArrayList("sysBPListHistory", target) }
+                it.getStringArrayList("diaBPListHistory")?.let{ target -> putStringArrayList("diaBPListHistory", target) }
             }
         }
 

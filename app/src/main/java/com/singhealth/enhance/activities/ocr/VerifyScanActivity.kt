@@ -227,6 +227,12 @@ class VerifyScanActivity : AppCompatActivity() {
             if (scanBundle.containsKey("clinicDiaBPTarget")) {
                 binding.verifyClinicTargetDia.text = scanBundle.getString("clinicDiaBPTarget")
             }
+            if (scanBundle.containsKey("clinicSysBP")) {
+                binding.verifyClinicSys.setText(scanBundle.getString("clinicSysBP"))
+            }
+            if (scanBundle.containsKey("clinicDiaBP")) {
+                binding.verifyClinicDia.setText(scanBundle.getString("clinicDiaBP"))
+            }
 
             if (scanBundle.containsKey("homeSysBPTarget") && scanBundle.containsKey("homeDiaBPTarget")) {
                 binding.homeBPTargetTV.text = String.format(
@@ -243,7 +249,7 @@ class VerifyScanActivity : AppCompatActivity() {
                 )
             }
 
-            if (scanBundle.containsKey("sysBPListHistory") && scanBundle.containsKey("diaBPListHistory")) {
+            if (scanBundle.containsKey("sysBPListHistory") && scanBundle.containsKey("diaBPListHistory") && !sevenDay) {
                 sysBPListHistory =
                     scanBundle.getStringArrayList("sysBPListHistory")?.toMutableList()!!
                 diaBPListHistory =
@@ -707,10 +713,10 @@ class VerifyScanActivity : AppCompatActivity() {
             scanIntent.putExtra("clinicDiaBPTarget", binding.verifyClinicTargetDia.text.toString())
         }
         binding.verifyClinicSys?.let {
-            scanIntent.putExtra("clinicSysBPTarget", binding.verifyClinicSys.text.toString())
+            scanIntent.putExtra("clinicSysBP", binding.verifyClinicSys.text.toString())
         }
         binding.verifyClinicDia?.let {
-            scanIntent.putExtra("clinicDiaBPTarget", binding.verifyClinicDia.text.toString())
+            scanIntent.putExtra("clinicDiaBP", binding.verifyClinicDia.text.toString())
         }
 
         if (!sysBPListHistory.isNullOrEmpty()) {
@@ -883,7 +889,13 @@ class VerifyScanActivity : AppCompatActivity() {
                     errorCount += 1
                     sysBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_whole_number)
                 } else if (sysBPFields[i].text!!.toString().toInt() == -1) {
-                    errorCount++
+                    errorCount += 1
+                    sysBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_abnormal_value)
+                } else if (sysBPFields[i].text.toString().length !in 2..3) {
+                    errorCount += 1
+                    sysBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_invalid_value)
+                } else if (sysBPFields[i].text.toString().toInt() !in 80..230) {
+                    errorCount += 1
                     sysBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_abnormal_value)
                 }
             }
@@ -896,8 +908,14 @@ class VerifyScanActivity : AppCompatActivity() {
                     errorCount += 1
                     diaBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_whole_number)
                 } else if (diaBPFields[i].text!!.toString().toInt() == -1) {
-                    errorCount++
+                    errorCount += 1
                     diaBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_replace_value)
+                } else if (diaBPFields[i].text.toString().length !in 2..3) {
+                    errorCount += 1
+                    diaBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_invalid_value)
+                } else if (diaBPFields[i].text.toString().toInt() !in 45..135) {
+                    errorCount += 1
+                    diaBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_abnormal_value)
                 }
             }
 
@@ -1200,6 +1218,12 @@ class VerifyScanActivity : AppCompatActivity() {
                 } else if (sysText.toInt() == -1) {
                     valid = false
                     sysField.error = ResourcesHelper.getString(this, R.string.verify_scan_abnormal_value)
+                } else if (sysText.length !in 2..3) {
+                    valid = false
+                    sysField.error = ResourcesHelper.getString(this, R.string.verify_scan_invalid_value)
+                } else if (sysText.toInt() !in 50..230) {
+                    valid = false
+                    sysField.error = ResourcesHelper.getString(this, R.string.verify_scan_abnormal_value)
                 }
             }
 
@@ -1211,6 +1235,12 @@ class VerifyScanActivity : AppCompatActivity() {
                     valid = false
                     diaField.error = ResourcesHelper.getString(this, R.string.verify_scan_whole_number)
                 } else if (diaText.toInt() == -1) {
+                    valid = false
+                    diaField.error = ResourcesHelper.getString(this, R.string.verify_scan_abnormal_value)
+                } else if (diaText.length !in 2..3) {
+                    valid = false
+                    diaField.error = ResourcesHelper.getString(this, R.string.verify_scan_invalid_value)
+                } else if (diaText.toInt() !in 35..135) {
                     valid = false
                     diaField.error = ResourcesHelper.getString(this, R.string.verify_scan_abnormal_value)
                 }
@@ -1347,6 +1377,14 @@ class VerifyScanActivity : AppCompatActivity() {
         println("Final SysBPList: $filteredSysBPList")
         println("Final DiaBPList: $filteredDiaBPList")
 
+        // Conditions
+        // Always throw day 1
+        // If less than 3 days of full readings than use general scan calculation for average
+        // If more or equal to 3 days than use 7 days scan
+        // Use the consecutive number of days
+        // Go from end to front
+        // Let's say day 7 is empty, it will check day 6 and etc..
+
         val finalSysBPList = if (filteredSysBPList.size < 8) {
             filteredSysBPList.toMutableList()
         } else {
@@ -1448,6 +1486,16 @@ class VerifyScanActivity : AppCompatActivity() {
         }
     }
 
+    private fun removeExtraRow(){
+        if (sysBPList.size > 32 && diaBPList.size > 32 && diaBPList.size == sysBPList.size){
+            // Since sysBPList size would be the same as the diaBPList size after adding a left or right column, could use either
+            for (i in 32 until sysBPList.size){
+                sysBPList.removeAt(i)
+                diaBPList.removeAt(i)
+            }
+        }
+    }
+
     @SuppressLint("SetTextI18n")
     private fun addRow(
         sysBP: String?,
@@ -1509,7 +1557,23 @@ class VerifyScanActivity : AppCompatActivity() {
                         println("SysBP Text Changed: $s")
                         val index = sysBPFields.indexOf(sysBPTIET)
                         if (index != -1) {
-                            sysBPList[index] = s.toString()
+                            if(!sevenDay){
+                                if (sysBPListHistory.isNotEmpty()){
+                                    if (index >= sysBPListHistory.size){
+                                        val newIndex = index - sysBPListHistory.size
+                                        sysBPList[newIndex] = s.toString()
+                                    }
+                                    else{
+                                        sysBPListHistory[index] = s.toString()
+                                    }
+                                }
+                                else{
+                                    sysBPList[index] = s.toString()
+                                }
+                            }
+                            else{
+                                sysBPList[index] = s.toString()
+                            }
                         }
                     }
                     typingDelayHandler.postDelayed(typingRunnable!!, 1000) // 500ms delay
@@ -1530,7 +1594,23 @@ class VerifyScanActivity : AppCompatActivity() {
                         println("DiaBP Text Changed: $s")
                         val index = diaBPFields.indexOf(diaBPTIET)
                         if (index != -1) {
-                            diaBPList[index] = s.toString()
+                            if(!sevenDay){
+                                if (diaBPListHistory.isNotEmpty()){
+                                    if (index >= diaBPListHistory.size){
+                                        val newIndex = index - diaBPListHistory.size
+                                        diaBPList[newIndex] = s.toString()
+                                    }
+                                    else{
+                                        diaBPListHistory[index] = s.toString()
+                                    }
+                                }
+                                else{
+                                    diaBPList[index] = s.toString()
+                                }
+                            }
+                            else{
+                                diaBPList[index] = s.toString()
+                            }
                         }
                     }
                     typingDelayHandler.postDelayed(typingRunnable!!, 1000) // 500ms delay
@@ -1708,6 +1788,12 @@ class VerifyScanActivity : AppCompatActivity() {
                     diaBPList.add("")
                 }
             }
+
+            //Remove extra rows from shifting left columns for seven day scan since seven day should only have 28 rows but have 4 more rows in case of data manipulation
+            if (sevenDay) {
+                removeExtraRow()
+            }
+
             // Clear the views and fields, then refresh
             binding.rowBPRecordLL.removeAllViews()
             sysBPFields.clear()
@@ -1733,6 +1819,10 @@ class VerifyScanActivity : AppCompatActivity() {
                 } else {
                     diaBPList.add("")
                 }
+            }
+
+            if (sevenDay) {
+                removeExtraRow()
             }
 
             binding.rowBPRecordLL.removeAllViews()
