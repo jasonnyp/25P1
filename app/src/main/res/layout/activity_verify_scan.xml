@@ -63,7 +63,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="4dp"
-                            android:text="@string/enhance_verify_home_bp"
+                            android:text="@string/enhance_verify_home_target_bp"
                             android:textAppearance="?attr/textAppearanceBodyMedium"
                             android:textSize="16sp" />
 
@@ -288,7 +288,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="4dp"
-                            android:text="@string/enhance_verify_clinic_bp"
+                            android:text="@string/enhance_verify_clinic_target_bp"
                             android:textAppearance="?attr/textAppearanceBodyMedium"
                             android:textSize="16sp" />
 

@@ -356,9 +356,9 @@
     <string name="enhance_verify_edit">Edit</string>
     <string name="enhance_verify_update">Update</string>
     <string name="enhance_verify_exit">Exit</string>
-    <string name="enhance_verify_home_bp">Home BP Target:</string>
+    <string name="enhance_verify_home_target_bp">Target Home BP:</string>
     <string name="enhance_verify_home_divider" translatable="false">/</string>
-    <string name="enhance_verify_clinic_target_bp">Clinic BP Target:</string>
+    <string name="enhance_verify_clinic_target_bp">Target Clinic BP:</string>
     <string name="enhance_verify_clinic_divider" translatable="false">/</string>
     <string name="enhance_verify_clinic_bp">Clinic BP:</string>
     <string name="enhance_verify_add_row">Add Row</string>
