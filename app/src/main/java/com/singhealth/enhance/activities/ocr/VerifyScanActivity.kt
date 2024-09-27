@@ -1489,10 +1489,26 @@ class VerifyScanActivity : AppCompatActivity() {
     private fun removeExtraRow(){
         if (sysBPList.size > 32 && diaBPList.size > 32 && diaBPList.size == sysBPList.size){
             // Since sysBPList size would be the same as the diaBPList size after adding a left or right column, could use either
-            for (i in 32 until sysBPList.size){
-                sysBPList.removeAt(i)
-                diaBPList.removeAt(i)
+
+            while (true){
+                var index = 32
+                println("Test sysBPList:" + sysBPList)
+                println("Test diaBPList:" + diaBPList)
+                println("Test sysBPList size:" + sysBPList.size)
+                println("Test diaBPList size:" + diaBPList.size)
+                println("Test index:" + index)
+                if ((sysBPList.size <= 32 && diaBPList.size <= 32) || index > sysBPList.size || index > diaBPList.size){
+                    println("YES")
+                    break
+                }else{
+                    if (sysBPList[index] == "" && diaBPList[index] == "") {
+                        sysBPList.removeAt(index)
+                        diaBPList.removeAt(index)
+                    }
+                    index += 1
+                }
             }
+            println("End")
         }
     }
 
@@ -1835,6 +1851,16 @@ class VerifyScanActivity : AppCompatActivity() {
         }
 
         binding.rowBPRecordLL.addView(rowBPRecordLayout)
+
+        // Refresh views so it shows error on empty blanks when clicked on add row for general scan
+        if (!sevenDay){
+            if (sysBP == null && diaBP == null) {
+                binding.rowBPRecordLL.removeAllViews()
+                sysBPFields.clear()
+                diaBPFields.clear()
+                refreshViews()
+            }
+        }
     }
 
     private fun addDivider() {
