@@ -1060,7 +1060,9 @@ class VerifyScanActivity : AppCompatActivity() {
     private fun calcSevenDayAvgBP() {
         val dayReadings = mutableListOf<List<Pair<String, String>>>()
         val incompleteDayReadings = mutableListOf<List<Pair<String, String>>>()
-        val dayReadingsStatus = mutableListOf<Int>() // 1 for full day, 0 for incomplete day
+        val dayReadingsStatus =
+            mutableListOf<Int>() // 2 for full day, 1 for incomplete day, 0 for empty day
+
         var currentDayReadings = mutableListOf<Pair<String, String>>()
 
         sysBPList = sysBPList.subList(0, 28).toMutableList()
@@ -1074,217 +1076,211 @@ class VerifyScanActivity : AppCompatActivity() {
             // Each day should have 4 readings (2 morning + 2 evening)
             if (currentDayReadings.size == 4) {
                 dayReadings.add(currentDayReadings.toList())
-                dayReadingsStatus.add(1)
+                dayReadingsStatus.add(2)
                 currentDayReadings.clear()
             } else if ((i + 1) % 4 == 0) {
                 // If it's the end of the day (4 readings) but incomplete
                 if (currentDayReadings.isNotEmpty()) {
                     incompleteDayReadings.add(currentDayReadings.toList())
+                    dayReadingsStatus.add(1)
+                } else if (currentDayReadings.isEmpty()) {
                     dayReadingsStatus.add(0)
                 }
                 currentDayReadings.clear()
             }
         }
 
-        println("Complete Day Readings: $dayReadings")
-        println("Incomplete Day Readings: $incompleteDayReadings")
+        // Now check if there are 3 consecutive full days remaining, starting from the last day
+        val validConsecutiveDays = mutableListOf<List<Pair<String, String>>>()
 
-        // Check if we have 28 readings (7 days of 4 readings)
-        if (dayReadings.size == 7) {
-            val filteredSysBPList = mutableListOf<String>()
-            val filteredDiaBPList = mutableListOf<String>()
+        for (i in dayReadingsStatus.size - 1 downTo 2) {
+            // Check for 3 consecutive full days in reverse
+            if (dayReadingsStatus[i] == 1 && dayReadingsStatus[i - 1] == 1 && dayReadingsStatus[i - 2] == 1) {
+                validConsecutiveDays.add(dayReadings[i])
+                validConsecutiveDays.add(dayReadings[i - 1])
+                validConsecutiveDays.add(dayReadings[i - 2])
 
-            for (day in dayReadings) {
-                val (morningSysBP1, morningDiaBP1) = day[0]
-                val (morningSysBP2, morningDiaBP2) = day[1]
-                val (eveningSysBP1, eveningDiaBP1) = day[2]
-                val (eveningSysBP2, eveningDiaBP2) = day[3]
-
-                println("Processing Day Readings:")
-                println("Morning Readings: $morningSysBP1, $morningDiaBP1; $morningSysBP2, $morningDiaBP2")
-                println("Evening Readings: $eveningSysBP1, $eveningDiaBP1; $eveningSysBP2, $eveningDiaBP2")
-
-                val chosenMorningSysBP =
-                    if (morningSysBP1.toIntOrNull() ?: 0 >= targetSysBP.toInt() || morningDiaBP1.toIntOrNull() ?: 0 >= targetDiaBP.toInt()) {
-                        morningSysBP2
-                    } else {
-                        morningSysBP1
-                    }
-                val chosenMorningDiaBP =
-                    if (morningSysBP1.toIntOrNull() ?: 0 >= targetSysBP.toInt() || morningDiaBP1.toIntOrNull() ?: 0 >= targetDiaBP.toInt()) {
-                        morningDiaBP2
-                    } else {
-                        morningDiaBP1
-                    }
-
-                val chosenEveningSysBP =
-                    if (eveningSysBP1.toIntOrNull() ?: 0 >= targetSysBP.toInt() || eveningDiaBP1.toIntOrNull() ?: 0 >= targetDiaBP.toInt()) {
-                        eveningSysBP2
-                    } else {
-                        eveningSysBP1
-                    }
-                val chosenEveningDiaBP =
-                    if (eveningSysBP1.toIntOrNull() ?: 0 >= targetSysBP.toInt() || eveningDiaBP1.toIntOrNull() ?: 0 >= targetDiaBP.toInt()) {
-                        eveningDiaBP2
-                    } else {
-                        eveningDiaBP1
-                    }
-
-                filteredSysBPList.add(chosenMorningSysBP)
-                filteredDiaBPList.add(chosenMorningDiaBP)
-                filteredSysBPList.add(chosenEveningSysBP)
-                filteredDiaBPList.add(chosenEveningDiaBP)
-
-                println("Chosen Morning Readings: $chosenMorningSysBP, $chosenMorningDiaBP")
-                println("Chosen Evening Readings: $chosenEveningSysBP, $chosenEveningDiaBP")
+                // Continue checking for more sets of consecutive full days in reverse
+                var j = i - 3
+                while (j >= 0 && dayReadingsStatus[j] == 1) {
+                    validConsecutiveDays.add(dayReadings[j])
+                    j--
+                }
+                break
             }
-            println("BEFORE")
-            println("Final SysBPList: $filteredSysBPList")
-            println("Final DiaBPList: $filteredDiaBPList")
-
-            val finalSysBPList = if (filteredSysBPList.size < 8) {
-                filteredSysBPList.toMutableList()
-            } else {
-                filteredSysBPList.drop(2).toMutableList()
-            }
-
-            val finalDiaBPList = if (filteredDiaBPList.size < 8) {
-                filteredDiaBPList.toMutableList()
-            } else {
-                filteredDiaBPList.drop(2).toMutableList()
-            }
-
-            println("AFTER")
-            println("Final SysBPList: $finalSysBPList")
-            println("Final DiaBPList: $finalDiaBPList")
-
-
-            sysBPList = finalSysBPList
-            diaBPList = finalDiaBPList
-
-            totalSysBP = 0
-            totalDiaBP = 0
-
-            for (field in finalSysBPList) {
-                totalSysBP += field.toInt()
-            }
-
-            for (field in finalDiaBPList) {
-                totalDiaBP += field.toInt()
-            }
-
-            avgSysBP = (totalSysBP.toFloat() / finalSysBPList.size).roundToInt()
-            avgDiaBP = (totalDiaBP.toFloat() / finalDiaBPList.size).roundToInt()
         }
-        else if (dayReadings.size >= 3 && dayReadings.size != 7) {
 
-            dayReadings.removeAt(0)
+        println("Number of Complete Day Readings: ${dayReadingsStatus.count { it == 2 }}")
+        println("Number of Incomplete Day Readings: ${dayReadingsStatus.count { it == 1 }}")
+        println("Number of Empty Day Readings: ${dayReadingsStatus.count { it == 0 }}")
+        println("Day Readings Status: $dayReadingsStatus")
+        println("Number of Valid Consecutive Days: ${validConsecutiveDays.count()}")
 
-            // Now check if there are 3 consecutive full days remaining
-            val validConsecutiveDays = mutableListOf<List<Pair<String, String>>>()
+        dayReadings.removeAt(0)
 
-            for (i in 0 until dayReadingsStatus.size - 2) {
-                // Check for 3 consecutive full days
-                if (dayReadingsStatus[i] == 1 && dayReadingsStatus[i + 1] == 1 && dayReadingsStatus[i + 2] == 1) {
-                    validConsecutiveDays.add(dayReadings[i])
-                    validConsecutiveDays.add(dayReadings[i + 1])
-                    validConsecutiveDays.add(dayReadings[i + 2])
+       if (validConsecutiveDays.size >= 3) {
 
-                    // Continue checking for more sets of consecutive full days
-                    var j = i + 3
-                    while (j < dayReadingsStatus.size && dayReadingsStatus[j] == 1) {
-                        validConsecutiveDays.add(dayReadings[j])
-                        j++
-                    }
-                    break
-                }
-            }
+           val filteredSysBPList = mutableListOf<String>()
+           val filteredDiaBPList = mutableListOf<String>()
 
-            if (validConsecutiveDays.size == 3) {
-                val filteredSysBPList = mutableListOf<String>()
-                val filteredDiaBPList = mutableListOf<String>()
+           for (day in validConsecutiveDays) {
+               val (morningSysBP1, morningDiaBP1) = day[0]
+               val (morningSysBP2, morningDiaBP2) = day[1]
+               val (eveningSysBP1, eveningDiaBP1) = day[2]
+               val (eveningSysBP2, eveningDiaBP2) = day[3]
 
-                for (day in validConsecutiveDays) {
-                    val (morningSysBP1, morningDiaBP1) = day[0]
-                    val (morningSysBP2, morningDiaBP2) = day[1]
-                    val (eveningSysBP1, eveningDiaBP1) = day[2]
-                    val (eveningSysBP2, eveningDiaBP2) = day[3]
+               println("Processing Day Readings:")
+               println("Morning Readings: $morningSysBP1, $morningDiaBP1; $morningSysBP2, $morningDiaBP2")
+               println("Evening Readings: $eveningSysBP1, $eveningDiaBP1; $eveningSysBP2, $eveningDiaBP2")
 
-                    println("Processing Day Readings:")
-                    println("Morning Readings: $morningSysBP1, $morningDiaBP1; $morningSysBP2, $morningDiaBP2")
-                    println("Evening Readings: $eveningSysBP1, $eveningDiaBP1; $eveningSysBP2, $eveningDiaBP2")
+               val chosenMorningSysBP =
+                   if (morningSysBP1.toIntOrNull() ?: 0 >= targetSysBP.toInt() || morningDiaBP1.toIntOrNull() ?: 0 >= targetDiaBP.toInt()) {
+                       morningSysBP2
+                   } else {
+                       morningSysBP1
+                   }
+               val chosenMorningDiaBP =
+                   if (morningSysBP1.toIntOrNull() ?: 0 >= targetSysBP.toInt() || morningDiaBP1.toIntOrNull() ?: 0 >= targetDiaBP.toInt()) {
+                       morningDiaBP2
+                   } else {
+                       morningDiaBP1
+                   }
 
-                    val chosenMorningSysBP =
-                        if (morningSysBP1.toIntOrNull() ?: 0 >= targetSysBP.toInt() || morningDiaBP1.toIntOrNull() ?: 0 >= targetDiaBP.toInt()) {
-                            morningSysBP2
-                        } else {
-                            morningSysBP1
-                        }
-                    val chosenMorningDiaBP =
-                        if (morningSysBP1.toIntOrNull() ?: 0 >= targetSysBP.toInt() || morningDiaBP1.toIntOrNull() ?: 0 >= targetDiaBP.toInt()) {
-                            morningDiaBP2
-                        } else {
-                            morningDiaBP1
-                        }
+               val chosenEveningSysBP =
+                   if (eveningSysBP1.toIntOrNull() ?: 0 >= targetSysBP.toInt() || eveningDiaBP1.toIntOrNull() ?: 0 >= targetDiaBP.toInt()) {
+                       eveningSysBP2
+                   } else {
+                       eveningSysBP1
+                   }
+               val chosenEveningDiaBP =
+                   if (eveningSysBP1.toIntOrNull() ?: 0 >= targetSysBP.toInt() || eveningDiaBP1.toIntOrNull() ?: 0 >= targetDiaBP.toInt()) {
+                       eveningDiaBP2
+                   } else {
+                       eveningDiaBP1
+                   }
 
-                    val chosenEveningSysBP =
-                        if (eveningSysBP1.toIntOrNull() ?: 0 >= targetSysBP.toInt() || eveningDiaBP1.toIntOrNull() ?: 0 >= targetDiaBP.toInt()) {
-                            eveningSysBP2
-                        } else {
-                            eveningSysBP1
-                        }
-                    val chosenEveningDiaBP =
-                        if (eveningSysBP1.toIntOrNull() ?: 0 >= targetSysBP.toInt() || eveningDiaBP1.toIntOrNull() ?: 0 >= targetDiaBP.toInt()) {
-                            eveningDiaBP2
-                        } else {
-                            eveningDiaBP1
-                        }
+               filteredSysBPList.add(chosenMorningSysBP)
+               filteredDiaBPList.add(chosenMorningDiaBP)
+               filteredSysBPList.add(chosenEveningSysBP)
+               filteredDiaBPList.add(chosenEveningDiaBP)
 
-                    filteredSysBPList.add(chosenMorningSysBP)
-                    filteredDiaBPList.add(chosenMorningDiaBP)
-                    filteredSysBPList.add(chosenEveningSysBP)
-                    filteredDiaBPList.add(chosenEveningDiaBP)
+               println("Chosen Morning Readings: $chosenMorningSysBP, $chosenMorningDiaBP")
+               println("Chosen Evening Readings: $chosenEveningSysBP, $chosenEveningDiaBP")
+           }
 
-                    println("Chosen Morning Readings: $chosenMorningSysBP, $chosenMorningDiaBP")
-                    println("Chosen Evening Readings: $chosenEveningSysBP, $chosenEveningDiaBP")
-                }
-                println("BEFORE")
-                println("Final SysBPList: $filteredSysBPList")
-                println("Final DiaBPList: $filteredDiaBPList")
+           val finalSysBPList = filteredSysBPList.toMutableList()
+           val finalDiaBPList = filteredDiaBPList.toMutableList()
 
-                val finalSysBPList = if (filteredSysBPList.size < 6) {
-                    filteredSysBPList.toMutableList()
-                } else {
-                    filteredSysBPList.toMutableList()
-                }
+           println("Final SysBPList: $finalSysBPList")
+           println("Final DiaBPList: $finalDiaBPList")
 
-                val finalDiaBPList = if (filteredDiaBPList.size < 6) {
-                    filteredDiaBPList.toMutableList()
-                } else {
-                    filteredDiaBPList.toMutableList()
-                }
+           sysBPList = finalSysBPList
+           diaBPList = finalDiaBPList
 
-                println("AFTER")
-                println("Final SysBPList: $finalSysBPList")
-                println("Final DiaBPList: $finalDiaBPList")
+           totalSysBP = 0
+           totalDiaBP = 0
 
-                sysBPList = finalSysBPList
-                diaBPList = finalDiaBPList
+           for (field in finalSysBPList) {
+               totalSysBP += field.toInt()
+           }
 
-                totalSysBP = 0
-                totalDiaBP = 0
+           for (field in finalDiaBPList) {
+               totalDiaBP += field.toInt()
+           }
 
-                for (field in finalSysBPList) {
-                    totalSysBP += field.toInt()
-                }
+           avgSysBP = (totalSysBP.toFloat() / finalSysBPList.size).roundToInt()
+           avgDiaBP = (totalDiaBP.toFloat() / finalDiaBPList.size).roundToInt()
+       }
+       else if (validConsecutiveDays.size < 3) {
 
-                for (field in finalDiaBPList) {
-                    totalDiaBP += field.toInt()
-                }
+           totalSysBP = 0
+           totalDiaBP = 0
 
-                avgSysBP = (totalSysBP.toFloat() / finalSysBPList.size).roundToInt()
-                avgDiaBP = (totalDiaBP.toFloat() / finalDiaBPList.size).roundToInt()
-            }
+           val SysBPList = mutableListOf<String>()
+           val DiaBPList = mutableListOf<String>()
+
+           for (day in dayReadings) {
+               val (morningSysBP1, morningDiaBP1) = day[0]
+               val (morningSysBP2, morningDiaBP2) = day[1]
+               val (eveningSysBP1, eveningDiaBP1) = day[2]
+               val (eveningSysBP2, eveningDiaBP2) = day[3]
+
+               SysBPList.add(morningSysBP1)
+               SysBPList.add(morningSysBP2)
+               SysBPList.add(eveningSysBP1)
+               SysBPList.add(eveningSysBP2)
+
+               DiaBPList.add(morningDiaBP1)
+               DiaBPList.add(morningDiaBP2)
+               DiaBPList.add(eveningDiaBP1)
+               DiaBPList.add(eveningDiaBP2)
+           }
+
+           for (day in incompleteDayReadings) {
+               for ((sysBP, diaBP) in day) {
+                   SysBPList.add(sysBP)
+                   DiaBPList.add(diaBP)
+               }
+           }
+
+           totalSysBP = 0
+           totalDiaBP = 0
+
+           for (field in SysBPList) {
+               totalSysBP += field.toInt()
+           }
+
+           for (field in DiaBPList) {
+               totalDiaBP += field.toInt()
+           }
+
+           avgSysBP = (totalSysBP.toFloat() / SysBPList.size).roundToInt()
+           avgDiaBP = (totalDiaBP.toFloat() / DiaBPList.size).roundToInt()
+       }
+        else if (dayReadings.size == 0) {
+           totalSysBP = 0
+           totalDiaBP = 0
+
+           val SysBPList = mutableListOf<String>()
+           val DiaBPList = mutableListOf<String>()
+
+           for (day in dayReadings) {
+               val (morningSysBP1, morningDiaBP1) = day[0]
+               val (morningSysBP2, morningDiaBP2) = day[1]
+               val (eveningSysBP1, eveningDiaBP1) = day[2]
+               val (eveningSysBP2, eveningDiaBP2) = day[3]
+
+               SysBPList.add(morningSysBP1)
+               SysBPList.add(morningSysBP2)
+               SysBPList.add(eveningSysBP1)
+               SysBPList.add(eveningSysBP2)
+
+               DiaBPList.add(morningDiaBP1)
+               DiaBPList.add(morningDiaBP2)
+               DiaBPList.add(eveningDiaBP1)
+               DiaBPList.add(eveningDiaBP2)
+           }
+
+           for (day in incompleteDayReadings) {
+               for ((sysBP, diaBP) in day) {
+                   SysBPList.add(sysBP)
+                   DiaBPList.add(diaBP)
+               }
+           }
+
+           totalSysBP = 0
+           totalDiaBP = 0
+
+           for (field in SysBPList) {
+               totalSysBP += field.toInt()
+           }
+
+           for (field in DiaBPList) {
+               totalDiaBP += field.toInt()
+           }
+
+           avgSysBP = (totalSysBP.toFloat() / SysBPList.size).roundToInt()
+           avgDiaBP = (totalDiaBP.toFloat() / DiaBPList.size).roundToInt()
         }
     }
 
