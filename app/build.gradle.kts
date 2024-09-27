@@ -11,7 +11,7 @@ android {
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.singhealth.enhance2"
+        applicationId = "com.singhealth.enhance"
         minSdk = 30
         targetSdk = 33
         versionCode = 1

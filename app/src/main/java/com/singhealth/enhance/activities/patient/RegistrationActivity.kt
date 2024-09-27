@@ -193,6 +193,24 @@ class RegistrationActivity : AppCompatActivity() {
             override fun afterTextChanged(s: Editable?) {}
         })
 
+        binding.registerClinicSysInput.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                binding.registerClinicSys.error = null
+            }
+
+            override fun afterTextChanged(s: Editable?) {}
+        })
+
+        binding.registerClinicDiaInput.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                binding.registerClinicDia.error = null
+            }
+
+            override fun afterTextChanged(s: Editable?) {}
+        })
+
         progressDialog = ProgressDialog(this)
         progressDialog.setCanceledOnTouchOutside(false)
 
@@ -329,6 +347,28 @@ class RegistrationActivity : AppCompatActivity() {
             binding.registerHomeDia.error = getString(R.string.register_invalid_number_verification)
         }
 
+        if (binding.registerClinicSysInput.text.isNullOrEmpty()) {
+            valid = false
+            binding.registerClinicSys.error = getString(R.string.register_empty_bp_verification, 135)
+        } else if (binding.registerClinicSysInput.text.toString().toFloatOrNull() == null) {
+            valid = false
+            binding.registerClinicSys.error = getString(R.string.register_invalid_value_verification)
+        } else if (binding.registerClinicSysInput.text.toString().toInt() > 200 || binding.registerClinicSysInput.text.toString().toInt() < 0) {
+            valid = false
+            binding.registerClinicSys.error = getString(R.string.register_invalid_number_verification)
+        }
+
+        if (binding.registerClinicDiaInput.text.isNullOrEmpty()) {
+            valid = false
+            binding.registerClinicDia.error = getString(R.string.register_empty_bp_verification, 85)
+        } else if (binding.registerClinicDiaInput.text.toString().toFloatOrNull() == null) {
+            valid = false
+            binding.registerClinicDia.error = getString(R.string.register_invalid_value_verification)
+        } else if (binding.registerClinicDiaInput.text.toString().toInt() > 200 || binding.registerClinicDiaInput.text.toString().toInt() < 0) {
+            valid = false
+            binding.registerClinicDia.error = getString(R.string.register_invalid_number_verification)
+        }
+
         return valid
     }
 
@@ -353,12 +393,12 @@ class RegistrationActivity : AppCompatActivity() {
             "dateOfBirth" to AESEncryption().encrypt(binding.dateOfBirthTIET.text.toString()),
             "gender" to gender,
             "clinicId" to StaffSharedPreferences.getSharedPreferences(applicationContext).getString("clinicId", ""),
-
             "weight" to AESEncryption().encrypt(binding.weightTIET.text.toString()),
             "height" to AESEncryption().encrypt(binding.heightTIET.text.toString()),
-            "targetSys" to AESEncryption().encrypt(binding.registerHomeSysInput.text.toString()),
-            "targetDia" to AESEncryption().encrypt(binding.registerHomeDiaInput.text.toString()),
-
+            "targetHomeSys" to AESEncryption().encrypt(binding.registerHomeSysInput.text.toString()),
+            "targetHomeDia" to AESEncryption().encrypt(binding.registerHomeDiaInput.text.toString()),
+            "targetClinicSys" to AESEncryption().encrypt(binding.registerClinicSysInput.text.toString()),
+            "targetClinicDia" to AESEncryption().encrypt(binding.registerClinicDiaInput.text.toString()),
             "bpStage" to "N/A"
         )
 

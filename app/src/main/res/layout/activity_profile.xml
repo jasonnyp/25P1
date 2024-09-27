@@ -152,11 +152,25 @@
                             <TextView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:text="@string/enhance_profile_target_bp"
+                                android:text="@string/enhance_profile_target_home_bp"
                                 android:textAllCaps="true" />
 
                             <TextView
-                                android:id="@+id/profileTargetBP"
+                                android:id="@+id/profileTargetHomeBP"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:textSize="18sp"
+                                android:layout_marginBottom="12dp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@string/enhance_profile_target_clinic_bp"
+                                android:textAllCaps="true" />
+
+                            <TextView
+                                android:id="@+id/profileTargetClinicBP"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:textSize="18sp"
