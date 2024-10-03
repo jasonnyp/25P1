@@ -206,137 +206,6 @@ class ScanActivity : AppCompatActivity() {
     }
 
     //Old Algorithm
-    private fun processDocumentTextBlock(result: FirebaseVisionDocumentText) {
-        val sysBPList = mutableListOf<String>()
-        val diaBPList = mutableListOf<String>()
-        val blocks = result.blocks
-
-        if (blocks.isEmpty()) {
-            progressDialog.dismiss()
-            ocrTextErrorDialog(this)
-        } else {
-            val words = extractWordsFromBlocks(blocks)
-            println("Scanned words:")
-            words.forEachIndexed { index, word ->
-                println("Word ${index + 1}: ${word.text}")
-            }
-
-            val numbers = words.map { it.text }
-                .asSequence()
-                .filter { it != "*" && it != "7" && it != "07" && it != "8" }
-                .map {
-                    when (it) {
-                        "Sis", "Eis", "Su", "Eu", "fir" -> "84"
-                        "14" -> "121"
-                        "10" -> "70"
-                        "16" -> "116"
-                        "1/6" -> "116"
-                        "T17" -> "117"
-                        "+5" -> "75"
-                        "+9" -> "79"
-                        "TIT", "川", "!!!", "|||" -> "111"
-                        "734" -> "134"
-                        "13T" -> "131"
-                        "9/2" -> "92"
-                        else -> it.replace(Regex("[^\\d]"), "")
-                    }
-                }
-                .map { it.replace(Regex("(\\d*)T(\\d*)"), "1$1$2") }
-                .filter { it.matches(Regex("\\d+")) && it.toInt() in 45..230 }
-                .map { it.toInt() }
-                .toMutableList()
-            println("Filtered numbers: $numbers")
-            processNumbers(numbers, sysBPList, diaBPList)
-            fixCommonErrors(sysBPList, diaBPList)
-            println("sysBPList after fixing common errors: $sysBPList")
-            println("diaBPList after fixing common errors: $diaBPList")
-
-            navigateToVerifyScanActivity(sysBPList, diaBPList, sevenDay)
-        }
-    }
-
-    private fun extractWordsFromBlocks(blocks: List<FirebaseVisionDocumentText.Block>): MutableList<FirebaseVisionDocumentText.Word> {
-        val words = mutableListOf<FirebaseVisionDocumentText.Word>()
-        for (block in blocks) {
-            for (paragraph in block.paragraphs) {
-                words.addAll(paragraph.words)
-            }
-        }
-
-//        println("Words before sorting by bounding box:")
-//        words.forEachIndexed { index, word ->
-//            println("Word ${index + 1}: ${word.text}")
-//        }
-
-        return words
-    }
-
-    private fun processNumbers(
-        numbers: List<Int>,
-        sysBPList: MutableList<String>,
-        diaBPList: MutableList<String>
-    ) {
-        val correctedNumbers = mutableListOf<Int>()
-
-        var i = 0
-        while (i < numbers.size) {
-            val systolic = numbers.getOrNull(i)
-            val diastolic = numbers.getOrNull(i + 1)
-
-            if (systolic != null && diastolic != null) {
-                if (systolic in 80..230 && diastolic in 45..135) {
-                    if (diastolic > systolic) {
-                        correctedNumbers.add(diastolic)
-                        correctedNumbers.add(systolic)
-                    } else {
-                        correctedNumbers.add(systolic)
-                        correctedNumbers.add(diastolic)
-                    }
-                } else if (systolic in 45..135 && diastolic in 80..230) {
-                    correctedNumbers.add(diastolic)
-                    correctedNumbers.add(systolic)
-                } else if (systolic !in 80..230) {
-                    correctedNumbers.add(-1)
-                    correctedNumbers.add(diastolic)
-                } else if (diastolic !in 45..135) {
-                    correctedNumbers.add(systolic)
-                    correctedNumbers.add(-1)
-                } else {
-                    correctedNumbers.add(-1)
-                    correctedNumbers.add(-1)
-                }
-            } else if (systolic != null) {
-                correctedNumbers.add(systolic)
-                correctedNumbers.add(-1)
-            } else if (diastolic != null) {
-                correctedNumbers.add(-1)
-                correctedNumbers.add(diastolic)
-            }
-
-            i += 2
-        }
-
-        if (correctedNumbers.size % 2 != 0) {
-            correctedNumbers.add(-1)
-        }
-
-        correctedNumbers.forEachIndexed { index, value ->
-            if (index % 2 == 0) {
-                sysBPList.add(value.toString())
-            } else {
-                diaBPList.add(value.toString())
-            }
-        }
-    }
-
-    private fun fixCommonErrors(sysBPList: MutableList<String>, diaBPList: MutableList<String>) {
-        for (i in 0 until maxOf(sysBPList.size, diaBPList.size)) {
-            sysBPList[i] = sysBPList[i].replace("기", "71").replace("ㄱㄱ", "77").replace("ㄱㅇ", "70").replace("סר", "70").replace("סך", "70").replace(" ", "")
-            diaBPList[i] = diaBPList[i].replace("기", "71").replace("ㄱㄱ", "77").replace("ㄱㅇ", "70").replace("סר", "70").replace("סך", "70").replace(" ", "")
-        }
-    }
-
-    // New Algorithm
 //    private fun processDocumentTextBlock(result: FirebaseVisionDocumentText) {
 //        val sysBPList = mutableListOf<String>()
 //        val diaBPList = mutableListOf<String>()
@@ -354,8 +223,8 @@ class ScanActivity : AppCompatActivity() {
 //
 //            val numbers = words.map { it.text }
 //                .asSequence()
-//                .filter { it != "*" && it != "7" && it != "07" && it != "8" } ignore
-//                .map { ignore
+//                .filter { it != "*" && it != "7" && it != "07" && it != "8" }
+//                .map {
 //                    when (it) {
 //                        "Sis", "Eis", "Su", "Eu", "fir" -> "84"
 //                        "14" -> "121"
@@ -372,12 +241,13 @@ class ScanActivity : AppCompatActivity() {
 //                        else -> it.replace(Regex("[^\\d]"), "")
 //                    }
 //                }
-//                .map { it.replace(Regex("(\\d*)T(\\d*)"), "1$1$2") } ignore
-//                .filter { it.matches(Regex("\\d+")) && it.toInt() in 45..230} ignore
-//                .map { it.toInt() } ignore
+//                .map { it.replace(Regex("(\\d*)T(\\d*)"), "1$1$2") } // No idea what this does essentially 203T3045 will beccome 12033045
+//                .filter { it.matches(Regex("\\d+")) && it.toInt() in 20..220 }
+//                .map { it.toInt() }
 //                .toMutableList()
 //            println("Filtered numbers: $numbers")
-//            processNumbers(numbers, sysBPList, diaBPList) ignore
+//            processNumbers(numbers, sysBPList, diaBPList)
+//            fixCommonErrors(sysBPList, diaBPList)
 //            println("sysBPList after fixing common errors: $sysBPList")
 //            println("diaBPList after fixing common errors: $diaBPList")
 //
@@ -392,9 +262,15 @@ class ScanActivity : AppCompatActivity() {
 //                words.addAll(paragraph.words)
 //            }
 //        }
+//
+//        println("Words before sorting by bounding box:")
+//        words.forEachIndexed { index, word ->
+//            println("Word ${index + 1}: ${word.text}")
+//        }
+//
 //        return words
 //    }
-//
+
 //    private fun processNumbers(
 //        numbers: List<Int>,
 //        sysBPList: MutableList<String>,
@@ -408,7 +284,7 @@ class ScanActivity : AppCompatActivity() {
 //            val diastolic = numbers.getOrNull(i + 1)
 //
 //            if (systolic != null && diastolic != null) {
-//                if (systolic in 80..230 && diastolic in 45..135) {
+//                if (systolic in 50..220 && diastolic in 20..160) {
 //                    if (diastolic > systolic) {
 //                        correctedNumbers.add(diastolic)
 //                        correctedNumbers.add(systolic)
@@ -416,13 +292,13 @@ class ScanActivity : AppCompatActivity() {
 //                        correctedNumbers.add(systolic)
 //                        correctedNumbers.add(diastolic)
 //                    }
-//                } else if (systolic in 45..135 && diastolic in 80..230) {
+//                } else if (systolic in 20..160 && diastolic in 50..220) {
 //                    correctedNumbers.add(diastolic)
 //                    correctedNumbers.add(systolic)
-//                } else if (systolic !in 80..230) {
+//                } else if (systolic !in 50..220) {
 //                    correctedNumbers.add(-1)
 //                    correctedNumbers.add(diastolic)
-//                } else if (diastolic !in 45..135) {
+//                } else if (diastolic !in 20..160) {
 //                    correctedNumbers.add(systolic)
 //                    correctedNumbers.add(-1)
 //                } else {
@@ -452,6 +328,123 @@ class ScanActivity : AppCompatActivity() {
 //            }
 //        }
 //    }
+//
+//    private fun fixCommonErrors(sysBPList: MutableList<String>, diaBPList: MutableList<String>) {
+//        for (i in 0 until maxOf(sysBPList.size, diaBPList.size)) {
+//            sysBPList[i] = sysBPList[i].replace("기", "71").replace("ㄱㄱ", "77").replace("ㄱㅇ", "70").replace("סר", "70").replace("סך", "70").replace(" ", "")
+//            diaBPList[i] = diaBPList[i].replace("기", "71").replace("ㄱㄱ", "77").replace("ㄱㅇ", "70").replace("סר", "70").replace("סך", "70").replace(" ", "")
+//        }
+//    }
+
+    // New Algorithm
+    private fun processDocumentTextBlock(result: FirebaseVisionDocumentText) {
+        val sysBPList = mutableListOf<String>()
+        val diaBPList = mutableListOf<String>()
+        val blocks = result.blocks
+
+        if (blocks.isEmpty()) {
+            progressDialog.dismiss()
+            ocrTextErrorDialog(this)
+        } else {
+            val words = extractWordsFromBlocks(blocks)
+            println("Scanned words:")
+            words.forEachIndexed { index, word ->
+                println("Word ${index + 1}: ${word.text}")
+            }
+
+            val numbers = words.map { it.text }
+                .filter{ it != "Systolic" && it != "Diastolic"}
+                .toMutableList()
+            println("Filtered numbers: $numbers")
+            processNumbers(numbers, sysBPList, diaBPList)
+            println("sysBPList after fixing common errors: $sysBPList")
+            println("diaBPList after fixing common errors: $diaBPList")
+
+            navigateToVerifyScanActivity(sysBPList, diaBPList, sevenDay)
+        }
+    }
+
+    private fun extractWordsFromBlocks(blocks: List<FirebaseVisionDocumentText.Block>): MutableList<FirebaseVisionDocumentText.Word> {
+        val words = mutableListOf<FirebaseVisionDocumentText.Word>()
+        for (block in blocks) {
+            for (paragraph in block.paragraphs) {
+                words.addAll(paragraph.words)
+            }
+        }
+        return words
+    }
+
+    private fun processNumbers(
+        numbers: List<String>,
+        sysBPList: MutableList<String>,
+        diaBPList: MutableList<String>
+    ) {
+        val correctedNumbers = mutableListOf<String>()
+
+        var i = 0
+        while (i < numbers.size) {
+            val systolic = numbers.getOrNull(i)
+            val diastolic = numbers.getOrNull(i + 1)
+
+            if (systolic != null && diastolic != null) {
+                // Check if is both are numbers for comparison algorithm to work, else just leave it as it is
+                if (systolic.toIntOrNull() != null && diastolic.toIntOrNull() != null){
+                    // 5 Conditions
+                    // Check systolic and diastolic in range and see if need swap places as systolic > diastolic if diastolic is more, it will be placed before the systolic as it might have swapped positions
+                    // Check is systolic and diastolic are swapped in places similar to the condition above
+                    // If diastolic is correct and systolic is wrong
+                    // If systolic is correct and diastolic is wrong
+                    // If both values aren't in range then return -1
+                    // TO DO: if both return -1 don't hide it in verify scan
+                    if (systolic.toInt() in 50..220 && diastolic.toInt() in 20..160) {
+                        if (diastolic.toInt() > systolic.toInt()) {
+                            correctedNumbers.add(diastolic)
+                            correctedNumbers.add(systolic)
+                        } else {
+                            correctedNumbers.add(systolic)
+                            correctedNumbers.add(diastolic)
+                        }
+                    } else if (systolic.toInt() in 20..160 && diastolic.toInt() in 50..220) {
+                        correctedNumbers.add(diastolic)
+                        correctedNumbers.add(systolic)
+                    } else if (systolic.toInt() !in 50..220) {
+                        correctedNumbers.add("-1")
+                        correctedNumbers.add(diastolic)
+                    } else if (diastolic.toInt() !in 20..160) {
+                        correctedNumbers.add(systolic)
+                        correctedNumbers.add("-1")
+                    } else {
+                        correctedNumbers.add("-1")
+                        correctedNumbers.add("-1")
+                    }
+                }
+                else{
+                    correctedNumbers.add(systolic)
+                    correctedNumbers.add(diastolic)
+                }
+            } else if (systolic != null) {
+                correctedNumbers.add(systolic)
+                correctedNumbers.add("-1")
+            } else if (diastolic != null) {
+                correctedNumbers.add("-1")
+                correctedNumbers.add(diastolic)
+            }
+
+            i += 2
+        }
+
+        if (correctedNumbers.size % 2 != 0) {
+            correctedNumbers.add("-1")
+        }
+
+        correctedNumbers.forEachIndexed { index, value ->
+            if (index % 2 == 0) {
+                sysBPList.add(value)
+            } else {
+                diaBPList.add(value)
+            }
+        }
+    }
 
     private fun navigateToVerifyScanActivity(sysBPList: MutableList<String>, diaBPList: MutableList<String>, sevenDay: Boolean) {
         val bundle = Bundle().apply {

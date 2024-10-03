@@ -288,13 +288,15 @@ class VerifyScanActivity : AppCompatActivity() {
         println("sysBPList after adding new scans: $sysBPList")
         println("diaBPList after adding new scans: $diaBPList")
 
-        val validSysBPList = sysBPList.filter { it != "-1" }
-        val validDiaBPList = diaBPList.filter { it != "-1" }
+
+        // The number used to hide extra rows that were included in seven Day Check function
+        val validSysBPList = sysBPList.filter { it != "-2" }
+        val validDiaBPList = diaBPList.filter { it != "-2"}
 
         var totalRows = maxOf(validSysBPList.size, validDiaBPList.size)
         if (sysBPListHistory.isNotEmpty() && diaBPListHistory.isNotEmpty()) {
-            val validSysBPListHistory = sysBPListHistory.filter { it != "-1" }
-            val validDiaBPListHistory = diaBPListHistory.filter { it != "-1" }
+            val validSysBPListHistory = sysBPListHistory.filter { it != "-2" }
+            val validDiaBPListHistory = diaBPListHistory.filter { it != "-2"}
             totalRows += maxOf(validSysBPListHistory.size, validDiaBPListHistory.size)
         }
 
@@ -451,8 +453,8 @@ class VerifyScanActivity : AppCompatActivity() {
         binding.calculateAvgBPBtn.setOnClickListener {
             if (validateFields()) {
                 getBPTarget()
-                val filteredSysBPList = sysBPList.filter { it.isNotBlank() && it != "-1" }
-                val filteredDiaBPList = diaBPList.filter { it.isNotBlank() && it != "-1" }
+                val filteredSysBPList = sysBPList.filter { it.isNotBlank() && it != "-2" }
+                val filteredDiaBPList = diaBPList.filter { it.isNotBlank() && it != "-2" }
                 val maxFilteredRows = maxOf(filteredSysBPList.size, filteredDiaBPList.size)
                 val maxHistoryRows = maxOf(sysBPListHistory.size, diaBPListHistory.size)
                 val finalRows = maxHistoryRows + maxFilteredRows
@@ -527,8 +529,8 @@ class VerifyScanActivity : AppCompatActivity() {
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 val input = s?.toString()?.toIntOrNull()
-                if (input != null && input in 91..209) {
-                    // Valid range for verifyClinicSys (91 to 209)
+                if (input != null && input in 50..220) {
+                    // Valid range for verifyClinicSys (91 to 209) <- Outdated values from last batch, copied verifyclinic as reference, change/remove if needed
                     setError(binding.homeTargetSysBox, null)
                 } else {
                     // Invalid range, set an error message and icon
@@ -552,8 +554,8 @@ class VerifyScanActivity : AppCompatActivity() {
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 val input = s?.toString()?.toIntOrNull()
-                if (input != null && input in 61..119) {
-                    // Valid range for verifyClinicDia (61 to 119)
+                if (input != null && input in 20..160) {
+                    // Valid range for verifyClinicDia (61 to 119) <- Outdated values from last batch, copied verifyclinic as reference, change/remove if needed
                     setError(binding.homeTargetDiaBox, null)
                 } else {
                     // Invalid range, set an error message and icon
@@ -577,8 +579,8 @@ class VerifyScanActivity : AppCompatActivity() {
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 val input = s?.toString()?.toIntOrNull()
-                if (input != null && input in 91..209) {
-                    // Valid range for verifyClinicSys (91 to 209)
+                if (input != null && input in 50..220) {
+                    // Valid range for verifyClinicSys (91 to 209) <- Outdated values from last batch, copied verifyclinic as reference, change/remove if needed
                     setError(binding.clinicTargetSysBox, null)
                 } else {
                     // Invalid range, set an error message and icon
@@ -602,8 +604,8 @@ class VerifyScanActivity : AppCompatActivity() {
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 val input = s?.toString()?.toIntOrNull()
-                if (input != null && input in 61..119) {
-                    // Valid range for verifyClinicDia (61 to 119)
+                if (input != null && input in 20..160) {
+                    // Valid range for verifyClinicDia (61 to 119) <- Outdated values from last batch, copied verifyclinic as reference, change/remove if needed
                     setError(binding.clinicTargetDiaBox, null)
                 } else {
                     // Invalid range, set an error message and icon
@@ -627,8 +629,8 @@ class VerifyScanActivity : AppCompatActivity() {
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 val input = s?.toString()?.toIntOrNull()
-                if (input != null && input in 91..209) {
-                    // Valid range for verifyClinicSys (91 to 209)
+                if (input != null && input in 50..220) {
+                    // Valid range for verifyClinicSys (91 to 209) <- Outdated values from last batch, change/remove if needed
                     setError(binding.verifyClinicSysBox, null)
                 } else {
                     // Invalid range, set an error message and icon
@@ -652,8 +654,8 @@ class VerifyScanActivity : AppCompatActivity() {
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 val input = s?.toString()?.toIntOrNull()
-                if (input != null && input in 61..119) {
-                    // Valid range for verifyClinicDia (61 to 119)
+                if (input != null && input in 20..160) {
+                    // Valid range for verifyClinicDia (61 to 119) <- Outdated values from last batch, change/remove if needed
                     setError(binding.verifyClinicDiaBox, null)
                 } else {
                     // Invalid range, set an error message and icon
@@ -866,6 +868,12 @@ class VerifyScanActivity : AppCompatActivity() {
         if (sevenDay) {
             sevenDayCheck()
         } else {
+            if (sysBPListHistory.isNotEmpty() && diaBPListHistory.isNotEmpty()){
+                for (i in 0 until minOf(sysBPListHistory.size, diaBPListHistory.size)) {
+                    addRow(sysBPListHistory[i], diaBPListHistory[i])
+                }
+                addDivider()
+            }
             for (i in 0 until maxOf(sysBPList.size, diaBPList.size)) {
                 addRow(sysBPList[i], diaBPList[i])
             }
@@ -894,7 +902,7 @@ class VerifyScanActivity : AppCompatActivity() {
                 } else if (sysBPFields[i].text.toString().length !in 2..3) {
                     errorCount += 1
                     sysBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_invalid_value)
-                } else if (sysBPFields[i].text.toString().toInt() !in 80..230) {
+                } else if (sysBPFields[i].text.toString().toInt() !in 50..220) {
                     errorCount += 1
                     sysBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_abnormal_value)
                 }
@@ -913,87 +921,153 @@ class VerifyScanActivity : AppCompatActivity() {
                 } else if (diaBPFields[i].text.toString().length !in 2..3) {
                     errorCount += 1
                     diaBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_invalid_value)
-                } else if (diaBPFields[i].text.toString().toInt() !in 45..135) {
+                } else if (diaBPFields[i].text.toString().toInt() !in 20..160) {
                     errorCount += 1
                     diaBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_abnormal_value)
                 }
             }
 
         } else {
+            if (sysBPListHistory.isEmpty() && diaBPListHistory.isEmpty()) {
+                // Outdated values, could refer to guidelines if there is a need to change systolic and diastolic values
+                // With reference from MOH clinical practice guidelines 1/2017 @ https://www.moh.gov.sg/docs/librariesprovider4/guidelines/cpg_hypertension-booklet---nov-2017.pdf
+                for (i in 0 until sysBPList.size) {
+                    val currentValueLength = sysBPFields[i].text.toString().length
 
-            // With reference from MOH clinical practice guidelines 1/2017 @ https://www.moh.gov.sg/docs/librariesprovider4/guidelines/cpg_hypertension-booklet---nov-2017.pdf
-            for (i in 0 until sysBPList.size) {
-                val currentValueLength = sysBPFields[i].text.toString().length
+                    if (sysBPFields[i].text.isNullOrEmpty()) {
+                        errorCount += 1
+                        sysBPFields[i].error =
+                            ResourcesHelper.getString(this, R.string.verify_scan_empty_field)
+                    } else if (!sysBPFields[i].text!!.isDigitsOnly()) {
+                        errorCount += 1
+                        sysBPFields[i].error =
+                            ResourcesHelper.getString(this, R.string.verify_scan_whole_number)
+                    } else if (sysBPFields[i].text!!.toString().toInt() == -1) {
+                        errorCount += 1
+                        sysBPFields[i].error =
+                            ResourcesHelper.getString(this, R.string.verify_scan_replace_value)
+                    } else if (currentValueLength !in 2..3) {
+                        errorCount += 1
+                        sysBPFields[i].error =
+                            ResourcesHelper.getString(this, R.string.verify_scan_invalid_value)
+                    } else if (sysBPFields[i].text.toString().toInt() !in 50..220) {
+                        errorCount += 1
+                        sysBPFields[i].error =
+                            ResourcesHelper.getString(this, R.string.verify_scan_abnormal_value)
+                    }
+                }
 
-                if (sysBPFields[i].text.isNullOrEmpty()) {
-                    errorCount += 1
-                    sysBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_empty_field)
-                } else if (!sysBPFields[i].text!!.isDigitsOnly()) {
-                    errorCount += 1
-                    sysBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_whole_number)
-                } else if (sysBPFields[i].text!!.toString().toInt() == -1) {
-                    errorCount += 1
-                    sysBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_replace_value)
-                } else if (currentValueLength !in 2..3) {
-                    errorCount += 1
-                    sysBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_invalid_value)
-                } else if (sysBPFields[i].text.toString().toInt() !in 80..230) {
-                    errorCount += 1
-                    sysBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_abnormal_value)
+                for (i in 0 until diaBPList.size) {
+                    val currentValueLength = diaBPFields[i].text.toString().length
+
+                    if (diaBPFields[i].text.isNullOrEmpty()) {
+                        errorCount += 1
+                        diaBPFields[i].error =
+                            ResourcesHelper.getString(this, R.string.verify_scan_empty_field)
+                    } else if (!diaBPFields[i].text!!.isDigitsOnly()) {
+                        errorCount += 1
+                        diaBPFields[i].error =
+                            ResourcesHelper.getString(this, R.string.verify_scan_whole_number)
+                    } else if (diaBPFields[i].text!!.toString().toInt() == -1) {
+                        errorCount += 1
+                        diaBPFields[i].error =
+                            ResourcesHelper.getString(this, R.string.verify_scan_replace_value)
+                    } else if (currentValueLength !in 2..3) {
+                        errorCount += 1
+                        diaBPFields[i].error =
+                            ResourcesHelper.getString(this, R.string.verify_scan_invalid_value)
+                    } else if (diaBPFields[i].text.toString().toInt() !in 20..160) {
+                        errorCount += 1
+                        diaBPFields[i].error =
+                            ResourcesHelper.getString(this, R.string.verify_scan_abnormal_value)
+                    }
                 }
             }
+            else{
+                // Outdated values, could refer to guidelines if there is a need to change systolic and diastolic values
+                // With reference from MOH clinical practice guidelines 1/2017 @ https://www.moh.gov.sg/docs/librariesprovider4/guidelines/cpg_hypertension-booklet---nov-2017.pdf
+                for (i in 0 until sysBPList.size) {
+                    val currentValueLength = sysBPFields[i + sysBPListHistory.size].text.toString().length
 
-            for (i in 0 until diaBPList.size) {
-                val currentValueLength = diaBPFields[i].text.toString().length
-
-                if (diaBPFields[i].text.isNullOrEmpty()) {
-                    errorCount += 1
-                    diaBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_empty_field)
-                } else if (!diaBPFields[i].text!!.isDigitsOnly()) {
-                    errorCount += 1
-                    diaBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_whole_number)
-                } else if (diaBPFields[i].text!!.toString().toInt() == -1) {
-                    errorCount += 1
-                    diaBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_replace_value)
-                } else if (currentValueLength !in 2..3) {
-                    errorCount += 1
-                    diaBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_invalid_value)
-                } else if (diaBPFields[i].text.toString().toInt() !in 45..135) {
-                    errorCount += 1
-                    diaBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_abnormal_value)
+                    if (sysBPFields[i + sysBPListHistory.size].text.isNullOrEmpty()) {
+                        errorCount += 1
+                        sysBPFields[i + sysBPListHistory.size].error =
+                            ResourcesHelper.getString(this, R.string.verify_scan_empty_field)
+                    } else if (!sysBPFields[i + sysBPListHistory.size].text!!.isDigitsOnly()) {
+                        errorCount += 1
+                        sysBPFields[i + sysBPListHistory.size].error =
+                            ResourcesHelper.getString(this, R.string.verify_scan_whole_number)
+                    } else if (sysBPFields[i + sysBPListHistory.size].text!!.toString().toInt() == -1) {
+                        errorCount += 1
+                        sysBPFields[i + sysBPListHistory.size].error =
+                            ResourcesHelper.getString(this, R.string.verify_scan_replace_value)
+                    } else if (currentValueLength !in 2..3) {
+                        errorCount += 1
+                        sysBPFields[i + sysBPListHistory.size].error =
+                            ResourcesHelper.getString(this, R.string.verify_scan_invalid_value)
+                    } else if (sysBPFields[i + sysBPListHistory.size].text.toString().toInt() !in 50..220) {
+                        errorCount += 1
+                        sysBPFields[i + sysBPListHistory.size].error =
+                            ResourcesHelper.getString(this, R.string.verify_scan_abnormal_value)
+                    }
                 }
-            }
 
-            // Show error text but doesn't add to error count of current records
-            for (i in 0 until sysBPListHistory.size) {
-                val currentValueLength = sysBPFields[i].text.toString().length
+                for (i in 0 until diaBPList.size) {
+                    val currentValueLength = diaBPFields[i + diaBPListHistory.size].text.toString().length
 
-                if (sysBPFields[i].text.isNullOrEmpty()) {
-                    sysBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_empty_field)
-                } else if (!sysBPFields[i].text!!.isDigitsOnly()) {
-                    sysBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_whole_number)
-                } else if (sysBPFields[i].text!!.toString().toInt() == -1) {
-                    sysBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_replace_value)
-                } else if (currentValueLength !in 2..3) {
-                    sysBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_invalid_value)
-                } else if (sysBPFields[i].text.toString().toInt() !in 80..230) {
-                    sysBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_abnormal_value)
+                    if (diaBPFields[i + diaBPListHistory.size].text.isNullOrEmpty()) {
+                        errorCount += 1
+                        diaBPFields[i + diaBPListHistory.size].error =
+                            ResourcesHelper.getString(this, R.string.verify_scan_empty_field)
+                    } else if (!diaBPFields[i + diaBPListHistory.size].text!!.isDigitsOnly()) {
+                        errorCount += 1
+                        diaBPFields[i + diaBPListHistory.size].error =
+                            ResourcesHelper.getString(this, R.string.verify_scan_whole_number)
+                    } else if (diaBPFields[i + diaBPListHistory.size].text!!.toString().toInt() == -1) {
+                        errorCount += 1
+                        diaBPFields[i + diaBPListHistory.size].error =
+                            ResourcesHelper.getString(this, R.string.verify_scan_replace_value)
+                    } else if (currentValueLength !in 2..3) {
+                        errorCount += 1
+                        diaBPFields[i + diaBPListHistory.size].error =
+                            ResourcesHelper.getString(this, R.string.verify_scan_invalid_value)
+                    } else if (diaBPFields[i + diaBPListHistory.size].text.toString().toInt() !in 20..160) {
+                        errorCount += 1
+                        diaBPFields[i + diaBPListHistory.size].error =
+                            ResourcesHelper.getString(this, R.string.verify_scan_abnormal_value)
+                    }
                 }
-            }
+                // Show error text but doesn't add to error count of current records
+                for (i in 0 until sysBPListHistory.size) {
+                    val currentValueLength = sysBPFields[i].text.toString().length
 
-            for (i in 0 until diaBPListHistory.size) {
-                val currentValueLength = diaBPFields[i].text.toString().length
+                    if (sysBPFields[i].text.isNullOrEmpty()) {
+                        sysBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_empty_field)
+                    } else if (!sysBPFields[i].text!!.isDigitsOnly()) {
+                        sysBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_whole_number)
+                    } else if (sysBPFields[i].text!!.toString().toInt() == -1) {
+                        sysBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_replace_value)
+                    } else if (currentValueLength !in 2..3) {
+                        sysBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_invalid_value)
+                    } else if (sysBPFields[i].text.toString().toInt() !in 50..220) {
+                        sysBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_abnormal_value)
+                    }
+                }
 
-                if (diaBPFields[i].text.isNullOrEmpty()) {
-                    diaBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_empty_field)
-                } else if (!diaBPFields[i].text!!.isDigitsOnly()) {
-                    diaBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_whole_number)
-                } else if (diaBPFields[i].text!!.toString().toInt() == -1) {
-                    diaBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_replace_value)
-                } else if (currentValueLength !in 2..3) {
-                    diaBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_invalid_value)
-                } else if (diaBPFields[i].text.toString().toInt() !in 45..135) {
-                    diaBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_abnormal_value)
+                for (i in 0 until diaBPListHistory.size) {
+                    val currentValueLength = diaBPFields[i].text.toString().length
+
+                    if (diaBPFields[i].text.isNullOrEmpty()) {
+                        diaBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_empty_field)
+                    } else if (!diaBPFields[i].text!!.isDigitsOnly()) {
+                        diaBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_whole_number)
+                    } else if (diaBPFields[i].text!!.toString().toInt() == -1) {
+                        diaBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_replace_value)
+                    } else if (currentValueLength !in 2..3) {
+                        diaBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_invalid_value)
+                    } else if (diaBPFields[i].text.toString().toInt() !in 20..160) {
+                        diaBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_abnormal_value)
+                    }
                 }
             }
         }
@@ -1091,7 +1165,7 @@ class VerifyScanActivity : AppCompatActivity() {
         } else if (!binding.homeTargetSys.text!!.isDigitsOnly()) {
             valid = false
             binding.homeTargetSys.error = ResourcesHelper.getString(this, R.string.verify_scan_whole_number)
-        } else if (binding.homeTargetSys.text.toString().toInt() !in 91..209) {
+        } else if (binding.homeTargetSys.text.toString().toInt() !in 50..220) {
             valid = false
             binding.homeTargetSys.error = ResourcesHelper.getString(this, R.string.verify_scan_abnormal_value)
         }
@@ -1103,7 +1177,7 @@ class VerifyScanActivity : AppCompatActivity() {
         } else if (!binding.homeTargetDia.text!!.isDigitsOnly()) {
             valid = false
             binding.homeTargetDia.error = ResourcesHelper.getString(this, R.string.verify_scan_whole_number)
-        } else if (binding.homeTargetDia.text.toString().toInt() !in 61..119) {
+        } else if (binding.homeTargetDia.text.toString().toInt() !in 20..160) {
             valid = false
             binding.homeTargetDia.error = ResourcesHelper.getString(this, R.string.verify_scan_abnormal_value)
         }
@@ -1121,7 +1195,7 @@ class VerifyScanActivity : AppCompatActivity() {
         } else if (!binding.clinicTargetSys.text!!.isDigitsOnly()) {
             valid = false
             binding.clinicTargetSys.error = ResourcesHelper.getString(this, R.string.verify_scan_whole_number)
-        } else if (binding.clinicTargetSys.text.toString().toInt() !in 91..209) {
+        } else if (binding.clinicTargetSys.text.toString().toInt() !in 50..220) {
             valid = false
             binding.clinicTargetSys.error = ResourcesHelper.getString(this, R.string.verify_scan_abnormal_value)
         }
@@ -1133,7 +1207,7 @@ class VerifyScanActivity : AppCompatActivity() {
         } else if (!binding.clinicTargetDia.text!!.isDigitsOnly()) {
             valid = false
             binding.clinicTargetDia.error = ResourcesHelper.getString(this, R.string.verify_scan_whole_number)
-        } else if (binding.clinicTargetDia.text.toString().toInt() !in 61..119) {
+        } else if (binding.clinicTargetDia.text.toString().toInt() !in 20..160) {
             valid = false
             binding.clinicTargetDia.error = ResourcesHelper.getString(this, R.string.verify_scan_abnormal_value)
         }
@@ -1151,7 +1225,7 @@ class VerifyScanActivity : AppCompatActivity() {
         } else if (!binding.verifyClinicSys.text!!.isDigitsOnly()) {
             valid = false
             binding.verifyClinicSys.error = ResourcesHelper.getString(this, R.string.verify_scan_whole_number)
-        } else if (binding.verifyClinicSys.text.toString().toInt() !in 91..209) {
+        } else if (binding.verifyClinicSys.text.toString().toInt() !in 50..220) {
             valid = false
             binding.verifyClinicSys.error = ResourcesHelper.getString(this, R.string.verify_scan_abnormal_value)
         }
@@ -1163,7 +1237,7 @@ class VerifyScanActivity : AppCompatActivity() {
         } else if (!binding.verifyClinicDia.text!!.isDigitsOnly()) {
             valid = false
             binding.verifyClinicDia.error = ResourcesHelper.getString(this, R.string.verify_scan_whole_number)
-        } else if (binding.verifyClinicDia.text.toString().toInt() !in 61..119) {
+        } else if (binding.verifyClinicDia.text.toString().toInt() !in 20..160) {
             valid = false
             binding.verifyClinicDia.error = ResourcesHelper.getString(this, R.string.verify_scan_abnormal_value)
         }
@@ -1182,7 +1256,7 @@ class VerifyScanActivity : AppCompatActivity() {
                 } else if (sysField.text!!.length !in 2..3) {
                     valid = false
                     sysField.error = ResourcesHelper.getString(this, R.string.verify_scan_invalid_value)
-                } else if (sysField.text.toString().toInt() !in 50..230) {
+                } else if (sysField.text.toString().toInt() !in 50..220) {
                     valid = false
                     sysField.error = ResourcesHelper.getString(this, R.string.verify_scan_abnormal_value)
                 }
@@ -1201,7 +1275,7 @@ class VerifyScanActivity : AppCompatActivity() {
                 } else if (diaField.text!!.length !in 2..3) {
                     valid = false
                     diaField.error = ResourcesHelper.getString(this, R.string.verify_scan_invalid_value)
-                } else if (diaField.text.toString().toInt() !in 35..135) {
+                } else if (diaField.text.toString().toInt() !in 20..160) {
                     valid = false
                     diaField.error = ResourcesHelper.getString(this, R.string.verify_scan_abnormal_value)
                 }
@@ -1221,7 +1295,7 @@ class VerifyScanActivity : AppCompatActivity() {
                 } else if (sysText.length !in 2..3) {
                     valid = false
                     sysField.error = ResourcesHelper.getString(this, R.string.verify_scan_invalid_value)
-                } else if (sysText.toInt() !in 50..230) {
+                } else if (sysText.toInt() !in 50..220) {
                     valid = false
                     sysField.error = ResourcesHelper.getString(this, R.string.verify_scan_abnormal_value)
                 }
@@ -1240,7 +1314,7 @@ class VerifyScanActivity : AppCompatActivity() {
                 } else if (diaText.length !in 2..3) {
                     valid = false
                     diaField.error = ResourcesHelper.getString(this, R.string.verify_scan_invalid_value)
-                } else if (diaText.toInt() !in 35..135) {
+                } else if (diaText.toInt() !in 20..160) {
                     valid = false
                     diaField.error = ResourcesHelper.getString(this, R.string.verify_scan_abnormal_value)
                 }
@@ -1314,7 +1388,7 @@ class VerifyScanActivity : AppCompatActivity() {
         diaBPList = diaBPList.subList(0, 28).toMutableList()
 
         for (i in sysBPList.indices) {
-            if (sysBPList[i].isNotBlank() && sysBPList[i] != "-1" && diaBPList[i].isNotBlank() && diaBPList[i] != "-1") {
+            if (sysBPList[i].isNotBlank() && sysBPList[i] != "-2" && diaBPList[i].isNotBlank() && diaBPList[i] != "-2") {
                 currentDayReadings.add(Pair(sysBPList[i], diaBPList[i]))
             }
 
@@ -1338,16 +1412,21 @@ class VerifyScanActivity : AppCompatActivity() {
         // Now check if there are 3 consecutive full days remaining, starting from the last day
         val validConsecutiveDays = mutableListOf<List<Pair<String, String>>>()
 
+        if (dayReadings.isNotEmpty()) {
+            dayReadings.removeAt(0)
+            dayReadingsStatus.removeAt(0)
+        }
+
         for (i in dayReadingsStatus.size - 1 downTo 2) {
             // Check for 3 consecutive full days in reverse
-            if (dayReadingsStatus[i] == 1 && dayReadingsStatus[i - 1] == 1 && dayReadingsStatus[i - 2] == 1) {
+            if (dayReadingsStatus[i] == 2 && dayReadingsStatus[i - 1] == 2 && dayReadingsStatus[i - 2] == 2) {
                 validConsecutiveDays.add(dayReadings[i])
                 validConsecutiveDays.add(dayReadings[i - 1])
                 validConsecutiveDays.add(dayReadings[i - 2])
 
                 // Continue checking for more sets of consecutive full days in reverse
                 var j = i - 3
-                while (j >= 0 && dayReadingsStatus[j] == 1) {
+                while (j >= 0 && dayReadingsStatus[j] == 2) {
                     validConsecutiveDays.add(dayReadings[j])
                     j--
                 }
@@ -1360,8 +1439,6 @@ class VerifyScanActivity : AppCompatActivity() {
         println("Number of Empty Day Readings: ${dayReadingsStatus.count { it == 0 }}")
         println("Day Readings Status: $dayReadingsStatus")
         println("Number of Valid Consecutive Days: ${validConsecutiveDays.count()}")
-
-        dayReadings.removeAt(0)
 
        if (validConsecutiveDays.size >= 3) {
 
@@ -1436,7 +1513,8 @@ class VerifyScanActivity : AppCompatActivity() {
            avgSysBP = (totalSysBP.toFloat() / finalSysBPList.size).roundToInt()
            avgDiaBP = (totalDiaBP.toFloat() / finalDiaBPList.size).roundToInt()
        }
-       else if (validConsecutiveDays.size < 3) {
+       else if (validConsecutiveDays.size < 3 && dayReadings.size >= 1) {
+           println("HELLO2")
 
            totalSysBP = 0
            totalDiaBP = 0
@@ -1483,28 +1561,12 @@ class VerifyScanActivity : AppCompatActivity() {
            avgDiaBP = (totalDiaBP.toFloat() / DiaBPList.size).roundToInt()
        }
         else if (dayReadings.size == 0) {
+
            totalSysBP = 0
            totalDiaBP = 0
 
            val SysBPList = mutableListOf<String>()
            val DiaBPList = mutableListOf<String>()
-
-           for (day in dayReadings) {
-               val (morningSysBP1, morningDiaBP1) = day[0]
-               val (morningSysBP2, morningDiaBP2) = day[1]
-               val (eveningSysBP1, eveningDiaBP1) = day[2]
-               val (eveningSysBP2, eveningDiaBP2) = day[3]
-
-               SysBPList.add(morningSysBP1)
-               SysBPList.add(morningSysBP2)
-               SysBPList.add(eveningSysBP1)
-               SysBPList.add(eveningSysBP2)
-
-               DiaBPList.add(morningDiaBP1)
-               DiaBPList.add(morningDiaBP2)
-               DiaBPList.add(eveningDiaBP1)
-               DiaBPList.add(eveningDiaBP2)
-           }
 
            for (day in incompleteDayReadings) {
                for ((sysBP, diaBP) in day) {
@@ -1539,8 +1601,8 @@ class VerifyScanActivity : AppCompatActivity() {
         for (day in 1..7) {
             // Morning
             addRow(
-                sysBPList.getOrElse(recordIndex) { "-1" },
-                diaBPList.getOrElse(recordIndex) { "-1" },
+                sysBPList.getOrElse(recordIndex) { "-2" },
+                diaBPList.getOrElse(recordIndex) { "-2" },
                 true,
                 day,
                 0,
@@ -1548,8 +1610,8 @@ class VerifyScanActivity : AppCompatActivity() {
             ) // Morning BP1 with header
 
             addRow(
-                sysBPList.getOrElse(recordIndex + 1) { "-1" },
-                diaBPList.getOrElse(recordIndex + 1) { "-1" },
+                sysBPList.getOrElse(recordIndex + 1) { "-2" },
+                diaBPList.getOrElse(recordIndex + 1) { "-2" },
                 true,
                 day,
                 0
@@ -1557,8 +1619,8 @@ class VerifyScanActivity : AppCompatActivity() {
 
             // Evening
             addRow(
-                sysBPList.getOrElse(recordIndex + 2) { "-1" },
-                diaBPList.getOrElse(recordIndex + 2) { "-1" },
+                sysBPList.getOrElse(recordIndex + 2) { "-2" },
+                diaBPList.getOrElse(recordIndex + 2) { "-2" },
                 true,
                 day,
                 1,
@@ -1566,8 +1628,8 @@ class VerifyScanActivity : AppCompatActivity() {
             ) // Evening BP1 with header
 
             addRow(
-                sysBPList.getOrElse(recordIndex + 3) { "-1" },
-                diaBPList.getOrElse(recordIndex + 3) { "-1" },
+                sysBPList.getOrElse(recordIndex + 3) { "-2" },
+                diaBPList.getOrElse(recordIndex + 3) { "-2" },
                 true,
                 day,
                 1
@@ -1578,8 +1640,8 @@ class VerifyScanActivity : AppCompatActivity() {
 
         while (recordIndex < sysBPList.size && recordIndex < diaBPList.size) {
             addRow(
-                sysBPList.getOrElse(recordIndex) { "-1" },
-                diaBPList.getOrElse(recordIndex) { "-1" },
+                sysBPList.getOrElse(recordIndex) { "-2" },
+                diaBPList.getOrElse(recordIndex) { "-2" },
                 true,
                 0,
                 0,
@@ -1590,35 +1652,60 @@ class VerifyScanActivity : AppCompatActivity() {
     }
 
     private fun ensureListSize(list: MutableList<String>, targetSize: Int) {
+        // Since -1 was used to indicate an error since it was not able to detect a value, -2 will be used to ensure list size, so empty blanks to ensure 7 day records will not show up when it is -2
+        // But errors like -1 will still show up
         while (list.size < targetSize) {
-            list.add("-1")
+            list.add("-2")
         }
     }
 
-    private fun removeExtraRow(){
-        if (sysBPList.size > 32 && diaBPList.size > 32 && diaBPList.size == sysBPList.size){
-            // Since sysBPList size would be the same as the diaBPList size after adding a left or right column, could use either
+//    private fun removeExtraRow(){
+//        // Technically diaBPList and sysBPList would be the same size so technically could just use 1 condition but just for safety checks there is 3 conditions
+//        if (sysBPList.size > 32 && diaBPList.size > 32 && diaBPList.size == sysBPList.size){
+//            // Since sysBPList size would be the same as the diaBPList size after adding a left or right column, could use either sysBPList or diaBPList
+//            while (true){
+//                var index = 32
+//                println("Test sysBPList:" + sysBPList)
+//                println("Test diaBPList:" + diaBPList)
+//                println("Test sysBPList size:" + sysBPList.size)
+//                println("Test diaBPList size:" + diaBPList.size)
+//                println("Test index:" + index)
+//                if ((sysBPList.size <= 32 && diaBPList.size <= 32) || index > sysBPList.size || index > diaBPList.size){
+//                    println("YES")
+//                    break
+//                }else{
+//                    if (sysBPList[index] == "" && diaBPList[index] == "") {
+//                        sysBPList.removeAt(index)
+//                        diaBPList.removeAt(index)
+//                    }
+//                    else{
+//                        continue
+//                    }
+//                    index += 1
+//                }
+//            }
+//            println("End")
+//        }
+//    }
 
-            while (true){
-                var index = 32
+    private fun removeExtraRow(){
+        var change = false
+
+        do {
+            for (index in 32 until sysBPList.size){
+                if ((sysBPList[index] == "" && diaBPList[index] == "") || (sysBPList[index] == "-2" && diaBPList[index] == "") || (sysBPList[index] == "" && diaBPList[index] == "-2")) {
+                    sysBPList.removeAt(index)
+                    diaBPList.removeAt(index)
+                    change = true
+                }
                 println("Test sysBPList:" + sysBPList)
                 println("Test diaBPList:" + diaBPList)
                 println("Test sysBPList size:" + sysBPList.size)
                 println("Test diaBPList size:" + diaBPList.size)
                 println("Test index:" + index)
-                if ((sysBPList.size <= 32 && diaBPList.size <= 32) || index > sysBPList.size || index > diaBPList.size){
-                    println("YES")
-                    break
-                }else{
-                    if (sysBPList[index] == "" && diaBPList[index] == "") {
-                        sysBPList.removeAt(index)
-                        diaBPList.removeAt(index)
-                    }
-                    index += 1
-                }
             }
-            println("End")
-        }
+
+        } while (change)
     }
 
     @SuppressLint("SetTextI18n")
@@ -1644,7 +1731,8 @@ class VerifyScanActivity : AppCompatActivity() {
         val addOneRowBtn = rowBPRecordLayout.findViewById<View>(R.id.addOneRowBtn) as Button
 
         if (isSevenDayCheck) {
-            if ((sysBP == null || sysBP == "-1") && (diaBP == null || diaBP == "-1")) {
+            // if ((sysBP == null || sysBP == "-1") && (diaBP == null || diaBP == "-1"))
+            if ((sysBP == null || sysBP == "-2") && (diaBP == null || diaBP == "-2")) {
                 bpRowContainer.visibility = View.GONE
             } else {
                 bpRowContainer.visibility = View.VISIBLE
@@ -1676,6 +1764,7 @@ class VerifyScanActivity : AppCompatActivity() {
 
             override fun afterTextChanged(s: Editable?) {
                 if (!isSwappingValues) {
+                    // Commented out runnable which is threading because no idea why it is used
                     typingRunnable?.let { typingDelayHandler.removeCallbacks(it) }
                     typingRunnable = Runnable {
                         saveStateForUndo()
@@ -1759,6 +1848,58 @@ class VerifyScanActivity : AppCompatActivity() {
             sysBPTIET.setText(diaBPTIET.text.toString())
             diaBPTIET.setText(tempValue)
 
+//            val diaIndex = diaBPFields.indexOf(diaBPTIET)
+//            if (diaIndex != -1) {
+//                if(!sevenDay){
+//                    if (diaBPListHistory.isNotEmpty()){
+//                        if (diaIndex >= diaBPListHistory.size){
+//                            val newIndex = diaIndex - diaBPListHistory.size
+//                            diaBPList[newIndex] = tempValue
+//                        }
+//                        else{
+//                            diaBPListHistory[diaIndex] = tempValue
+//                        }
+//                    }
+//                    else{
+//                        diaBPList[diaIndex] = tempValue
+//                    }
+//                }
+//                else{
+//                    diaBPList[diaIndex] = tempValue
+//                }
+//            }
+//
+//            val sysIndex = sysBPFields.indexOf(sysBPTIET)
+//            if (sysIndex != -1) {
+//                if(!sevenDay){
+//                    if (sysBPListHistory.isNotEmpty()){
+//                        if (sysIndex >= sysBPListHistory.size){
+//                            val newIndex = sysIndex - sysBPListHistory.size
+//                            sysBPList[newIndex] = diaBPTIET.text.toString()
+//                        }
+//                        else{
+//                            sysBPListHistory[sysIndex] = diaBPTIET.text.toString()
+//                        }
+//                    }
+//                    else{
+//                        sysBPList[sysIndex] = diaBPTIET.text.toString()
+//                    }
+//                }
+//                else{
+//                    sysBPList[sysIndex] = diaBPTIET.text.toString()
+//                }
+//            }
+
+            val sysBPValues = sysBPFields.map { it.text.toString() }
+            val diaBPValues = diaBPFields.map { it.text.toString() }
+
+            println("sysBPFields after swap: $sysBPFields")
+            println("diaBPFields after swap: $diaBPFields")
+            println("sysBPFields values after swap: $sysBPValues")
+            println("diaBPFields values after swap: $diaBPValues")
+            println("sysBPList after swap: $sysBPList")
+            println("diaBPList after swap: $diaBPList")
+
             isSwappingValues = false
 
             val toast = Toast.makeText(this, "Values swapped", Toast.LENGTH_SHORT)
@@ -1791,24 +1932,38 @@ class VerifyScanActivity : AppCompatActivity() {
                     println("diaBPList before removal: $diaBPList")
 
                     val diaIndex = diaBPFields.indexOf(diaBPTIET)
-                    if (diaIndex != -1) {
-                        diaBPList.removeAt(diaIndex)
-                    }
                     val sysIndex = sysBPFields.indexOf(sysBPTIET)
-                    if (sysIndex != -1) {
+                    if (!sevenDay) {
+                        // Since both would be the samae length, either could be used for checks
+                        if (sysBPListHistory.isNotEmpty() && diaBPListHistory.isNotEmpty()){
+                            // Could use either sysBPListHistory or diaBPListHistory since their size would be the same theoratically
+                            // The index would probaly be the same but just to standardise with the previous batches codes, I used 2 indexes
+                            if (sysIndex >= sysBPListHistory.size){
+                                val newSysIndex = sysIndex - sysBPListHistory.size
+                                val newDiaIndex = diaIndex - diaBPListHistory.size
+                                diaBPList.removeAt(newDiaIndex)
+                                sysBPList.removeAt(newSysIndex)
+                            }
+                            else{
+                                diaBPListHistory.removeAt(diaIndex)
+                                sysBPListHistory.removeAt(sysIndex)
+                            }
+                        }
+                        else{
+                            diaBPList.removeAt(diaIndex)
+                            sysBPList.removeAt(sysIndex)
+                        }
+                    } else {
+                        diaBPList.removeAt(diaIndex)
                         sysBPList.removeAt(sysIndex)
                     }
                     sysBPFields.remove(sysBPTIET)
                     diaBPFields.remove(diaBPTIET)
 
-                    if (sevenDay) {
-                        binding.rowBPRecordLL.removeAllViews()
-                        sysBPFields.clear()
-                        diaBPFields.clear()
-                        sevenDayCheck()
-                    } else {
-                        binding.rowBPRecordLL.removeView(rowBPRecordLayout)
-                    }
+                    binding.rowBPRecordLL.removeAllViews()
+                    sysBPFields.clear()
+                    diaBPFields.clear()
+                    refreshViews()
 
                     // Print lists after removal
                     println("sysBPList after removal: $sysBPList")
@@ -1847,8 +2002,21 @@ class VerifyScanActivity : AppCompatActivity() {
 
             if (!sevenDay) {
                 val currentRowIndex = binding.rowBPRecordLL.indexOfChild(rowBPRecordLayout)
-                sysBPList.add(currentRowIndex + 1, "")
-                diaBPList.add(currentRowIndex + 1, "")
+                if (sysBPListHistory.isNotEmpty() && diaBPListHistory.isNotEmpty()){
+                    // Could use either sysBPListHistory or diaBPListHistory since their size would be the same theoratically
+                    // Why -1? cus divider to seperate old records and new records is considered as a child of rowBPRecordLayout
+                    if (currentRowIndex >= sysBPListHistory.size){
+                        val newCurrentRowIndex = currentRowIndex - sysBPListHistory.size - 1
+                        sysBPList.add(newCurrentRowIndex + 1, "")
+                        diaBPList.add(newCurrentRowIndex + 1, "")
+                    } else{
+                        sysBPListHistory.add(currentRowIndex + 1, "")
+                        diaBPListHistory.add(currentRowIndex + 1, "")
+                    }
+                }else {
+                    sysBPList.add(currentRowIndex + 1, "")
+                    diaBPList.add(currentRowIndex + 1, "")
+                }
 
                 println("addRowIV clicked. Current Row Index: $currentRowIndex")
                 println("sysBPList before modification: $sysBPList\n")
@@ -1872,7 +2040,8 @@ class VerifyScanActivity : AppCompatActivity() {
                     val nextDiaBPTIET =
                         nextRowLayout.findViewById<TextInputEditText>(R.id.diaBPTIET)
 
-                    if (nextSysBPTIET.text.toString() != "-1" && nextDiaBPTIET.text.toString() != "-1") {
+                    // Commented out these conditions because previous batch decided to hide the row if both are -1
+                    if (nextSysBPTIET.text.toString() != "-2" && nextDiaBPTIET.text.toString() != "-2") {
                         sysBPList.add(currentRowIndex + 1, "")
                         diaBPList.add(currentRowIndex + 1, "")
                     } else {
@@ -1904,19 +2073,57 @@ class VerifyScanActivity : AppCompatActivity() {
             saveStateForUndo()
             val currentRowIndex = binding.rowBPRecordLL.indexOfChild(rowBPRecordLayout)
 
-            sysBPList.add(currentRowIndex, "")
+            if (!sevenDay) {
+                if (sysBPListHistory.isNotEmpty()) {
+                    if (currentRowIndex >= sysBPListHistory.size) {
+                        val newCurrentRowIndex = currentRowIndex - sysBPListHistory.size - 1
+                        sysBPList.add(newCurrentRowIndex, "")
 
-            while (diaBPList.size != sysBPList.size) {
-                if (diaBPList.size > sysBPList.size) {
-                    sysBPList.add("")
-                } else {
-                    diaBPList.add("")
+                        while (diaBPList.size != sysBPList.size) {
+                            if (diaBPList.size > sysBPList.size) {
+                                sysBPList.add("")
+                            } else {
+                                diaBPList.add("")
+                            }
+                        }
+                    }
+                    else{
+                        sysBPListHistory.add(currentRowIndex, "")
+
+                        while (diaBPListHistory.size != sysBPListHistory.size) {
+                            if (diaBPListHistory.size > sysBPListHistory.size) {
+                                sysBPListHistory.add("")
+                            } else {
+                                diaBPListHistory.add("")
+                            }
+                        }
+                    }
+                }
+                else {
+                    sysBPList.add(currentRowIndex, "")
+
+                    while (diaBPList.size != sysBPList.size) {
+                        if (diaBPList.size > sysBPList.size) {
+                            sysBPList.add("")
+                        } else {
+                            diaBPList.add("")
+                        }
+                    }
                 }
             }
+            else {
+                sysBPList.add(currentRowIndex, "")
 
-            //Remove extra rows from shifting left columns for seven day scan since seven day should only have 28 rows but have 4 more rows in case of data manipulation
-            if (sevenDay) {
-                removeExtraRow()
+                while (diaBPList.size != sysBPList.size) {
+                    if (diaBPList.size > sysBPList.size) {
+                        sysBPList.add("")
+                    } else {
+                        diaBPList.add("")
+                    }
+                }
+
+                // Remove extra rows from shifting left columns for seven day scan since seven day should only have 28 rows but have 4 more rows in case of data manipulation
+                // removeExtraRow()
             }
 
             // Clear the views and fields, then refresh
@@ -1936,18 +2143,55 @@ class VerifyScanActivity : AppCompatActivity() {
             saveStateForUndo()
             val currentRowIndex = binding.rowBPRecordLL.indexOfChild(rowBPRecordLayout)
 
-            diaBPList.add(currentRowIndex, "")
+            if (!sevenDay) {
+                if (diaBPListHistory.isNotEmpty()) {
+                    if (currentRowIndex >= diaBPListHistory.size) {
+                        val newCurrentRowIndex = currentRowIndex - diaBPListHistory.size - 1
+                        diaBPList.add(newCurrentRowIndex, "")
 
-            while (diaBPList.size != sysBPList.size) {
-                if (diaBPList.size > sysBPList.size) {
-                    sysBPList.add("")
-                } else {
-                    diaBPList.add("")
+                        while (diaBPList.size != sysBPList.size) {
+                            if (diaBPList.size > sysBPList.size) {
+                                sysBPList.add("")
+                            } else {
+                                diaBPList.add("")
+                            }
+                        }
+                    }
+                    else{
+                        diaBPListHistory.add(currentRowIndex, "")
+
+                        while (diaBPListHistory.size != sysBPListHistory.size) {
+                            if (diaBPListHistory.size > sysBPListHistory.size) {
+                                sysBPListHistory.add("")
+                            } else {
+                                diaBPListHistory.add("")
+                            }
+                        }
+                    }
+                }
+                else {
+                    diaBPList.add(currentRowIndex, "")
+
+                    while (diaBPList.size != sysBPList.size) {
+                        if (diaBPList.size > sysBPList.size) {
+                            sysBPList.add("")
+                        } else {
+                            diaBPList.add("")
+                        }
+                    }
                 }
             }
+            else {
+                diaBPList.add(currentRowIndex, "")
 
-            if (sevenDay) {
-                removeExtraRow()
+                while (diaBPList.size != sysBPList.size) {
+                    if (diaBPList.size > sysBPList.size) {
+                        sysBPList.add("")
+                    } else {
+                        diaBPList.add("")
+                    }
+                }
+                //removeExtraRow()
             }
 
             binding.rowBPRecordLL.removeAllViews()
