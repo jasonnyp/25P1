@@ -81,7 +81,6 @@ class VerifyScanActivity : AppCompatActivity() {
     private lateinit var targetClinicSysBP: String
     private lateinit var targetClinicDiaBP: String
     private var sevenDay: Boolean = false
-    private var isSwappingValues = false
 
     private var sysBPList: MutableList<String> = mutableListOf()
     private var diaBPList: MutableList<String> = mutableListOf()
@@ -1071,9 +1070,7 @@ class VerifyScanActivity : AppCompatActivity() {
                 }
             }
         }
-        println("Error Count: $errorCount")
         if (errorCount == 6 && !errorchecked) {
-            println("Error occured $errorCount")
             errorchecked = true
             MaterialAlertDialogBuilder(this)
                 .setIcon(R.drawable.ic_error)
@@ -1652,8 +1649,8 @@ class VerifyScanActivity : AppCompatActivity() {
     }
 
     private fun ensureListSize(list: MutableList<String>, targetSize: Int) {
-        // Since -1 was used to indicate an error since it was not able to detect a value, -2 will be used to ensure list size, so empty blanks to ensure 7 day records will not show up when it is -2
-        // But errors like -1 will still show up
+        // Since -1 was used to indicate an error since it was not able to detect a value, -2 will be used to ensure list size
+        // So empty blanks to ensure 7 day records will not show up when it is -2, but errors like -1 will still show up
         while (list.size < targetSize) {
             list.add("-2")
         }
@@ -1689,23 +1686,26 @@ class VerifyScanActivity : AppCompatActivity() {
 //    }
 
     private fun removeExtraRow(){
-        var change = false
-
-        do {
-            for (index in 32 until sysBPList.size){
-                if ((sysBPList[index] == "" && diaBPList[index] == "") || (sysBPList[index] == "-2" && diaBPList[index] == "") || (sysBPList[index] == "" && diaBPList[index] == "-2")) {
+        // Remove rows more than 30 rows that are blank
+        for (index in 29 until sysBPList.size){
+            if (index < sysBPList.size) {
+                if (sysBPList[index] == "" && diaBPList[index] == "") {
                     sysBPList.removeAt(index)
                     diaBPList.removeAt(index)
-                    change = true
                 }
-                println("Test sysBPList:" + sysBPList)
-                println("Test diaBPList:" + diaBPList)
-                println("Test sysBPList size:" + sysBPList.size)
-                println("Test diaBPList size:" + diaBPList.size)
-                println("Test index:" + index)
             }
+        }
 
-        } while (change)
+        // Remove rows with -2 and empty spaces
+        // Could use either sysBPList or diaBPList size since they are theorectically the same
+        for (index in 0 until sysBPList.size){
+            if (index < sysBPList.size) {
+                if ((sysBPList[index] == "-2" && diaBPList[index] == "") || (sysBPList[index] == "" && diaBPList[index] == "-2")) {
+                    sysBPList.removeAt(index)
+                    diaBPList.removeAt(index)
+                }
+            }
+        }
     }
 
     @SuppressLint("SetTextI18n")
@@ -1731,7 +1731,6 @@ class VerifyScanActivity : AppCompatActivity() {
         val addOneRowBtn = rowBPRecordLayout.findViewById<View>(R.id.addOneRowBtn) as Button
 
         if (isSevenDayCheck) {
-            // if ((sysBP == null || sysBP == "-1") && (diaBP == null || diaBP == "-1"))
             if ((sysBP == null || sysBP == "-2") && (diaBP == null || diaBP == "-2")) {
                 bpRowContainer.visibility = View.GONE
             } else {
@@ -1760,75 +1759,75 @@ class VerifyScanActivity : AppCompatActivity() {
         sysBPTIET.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                println("SysBP Text Changed: $s")
+                val index = sysBPFields.indexOf(sysBPTIET)
+                if (index != -1) {
+                    if(!sevenDay){
+                        if (sysBPListHistory.isNotEmpty()){
+                            if (index >= sysBPListHistory.size){
+                                val newIndex = index - sysBPListHistory.size
+                                sysBPList[newIndex] = s.toString()
+                            }
+                            else{
+                                sysBPListHistory[index] = s.toString()
+                            }
+                        }
+                        else{
+                            sysBPList[index] = s.toString()
+                        }
+                    }
+                    else{
+                        sysBPList[index] = s.toString()
+                    }
+                }
+            }
 
             override fun afterTextChanged(s: Editable?) {
-                if (!isSwappingValues) {
-                    // Commented out runnable which is threading because no idea why it is used
+                    // Runnable is to help with undo as afterTextChanged would call saveStateForUndo() before user types finish the number and will undo not the previous value but the one currently still typing
                     typingRunnable?.let { typingDelayHandler.removeCallbacks(it) }
                     typingRunnable = Runnable {
                         saveStateForUndo()
-                        println("SysBP Text Changed: $s")
-                        val index = sysBPFields.indexOf(sysBPTIET)
-                        if (index != -1) {
-                            if(!sevenDay){
-                                if (sysBPListHistory.isNotEmpty()){
-                                    if (index >= sysBPListHistory.size){
-                                        val newIndex = index - sysBPListHistory.size
-                                        sysBPList[newIndex] = s.toString()
-                                    }
-                                    else{
-                                        sysBPListHistory[index] = s.toString()
-                                    }
-                                }
-                                else{
-                                    sysBPList[index] = s.toString()
-                                }
-                            }
-                            else{
-                                sysBPList[index] = s.toString()
-                            }
-                        }
                     }
-                    typingDelayHandler.postDelayed(typingRunnable!!, 1000) // 500ms delay
-                }
+                    typingDelayHandler.postDelayed(typingRunnable!!, 300) // 500ms delay - recommended by older batches, after testing, found 300ms suitable even tho not the best, could be longer but might affect it not being able to save
+                // A longer delay would save the output as after the text first changed it will invoke the function, a longer delay would allows the user to finish typing the value before saving it
+                // Why not a longer delay such that it will just go directly to the old value instead of undoing twice? To help performance issue as if you do any control like add rows etc before the delay, it will not save the state
             }
         })
 
         diaBPTIET.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                println("DiaBP Text Changed: $s")
+                val index = diaBPFields.indexOf(diaBPTIET)
+                if (index != -1) {
+                    if(!sevenDay){
+                        if (diaBPListHistory.isNotEmpty()){
+                            if (index >= diaBPListHistory.size){
+                                val newIndex = index - diaBPListHistory.size
+                                diaBPList[newIndex] = s.toString()
+                            }
+                            else{
+                                diaBPListHistory[index] = s.toString()
+                            }
+                        }
+                        else{
+                            diaBPList[index] = s.toString()
+                        }
+                    }
+                    else{
+                        diaBPList[index] = s.toString()
+                    }
+                }
+            }
 
             override fun afterTextChanged(s: Editable?) {
-                if (!isSwappingValues) {
                     typingRunnable?.let { typingDelayHandler.removeCallbacks(it) }
                     typingRunnable = Runnable {
                         saveStateForUndo()
-                        println("DiaBP Text Changed: $s")
-                        val index = diaBPFields.indexOf(diaBPTIET)
-                        if (index != -1) {
-                            if(!sevenDay){
-                                if (diaBPListHistory.isNotEmpty()){
-                                    if (index >= diaBPListHistory.size){
-                                        val newIndex = index - diaBPListHistory.size
-                                        diaBPList[newIndex] = s.toString()
-                                    }
-                                    else{
-                                        diaBPListHistory[index] = s.toString()
-                                    }
-                                }
-                                else{
-                                    diaBPList[index] = s.toString()
-                                }
-                            }
-                            else{
-                                diaBPList[index] = s.toString()
-                            }
-                        }
                     }
-                    typingDelayHandler.postDelayed(typingRunnable!!, 1000) // 500ms delay
-                }
+                    typingDelayHandler.postDelayed(typingRunnable!!, 300) // 500ms delay - recommended by older batches, after testing, found 300ms suitable
             }
         })
 
@@ -1841,66 +1840,14 @@ class VerifyScanActivity : AppCompatActivity() {
             saveStateForUndo()
             println("Swapping values...")
 
-            // Disable TextWatcher during swap
-            isSwappingValues = true
-
             val tempValue = sysBPTIET.text.toString()
             sysBPTIET.setText(diaBPTIET.text.toString())
             diaBPTIET.setText(tempValue)
 
-//            val diaIndex = diaBPFields.indexOf(diaBPTIET)
-//            if (diaIndex != -1) {
-//                if(!sevenDay){
-//                    if (diaBPListHistory.isNotEmpty()){
-//                        if (diaIndex >= diaBPListHistory.size){
-//                            val newIndex = diaIndex - diaBPListHistory.size
-//                            diaBPList[newIndex] = tempValue
-//                        }
-//                        else{
-//                            diaBPListHistory[diaIndex] = tempValue
-//                        }
-//                    }
-//                    else{
-//                        diaBPList[diaIndex] = tempValue
-//                    }
-//                }
-//                else{
-//                    diaBPList[diaIndex] = tempValue
-//                }
-//            }
-//
-//            val sysIndex = sysBPFields.indexOf(sysBPTIET)
-//            if (sysIndex != -1) {
-//                if(!sevenDay){
-//                    if (sysBPListHistory.isNotEmpty()){
-//                        if (sysIndex >= sysBPListHistory.size){
-//                            val newIndex = sysIndex - sysBPListHistory.size
-//                            sysBPList[newIndex] = diaBPTIET.text.toString()
-//                        }
-//                        else{
-//                            sysBPListHistory[sysIndex] = diaBPTIET.text.toString()
-//                        }
-//                    }
-//                    else{
-//                        sysBPList[sysIndex] = diaBPTIET.text.toString()
-//                    }
-//                }
-//                else{
-//                    sysBPList[sysIndex] = diaBPTIET.text.toString()
-//                }
-//            }
-
-            val sysBPValues = sysBPFields.map { it.text.toString() }
-            val diaBPValues = diaBPFields.map { it.text.toString() }
-
-            println("sysBPFields after swap: $sysBPFields")
-            println("diaBPFields after swap: $diaBPFields")
-            println("sysBPFields values after swap: $sysBPValues")
-            println("diaBPFields values after swap: $diaBPValues")
-            println("sysBPList after swap: $sysBPList")
-            println("diaBPList after swap: $diaBPList")
-
-            isSwappingValues = false
+            binding.rowBPRecordLL.removeAllViews()
+            sysBPFields.clear()
+            diaBPFields.clear()
+            refreshViews()
 
             val toast = Toast.makeText(this, "Values swapped", Toast.LENGTH_SHORT)
             toast.show()
@@ -1934,9 +1881,8 @@ class VerifyScanActivity : AppCompatActivity() {
                     val diaIndex = diaBPFields.indexOf(diaBPTIET)
                     val sysIndex = sysBPFields.indexOf(sysBPTIET)
                     if (!sevenDay) {
-                        // Since both would be the samae length, either could be used for checks
+                        // Since both would be the same length theorectically, either could be used for checks
                         if (sysBPListHistory.isNotEmpty() && diaBPListHistory.isNotEmpty()){
-                            // Could use either sysBPListHistory or diaBPListHistory since their size would be the same theoratically
                             // The index would probaly be the same but just to standardise with the previous batches codes, I used 2 indexes
                             if (sysIndex >= sysBPListHistory.size){
                                 val newSysIndex = sysIndex - sysBPListHistory.size
@@ -2040,7 +1986,6 @@ class VerifyScanActivity : AppCompatActivity() {
                     val nextDiaBPTIET =
                         nextRowLayout.findViewById<TextInputEditText>(R.id.diaBPTIET)
 
-                    // Commented out these conditions because previous batch decided to hide the row if both are -1
                     if (nextSysBPTIET.text.toString() != "-2" && nextDiaBPTIET.text.toString() != "-2") {
                         sysBPList.add(currentRowIndex + 1, "")
                         diaBPList.add(currentRowIndex + 1, "")
@@ -2122,8 +2067,19 @@ class VerifyScanActivity : AppCompatActivity() {
                     }
                 }
 
+                // Remove the hidden -2 and replace it with a space when any value shifted
+                for (index in 0 until diaBPList.size){
+                    if (index < diaBPList.size) {
+                        if (sysBPList[index].toIntOrNull() != null) {
+                            if (diaBPList[index] == "-2" && sysBPList[index].toInt() > 0) {
+                                diaBPList[index] = ""
+                            }
+                        }
+                    }
+                }
+
                 // Remove extra rows from shifting left columns for seven day scan since seven day should only have 28 rows but have 4 more rows in case of data manipulation
-                // removeExtraRow()
+                removeExtraRow()
             }
 
             // Clear the views and fields, then refresh
@@ -2191,7 +2147,17 @@ class VerifyScanActivity : AppCompatActivity() {
                         diaBPList.add("")
                     }
                 }
-                //removeExtraRow()
+
+                for (index in 0 until sysBPList.size){
+                    if (index < sysBPList.size) {
+                        if (diaBPList[index].toIntOrNull() != null) {
+                            if (sysBPList[index] == "-2" && diaBPList[index].toInt() > 0) {
+                                sysBPList[index] = ""
+                            }
+                        }
+                    }
+                }
+                removeExtraRow()
             }
 
             binding.rowBPRecordLL.removeAllViews()
