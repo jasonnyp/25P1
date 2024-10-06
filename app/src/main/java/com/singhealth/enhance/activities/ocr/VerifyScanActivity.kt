@@ -1655,35 +1655,6 @@ class VerifyScanActivity : AppCompatActivity() {
         }
     }
 
-//    private fun removeExtraRow(){
-//        // Technically diaBPList and sysBPList would be the same size so technically could just use 1 condition but just for safety checks there is 3 conditions
-//        if (sysBPList.size > 32 && diaBPList.size > 32 && diaBPList.size == sysBPList.size){
-//            // Since sysBPList size would be the same as the diaBPList size after adding a left or right column, could use either sysBPList or diaBPList
-//            while (true){
-//                var index = 32
-//                println("Test sysBPList:" + sysBPList)
-//                println("Test diaBPList:" + diaBPList)
-//                println("Test sysBPList size:" + sysBPList.size)
-//                println("Test diaBPList size:" + diaBPList.size)
-//                println("Test index:" + index)
-//                if ((sysBPList.size <= 32 && diaBPList.size <= 32) || index > sysBPList.size || index > diaBPList.size){
-//                    println("YES")
-//                    break
-//                }else{
-//                    if (sysBPList[index] == "" && diaBPList[index] == "") {
-//                        sysBPList.removeAt(index)
-//                        diaBPList.removeAt(index)
-//                    }
-//                    else{
-//                        continue
-//                    }
-//                    index += 1
-//                }
-//            }
-//            println("End")
-//        }
-//    }
-
     private fun removeExtraRow(){
         // Remove rows more than 30 rows that are blank
         for (index in 29 until sysBPList.size){
