@@ -538,8 +538,8 @@ class VerifyScanActivity : AppCompatActivity() {
                         ResourcesHelper.getString(
                             this@VerifyScanActivity,
                             R.string.verify_scan_valid_value,
-                            91,
-                            209
+                            50,
+                            220
                         )
                     )
                 }
@@ -563,8 +563,8 @@ class VerifyScanActivity : AppCompatActivity() {
                         ResourcesHelper.getString(
                             this@VerifyScanActivity,
                             R.string.verify_scan_valid_value,
-                            61,
-                            119
+                            20,
+                            160
                         )
                     )
                 }
@@ -588,8 +588,8 @@ class VerifyScanActivity : AppCompatActivity() {
                         ResourcesHelper.getString(
                             this@VerifyScanActivity,
                             R.string.verify_scan_valid_value,
-                            91,
-                            209
+                            50,
+                            220
                         )
                     )
                 }
@@ -613,8 +613,8 @@ class VerifyScanActivity : AppCompatActivity() {
                         ResourcesHelper.getString(
                             this@VerifyScanActivity,
                             R.string.verify_scan_valid_value,
-                            61,
-                            119
+                            20,
+                            160
                         )
                     )
                 }
@@ -638,8 +638,8 @@ class VerifyScanActivity : AppCompatActivity() {
                         ResourcesHelper.getString(
                             this@VerifyScanActivity,
                             R.string.verify_scan_valid_value,
-                            91,
-                            209
+                            50,
+                            220
                         )
                     )
                 }
@@ -663,8 +663,8 @@ class VerifyScanActivity : AppCompatActivity() {
                         ResourcesHelper.getString(
                             this@VerifyScanActivity,
                             R.string.verify_scan_valid_value,
-                            61,
-                            119
+                            20,
+                            160
                         )
                     )
                 }
@@ -1511,7 +1511,6 @@ class VerifyScanActivity : AppCompatActivity() {
            avgDiaBP = (totalDiaBP.toFloat() / finalDiaBPList.size).roundToInt()
        }
        else if (validConsecutiveDays.size < 3 && dayReadings.size >= 1) {
-           println("HELLO2")
 
            totalSysBP = 0
            totalDiaBP = 0
@@ -1729,6 +1728,8 @@ class VerifyScanActivity : AppCompatActivity() {
         val bpRowContainer =
             rowBPRecordLayout.findViewById<View>(R.id.bpRowContainer) as LinearLayout
         val addOneRowBtn = rowBPRecordLayout.findViewById<View>(R.id.addOneRowBtn) as Button
+        var sysUndoState = true
+        var diaUndoState = true
 
         if (isSevenDayCheck) {
             if ((sysBP == null || sysBP == "-2") && (diaBP == null || diaBP == "-2")) {
@@ -1757,7 +1758,12 @@ class VerifyScanActivity : AppCompatActivity() {
 
         // Add TextWatchers to update the lists
         sysBPTIET.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                if (sysUndoState) {
+                    saveStateForUndo()
+                    sysUndoState = false
+                }
+            }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 println("SysBP Text Changed: $s")
@@ -1784,19 +1790,27 @@ class VerifyScanActivity : AppCompatActivity() {
             }
 
             override fun afterTextChanged(s: Editable?) {
-                    // Runnable is to help with undo as afterTextChanged would call saveStateForUndo() before user types finish the number and will undo not the previous value but the one currently still typing
+                // Runnable is to help with undo as it would give before user time to finish typing the number before saving state for undo
+                // If user tries to go to 1 but change too slow like 180 and then remove 0 and stays at 18 for 1000ms before going to 1, will save 18 and not 180
+                // Goal is to save value before they tried to change so above would be worse if delay is faster
                     typingRunnable?.let { typingDelayHandler.removeCallbacks(it) }
                     typingRunnable = Runnable {
-                        saveStateForUndo()
+                        sysUndoState = true
                     }
-                    typingDelayHandler.postDelayed(typingRunnable!!, 300) // 500ms delay - recommended by older batches, after testing, found 300ms suitable even tho not the best, could be longer but might affect it not being able to save
-                // A longer delay would save the output as after the text first changed it will invoke the function, a longer delay would allows the user to finish typing the value before saving it
-                // Why not a longer delay such that it will just go directly to the old value instead of undoing twice? To help performance issue as if you do any control like add rows etc before the delay, it will not save the state
+                    typingDelayHandler.postDelayed(typingRunnable!!, 1000)
+                // 500ms delay - recommended by older batches could be shorter but might affect it saving before fully typing, I recommend 1000
+                // Longer delay or shorter which one better? - Note: won't affect if user just change this box and then go to another, below only affects if retype
+                // If too fast, affects saving value before finish typing, if too slow, might not even saved the multiple retype value if they choose to come back and type before the delay
             }
         })
 
         diaBPTIET.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                if (diaUndoState) {
+                    saveStateForUndo()
+                    diaUndoState = false
+                }
+            }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 println("DiaBP Text Changed: $s")
@@ -1825,9 +1839,9 @@ class VerifyScanActivity : AppCompatActivity() {
             override fun afterTextChanged(s: Editable?) {
                     typingRunnable?.let { typingDelayHandler.removeCallbacks(it) }
                     typingRunnable = Runnable {
-                        saveStateForUndo()
+                        diaUndoState = true
                     }
-                    typingDelayHandler.postDelayed(typingRunnable!!, 300) // 500ms delay - recommended by older batches, after testing, found 300ms suitable
+                    typingDelayHandler.postDelayed(typingRunnable!!, 1000)
             }
         })
 
