@@ -4,6 +4,7 @@ import android.Manifest
 import android.app.ProgressDialog
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Rect
 import android.net.Uri
 import android.os.Bundle
 import android.view.MenuItem
@@ -18,6 +19,7 @@ import com.canhub.cropper.CropImageContract
 import com.canhub.cropper.CropImageContractOptions
 import com.canhub.cropper.CropImageOptions
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.firebase.ktx.Firebase
 import com.google.firebase.ml.vision.FirebaseVision
 import com.google.firebase.ml.vision.common.FirebaseVisionImage
 import com.google.firebase.ml.vision.document.FirebaseVisionCloudDocumentRecognizerOptions
@@ -35,6 +37,8 @@ import com.singhealth.enhance.activities.validation.patientNotFoundInSessionErro
 import com.singhealth.enhance.databinding.ActivityScanBinding
 import com.singhealth.enhance.security.AESEncryption
 import com.singhealth.enhance.security.SecureSharedPreferences
+import kotlin.math.max
+import kotlin.math.min
 
 class ScanActivity : AppCompatActivity() {
     private lateinit var binding: ActivityScanBinding
@@ -44,6 +48,7 @@ class ScanActivity : AppCompatActivity() {
     private lateinit var progressDialog: ProgressDialog
     private lateinit var outputUri: Uri
     private lateinit var patientID: String
+    private var boundingBox: Rect = Rect(0,0,0,0)
     private var sevenDay: Boolean = false
     private var showContinueScan: Boolean = false
 
@@ -158,6 +163,7 @@ class ScanActivity : AppCompatActivity() {
                 cropImageOptions = CropImageOptions(
                     imageSourceIncludeCamera = includeCamera,
                     imageSourceIncludeGallery = includeGallery,
+                    skipEditing = true,
                 ),
             ),
         )
@@ -165,12 +171,81 @@ class ScanActivity : AppCompatActivity() {
 
     private val customCropImage = registerForActivityResult(CropImageContract()) {
         if (it !is CropImage.CancelledResult) {
+            handleCropImageResultForAutocrop(it.uriContent.toString())
+        }
+    }
+
+    private fun handleCropImageResultForAutocrop(uri: String) {
+        outputUri = Uri.parse(uri.replace("file:", ""))
+
+        if (outputUri.toString().isNotEmpty()) {
+            processDocumentImageForAutoCrop()
+        } else {
+            Toast.makeText(this, "ERROR: No image to process.", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun processDocumentImageForAutoCrop() {
+        progressDialog.setTitle("Processing image")
+        progressDialog.setMessage("Please wait a moment...")
+        progressDialog.show()
+
+        val options = FirebaseVisionCloudDocumentRecognizerOptions.Builder()
+            .setLanguageHints(listOf("kr")) // Set language hints if needed
+            .build()
+
+        val ocrEngine = FirebaseVision.getInstance().getCloudDocumentTextRecognizer(options)
+        val imageToProcess = FirebaseVisionImage.fromFilePath(this, outputUri)
+
+        ocrEngine.processImage(imageToProcess)
+            .addOnSuccessListener { firebaseVisionDocumentText ->
+                extractWordsFromBlocks(firebaseVisionDocumentText.blocks)
+                startCameraWithUri()
+            }
+            .addOnFailureListener { e ->
+                progressDialog.dismiss()
+                ocrTextErrorDialog(this, )
+            }
+    }
+
+    private fun startCameraWithUri() {
+        println("Bounding Box Used $boundingBox")
+        if (boundingBox != Rect(0,0,0,0)) {
+            customCroppedImage.launch(
+                CropImageContractOptions(
+                    uri = outputUri,
+                    cropImageOptions = CropImageOptions(
+                        initialCropWindowRectangle = boundingBox,
+                    ),
+                ),
+            )
+            println("Test $boundingBox")
+        } else{
+            customCroppedImage.launch(
+                CropImageContractOptions(
+                    uri = outputUri,
+                    cropImageOptions = CropImageOptions(
+                    ),
+                ),
+            )
+        }
+    }
+
+    private val customCroppedImage = registerForActivityResult(CropImageContract()) {
+        if (it !is CropImage.CancelledResult) {
             handleCropImageResult(it.uriContent.toString())
+        }
+        else{
+            binding.cropIV.visibility = View.GONE
+            binding.ocrInstructionsTextViewValue.visibility = View.VISIBLE
+            binding.scanStatusTextView.visibility = View.VISIBLE
+            progressDialog.dismiss()
         }
     }
 
     private fun handleCropImageResult(uri: String) {
         outputUri = Uri.parse(uri.replace("file:", "")).also { parsedUri ->
+            binding.cropIV.visibility = View.VISIBLE
             binding.cropIV.setImageUriAsync(parsedUri)
             binding.ocrInstructionsTextViewValue.visibility = View.GONE
             binding.scanStatusTextView.visibility = View.GONE
@@ -205,7 +280,273 @@ class ScanActivity : AppCompatActivity() {
             }
     }
 
-    //Old Algorithm
+    // New Algorithm
+    private fun processDocumentTextBlock(result: FirebaseVisionDocumentText) {
+        val sysBPList = mutableListOf<String>()
+        val diaBPList = mutableListOf<String>()
+        val blocks = result.blocks
+
+        if (blocks.isEmpty()) {
+            progressDialog.dismiss()
+            ocrTextErrorDialog(this)
+        } else {
+            val words = extractWordsFromBlocks(blocks)
+            println("Scanned words:")
+            words.forEachIndexed { index, word ->
+                println("Word ${index + 1}: ${word.text}")
+            }
+
+            val numbers = words.map { it.text }
+                .filter{ it !in "Systolic" && it !in "Diastolic" && it !in "Pulse" && it !in "Morning" && it !in "Evening" && it !in "1st" && it !in "2nd" && it.length in 2..3}
+                .toMutableList()
+            println("Filtered numbers: $numbers")
+            processNumbers(numbers, sysBPList, diaBPList)
+            println("sysBPList after fixing common errors: $sysBPList")
+            println("diaBPList after fixing common errors: $diaBPList")
+
+            navigateToVerifyScanActivity(sysBPList, diaBPList, sevenDay)
+        }
+    }
+
+    private fun extractWordsFromBlocks(blocks: List<FirebaseVisionDocumentText.Block>): MutableList<FirebaseVisionDocumentText.Word> {
+        val words = mutableListOf<FirebaseVisionDocumentText.Word>()
+        var totalCount = 0
+        var firstBoundingBox = Rect(0, 0, 0, 0)
+        var secondBoundingBox = Rect(0, 0, 0, 0)
+        var bottom: Int? = null
+        for (block in blocks) {
+            totalCount += 1
+            println("Bounding block number $totalCount")
+            for (paragraph in block.paragraphs) {
+                words.addAll(paragraph.words)
+
+                for (word in paragraph.words) {
+                    println(word.text)
+                    if (word.text == "Systolic") {
+                        println("Bounding Box ${block.boundingBox} with Systolic")
+                        if (block.boundingBox != null) {
+                            firstBoundingBox = block.boundingBox!!
+                        }
+                    } else if (word.text == "Diastolic") {
+                        println("Bounding Box ${block.boundingBox} with Diastolic")
+                        if (block.boundingBox != null) {
+                            secondBoundingBox = block.boundingBox!!
+                        }
+                    }
+                }
+            }
+            if (block.boundingBox != null) {
+                println(block.boundingBox!!.bottom)
+                if (bottom == null){
+                    bottom = block.boundingBox!!.bottom
+                }
+                else if (block.boundingBox!!.bottom > bottom){
+                    bottom = block.boundingBox!!.bottom
+                    println("New Bottom:$bottom")
+
+                }
+            }
+        }
+        if (firstBoundingBox != Rect(0, 0, 0, 0) && secondBoundingBox != Rect(0, 0, 0, 0)){
+            if (firstBoundingBox == secondBoundingBox) {
+                val top = firstBoundingBox.top
+                val left = firstBoundingBox.left - 100
+                val right = firstBoundingBox.right + 100
+                if (bottom != null) {
+                    boundingBox.set(left,top,right,bottom)
+                }
+                else{
+                    boundingBox.set(left,top,right,0)
+                }
+            }
+            else {
+                val top = max(firstBoundingBox.top, secondBoundingBox.top)
+                val left = firstBoundingBox.left - 100
+                val right = secondBoundingBox.right + 100
+                if (bottom != null) {
+                    boundingBox.set(left,top,right,bottom)
+                }
+                else{
+                    boundingBox.set(left,top,right,0)
+                }
+            }
+        } else{
+            boundingBox.set(0,0,0,0)
+        }
+        return words
+    }
+
+    private fun processNumbers(
+        numbers: List<String>,
+        sysBPList: MutableList<String>,
+        diaBPList: MutableList<String>
+    ) {
+        val correctedNumbers = mutableListOf<String>()
+
+        var i = 0
+        while (i < numbers.size) {
+            val systolic = numbers.getOrNull(i)
+            val diastolic = numbers.getOrNull(i + 1)
+
+            if (systolic != null && diastolic != null) {
+                if (systolic.toIntOrNull() != null && diastolic.toIntOrNull() != null){
+                    if (systolic.toInt() in 50..220 && diastolic.toInt() in 20..160) {
+                        if (diastolic.toInt() > systolic.toInt()) {
+                            correctedNumbers.add(diastolic)
+                            correctedNumbers.add(systolic)
+                        } else {
+                            correctedNumbers.add(systolic)
+                            correctedNumbers.add(diastolic)
+                        }
+                    } else if (systolic.toInt() in 20..160 && diastolic.toInt() in 50..220) {
+                        correctedNumbers.add(diastolic)
+                        correctedNumbers.add(systolic)
+                    } else if (systolic.toInt() !in 50..220) {
+                        correctedNumbers.add("-1")
+                        correctedNumbers.add(diastolic)
+                    } else if (diastolic.toInt() !in 20..160) {
+                        correctedNumbers.add(systolic)
+                        correctedNumbers.add("-1")
+                    } else {
+                        correctedNumbers.add("-1")
+                        correctedNumbers.add("-1")
+                    }
+                    // Maybe remove 2 last if statements and make last else to just add systolic and diastolic if don't want to filter
+                }
+                else{
+                    correctedNumbers.add(systolic)
+                    correctedNumbers.add(diastolic)
+                }
+            } else if (systolic != null) {
+                correctedNumbers.add(systolic)
+                correctedNumbers.add("-1")
+            } else if (diastolic != null) {
+                correctedNumbers.add("-1")
+                correctedNumbers.add(diastolic)
+            }
+
+            i += 2
+        }
+
+        if (correctedNumbers.size % 2 != 0) {
+            correctedNumbers.add("-1")
+        }
+
+        correctedNumbers.forEachIndexed { index, value ->
+            if (index % 2 == 0) {
+                sysBPList.add(value)
+            } else {
+                diaBPList.add(value)
+            }
+        }
+    }
+
+    private fun navigateToVerifyScanActivity(sysBPList: MutableList<String>, diaBPList: MutableList<String>, sevenDay: Boolean) {
+        val bundle = Bundle().apply {
+            putStringArrayList("sysBPList", ArrayList(sysBPList))
+            putStringArrayList("diaBPList", ArrayList(diaBPList))
+            putBoolean("sevenDay", sevenDay)
+            putBoolean("showProgressDialog", true)
+            intent.extras?.let {
+                it.getString("homeSysBPTarget")?.let { target -> putString("homeSysBPTarget", target) }
+                it.getString("homeDiaBPTarget")?.let { target -> putString("homeDiaBPTarget", target) }
+                it.getString("clinicSysBPTarget")?.let { target -> putString("clinicSysBPTarget", target) }
+                it.getString("clinicDiaBPTarget")?.let { target -> putString("clinicDiaBPTarget", target) }
+                it.getString("clinicSysBP")?.let { target -> putString("clinicSysBP", target) }
+                it.getString("clinicDiaBP")?.let { target -> putString("clinicDiaBP", target) }
+                it.getStringArrayList("sysBPListHistory")?.let{ target -> putStringArrayList("sysBPListHistory", target) }
+                it.getStringArrayList("diaBPListHistory")?.let{ target -> putStringArrayList("diaBPListHistory", target) }
+            }
+        }
+
+        val verifyScanIntent = Intent(this, VerifyScanActivity::class.java).apply { putExtras(bundle) }
+        startActivity(verifyScanIntent)
+        finish()
+    }
+
+    private val requestPermissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
+        if (!isGranted) {
+            MaterialAlertDialogBuilder(this)
+                .setIcon(R.drawable.ic_error)
+                .setTitle(getString(R.string.ocr_app_permissions_header))
+                .setMessage(getString(R.string.ocr_app_permissions_body))
+                .setPositiveButton(getString(R.string.ok_dialog)) { dialog, _ -> dialog.dismiss() }
+                .show()
+        }
+        else {
+            onClickRequestPermission()
+        }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return if (actionBarDrawerToggle.onOptionsItemSelected(item)) {
+            true
+        } else super.onOptionsItemSelected(item)
+    }
+
+    private fun navigateTo(activityClass: Class<*>) {
+        startActivity(Intent(this, activityClass))
+        finish()
+    }
+}
+
+// Old Scan Algorithm
+//    private fun startCameraWithoutUri(includeCamera: Boolean, includeGallery: Boolean) {
+//        customCropImage.launch(
+//            CropImageContractOptions(
+//                uri = null,
+//                cropImageOptions = CropImageOptions(
+//                    imageSourceIncludeCamera = includeCamera,
+//                    imageSourceIncludeGallery = includeGallery,
+//                ),
+//            ),
+//        )
+//    }
+//
+//    private val customCropImage = registerForActivityResult(CropImageContract()) {
+//        if (it !is CropImage.CancelledResult) {
+//            handleCropImageResult(it.uriContent.toString())
+//        }
+//    }
+//
+//    private fun handleCropImageResult(uri: String) {
+//        outputUri = Uri.parse(uri.replace("file:", "")).also { parsedUri ->
+//            binding.cropIV.setImageUriAsync(parsedUri)
+//            binding.ocrInstructionsTextViewValue.visibility = View.GONE
+//            binding.scanStatusTextView.visibility = View.GONE
+//        }
+//
+//        if (outputUri.toString().isNotEmpty()) {
+//            processDocumentImage()
+//        } else {
+//            Toast.makeText(this, "ERROR: No image to process.", Toast.LENGTH_SHORT).show()
+//        }
+//    }
+//
+//    private fun processDocumentImage() {
+//        progressDialog.setTitle("Processing image")
+//        progressDialog.setMessage("Please wait a moment...")
+//        progressDialog.show()
+//
+//        val options = FirebaseVisionCloudDocumentRecognizerOptions.Builder()
+//            .setLanguageHints(listOf("kr")) // Set language hints if needed
+//            .build()
+//
+//        val ocrEngine = FirebaseVision.getInstance().getCloudDocumentTextRecognizer(options)
+//        val imageToProcess = FirebaseVisionImage.fromFilePath(this, outputUri)
+//
+//        ocrEngine.processImage(imageToProcess)
+//            .addOnSuccessListener { firebaseVisionDocumentText ->
+//                processDocumentTextBlock(firebaseVisionDocumentText)
+//            }
+//            .addOnFailureListener { e ->
+//                progressDialog.dismiss()
+//                ocrTextErrorDialog(this, )
+//            }
+//    }
+
+
+// Old Algorithm
 //    private fun processDocumentTextBlock(result: FirebaseVisionDocumentText) {
 //        val sysBPList = mutableListOf<String>()
 //        val diaBPList = mutableListOf<String>()
@@ -335,162 +676,3 @@ class ScanActivity : AppCompatActivity() {
 //            diaBPList[i] = diaBPList[i].replace("기", "71").replace("ㄱㄱ", "77").replace("ㄱㅇ", "70").replace("סר", "70").replace("סך", "70").replace(" ", "")
 //        }
 //    }
-
-    // New Algorithm
-    private fun processDocumentTextBlock(result: FirebaseVisionDocumentText) {
-        val sysBPList = mutableListOf<String>()
-        val diaBPList = mutableListOf<String>()
-        val blocks = result.blocks
-
-        if (blocks.isEmpty()) {
-            progressDialog.dismiss()
-            ocrTextErrorDialog(this)
-        } else {
-            val words = extractWordsFromBlocks(blocks)
-            println("Scanned words:")
-            words.forEachIndexed { index, word ->
-                println("Word ${index + 1}: ${word.text}")
-            }
-
-            val numbers = words.map { it.text }
-                .filter{ it != "Systolic" && it != "Diastolic"}
-                .toMutableList()
-            println("Filtered numbers: $numbers")
-            processNumbers(numbers, sysBPList, diaBPList)
-            println("sysBPList after fixing common errors: $sysBPList")
-            println("diaBPList after fixing common errors: $diaBPList")
-
-            navigateToVerifyScanActivity(sysBPList, diaBPList, sevenDay)
-        }
-    }
-
-    private fun extractWordsFromBlocks(blocks: List<FirebaseVisionDocumentText.Block>): MutableList<FirebaseVisionDocumentText.Word> {
-        val words = mutableListOf<FirebaseVisionDocumentText.Word>()
-        for (block in blocks) {
-            for (paragraph in block.paragraphs) {
-                words.addAll(paragraph.words)
-            }
-        }
-        return words
-    }
-
-    private fun processNumbers(
-        numbers: List<String>,
-        sysBPList: MutableList<String>,
-        diaBPList: MutableList<String>
-    ) {
-        val correctedNumbers = mutableListOf<String>()
-
-        var i = 0
-        while (i < numbers.size) {
-            val systolic = numbers.getOrNull(i)
-            val diastolic = numbers.getOrNull(i + 1)
-
-            if (systolic != null && diastolic != null) {
-                // Check if is both are numbers for comparison algorithm to work, else just leave it as it is
-                if (systolic.toIntOrNull() != null && diastolic.toIntOrNull() != null){
-                    // 5 Conditions
-                    // Check systolic and diastolic in range and see if need swap places as systolic > diastolic if diastolic is more, it will be placed before the systolic as it might have swapped positions
-                    // Check is systolic and diastolic are swapped in places similar to the condition above
-                    // If diastolic is correct and systolic is wrong
-                    // If systolic is correct and diastolic is wrong
-                    // If both values aren't in range then return -1
-                    // TO DO: if both return -1 don't hide it in verify scan
-                    if (systolic.toInt() in 50..220 && diastolic.toInt() in 20..160) {
-                        if (diastolic.toInt() > systolic.toInt()) {
-                            correctedNumbers.add(diastolic)
-                            correctedNumbers.add(systolic)
-                        } else {
-                            correctedNumbers.add(systolic)
-                            correctedNumbers.add(diastolic)
-                        }
-                    } else if (systolic.toInt() in 20..160 && diastolic.toInt() in 50..220) {
-                        correctedNumbers.add(diastolic)
-                        correctedNumbers.add(systolic)
-                    } else if (systolic.toInt() !in 50..220) {
-                        correctedNumbers.add("-1")
-                        correctedNumbers.add(diastolic)
-                    } else if (diastolic.toInt() !in 20..160) {
-                        correctedNumbers.add(systolic)
-                        correctedNumbers.add("-1")
-                    } else {
-                        correctedNumbers.add("-1")
-                        correctedNumbers.add("-1")
-                    }
-                }
-                else{
-                    correctedNumbers.add(systolic)
-                    correctedNumbers.add(diastolic)
-                }
-            } else if (systolic != null) {
-                correctedNumbers.add(systolic)
-                correctedNumbers.add("-1")
-            } else if (diastolic != null) {
-                correctedNumbers.add("-1")
-                correctedNumbers.add(diastolic)
-            }
-
-            i += 2
-        }
-
-        if (correctedNumbers.size % 2 != 0) {
-            correctedNumbers.add("-1")
-        }
-
-        correctedNumbers.forEachIndexed { index, value ->
-            if (index % 2 == 0) {
-                sysBPList.add(value)
-            } else {
-                diaBPList.add(value)
-            }
-        }
-    }
-
-    private fun navigateToVerifyScanActivity(sysBPList: MutableList<String>, diaBPList: MutableList<String>, sevenDay: Boolean) {
-        val bundle = Bundle().apply {
-            putStringArrayList("sysBPList", ArrayList(sysBPList))
-            putStringArrayList("diaBPList", ArrayList(diaBPList))
-            putBoolean("sevenDay", sevenDay)
-            putBoolean("showProgressDialog", true)
-            intent.extras?.let {
-                it.getString("homeSysBPTarget")?.let { target -> putString("homeSysBPTarget", target) }
-                it.getString("homeDiaBPTarget")?.let { target -> putString("homeDiaBPTarget", target) }
-                it.getString("clinicSysBPTarget")?.let { target -> putString("clinicSysBPTarget", target) }
-                it.getString("clinicDiaBPTarget")?.let { target -> putString("clinicDiaBPTarget", target) }
-                it.getString("clinicSysBP")?.let { target -> putString("clinicSysBP", target) }
-                it.getString("clinicDiaBP")?.let { target -> putString("clinicDiaBP", target) }
-                it.getStringArrayList("sysBPListHistory")?.let{ target -> putStringArrayList("sysBPListHistory", target) }
-                it.getStringArrayList("diaBPListHistory")?.let{ target -> putStringArrayList("diaBPListHistory", target) }
-            }
-        }
-
-        val verifyScanIntent = Intent(this, VerifyScanActivity::class.java).apply { putExtras(bundle) }
-        startActivity(verifyScanIntent)
-        finish()
-    }
-
-    private val requestPermissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
-        if (!isGranted) {
-            MaterialAlertDialogBuilder(this)
-                .setIcon(R.drawable.ic_error)
-                .setTitle(getString(R.string.ocr_app_permissions_header))
-                .setMessage(getString(R.string.ocr_app_permissions_body))
-                .setPositiveButton(getString(R.string.ok_dialog)) { dialog, _ -> dialog.dismiss() }
-                .show()
-        }
-        else {
-            onClickRequestPermission()
-        }
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return if (actionBarDrawerToggle.onOptionsItemSelected(item)) {
-            true
-        } else super.onOptionsItemSelected(item)
-    }
-
-    private fun navigateTo(activityClass: Class<*>) {
-        startActivity(Intent(this, activityClass))
-        finish()
-    }
-}

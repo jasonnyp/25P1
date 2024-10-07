@@ -60,8 +60,8 @@ class LoginActivity : AppCompatActivity() {
 
         binding.loginBtn.setOnClickListener {
             if (validateFields()) {
-                val email = binding.staffIDTIET.text.toString() + "@enhance.com"
-                val password = binding.passwordTIET.text.toString()
+                val email = binding.staffIDTIET.text.toString().trim() + "@enhance.com"
+                val password = binding.passwordTIET.text.toString().trim()
                 auth.signInWithEmailAndPassword(email, password)
                     .addOnCompleteListener(this) { task ->
                         if (task.isSuccessful) {
