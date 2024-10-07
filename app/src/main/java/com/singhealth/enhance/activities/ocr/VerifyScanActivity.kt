@@ -81,6 +81,7 @@ class VerifyScanActivity : AppCompatActivity() {
     private lateinit var targetClinicSysBP: String
     private lateinit var targetClinicDiaBP: String
     private var sevenDay: Boolean = false
+    private var isSwappingValues = false
 
     private var sysBPList: MutableList<String> = mutableListOf()
     private var diaBPList: MutableList<String> = mutableListOf()
@@ -1730,7 +1731,7 @@ class VerifyScanActivity : AppCompatActivity() {
         // Add TextWatchers to update the lists
         sysBPTIET.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                if (sysUndoState) {
+                if (sysUndoState && !isSwappingValues) {
                     saveStateForUndo()
                     sysUndoState = false
                 }
@@ -1777,7 +1778,7 @@ class VerifyScanActivity : AppCompatActivity() {
 
         diaBPTIET.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                if (diaUndoState) {
+                if (diaUndoState && !isSwappingValues) {
                     saveStateForUndo()
                     diaUndoState = false
                 }
@@ -1825,9 +1826,13 @@ class VerifyScanActivity : AppCompatActivity() {
             saveStateForUndo()
             println("Swapping values...")
 
+            isSwappingValues = true
+
             val tempValue = sysBPTIET.text.toString()
             sysBPTIET.setText(diaBPTIET.text.toString())
             diaBPTIET.setText(tempValue)
+
+            isSwappingValues = false
 
             binding.rowBPRecordLL.removeAllViews()
             sysBPFields.clear()
