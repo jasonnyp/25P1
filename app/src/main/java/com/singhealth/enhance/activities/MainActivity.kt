@@ -23,7 +23,6 @@ import com.singhealth.enhance.security.SecureSharedPreferences
 import com.singhealth.enhance.security.StaffSharedPreferences
 
 class MainActivity : AppCompatActivity() {
-class MainActivity : BaseActivity() {
     private lateinit var binding: ActivityMainBinding
 
     private lateinit var actionBarDrawerToggle: ActionBarDrawerToggle
