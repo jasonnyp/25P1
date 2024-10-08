@@ -772,16 +772,20 @@ class VerifyScanActivity : AppCompatActivity() {
                     )
                 }
                 binding.verifyClinicSys?.let {
-                    scanIntent.putExtra(
-                        "clinicSysBP",
-                        binding.verifyClinicSys.text.toString()
-                    )
+                    if (binding.verifyClinicSys.text.toString() != "") {
+                        scanIntent.putExtra(
+                            "clinicSysBP",
+                            binding.verifyClinicSys.text.toString()
+                        )
+                    }
                 }
                 binding.verifyClinicDia?.let {
-                    scanIntent.putExtra(
-                        "clinicDiaBP",
-                        binding.verifyClinicDia.text.toString()
-                    )
+                    if (binding.verifyClinicDia.text.toString() != "") {
+                        scanIntent.putExtra(
+                            "clinicDiaBP",
+                            binding.verifyClinicDia.text.toString()
+                        )
+                    }
                 }
 
                 if (!sysBPListHistory.isNullOrEmpty()) {
