@@ -96,6 +96,8 @@ class VerifyScanActivity : AppCompatActivity() {
     private var avgSysBP = 0
     private var avgDiaBP = 0
 
+    private val validDayIndices = mutableListOf<Int>() // To track the days used for calculating average
+
     private val undoStack = mutableListOf<Pair<MutableList<String>, MutableList<String>>>()
     private val maxUndoStackSize = 10
 
@@ -478,7 +480,8 @@ class VerifyScanActivity : AppCompatActivity() {
                     "averageDiaBP" to avgDiaBP,
                     "clinicSysBP" to clinicSysBP,
                     "clinicDiaBP" to clinicDiaBP,
-                    "scanRecordCount" to finalRows
+                    "scanRecordCount" to finalRows,
+                    "validDayIndices" to validDayIndices.distinct()
                 )
 
                 db.collection("patients").document(patientID).collection("visits").add(visit)
@@ -1382,7 +1385,6 @@ class VerifyScanActivity : AppCompatActivity() {
         val dayReadings = mutableListOf<List<Pair<String, String>>>()
         val incompleteDayReadings = mutableListOf<List<Pair<String, String>>>()
         val dayReadingsStatus = mutableListOf<Int>() // 2 for full day, 1 for incomplete day, 0 for empty day
-        val validDayIndices = mutableListOf<Int>() // To track the days used for calculating average
 
         var currentDayReadings = mutableListOf<Pair<String, String>>()
 
@@ -1441,7 +1443,7 @@ class VerifyScanActivity : AppCompatActivity() {
 
         // Collect indices of all valid days
         for (i in dayReadingsStatus.indices) {
-            if (dayReadingsStatus[i] == 2) {
+            if (dayReadingsStatus[i] == 2 && i > 0) {
                 validDayIndices.add(i + 1) // Using 1-based indexing
             }
         }
