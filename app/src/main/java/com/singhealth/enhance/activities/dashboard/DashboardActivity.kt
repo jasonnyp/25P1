@@ -159,6 +159,7 @@ class DashboardActivity : AppCompatActivity() {
                     val clinicDiaBPTarget = document.get("clinicDiaBPTarget") as? Long
                     val clinicSysBP = document.get("clinicSysBP") as? Long
                     val clinicDiaBP = document.get("clinicDiaBP") as? Long
+                    val validDayIndices = document.get("validDayIndices") as? List<*>
                     var scanRecordCount = document.get("scanRecordCount") as? Long
                     if (scanRecordCount == null) {
                         scanRecordCount = 0
@@ -175,7 +176,8 @@ class DashboardActivity : AppCompatActivity() {
                             clinicDiaBPTarget,
                             clinicSysBP,
                             clinicDiaBP,
-                            scanRecordCount
+                            scanRecordCount,
+                            validDayIndices
                         )
                     )
                 }
