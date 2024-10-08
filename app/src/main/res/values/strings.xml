@@ -243,6 +243,7 @@
 
     <!-- activity_recommendation -->
     <string name="enhance_recco_header">The following are the recommendations based on the %1$s scanned BP records:</string>
+    <string name="average_days_message">The average was calculated using Day(s) %1$s.</string>
     <string name="enhance_recco_do">Do:</string>
     <string name="enhance_recco_dont">Don\'t:</string>
     <string name="bpDivider" translatable="false">/</string>

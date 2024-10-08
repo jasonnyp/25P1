@@ -45,6 +45,7 @@ class RecommendationActivity : AppCompatActivity() {
     private var bundleRecordCount: Int = 0
     private var history = ArrayList<HistoryData>()
     private lateinit var sortedHistory: List<HistoryData>
+    private lateinit var validDaysList: List<String>
 
     private val db = Firebase.firestore
 
@@ -75,6 +76,9 @@ class RecommendationActivity : AppCompatActivity() {
             patientID = patientSharedPreferences.getString("patientID", null)
         }
 
+        val averageDays = validDaysList.joinToString(", ")
+        binding.averageDaysTextView.text = getString(R.string.average_days_message, averageDays)
+
         val avgBPBundle = intent.extras
         avgSysBP = avgBPBundle!!.getInt("avgSysBP").toLong()
         avgDiaBP = avgBPBundle.getInt("avgDiaBP").toLong()
@@ -102,6 +106,7 @@ class RecommendationActivity : AppCompatActivity() {
                     val clinicDiaBPTarget = document.get("clinicDiaBPTarget") as? Long
                     val clinicSysBP = document.get("clinicSysBP") as? Long
                     val clinicDiaBP = document.get("clinicDiaBP") as? Long
+                    val validDayIndices = document.getString("validDayIndices")
                     var scanRecordCount = document.get("scanRecordCount") as? Long
                     if (scanRecordCount == null) {
                         scanRecordCount = 0
@@ -121,6 +126,7 @@ class RecommendationActivity : AppCompatActivity() {
                             scanRecordCount
                         )
                     )
+                    validDaysList = validDayIndices?.split(", ") ?: emptyList()
                 }
 
                 sortedHistory = history.sortedByDescending { it.date }
@@ -141,6 +147,7 @@ class RecommendationActivity : AppCompatActivity() {
                 if (binding.insufficientRecordMessage.text == "") {
                     binding.insufficientRecordMessage.visibility = View.GONE
                 }
+                // binding.averageDaysTextView.text = getString(R.string.average_days_message, averageDays)
 
                 binding.targetHomeSysBPTV.text = patientTargetSys.toString()
                 binding.targetHomeDiaBPTV.text = patientTargetDia.toString()

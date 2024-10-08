@@ -28,6 +28,17 @@
                 android:textStyle="bold" />
 
             <TextView
+                android:id="@+id/averageDaysTextView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingStart="16dp"
+                android:paddingTop="6dp"
+                android:paddingEnd="16dp"
+                android:text="@string/average_days_message"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
                 android:id="@+id/insufficientRecordMessage"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
