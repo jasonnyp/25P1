@@ -1377,8 +1377,8 @@ class VerifyScanActivity : AppCompatActivity() {
     private fun calcSevenDayAvgBP() {
         val dayReadings = mutableListOf<List<Pair<String, String>>>()
         val incompleteDayReadings = mutableListOf<List<Pair<String, String>>>()
-        val dayReadingsStatus =
-            mutableListOf<Int>() // 2 for full day, 1 for incomplete day, 0 for empty day
+        val dayReadingsStatus = mutableListOf<Int>() // 2 for full day, 1 for incomplete day, 0 for empty day
+        val validDayIndices = mutableListOf<Int>() // To track the days used for calculating average
 
         var currentDayReadings = mutableListOf<Pair<String, String>>()
 
@@ -1415,6 +1415,9 @@ class VerifyScanActivity : AppCompatActivity() {
             dayReadingsStatus.removeAt(0)
         }
 
+        // Clear the validDayIndices before populating
+        validDayIndices.clear()
+
         for (i in dayReadingsStatus.size - 1 downTo 2) {
             // Check for 3 consecutive full days in reverse
             if (dayReadingsStatus[i] == 2 && dayReadingsStatus[i - 1] == 2 && dayReadingsStatus[i - 2] == 2) {
@@ -1429,6 +1432,13 @@ class VerifyScanActivity : AppCompatActivity() {
                     j--
                 }
                 break
+            }
+        }
+
+        // Collect indices of all valid days
+        for (i in dayReadingsStatus.indices) {
+            if (dayReadingsStatus[i] == 2) {
+                validDayIndices.add(i + 1) // Using 1-based indexing
             }
         }
 
@@ -1510,6 +1520,8 @@ class VerifyScanActivity : AppCompatActivity() {
 
            avgSysBP = (totalSysBP.toFloat() / finalSysBPList.size).roundToInt()
            avgDiaBP = (totalDiaBP.toFloat() / finalDiaBPList.size).roundToInt()
+
+           println("Days used for average calculation: ${validDayIndices.distinct().joinToString(", ")}")
        }
        else if (validConsecutiveDays.size < 3 && dayReadings.size >= 1) {
 
@@ -1556,6 +1568,8 @@ class VerifyScanActivity : AppCompatActivity() {
 
            avgSysBP = (totalSysBP.toFloat() / SysBPList.size).roundToInt()
            avgDiaBP = (totalDiaBP.toFloat() / DiaBPList.size).roundToInt()
+
+           println("Days used for average calculation: ${validDayIndices.distinct().joinToString(", ")}")
        }
         else if (dayReadings.size == 0) {
 
@@ -1585,6 +1599,8 @@ class VerifyScanActivity : AppCompatActivity() {
 
            avgSysBP = (totalSysBP.toFloat() / SysBPList.size).roundToInt()
            avgDiaBP = (totalDiaBP.toFloat() / DiaBPList.size).roundToInt()
+
+           println("Days used for average calculation: ${validDayIndices.distinct().joinToString(", ")}")
         }
     }
 
