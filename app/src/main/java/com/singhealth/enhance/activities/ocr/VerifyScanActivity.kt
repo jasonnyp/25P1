@@ -460,6 +460,7 @@ class VerifyScanActivity : AppCompatActivity() {
                 val maxFilteredRows = maxOf(filteredSysBPList.size, filteredDiaBPList.size)
                 val maxHistoryRows = maxOf(sysBPListHistory.size, diaBPListHistory.size)
                 val finalRows = maxHistoryRows + maxFilteredRows
+                val visit: HashMap<String, *>
                 if (sevenDay) {
                     calcSevenDayAvgBP()
                 } else {
@@ -469,20 +470,36 @@ class VerifyScanActivity : AppCompatActivity() {
                 clinicDiaBP = binding.verifyClinicDia.text.toString().toInt()
 
                 // TODO: Save record into database
-                val visit = hashMapOf(
-                    "date" to LocalDateTime.now()
-                        .format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")),
-                    "homeSysBPTarget" to homeSysBPTarget,
-                    "homeDiaBPTarget" to homeDiaBPTarget,
-                    "clinicSysBPTarget" to clinicSysBPTarget,
-                    "clinicDiaBPTarget" to clinicDiaBPTarget,
-                    "averageSysBP" to avgSysBP,
-                    "averageDiaBP" to avgDiaBP,
-                    "clinicSysBP" to clinicSysBP,
-                    "clinicDiaBP" to clinicDiaBP,
-                    "scanRecordCount" to finalRows,
-                    "validDayIndices" to validDayIndices.distinct()
-                )
+                if (validDayIndices.isNotEmpty()) {
+                    visit = hashMapOf(
+                        "date" to LocalDateTime.now()
+                            .format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")),
+                        "homeSysBPTarget" to homeSysBPTarget,
+                        "homeDiaBPTarget" to homeDiaBPTarget,
+                        "clinicSysBPTarget" to clinicSysBPTarget,
+                        "clinicDiaBPTarget" to clinicDiaBPTarget,
+                        "averageSysBP" to avgSysBP,
+                        "averageDiaBP" to avgDiaBP,
+                        "clinicSysBP" to clinicSysBP,
+                        "clinicDiaBP" to clinicDiaBP,
+                        "scanRecordCount" to finalRows,
+                        "validDayIndices" to validDayIndices.distinct()
+                    )
+                } else{
+                    visit = hashMapOf(
+                        "date" to LocalDateTime.now()
+                            .format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")),
+                        "homeSysBPTarget" to homeSysBPTarget,
+                        "homeDiaBPTarget" to homeDiaBPTarget,
+                        "clinicSysBPTarget" to clinicSysBPTarget,
+                        "clinicDiaBPTarget" to clinicDiaBPTarget,
+                        "averageSysBP" to avgSysBP,
+                        "averageDiaBP" to avgDiaBP,
+                        "clinicSysBP" to clinicSysBP,
+                        "clinicDiaBP" to clinicDiaBP,
+                        "scanRecordCount" to finalRows,
+                    )
+                }
 
                 db.collection("patients").document(patientID).collection("visits").add(visit)
                     .addOnSuccessListener {
@@ -1441,13 +1458,6 @@ class VerifyScanActivity : AppCompatActivity() {
             }
         }
 
-        // Collect indices of all valid days
-        for (i in dayReadingsStatus.indices) {
-            if (dayReadingsStatus[i] == 2 && i > 0) {
-                validDayIndices.add(i + 1) // Using 1-based indexing
-            }
-        }
-
         println("Number of Complete Day Readings: ${dayReadingsStatus.count { it == 2 }}")
         println("Number of Incomplete Day Readings: ${dayReadingsStatus.count { it == 1 }}")
         println("Number of Empty Day Readings: ${dayReadingsStatus.count { it == 0 }}")
@@ -1522,6 +1532,13 @@ class VerifyScanActivity : AppCompatActivity() {
 
            for (field in finalDiaBPList) {
                totalDiaBP += field.toInt()
+           }
+
+           // Collect indices of all valid days
+           for (i in dayReadingsStatus.indices) {
+               if (dayReadingsStatus[i] == 2) {
+                   validDayIndices.add(i + 2) // Using 1-based indexing
+               }
            }
 
            avgSysBP = (totalSysBP.toFloat() / finalSysBPList.size).roundToInt()
