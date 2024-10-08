@@ -1661,25 +1661,91 @@ class VerifyScanActivity : AppCompatActivity() {
     }
 
     private fun removeExtraRow(){
-        // Remove rows more than 30 rows that are blank
-        for (index in 29 until sysBPList.size){
-            if (index < sysBPList.size) {
-                if (sysBPList[index] == "" && diaBPList[index] == "") {
-                    sysBPList.removeAt(index)
-                    diaBPList.removeAt(index)
+        if (sevenDay) {
+            // Remove rows more than 30 rows that are blank
+            // Seven day scan since seven day should only have 28 rows but have 2 more rows in case of data manipulation
+            for (index in 29 until sysBPList.size) {
+                if (index < sysBPList.size) {
+                    if (sysBPList[index] == "" && diaBPList[index] == "") {
+                        sysBPList.removeAt(index)
+                        diaBPList.removeAt(index)
+                    }
+                }
+            }
+
+            // Remove rows with -2 and empty spaces
+            // Could use either sysBPList or diaBPList size since they are theorectically the same
+            for (index in 0 until sysBPList.size) {
+                if (index < sysBPList.size) {
+                    if ((sysBPList[index] == "-2" && diaBPList[index] == "") || (sysBPList[index] == "" && diaBPList[index] == "-2")) {
+                        sysBPList.removeAt(index)
+                        diaBPList.removeAt(index)
+                    }
                 }
             }
         }
-
-        // Remove rows with -2 and empty spaces
-        // Could use either sysBPList or diaBPList size since they are theorectically the same
-        for (index in 0 until sysBPList.size){
-            if (index < sysBPList.size) {
-                if ((sysBPList[index] == "-2" && diaBPList[index] == "") || (sysBPList[index] == "" && diaBPList[index] == "-2")) {
-                    sysBPList.removeAt(index)
-                    diaBPList.removeAt(index)
+        else{
+            for (index in 0 until sysBPList.size) {
+                if (index < sysBPList.size) {
+                    if (sysBPList[index] == "" && diaBPList[index] == "") {
+                        sysBPList.removeAt(index)
+                        diaBPList.removeAt(index)
+                    }
                 }
             }
+            for (index in 0 until sysBPListHistory.size) {
+                if (index < sysBPListHistory.size) {
+                    if (sysBPListHistory[index] == "" && diaBPListHistory[index] == "") {
+                        sysBPListHistory.removeAt(index)
+                        diaBPListHistory.removeAt(index)
+                    }
+                }
+            }
+        }
+    }
+
+    // Combine and split lists for "Stepping"
+    private fun shiftStepping(list1: MutableList<String>, list2: MutableList<String>, type: String, index: Int){
+        val combinedNumbers = mutableListOf<String>()
+        val newSysBPList = mutableListOf<String>()
+        val newDiaBPList = mutableListOf<String>()
+
+        // Theoretically size should be the same so use either but just to play safe just make a check
+        while (list1.size != list2.size) {
+            if (list1.size > list2.size) {
+                list2.add("")
+            } else {
+                list1.add("")
+            }
+        }
+
+        for (listIndex in 0 until list1.size){
+            combinedNumbers.add(list1[listIndex])
+            combinedNumbers.add(list2[listIndex])
+        }
+
+        // Add " " in combined list then split
+        if (type == "sys" || type == "sysHistory"){
+            combinedNumbers.add(index * 2, "")
+        } else if (type == "dia" || type == "diaHistory"){
+            combinedNumbers.add(index * 2 + 1, "")
+        }
+
+        combinedNumbers.forEachIndexed { index, value ->
+            if (index % 2 == 0) {
+                newSysBPList.add(value)
+            } else {
+                newDiaBPList.add(value)
+            }
+        }
+
+        if (type == "sysHistory" || type == "diaHistory" ) {
+            sysBPListHistory = newSysBPList
+            diaBPListHistory = newDiaBPList
+        }
+        else if (type == "sys" || type == "dia") {
+            sysBPList = newSysBPList
+            diaBPList = newDiaBPList
         }
     }
 
@@ -2013,12 +2079,14 @@ class VerifyScanActivity : AppCompatActivity() {
             saveStateForUndo()
             val currentRowIndex = binding.rowBPRecordLL.indexOfChild(rowBPRecordLayout)
 
-            // Pushes down
             if (!sevenDay) {
                 if (sysBPListHistory.isNotEmpty()) {
                     if (currentRowIndex >= sysBPListHistory.size) {
                         val newCurrentRowIndex = currentRowIndex - sysBPListHistory.size - 1
+                        // Pushes Down
                         sysBPList.add(newCurrentRowIndex, "")
+                        // Step diagonally
+//                        shiftStepping(sysBPList, diaBPList, "sys", newCurrentRowIndex)
 
                         while (diaBPList.size != sysBPList.size) {
                             if (diaBPList.size > sysBPList.size) {
@@ -2030,6 +2098,7 @@ class VerifyScanActivity : AppCompatActivity() {
                     }
                     else{
                         sysBPListHistory.add(currentRowIndex, "")
+//                        shiftStepping(sysBPListHistory, diaBPListHistory, "sysHistory", currentRowIndex)
 
                         while (diaBPListHistory.size != sysBPListHistory.size) {
                             if (diaBPListHistory.size > sysBPListHistory.size) {
@@ -2042,6 +2111,7 @@ class VerifyScanActivity : AppCompatActivity() {
                 }
                 else {
                     sysBPList.add(currentRowIndex, "")
+//                    shiftStepping(sysBPList, diaBPList, "sys", currentRowIndex)
 
                     while (diaBPList.size != sysBPList.size) {
                         if (diaBPList.size > sysBPList.size) {
@@ -2054,6 +2124,7 @@ class VerifyScanActivity : AppCompatActivity() {
             }
             else {
                 sysBPList.add(currentRowIndex, "")
+//                shiftStepping(sysBPList, diaBPList, "sys", currentRowIndex)
 
                 while (diaBPList.size != sysBPList.size) {
                     if (diaBPList.size > sysBPList.size) {
@@ -2073,12 +2144,10 @@ class VerifyScanActivity : AppCompatActivity() {
                         }
                     }
                 }
-
-                // Remove extra rows from shifting left columns for seven day scan since seven day should only have 28 rows but have 4 more rows in case of data manipulation
-                removeExtraRow()
             }
 
-            // Add Step
+            // Remove extra rows from shifting left columns
+            removeExtraRow()
 
             // Clear the views and fields, then refresh
             binding.rowBPRecordLL.removeAllViews()
@@ -2097,12 +2166,12 @@ class VerifyScanActivity : AppCompatActivity() {
             saveStateForUndo()
             val currentRowIndex = binding.rowBPRecordLL.indexOfChild(rowBPRecordLayout)
 
-            // Pushes down
             if (!sevenDay) {
                 if (diaBPListHistory.isNotEmpty()) {
                     if (currentRowIndex >= diaBPListHistory.size) {
                         val newCurrentRowIndex = currentRowIndex - diaBPListHistory.size - 1
                         diaBPList.add(newCurrentRowIndex, "")
+//                        shiftStepping(sysBPList, diaBPList, "dia", newCurrentRowIndex)
 
                         while (diaBPList.size != sysBPList.size) {
                             if (diaBPList.size > sysBPList.size) {
@@ -2114,6 +2183,7 @@ class VerifyScanActivity : AppCompatActivity() {
                     }
                     else{
                         diaBPListHistory.add(currentRowIndex, "")
+//                        shiftStepping(sysBPListHistory, diaBPListHistory, "diaHistory", currentRowIndex)
 
                         while (diaBPListHistory.size != sysBPListHistory.size) {
                             if (diaBPListHistory.size > sysBPListHistory.size) {
@@ -2126,6 +2196,7 @@ class VerifyScanActivity : AppCompatActivity() {
                 }
                 else {
                     diaBPList.add(currentRowIndex, "")
+//                    shiftStepping(sysBPList, diaBPList, "dia", currentRowIndex)
 
                     while (diaBPList.size != sysBPList.size) {
                         if (diaBPList.size > sysBPList.size) {
@@ -2138,6 +2209,7 @@ class VerifyScanActivity : AppCompatActivity() {
             }
             else {
                 diaBPList.add(currentRowIndex, "")
+//                shiftStepping(sysBPList, diaBPList, "dia", currentRowIndex)
 
                 while (diaBPList.size != sysBPList.size) {
                     if (diaBPList.size > sysBPList.size) {
@@ -2156,10 +2228,9 @@ class VerifyScanActivity : AppCompatActivity() {
                         }
                     }
                 }
-                removeExtraRow()
             }
 
-            // Add step
+            removeExtraRow()
 
             binding.rowBPRecordLL.removeAllViews()
             sysBPFields.clear()
