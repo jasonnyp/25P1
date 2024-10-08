@@ -1826,6 +1826,7 @@ class VerifyScanActivity : AppCompatActivity() {
             saveStateForUndo()
             println("Swapping values...")
 
+            // Since swap already calls undo, disable textwatcher so it does not call undo again when text changed
             isSwappingValues = true
 
             val tempValue = sysBPTIET.text.toString()
@@ -2008,6 +2009,7 @@ class VerifyScanActivity : AppCompatActivity() {
             saveStateForUndo()
             val currentRowIndex = binding.rowBPRecordLL.indexOfChild(rowBPRecordLayout)
 
+            // Pushes down
             if (!sevenDay) {
                 if (sysBPListHistory.isNotEmpty()) {
                     if (currentRowIndex >= sysBPListHistory.size) {
@@ -2072,6 +2074,8 @@ class VerifyScanActivity : AppCompatActivity() {
                 removeExtraRow()
             }
 
+            // Add Step
+
             // Clear the views and fields, then refresh
             binding.rowBPRecordLL.removeAllViews()
             sysBPFields.clear()
@@ -2089,6 +2093,7 @@ class VerifyScanActivity : AppCompatActivity() {
             saveStateForUndo()
             val currentRowIndex = binding.rowBPRecordLL.indexOfChild(rowBPRecordLayout)
 
+            // Pushes down
             if (!sevenDay) {
                 if (diaBPListHistory.isNotEmpty()) {
                     if (currentRowIndex >= diaBPListHistory.size) {
@@ -2149,6 +2154,8 @@ class VerifyScanActivity : AppCompatActivity() {
                 }
                 removeExtraRow()
             }
+
+            // Add step
 
             binding.rowBPRecordLL.removeAllViews()
             sysBPFields.clear()

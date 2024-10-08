@@ -51,6 +51,8 @@ class ScanActivity : AppCompatActivity() {
     private var boundingBox: Rect = Rect(0,0,0,0)
     private var sevenDay: Boolean = false
     private var showContinueScan: Boolean = false
+    private var clinicSysBP: String? = null
+    private var clinicDiaBP: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -315,6 +317,7 @@ class ScanActivity : AppCompatActivity() {
         var secondBoundingBox = Rect(0, 0, 0, 0)
         var bottom: Int? = null
         for (block in blocks) {
+            var accumuatedWords: String = ""
             totalCount += 1
             println("Bounding block number $totalCount")
             for (paragraph in block.paragraphs) {
@@ -333,6 +336,14 @@ class ScanActivity : AppCompatActivity() {
                             secondBoundingBox = block.boundingBox!!
                         }
                     }
+                    if (accumuatedWords == "Clinic/OfficeBP:"){
+                        val targetClinicBP = word.text.split("/").toTypedArray()
+                        if (targetClinicBP.size == 2) {
+                            clinicSysBP = targetClinicBP[0]
+                            clinicDiaBP = targetClinicBP[1]
+                        }
+                    }
+                    accumuatedWords += word.text
                 }
             }
             if (block.boundingBox != null) {
@@ -381,8 +392,9 @@ class ScanActivity : AppCompatActivity() {
         sysBPList: MutableList<String>,
         diaBPList: MutableList<String>
     ) {
-        val correctedNumbers = mutableListOf<String>()
+        var correctedNumbers = mutableListOf<String>()
 
+        // Smart Algorithm
         var i = 0
         while (i < numbers.size) {
             val systolic = numbers.getOrNull(i)
@@ -401,17 +413,10 @@ class ScanActivity : AppCompatActivity() {
                     } else if (systolic.toInt() in 20..160 && diastolic.toInt() in 50..220) {
                         correctedNumbers.add(diastolic)
                         correctedNumbers.add(systolic)
-                    } else if (systolic.toInt() !in 50..220) {
-                        correctedNumbers.add("-1")
-                        correctedNumbers.add(diastolic)
-                    } else if (diastolic.toInt() !in 20..160) {
-                        correctedNumbers.add(systolic)
-                        correctedNumbers.add("-1")
                     } else {
-                        correctedNumbers.add("-1")
-                        correctedNumbers.add("-1")
+                        correctedNumbers.add(systolic)
+                        correctedNumbers.add(diastolic)
                     }
-                    // Maybe remove 2 last if statements and make last else to just add systolic and diastolic if don't want to filter
                 }
                 else{
                     correctedNumbers.add(systolic)
@@ -427,6 +432,9 @@ class ScanActivity : AppCompatActivity() {
 
             i += 2
         }
+
+        // "Dumb Algorithm" Remove algorithm on top
+//        correctedNumbers = numbers.toMutableList()
 
         if (correctedNumbers.size % 2 != 0) {
             correctedNumbers.add("-1")
@@ -445,6 +453,10 @@ class ScanActivity : AppCompatActivity() {
         val bundle = Bundle().apply {
             putStringArrayList("sysBPList", ArrayList(sysBPList))
             putStringArrayList("diaBPList", ArrayList(diaBPList))
+            if (clinicSysBP != null && clinicDiaBP != null) {
+                putString("clinicSysBP", clinicSysBP)
+                putString("clinicDiaBP", clinicDiaBP)
+            }
             putBoolean("sevenDay", sevenDay)
             putBoolean("showProgressDialog", true)
             intent.extras?.let {
