@@ -135,6 +135,7 @@ class HistoryActivity : AppCompatActivity(), HistoryAdapter.OnItemClickListener 
                         val clinicDiaBPTarget = document.get("clinicDiaBPTarget") as? Long
                         val clinicSysBP = document.get("clinicSysBP") as? Long
                         val clinicDiaBP = document.get("clinicDiaBP") as? Long
+                        val validDayIndices = document.get("validDayIndices") as? List<*>
                         var scanRecordCount = document.get("scanRecordCount") as? Long
                         if (scanRecordCount == null) {
                             scanRecordCount = 0
@@ -151,7 +152,8 @@ class HistoryActivity : AppCompatActivity(), HistoryAdapter.OnItemClickListener 
                                 clinicDiaBPTarget,
                                 clinicSysBP,
                                 clinicDiaBP,
-                                scanRecordCount
+                                scanRecordCount,
+                                validDayIndices
                             )
                         )
                     }

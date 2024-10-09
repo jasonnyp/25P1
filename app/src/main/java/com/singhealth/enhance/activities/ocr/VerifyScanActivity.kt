@@ -460,6 +460,7 @@ class VerifyScanActivity : AppCompatActivity() {
                 val maxFilteredRows = maxOf(filteredSysBPList.size, filteredDiaBPList.size)
                 val maxHistoryRows = maxOf(sysBPListHistory.size, diaBPListHistory.size)
                 val finalRows = maxHistoryRows + maxFilteredRows
+                val visit: HashMap<String, *>
                 if (sevenDay) {
                     calcSevenDayAvgBP()
                 } else {
@@ -469,20 +470,36 @@ class VerifyScanActivity : AppCompatActivity() {
                 clinicDiaBP = binding.verifyClinicDia.text.toString().toInt()
 
                 // TODO: Save record into database
-                val visit = hashMapOf(
-                    "date" to LocalDateTime.now()
-                        .format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")),
-                    "homeSysBPTarget" to homeSysBPTarget,
-                    "homeDiaBPTarget" to homeDiaBPTarget,
-                    "clinicSysBPTarget" to clinicSysBPTarget,
-                    "clinicDiaBPTarget" to clinicDiaBPTarget,
-                    "averageSysBP" to avgSysBP,
-                    "averageDiaBP" to avgDiaBP,
-                    "clinicSysBP" to clinicSysBP,
-                    "clinicDiaBP" to clinicDiaBP,
-                    "scanRecordCount" to finalRows,
-                    "validDayIndices" to validDayIndices.distinct()
-                )
+                if (validDayIndices.isNotEmpty()) {
+                    visit = hashMapOf(
+                        "date" to LocalDateTime.now()
+                            .format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")),
+                        "homeSysBPTarget" to homeSysBPTarget,
+                        "homeDiaBPTarget" to homeDiaBPTarget,
+                        "clinicSysBPTarget" to clinicSysBPTarget,
+                        "clinicDiaBPTarget" to clinicDiaBPTarget,
+                        "averageSysBP" to avgSysBP,
+                        "averageDiaBP" to avgDiaBP,
+                        "clinicSysBP" to clinicSysBP,
+                        "clinicDiaBP" to clinicDiaBP,
+                        "scanRecordCount" to finalRows,
+                        "validDayIndices" to validDayIndices.distinct().reversed()
+                    )
+                } else{
+                    visit = hashMapOf(
+                        "date" to LocalDateTime.now()
+                            .format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")),
+                        "homeSysBPTarget" to homeSysBPTarget,
+                        "homeDiaBPTarget" to homeDiaBPTarget,
+                        "clinicSysBPTarget" to clinicSysBPTarget,
+                        "clinicDiaBPTarget" to clinicDiaBPTarget,
+                        "averageSysBP" to avgSysBP,
+                        "averageDiaBP" to avgDiaBP,
+                        "clinicSysBP" to clinicSysBP,
+                        "clinicDiaBP" to clinicDiaBP,
+                        "scanRecordCount" to finalRows,
+                    )
+                }
 
                 db.collection("patients").document(patientID).collection("visits").add(visit)
                     .addOnSuccessListener {
@@ -1409,6 +1426,8 @@ class VerifyScanActivity : AppCompatActivity() {
                 } else if (currentDayReadings.isEmpty()) {
                     dayReadingsStatus.add(0)
                 }
+                // Needed to locate for validConsecutiveDays
+                dayReadings.add(emptyList())
                 currentDayReadings.clear()
             }
         }
@@ -1430,21 +1449,19 @@ class VerifyScanActivity : AppCompatActivity() {
                 validConsecutiveDays.add(dayReadings[i])
                 validConsecutiveDays.add(dayReadings[i - 1])
                 validConsecutiveDays.add(dayReadings[i - 2])
+                // Collect indices of all valid days, why +2 for each under? cus day 1 was removed earlier so +1 so list size is 6 instead of 7, and index starts with 0 instead of 1 so + another 1
+                validDayIndices.add(i + 2)
+                validDayIndices.add(i + 1)
+                validDayIndices.add(i)
 
                 // Continue checking for more sets of consecutive full days in reverse
                 var j = i - 3
                 while (j >= 0 && dayReadingsStatus[j] == 2) {
                     validConsecutiveDays.add(dayReadings[j])
+                    validDayIndices.add(j + 2)
                     j--
                 }
                 break
-            }
-        }
-
-        // Collect indices of all valid days
-        for (i in dayReadingsStatus.indices) {
-            if (dayReadingsStatus[i] == 2 && i > 0) {
-                validDayIndices.add(i + 1) // Using 1-based indexing
             }
         }
 
@@ -1460,48 +1477,50 @@ class VerifyScanActivity : AppCompatActivity() {
            val filteredDiaBPList = mutableListOf<String>()
 
            for (day in validConsecutiveDays) {
-               val (morningSysBP1, morningDiaBP1) = day[0]
-               val (morningSysBP2, morningDiaBP2) = day[1]
-               val (eveningSysBP1, eveningDiaBP1) = day[2]
-               val (eveningSysBP2, eveningDiaBP2) = day[3]
+               if (day.isNotEmpty()) {
+                   val (morningSysBP1, morningDiaBP1) = day[0]
+                   val (morningSysBP2, morningDiaBP2) = day[1]
+                   val (eveningSysBP1, eveningDiaBP1) = day[2]
+                   val (eveningSysBP2, eveningDiaBP2) = day[3]
 
-               println("Processing Day Readings:")
-               println("Morning Readings: $morningSysBP1, $morningDiaBP1; $morningSysBP2, $morningDiaBP2")
-               println("Evening Readings: $eveningSysBP1, $eveningDiaBP1; $eveningSysBP2, $eveningDiaBP2")
+                   println("Processing Day Readings:")
+                   println("Morning Readings: $morningSysBP1, $morningDiaBP1; $morningSysBP2, $morningDiaBP2")
+                   println("Evening Readings: $eveningSysBP1, $eveningDiaBP1; $eveningSysBP2, $eveningDiaBP2")
 
-               val chosenMorningSysBP =
-                   if (morningSysBP1.toIntOrNull() ?: 0 >= targetHomeSysBP.toInt() || morningDiaBP1.toIntOrNull() ?: 0 >= targetHomeDiaBP.toInt()) {
-                       morningSysBP2
-                   } else {
-                       morningSysBP1
-                   }
-               val chosenMorningDiaBP =
-                   if (morningSysBP1.toIntOrNull() ?: 0 >= targetHomeSysBP.toInt() || morningDiaBP1.toIntOrNull() ?: 0 >= targetHomeDiaBP.toInt()) {
-                       morningDiaBP2
-                   } else {
-                       morningDiaBP1
-                   }
+                   val chosenMorningSysBP =
+                       if (morningSysBP1.toIntOrNull() ?: 0 >= targetHomeSysBP.toInt() || morningDiaBP1.toIntOrNull() ?: 0 >= targetHomeDiaBP.toInt()) {
+                           morningSysBP2
+                       } else {
+                           morningSysBP1
+                       }
+                   val chosenMorningDiaBP =
+                       if (morningSysBP1.toIntOrNull() ?: 0 >= targetHomeSysBP.toInt() || morningDiaBP1.toIntOrNull() ?: 0 >= targetHomeDiaBP.toInt()) {
+                           morningDiaBP2
+                       } else {
+                           morningDiaBP1
+                       }
 
-               val chosenEveningSysBP =
-                   if (eveningSysBP1.toIntOrNull() ?: 0 >= targetHomeSysBP.toInt() || eveningDiaBP1.toIntOrNull() ?: 0 >= targetHomeDiaBP.toInt()) {
-                       eveningSysBP2
-                   } else {
-                       eveningSysBP1
-                   }
-               val chosenEveningDiaBP =
-                   if (eveningSysBP1.toIntOrNull() ?: 0 >= targetHomeSysBP.toInt() || eveningDiaBP1.toIntOrNull() ?: 0 >= targetHomeDiaBP.toInt()) {
-                       eveningDiaBP2
-                   } else {
-                       eveningDiaBP1
-                   }
+                   val chosenEveningSysBP =
+                       if (eveningSysBP1.toIntOrNull() ?: 0 >= targetHomeSysBP.toInt() || eveningDiaBP1.toIntOrNull() ?: 0 >= targetHomeDiaBP.toInt()) {
+                           eveningSysBP2
+                       } else {
+                           eveningSysBP1
+                       }
+                   val chosenEveningDiaBP =
+                       if (eveningSysBP1.toIntOrNull() ?: 0 >= targetHomeSysBP.toInt() || eveningDiaBP1.toIntOrNull() ?: 0 >= targetHomeDiaBP.toInt()) {
+                           eveningDiaBP2
+                       } else {
+                           eveningDiaBP1
+                       }
 
-               filteredSysBPList.add(chosenMorningSysBP)
-               filteredDiaBPList.add(chosenMorningDiaBP)
-               filteredSysBPList.add(chosenEveningSysBP)
-               filteredDiaBPList.add(chosenEveningDiaBP)
+                   filteredSysBPList.add(chosenMorningSysBP)
+                   filteredDiaBPList.add(chosenMorningDiaBP)
+                   filteredSysBPList.add(chosenEveningSysBP)
+                   filteredDiaBPList.add(chosenEveningDiaBP)
 
-               println("Chosen Morning Readings: $chosenMorningSysBP, $chosenMorningDiaBP")
-               println("Chosen Evening Readings: $chosenEveningSysBP, $chosenEveningDiaBP")
+                   println("Chosen Morning Readings: $chosenMorningSysBP, $chosenMorningDiaBP")
+                   println("Chosen Evening Readings: $chosenEveningSysBP, $chosenEveningDiaBP")
+               }
            }
 
            val finalSysBPList = filteredSysBPList.toMutableList()
@@ -1538,20 +1557,22 @@ class VerifyScanActivity : AppCompatActivity() {
            val DiaBPList = mutableListOf<String>()
 
            for (day in dayReadings) {
-               val (morningSysBP1, morningDiaBP1) = day[0]
-               val (morningSysBP2, morningDiaBP2) = day[1]
-               val (eveningSysBP1, eveningDiaBP1) = day[2]
-               val (eveningSysBP2, eveningDiaBP2) = day[3]
+               if (day.isNotEmpty()) {
+                   val (morningSysBP1, morningDiaBP1) = day[0]
+                   val (morningSysBP2, morningDiaBP2) = day[1]
+                   val (eveningSysBP1, eveningDiaBP1) = day[2]
+                   val (eveningSysBP2, eveningDiaBP2) = day[3]
 
-               SysBPList.add(morningSysBP1)
-               SysBPList.add(morningSysBP2)
-               SysBPList.add(eveningSysBP1)
-               SysBPList.add(eveningSysBP2)
+                   SysBPList.add(morningSysBP1)
+                   SysBPList.add(morningSysBP2)
+                   SysBPList.add(eveningSysBP1)
+                   SysBPList.add(eveningSysBP2)
 
-               DiaBPList.add(morningDiaBP1)
-               DiaBPList.add(morningDiaBP2)
-               DiaBPList.add(eveningDiaBP1)
-               DiaBPList.add(eveningDiaBP2)
+                   DiaBPList.add(morningDiaBP1)
+                   DiaBPList.add(morningDiaBP2)
+                   DiaBPList.add(eveningDiaBP1)
+                   DiaBPList.add(eveningDiaBP2)
+               }
            }
 
            for (day in incompleteDayReadings) {

@@ -76,9 +76,6 @@ class RecommendationActivity : AppCompatActivity() {
             patientID = patientSharedPreferences.getString("patientID", null)
         }
 
-        val averageDays = validDaysList.joinToString(", ")
-        binding.averageDaysTextView.text = getString(R.string.average_days_message, averageDays)
-
         val avgBPBundle = intent.extras
         avgSysBP = avgBPBundle!!.getInt("avgSysBP").toLong()
         avgDiaBP = avgBPBundle.getInt("avgDiaBP").toLong()
@@ -106,7 +103,7 @@ class RecommendationActivity : AppCompatActivity() {
                     val clinicDiaBPTarget = document.get("clinicDiaBPTarget") as? Long
                     val clinicSysBP = document.get("clinicSysBP") as? Long
                     val clinicDiaBP = document.get("clinicDiaBP") as? Long
-                    val validDayIndices = document.getString("validDayIndices")
+                    val validDayIndices = document.get("validDayIndices") as? List<*>
                     var scanRecordCount = document.get("scanRecordCount") as? Long
                     if (scanRecordCount == null) {
                         scanRecordCount = 0
@@ -123,10 +120,10 @@ class RecommendationActivity : AppCompatActivity() {
                             clinicDiaBPTarget,
                             clinicSysBP,
                             clinicDiaBP,
-                            scanRecordCount
+                            scanRecordCount,
+                            validDayIndices
                         )
                     )
-                    validDaysList = validDayIndices?.split(", ") ?: emptyList()
                 }
 
                 sortedHistory = history.sortedByDescending { it.date }
@@ -135,6 +132,13 @@ class RecommendationActivity : AppCompatActivity() {
                 val patientTargetDia: Long = sortedHistory[bundlePosition].homeDiaBPTarget!!
                 val clinicTargetSys: Long = sortedHistory[bundlePosition].clinicSysBPTarget!!
                 val clinicTargetDia: Long = sortedHistory[bundlePosition].clinicDiaBPTarget!!
+                if(sortedHistory[bundlePosition].validDayIndices != null) {
+                    validDaysList =
+                        (sortedHistory[bundlePosition].validDayIndices as List<String>?)!!
+
+                } else{
+                    validDaysList = emptyList()
+                }
                 bundleRecordCount = avgBPBundle.getInt("scanRecordCount")
 
                 binding.recommendationHeader.text =
@@ -147,7 +151,14 @@ class RecommendationActivity : AppCompatActivity() {
                 if (binding.insufficientRecordMessage.text == "") {
                     binding.insufficientRecordMessage.visibility = View.GONE
                 }
-                // binding.averageDaysTextView.text = getString(R.string.average_days_message, averageDays)
+
+                if (validDaysList.isNotEmpty()) {
+                    val averageDays = validDaysList.joinToString(", ")
+                    binding.averageDaysTextView.text =
+                        getString(R.string.average_days_message, averageDays)
+                } else{
+                    binding.averageDaysTextView.visibility = View.GONE
+                }
 
                 binding.targetHomeSysBPTV.text = patientTargetSys.toString()
                 binding.targetHomeDiaBPTV.text = patientTargetDia.toString()
