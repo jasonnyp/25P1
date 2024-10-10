@@ -98,7 +98,8 @@ class VerifyScanActivity : AppCompatActivity() {
 
     private val validDayIndices = mutableListOf<Int>() // To track the days used for calculating average
 
-    private val undoStack = mutableListOf<Pair<MutableList<String>, MutableList<String>>>()
+    private val undoStackOld = mutableListOf<Pair<MutableList<String>, MutableList<String>>>()
+    private val undoStackCurrent = mutableListOf<Pair<MutableList<String>, MutableList<String>>>()
     private val maxUndoStackSize = 10
 
     private val db = Firebase.firestore
@@ -843,17 +844,19 @@ class VerifyScanActivity : AppCompatActivity() {
         println("Current diaBPList: $diaBPList")
 
         // Check if the current state is different from the last saved state
-        if (undoStack.isEmpty() || !listsAreEqual(undoStack.last().first, sysBPList) || !listsAreEqual(undoStack.last().second, diaBPList)) {
-            if (undoStack.size >= maxUndoStackSize) {
+        if (undoStackCurrent.isEmpty() || !listsAreEqual(undoStackCurrent.last().first, sysBPList) || !listsAreEqual(undoStackCurrent.last().second, diaBPList) || undoStackOld.isEmpty() || !listsAreEqual(undoStackOld.last().first, sysBPListHistory) || !listsAreEqual(undoStackOld.last().second, diaBPListHistory)) {
+            if (undoStackCurrent.size >= maxUndoStackSize) {
                 println("Undo stack is full. Removing oldest state.")
-                undoStack.removeAt(0)
+                undoStackCurrent.removeAt(0)
+                undoStackOld.removeAt(0)
             }
             println("Adding current state to undo stack.")
-            undoStack.add(Pair(sysBPList.toMutableList(), diaBPList.toMutableList()))
-        } else {
+            undoStackCurrent.add(Pair(sysBPList.toMutableList(), diaBPList.toMutableList()))
+            undoStackOld.add(Pair(sysBPListHistory.toMutableList(), diaBPListHistory.toMutableList()))
+        }  else {
             println("Current state is the same as the last state in the undo stack. Not adding.")
         }
-        println("Undo stack size after save: ${undoStack.size}")
+        println("Undo stack size after save: ${undoStackOld.size}")
     }
 
     private fun listsAreEqual(list1: MutableList<String>, list2: MutableList<String>): Boolean {
@@ -862,20 +865,30 @@ class VerifyScanActivity : AppCompatActivity() {
 
     fun undo() {
         println("Performing undo...")
-        if (undoStack.isNotEmpty()) {
+        if (undoStackCurrent.isNotEmpty() || undoStackOld.isNotEmpty()) {
             // Remove the last state from the undo stack after restoring
-            val lastState = undoStack.removeAt(undoStack.size - 1)
+            val lastStateCurrent = undoStackCurrent.removeAt(undoStackCurrent.size - 1)
+            val lastStateOld = undoStackOld.removeAt(undoStackOld.size - 1)
             println("Restoring state from undo stack...")
-            println("Last saved sysBPList: ${lastState.first}")
-            println("Last saved diaBPList: ${lastState.second}")
+            println("Last saved sysBPList: ${lastStateCurrent.first}")
+            println("Last saved diaBPList: ${lastStateCurrent.second}")
+            println("Last saved sysBPListHistory: ${lastStateOld.first}")
+            println("Last saved diaBPListHistory: ${lastStateOld.second}")
 
             sysBPList.clear()
-            sysBPList.addAll(lastState.first)
+            sysBPList.addAll(lastStateCurrent.first)
             diaBPList.clear()
-            diaBPList.addAll(lastState.second)
+            diaBPList.addAll(lastStateCurrent.second)
+
+            sysBPListHistory.clear()
+            sysBPListHistory.addAll(lastStateOld.first)
+            diaBPListHistory.clear()
+            diaBPListHistory.addAll(lastStateOld.second)
 
             println("Restored sysBPList: $sysBPList")
             println("Restored diaBPList: $diaBPList")
+            println("Restored sysBPListHistory: $sysBPListHistory")
+            println("Restored diaBPListHistory: $diaBPListHistory")
             Toast.makeText(this, "Undo successful", Toast.LENGTH_SHORT).show()
             refreshViews()
         } else {
