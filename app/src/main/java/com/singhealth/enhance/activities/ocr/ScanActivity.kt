@@ -342,6 +342,7 @@ class ScanActivity : AppCompatActivity() {
                             clinicSysBP = targetClinicBP[0]
                             clinicDiaBP = targetClinicBP[1]
                         }
+                        println("Clinic BP detected ${word.text}")
                     }
                     accumuatedWords += word.text
                 }

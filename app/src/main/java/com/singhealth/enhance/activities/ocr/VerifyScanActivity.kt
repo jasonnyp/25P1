@@ -1449,7 +1449,7 @@ class VerifyScanActivity : AppCompatActivity() {
                 validConsecutiveDays.add(dayReadings[i])
                 validConsecutiveDays.add(dayReadings[i - 1])
                 validConsecutiveDays.add(dayReadings[i - 2])
-                // Collect indices of all valid days, why +2 for each under? cus day 1 was removed earlier so +1 so list size is 6 instead of 7, and index starts with 0 instead of 1 so + another 1
+                // Collect indices of all valid days, why +2 for each under? +1 cus day 1 was removed earlier so list size is 6 instead of 7, and index starts with 0 instead of 1 so + another 1
                 validDayIndices.add(i + 2)
                 validDayIndices.add(i + 1)
                 validDayIndices.add(i)
@@ -2317,20 +2317,38 @@ class VerifyScanActivity : AppCompatActivity() {
                                                 "targetHomeDia" to AESEncryption().encrypt(binding.homeTargetDia.text.toString()),)
                             docRef.set(data, SetOptions.merge())
 
+                            // Updates UI to hide options and show view
                             binding.editHomeBPLayout.visibility = View.VISIBLE
                             binding.verifyEditHomeBPTarget.visibility = View.GONE
                             binding.verifyEditHomeBPTextFields.visibility = View.GONE
                             binding.homeBPTargetTV.visibility = View.VISIBLE
 
+                            // Updates components
                             homeSysBPTarget = binding.homeTargetSys.text.toString().toInt()
                             homeDiaBPTarget = binding.homeTargetDia.text.toString().toInt()
+
+                            // Updates UI to show updated value
                             binding.verifyHomeTargetSys.text = homeSysBPTarget.toString()
                             binding.verifyHomeTargetDia.text = homeDiaBPTarget.toString()
+
+                            // Updates hidden view to save data into firebase when clicked on 7 day calc
                             binding.homeBPTargetTV.text = String.format(
                                 "%s / %s",
                                 homeSysBPTarget.toString(),
                                 homeDiaBPTarget.toString()
                             )
+
+                            // Updates the values used for comparison in 7 day calc
+                            targetHomeSysBP = homeSysBPTarget.toString()
+                            targetHomeDiaBP = homeDiaBPTarget.toString()
+
+                            // Updates the values stored in secured shared preferences
+                            SecureSharedPreferences.getSharedPreferences(applicationContext)
+                                .edit()
+                                .putString("targetHomeSysBP", targetHomeSysBP)
+                                .putString("targetHomeDiaBP", targetHomeDiaBP)
+                                .apply()
+
                             progressDialog.dismiss()
                         }
                         else{
@@ -2379,13 +2397,25 @@ class VerifyScanActivity : AppCompatActivity() {
 
                             clinicSysBPTarget = binding.clinicTargetSys.text.toString().toInt()
                             clinicDiaBPTarget = binding.clinicTargetDia.text.toString().toInt()
+
                             binding.verifyClinicTargetSys.text = clinicSysBPTarget.toString()
                             binding.verifyClinicTargetDia.text = clinicDiaBPTarget.toString()
+
                             binding.clinicBPTargetTV.text = String.format(
                                 "%s / %s",
                                 clinicSysBPTarget.toString(),
                                 clinicDiaBPTarget.toString()
                             )
+
+                            targetClinicSysBP = clinicSysBPTarget.toString()
+                            targetClinicDiaBP = clinicDiaBPTarget.toString()
+
+                            SecureSharedPreferences.getSharedPreferences(applicationContext)
+                                .edit()
+                                .putString("targetClinicSysBP", targetClinicSysBP)
+                                .putString("targetClinicDiaBP", targetClinicDiaBP)
+                                .apply()
+
                             progressDialog.dismiss()
                         }
                         else{
