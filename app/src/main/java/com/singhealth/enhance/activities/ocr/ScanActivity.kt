@@ -37,6 +37,7 @@ import com.singhealth.enhance.activities.validation.patientNotFoundInSessionErro
 import com.singhealth.enhance.databinding.ActivityScanBinding
 import com.singhealth.enhance.security.AESEncryption
 import com.singhealth.enhance.security.SecureSharedPreferences
+import kotlin.math.abs
 import kotlin.math.max
 
 class ScanActivity : AppCompatActivity() {
@@ -210,6 +211,7 @@ class ScanActivity : AppCompatActivity() {
 
         ocrEngine.processImage(imageToProcess)
             .addOnSuccessListener { firebaseVisionDocumentText ->
+                // Used here to detect words for the auto crop box
                 extractWordsFromBlocks(firebaseVisionDocumentText.blocks)
                 startCameraWithUri()
             }
@@ -230,7 +232,6 @@ class ScanActivity : AppCompatActivity() {
                     ),
                 ),
             )
-            println("Test $boundingBox")
         } else{
             customCroppedImage.launch(
                 CropImageContractOptions(
@@ -301,6 +302,7 @@ class ScanActivity : AppCompatActivity() {
             progressDialog.dismiss()
             ocrTextErrorDialog(this)
         } else {
+            // Return list of words from the function
             val words = extractWordsFromBlocks(blocks)
             println("Scanned words:")
             words.forEachIndexed { index, word ->
@@ -382,6 +384,8 @@ class ScanActivity : AppCompatActivity() {
                         secondOrientationBoundingBox = block.boundingBox!!
                         println("Second Orientation Bounding Box:$secondOrientationBoundingBox")
                     }
+
+                    // Get word list for each day to detect if there are missing values
                 }
             }
 
@@ -427,6 +431,7 @@ class ScanActivity : AppCompatActivity() {
         // Comparison to detect the direction
         if (firstBoundingBox != Rect(0, 0, 0, 0) && secondBoundingBox != Rect(0, 0, 0, 0)) {
             println("Orientation:$orientation")
+            // Comparison in regards to orientation of image flaws: could be vertical picture taken in landscape
             if (orientation == "Vertical"){
                 if (firstOrientationBoundingBox.top < secondOrientationBoundingBox.top) {
                     direction = "Top"
@@ -434,12 +439,24 @@ class ScanActivity : AppCompatActivity() {
                     direction = "Down"
                 }
             } else if (orientation == "Horizontal") {
-                if (firstOrientationBoundingBox.left > secondOrientationBoundingBox.left) {
-                    direction = "Right"
-                } else if (firstOrientationBoundingBox.left < secondOrientationBoundingBox.left) {
+                if (firstOrientationBoundingBox.left < secondOrientationBoundingBox.left) {
                     direction = "Left"
+                } else if (firstOrientationBoundingBox.left > secondOrientationBoundingBox.left) {
+                    direction = "Right"
                 }
             }
+
+            // Comparison in regards to difference in distances flaws: uses hardcoded values which means the difference changes depending on how near/far its taken
+            // Further the image, the difference will be lesser
+//            if (firstOrientationBoundingBox.left < secondOrientationBoundingBox.left && abs(firstOrientationBoundingBox.left - secondOrientationBoundingBox.left) > 300){
+//                direction = "Left"
+//            } else if (firstOrientationBoundingBox.top < secondOrientationBoundingBox.top && abs(firstOrientationBoundingBox.top - secondOrientationBoundingBox.top) > 300){
+//                direction = "Top"
+//            } else if (firstOrientationBoundingBox.left > secondOrientationBoundingBox.left && abs(firstOrientationBoundingBox.left - secondOrientationBoundingBox.left) > 300){
+//                direction = "Right"
+//            } else if (firstOrientationBoundingBox.top > secondOrientationBoundingBox.top && abs(firstOrientationBoundingBox.top - secondOrientationBoundingBox.top) > 300){
+//                direction = "Down"
+//            }
         }
 
         // Setting the bounding box to be used for the autocrop library
