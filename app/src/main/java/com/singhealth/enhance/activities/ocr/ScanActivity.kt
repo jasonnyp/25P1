@@ -4,6 +4,7 @@ import android.Manifest
 import android.app.ProgressDialog
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.BitmapFactory
 import android.graphics.Rect
 import android.net.Uri
 import android.os.Bundle
@@ -19,7 +20,6 @@ import com.canhub.cropper.CropImageContract
 import com.canhub.cropper.CropImageContractOptions
 import com.canhub.cropper.CropImageOptions
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.firebase.ktx.Firebase
 import com.google.firebase.ml.vision.FirebaseVision
 import com.google.firebase.ml.vision.common.FirebaseVisionImage
 import com.google.firebase.ml.vision.document.FirebaseVisionCloudDocumentRecognizerOptions
@@ -38,7 +38,6 @@ import com.singhealth.enhance.databinding.ActivityScanBinding
 import com.singhealth.enhance.security.AESEncryption
 import com.singhealth.enhance.security.SecureSharedPreferences
 import kotlin.math.max
-import kotlin.math.min
 
 class ScanActivity : AppCompatActivity() {
     private lateinit var binding: ActivityScanBinding
@@ -48,11 +47,13 @@ class ScanActivity : AppCompatActivity() {
     private lateinit var progressDialog: ProgressDialog
     private lateinit var outputUri: Uri
     private lateinit var patientID: String
+    private lateinit var orientation: String
     private var boundingBox: Rect = Rect(0,0,0,0)
     private var sevenDay: Boolean = false
     private var showContinueScan: Boolean = false
     private var clinicSysBP: String? = null
     private var clinicDiaBP: String? = null
+    private var direction: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -179,6 +180,14 @@ class ScanActivity : AppCompatActivity() {
 
     private fun handleCropImageResultForAutocrop(uri: String) {
         outputUri = Uri.parse(uri.replace("file:", ""))
+        contentResolver.openInputStream(outputUri)?.use { inputStream ->
+            val bitmap = BitmapFactory.decodeStream(inputStream)
+            orientation = if (bitmap.width > bitmap.height){
+                "Horizontal"
+            } else{
+                "Vertical"
+            }
+        }
 
         if (outputUri.toString().isNotEmpty()) {
             processDocumentImageForAutoCrop()
@@ -206,7 +215,7 @@ class ScanActivity : AppCompatActivity() {
             }
             .addOnFailureListener { e ->
                 progressDialog.dismiss()
-                ocrTextErrorDialog(this, )
+                ocrTextErrorDialog(this)
             }
     }
 
@@ -278,7 +287,7 @@ class ScanActivity : AppCompatActivity() {
             }
             .addOnFailureListener { e ->
                 progressDialog.dismiss()
-                ocrTextErrorDialog(this, )
+                ocrTextErrorDialog(this)
             }
     }
 
@@ -313,73 +322,215 @@ class ScanActivity : AppCompatActivity() {
     private fun extractWordsFromBlocks(blocks: List<FirebaseVisionDocumentText.Block>): MutableList<FirebaseVisionDocumentText.Word> {
         val words = mutableListOf<FirebaseVisionDocumentText.Word>()
         var totalCount = 0
+        var searchNextBoundingBox = false
         var firstBoundingBox = Rect(0, 0, 0, 0)
         var secondBoundingBox = Rect(0, 0, 0, 0)
-        var bottom: Int? = null
+        var leftGap: Int? = null
+        var topGap: Int? = null
+        var rightGap: Int? = null
+        var bottomGap: Int? = null
+        var firstOrientationBoundingBox = Rect(0, 0, 0, 0)
+        var secondOrientationBoundingBox= Rect(0, 0, 0, 0)
         for (block in blocks) {
-            var accumuatedWords: String = ""
+            var accumulatedWords = ""
             totalCount += 1
             println("Bounding block number $totalCount")
             for (paragraph in block.paragraphs) {
+                // Used to detect words from cropping and for processDocumentTextBlocks
                 words.addAll(paragraph.words)
 
+                // Used for auto cropping by detection of words
                 for (word in paragraph.words) {
                     println(word.text)
                     if (word.text == "Systolic") {
                         println("Bounding Box ${block.boundingBox} with Systolic")
-                        if (block.boundingBox != null) {
-                            firstBoundingBox = block.boundingBox!!
-                        }
+                        firstBoundingBox = block.boundingBox!!
                     } else if (word.text == "Diastolic") {
                         println("Bounding Box ${block.boundingBox} with Diastolic")
-                        if (block.boundingBox != null) {
-                            secondBoundingBox = block.boundingBox!!
-                        }
+                        secondBoundingBox = block.boundingBox!!
                     }
-                    if (accumuatedWords == "Clinic/OfficeBP:"){
+
+                    // Search clinicBP in this and next bounding Box
+                    if (searchNextBoundingBox){
                         val targetClinicBP = word.text.split("/").toTypedArray()
                         if (targetClinicBP.size == 2) {
                             clinicSysBP = targetClinicBP[0]
                             clinicDiaBP = targetClinicBP[1]
+                            println("Clinic BP detected ${word.text}")
+                        }
+                        searchNextBoundingBox = false
+                    }
+                    if (accumulatedWords == "Clinic/OfficeBP"){
+                        searchNextBoundingBox = true
+                    }
+                    if (accumulatedWords == "Clinic/OfficeBP:"){
+                        val targetClinicBP = word.text.split("/").toTypedArray()
+                        if (targetClinicBP.size == 2) {
+                            clinicSysBP = targetClinicBP[0]
+                            clinicDiaBP = targetClinicBP[1]
+                            searchNextBoundingBox = false
                         }
                         println("Clinic BP detected ${word.text}")
                     }
-                    accumuatedWords += word.text
+                    accumulatedWords += word.text
+
+                    // Get the bounding boxes for comparison of direction for the image
+                    if (accumulatedWords == "DAY1") {
+                        firstOrientationBoundingBox = block.boundingBox!!
+                        println("First Orientation Bounding Box:$firstOrientationBoundingBox")
+                    } else if (accumulatedWords == "DAY7") {
+                        secondOrientationBoundingBox = block.boundingBox!!
+                        println("Second Orientation Bounding Box:$secondOrientationBoundingBox")
+                    }
                 }
             }
-            if (block.boundingBox != null) {
-                println(block.boundingBox!!.bottom)
-                if (bottom == null){
-                    bottom = block.boundingBox!!.bottom
-                }
-                else if (block.boundingBox!!.bottom > bottom){
-                    bottom = block.boundingBox!!.bottom
-                    println("New Bottom:$bottom")
 
+            // Get the last coordinates for all the different orientations
+            if (leftGap == null){
+                leftGap = block.boundingBox!!.left
+                println("First Left:${block.boundingBox!!.left}")
+            }
+            else if (block.boundingBox!!.left < leftGap){
+                leftGap = block.boundingBox!!.left
+                println("New Left:$leftGap")
+
+            }
+            if (topGap == null){
+                topGap = block.boundingBox!!.top
+                println("First Top:${block.boundingBox!!.top}")
+            }
+            else if (block.boundingBox!!.top < topGap){
+                topGap = block.boundingBox!!.top
+                println("New Top:$topGap")
+
+            }
+            if (rightGap == null){
+                rightGap = block.boundingBox!!.right
+                println("First Right:${block.boundingBox!!.right}")
+            }
+            else if (block.boundingBox!!.right > rightGap){
+                rightGap = block.boundingBox!!.right
+                println("New Right:$rightGap")
+
+            }
+            if (bottomGap == null){
+                bottomGap = block.boundingBox!!.bottom
+                println("First Bottom:${block.boundingBox!!.bottom}")
+            }
+            else if (block.boundingBox!!.bottom > bottomGap){
+                bottomGap = block.boundingBox!!.bottom
+                println("New Bottom:$bottomGap")
+
+            }
+        }
+
+        // Comparison to detect the direction
+        if (firstBoundingBox != Rect(0, 0, 0, 0) && secondBoundingBox != Rect(0, 0, 0, 0)) {
+            println("Orientation:$orientation")
+            if (orientation == "Vertical"){
+                if (firstOrientationBoundingBox.top < secondOrientationBoundingBox.top) {
+                    direction = "Top"
+                } else if (firstOrientationBoundingBox.top > secondOrientationBoundingBox.top) {
+                    direction = "Down"
+                }
+            } else if (orientation == "Horizontal") {
+                if (firstOrientationBoundingBox.left > secondOrientationBoundingBox.left) {
+                    direction = "Right"
+                } else if (firstOrientationBoundingBox.left < secondOrientationBoundingBox.left) {
+                    direction = "Left"
                 }
             }
         }
+
+        // Setting the bounding box to be used for the autocrop library
         if (firstBoundingBox != Rect(0, 0, 0, 0) && secondBoundingBox != Rect(0, 0, 0, 0)){
-            if (firstBoundingBox == secondBoundingBox) {
-                val top = firstBoundingBox.top
-                val left = firstBoundingBox.left - 100
-                val right = firstBoundingBox.right + 100
-                if (bottom != null) {
-                    boundingBox.set(left,top,right,bottom)
-                }
-                else{
-                    boundingBox.set(left,top,right,0)
+            println("Direction:$direction")
+            // Autocrop if not rotated
+            if (direction == "Top") {
+                if (firstBoundingBox == secondBoundingBox) {
+                    val left = firstBoundingBox.left - 100
+                    val top = firstBoundingBox.top
+                    val right = firstBoundingBox.right + 100
+                    if (bottomGap != null) {
+                        boundingBox.set(left, top, right, bottomGap)
+                    } else {
+                        boundingBox.set(left, top, right, 0)
+                    }
+                } else {
+                    val left = firstBoundingBox.left - 100
+                    val top = max(firstBoundingBox.top, secondBoundingBox.top)
+                    val right = secondBoundingBox.right + 100
+                    if (bottomGap != null) {
+                        boundingBox.set(left, top, right, bottomGap)
+                    } else {
+                        boundingBox.set(left, top, right, 0)
+                    }
                 }
             }
-            else {
-                val top = max(firstBoundingBox.top, secondBoundingBox.top)
-                val left = firstBoundingBox.left - 100
-                val right = secondBoundingBox.right + 100
-                if (bottom != null) {
-                    boundingBox.set(left,top,right,bottom)
+            // Autocrop box if horizontal-right
+            else if (direction == "Right") {
+                if (firstBoundingBox == secondBoundingBox) {
+                    val top = firstBoundingBox.top - 100
+                    val right = firstBoundingBox.right
+                    val bottom = firstBoundingBox.bottom + 100
+                    if (leftGap != null) {
+                        boundingBox.set(leftGap, top, right, bottom)
+                    } else {
+                        boundingBox.set(0, top, right, 0)
+                    }
+                } else {
+                    val top = firstBoundingBox.top - 100
+                    val right = max(firstBoundingBox.right, secondBoundingBox.right)
+                    val bottom = secondBoundingBox.bottom + 100
+                    if (leftGap != null) {
+                        boundingBox.set(leftGap, top, right, bottom)
+                    } else {
+                        boundingBox.set(0, top, right, bottom)
+                    }
                 }
-                else{
-                    boundingBox.set(left,top,right,0)
+            }
+            // Autocrop box if upside down
+            else if (direction == "Down") {
+                if (firstBoundingBox == secondBoundingBox) {
+                    val left = firstBoundingBox.left - 100
+                    val right = firstBoundingBox.right + 100
+                    val bottom = firstBoundingBox.bottom
+                    if (topGap != null) {
+                        boundingBox.set(left, topGap, right, bottom)
+                    } else {
+                        boundingBox.set(left, 0, right, 0)
+                    }
+                } else {
+                    val left = secondBoundingBox.left - 100
+                    val right = firstBoundingBox.right + 100
+                    val bottom = max(firstBoundingBox.bottom, secondBoundingBox.bottom)
+                    if (topGap != null) {
+                        boundingBox.set(left, topGap, right, bottom)
+                    } else {
+                        boundingBox.set(left, 0, right, 0)
+                    }
+                }
+            }
+            // Autocrop box if horizontal-left
+            else if (direction == "Left") {
+                if (firstBoundingBox == secondBoundingBox) {
+                    val left = firstBoundingBox.left
+                    val top = firstBoundingBox.top - 100
+                    val bottom = firstBoundingBox.bottom + 100
+                    if (rightGap != null) {
+                        boundingBox.set(left, top, rightGap, bottom)
+                    } else {
+                        boundingBox.set(left, top, 0, bottom)
+                    }
+                } else {
+                    val left = max(firstBoundingBox.left, secondBoundingBox.left)
+                    val top = secondBoundingBox.top - 100
+                    val bottom = firstBoundingBox.bottom + 100
+                    if (rightGap != null) {
+                        boundingBox.set(left, top, rightGap, bottom)
+                    } else {
+                        boundingBox.set(left, top, 0, bottom)
+                    }
                 }
             }
         } else{
