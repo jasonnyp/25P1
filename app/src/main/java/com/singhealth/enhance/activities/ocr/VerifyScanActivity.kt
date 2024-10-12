@@ -270,7 +270,6 @@ class VerifyScanActivity : AppCompatActivity() {
         }
 
         if (sevenDay) {
-            findViewById<Button>(R.id.addRowBtn).visibility = View.GONE
             sevenDayCheck()
         } else {
             println("Not seven day check")
@@ -406,9 +405,6 @@ class VerifyScanActivity : AppCompatActivity() {
 
         // Check BP records for errors
         postScanValidation()
-
-        // Add new row
-        binding.addRowBtn.setOnClickListener { addRow(null, null) }
 
         // More options button
         binding.moreOptionsBtn.setOnClickListener {
@@ -1561,10 +1557,7 @@ class VerifyScanActivity : AppCompatActivity() {
 
            println("Days used for average calculation: ${validDayIndices.distinct().joinToString(", ")}")
        }
-       else if (validConsecutiveDays.size < 3 && dayReadings.size >= 1) {
-
-           totalSysBP = 0
-           totalDiaBP = 0
+       else if (validConsecutiveDays.size < 3) {
 
            val SysBPList = mutableListOf<String>()
            val DiaBPList = mutableListOf<String>()
@@ -1611,37 +1604,6 @@ class VerifyScanActivity : AppCompatActivity() {
 
            println("Days used for average calculation: ${validDayIndices.distinct().joinToString(", ")}")
        }
-        else if (dayReadings.size == 0) {
-
-           totalSysBP = 0
-           totalDiaBP = 0
-
-           val SysBPList = mutableListOf<String>()
-           val DiaBPList = mutableListOf<String>()
-
-           for (day in incompleteDayReadings) {
-               for ((sysBP, diaBP) in day) {
-                   SysBPList.add(sysBP)
-                   DiaBPList.add(diaBP)
-               }
-           }
-
-           totalSysBP = 0
-           totalDiaBP = 0
-
-           for (field in SysBPList) {
-               totalSysBP += field.toInt()
-           }
-
-           for (field in DiaBPList) {
-               totalDiaBP += field.toInt()
-           }
-
-           avgSysBP = (totalSysBP.toFloat() / SysBPList.size).roundToInt()
-           avgDiaBP = (totalDiaBP.toFloat() / DiaBPList.size).roundToInt()
-
-           println("Days used for average calculation: ${validDayIndices.distinct().joinToString(", ")}")
-        }
     }
 
     private fun sevenDayCheck() {
@@ -2294,16 +2256,6 @@ class VerifyScanActivity : AppCompatActivity() {
         }
 
         binding.rowBPRecordLL.addView(rowBPRecordLayout)
-
-        // Refresh views so it shows error on empty blanks when clicked on add row for general scan
-        if (!sevenDay){
-            if (sysBP == null && diaBP == null) {
-                binding.rowBPRecordLL.removeAllViews()
-                sysBPFields.clear()
-                diaBPFields.clear()
-                refreshViews()
-            }
-        }
     }
 
     private fun addDivider() {
