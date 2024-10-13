@@ -310,7 +310,7 @@ class ScanActivity : AppCompatActivity() {
             }
 
             val numbers = words.map { it.text }
-                .filter{ it !in "Systolic" && it !in "Diastolic" && it !in "Pulse" && it !in "Morning" && it !in "Evening" && it !in "1st" && it !in "2nd" && it.length in 2..3}
+                .filter{ it.lowercase() !in "systolic" && it.lowercase() !in "diastolic" && it.lowercase() !in "pulse" && it.lowercase() !in "morning" && it.lowercase() !in "evening" && it.lowercase() !in "1st" && it.lowercase() !in "2nd" && it.length in 2..3}
                 .toMutableList()
             println("Filtered numbers: $numbers")
             processNumbers(numbers, sysBPList, diaBPList)
@@ -331,8 +331,6 @@ class ScanActivity : AppCompatActivity() {
         var topGap: Int? = null
         var rightGap: Int? = null
         var bottomGap: Int? = null
-        var firstOrientationBoundingBox = Rect(0, 0, 0, 0)
-        var secondOrientationBoundingBox= Rect(0, 0, 0, 0)
         for (block in blocks) {
             var accumulatedWords = ""
             totalCount += 1
@@ -352,7 +350,7 @@ class ScanActivity : AppCompatActivity() {
                         secondBoundingBox = block.boundingBox!!
                     }
 
-                    // Search clinicBP in this and next bounding Box
+                    // Search clinicBP in this and next bounding Box, flow must be in this order of sequence or would not detect
                     if (searchNextBoundingBox){
                         val targetClinicBP = word.text.split("/").toTypedArray()
                         if (targetClinicBP.size == 2) {
@@ -376,53 +374,44 @@ class ScanActivity : AppCompatActivity() {
                     }
                     accumulatedWords += word.text
 
-                    // Get the bounding boxes for comparison of direction for the image
-                    if (accumulatedWords == "DAY1") {
-                        firstOrientationBoundingBox = block.boundingBox!!
-                        println("First Orientation Bounding Box:$firstOrientationBoundingBox")
-                    } else if (accumulatedWords == "DAY7") {
-                        secondOrientationBoundingBox = block.boundingBox!!
-                        println("Second Orientation Bounding Box:$secondOrientationBoundingBox")
-                    }
-
                     // Get word list for each day to detect if there are missing values
                 }
             }
 
             // Get the last coordinates for all the different orientations
             if (leftGap == null){
-                leftGap = block.boundingBox!!.left
-                println("First Left:${block.boundingBox!!.left}")
+                leftGap = block.boundingBox!!.left - 30
+                println("First Left:$leftGap")
             }
             else if (block.boundingBox!!.left < leftGap){
-                leftGap = block.boundingBox!!.left
+                leftGap = block.boundingBox!!.left - 30
                 println("New Left:$leftGap")
 
             }
             if (topGap == null){
-                topGap = block.boundingBox!!.top
-                println("First Top:${block.boundingBox!!.top}")
+                topGap = block.boundingBox!!.top - 30
+                println("First Top:$topGap")
             }
             else if (block.boundingBox!!.top < topGap){
-                topGap = block.boundingBox!!.top
+                topGap = block.boundingBox!!.top - 30
                 println("New Top:$topGap")
 
             }
             if (rightGap == null){
-                rightGap = block.boundingBox!!.right
-                println("First Right:${block.boundingBox!!.right}")
+                rightGap = block.boundingBox!!.right + 30
+                println("First Right:$rightGap")
             }
             else if (block.boundingBox!!.right > rightGap){
-                rightGap = block.boundingBox!!.right
+                rightGap = block.boundingBox!!.right + 30
                 println("New Right:$rightGap")
 
             }
             if (bottomGap == null){
-                bottomGap = block.boundingBox!!.bottom
-                println("First Bottom:${block.boundingBox!!.bottom}")
+                bottomGap = block.boundingBox!!.bottom + 30
+                println("First Bottom:$bottomGap")
             }
             else if (block.boundingBox!!.bottom > bottomGap){
-                bottomGap = block.boundingBox!!.bottom
+                bottomGap = block.boundingBox!!.bottom + 30
                 println("New Bottom:$bottomGap")
 
             }
@@ -432,31 +421,31 @@ class ScanActivity : AppCompatActivity() {
         if (firstBoundingBox != Rect(0, 0, 0, 0) && secondBoundingBox != Rect(0, 0, 0, 0)) {
             println("Orientation:$orientation")
             // Comparison in regards to orientation of image flaws: could be vertical picture taken in landscape
-            if (orientation == "Vertical"){
-                if (firstOrientationBoundingBox.top < secondOrientationBoundingBox.top) {
-                    direction = "Top"
-                } else if (firstOrientationBoundingBox.top > secondOrientationBoundingBox.top) {
-                    direction = "Down"
-                }
-            } else if (orientation == "Horizontal") {
-                if (firstOrientationBoundingBox.left < secondOrientationBoundingBox.left) {
-                    direction = "Left"
-                } else if (firstOrientationBoundingBox.left > secondOrientationBoundingBox.left) {
-                    direction = "Right"
-                }
-            }
+//            if (orientation == "Vertical"){
+//                if (firstBoundingBox.left < secondBoundingBox.left) {
+//                    direction = "Top"
+//                } else if (firstBoundingBox.left > secondBoundingBox.left) {
+//                    direction = "Down"
+//                }
+//            } else if (orientation == "Horizontal") {
+//                if (firstBoundingBox.top > secondBoundingBox.top) {
+//                    direction = "Left"
+//                } else if (firstBoundingBox.top < secondBoundingBox.left) {
+//                    direction = "Right"
+//                }
+//            }
 
             // Comparison in regards to difference in distances flaws: uses hardcoded values which means the difference changes depending on how near/far its taken
             // Further the image, the difference will be lesser
-//            if (firstOrientationBoundingBox.left < secondOrientationBoundingBox.left && abs(firstOrientationBoundingBox.left - secondOrientationBoundingBox.left) > 300){
-//                direction = "Left"
-//            } else if (firstOrientationBoundingBox.top < secondOrientationBoundingBox.top && abs(firstOrientationBoundingBox.top - secondOrientationBoundingBox.top) > 300){
-//                direction = "Top"
-//            } else if (firstOrientationBoundingBox.left > secondOrientationBoundingBox.left && abs(firstOrientationBoundingBox.left - secondOrientationBoundingBox.left) > 300){
-//                direction = "Right"
-//            } else if (firstOrientationBoundingBox.top > secondOrientationBoundingBox.top && abs(firstOrientationBoundingBox.top - secondOrientationBoundingBox.top) > 300){
-//                direction = "Down"
-//            }
+            if (firstBoundingBox.top > secondBoundingBox.top && abs(firstBoundingBox.top - secondBoundingBox.top) > 180){
+                direction = "Left"
+            } else if (firstBoundingBox.left < secondBoundingBox.left && abs(firstBoundingBox.left - secondBoundingBox.left) > 180){
+                direction = "Top"
+            } else if (firstBoundingBox.top < secondBoundingBox.top && abs(firstBoundingBox.top - secondBoundingBox.top) > 180){
+                direction = "Right"
+            } else if (firstBoundingBox.left > secondBoundingBox.left && abs(firstBoundingBox.left - secondBoundingBox.left) > 180){
+                direction = "Down"
+            }
         }
 
         // Setting the bounding box to be used for the autocrop library
