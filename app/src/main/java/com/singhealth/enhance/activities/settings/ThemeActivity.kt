@@ -8,11 +8,27 @@ import android.view.MenuItem
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import com.google.firebase.auth.auth
+import com.singhealth.enhance.security.LogOutTimerUtil
+import com.singhealth.enhance.activities.authentication.LoginActivity
 import com.singhealth.enhance.databinding.ActivityThemeBinding
 
 
-class ThemeActivity : AppCompatActivity() {
+class ThemeActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
     private lateinit var binding: ActivityThemeBinding
+
+    // Used for Session Timeout
+    override fun onUserInteraction() {
+        super.onUserInteraction()
+        LogOutTimerUtil.startLogoutTimer(this, this)
+    }
+
+    override fun doLogout() {
+        com.google.firebase.Firebase.auth.signOut()
+        startActivity(Intent(this, LoginActivity::class.java))
+        finish()
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityThemeBinding.inflate(layoutInflater)

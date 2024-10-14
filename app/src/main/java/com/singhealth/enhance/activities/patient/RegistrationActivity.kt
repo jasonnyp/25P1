@@ -14,7 +14,6 @@ import android.widget.Toast
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.ActionBarDrawerToggle
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -34,7 +33,7 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 
-class RegistrationActivity : AppCompatActivity() {
+class RegistrationActivity : BaseActivity() {
     lateinit var binding: ActivityRegistrationBinding
 
     private lateinit var actionBarDrawerToggle: ActionBarDrawerToggle

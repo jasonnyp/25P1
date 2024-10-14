@@ -4,30 +4,53 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.MenuItem
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
+import com.google.firebase.auth.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.singhealth.enhance.R
-import com.singhealth.enhance.activities.validation.errorDialogBuilder
-import com.singhealth.enhance.activities.validation.firebaseErrorDialog
-import com.singhealth.enhance.activities.validation.internetConnectionCheck
+import com.singhealth.enhance.activities.authentication.LoginActivity
 import com.singhealth.enhance.activities.patient.ProfileActivity
 import com.singhealth.enhance.activities.patient.RegistrationActivity
 import com.singhealth.enhance.activities.settings.SettingsActivity
+import com.singhealth.enhance.activities.validation.errorDialogBuilder
+import com.singhealth.enhance.activities.validation.firebaseErrorDialog
+import com.singhealth.enhance.activities.validation.internetConnectionCheck
 import com.singhealth.enhance.databinding.ActivityMainBinding
 import com.singhealth.enhance.security.AESEncryption
+import com.singhealth.enhance.security.LogOutTimerUtil
 import com.singhealth.enhance.security.SecureSharedPreferences
 import com.singhealth.enhance.security.StaffSharedPreferences
 
-class MainActivity : AppCompatActivity() {
+
+class MainActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
     private lateinit var binding: ActivityMainBinding
 
     private lateinit var actionBarDrawerToggle: ActionBarDrawerToggle
 
     private val db = Firebase.firestore
+
+    // Used for Session Timeout
+
+    override fun onStart() {
+        super.onStart()
+        LogOutTimerUtil.startLogoutTimer(this, this)
+    }
+
+    override fun onUserInteraction() {
+        super.onUserInteraction()
+        LogOutTimerUtil.startLogoutTimer(this, this)
+    }
+
+    override fun doLogout() {
+        com.google.firebase.Firebase.auth.signOut()
+        startActivity(Intent(this, LoginActivity::class.java))
+        finish()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

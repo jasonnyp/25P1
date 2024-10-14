@@ -16,7 +16,7 @@ import com.singhealth.enhance.R
 import com.singhealth.enhance.activities.MainActivity
 import com.singhealth.enhance.activities.validation.errorDialogBuilder
 import com.singhealth.enhance.databinding.ActivityLoginBinding
-import com.singhealth.enhance.security.AESEncryption
+import com.singhealth.enhance.security.SecureSharedPreferences
 import com.singhealth.enhance.security.StaffSharedPreferences
 import java.util.Calendar
 
@@ -68,6 +68,11 @@ class LoginActivity : AppCompatActivity() {
                             val user = auth.currentUser
                             user?.let {
                                 val uid = it.uid
+
+                                // Store UID in SecureSharedPreferences
+                                val userSession = SecureSharedPreferences.getSharedPreferences(applicationContext)
+                                userSession.edit().putString("userID", uid).apply()  // Save user UID after successful login
+
                                 val query = db.collection("staff").get()
                                 query.addOnSuccessListener { querySnapshot ->
                                     var staffFound = false

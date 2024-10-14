@@ -47,6 +47,7 @@ android {
 dependencies {
 
     implementation ("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
+    implementation ("androidx.work:work-runtime-ktx:2.7.1")
 //    aws
     implementation("aws.sdk.kotlin:dynamodb:1.0.0")
     implementation("aws.sdk.kotlin:iam:1.0.0")

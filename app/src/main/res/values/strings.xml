@@ -122,7 +122,8 @@
     <string name="unknown_hypertension_status">(Unknown)</string>
 
     <!-- RecommendationActivity.kt -->
-    <string name="insufficient_records">(This record BP was calculated based on inadequate home BP readings.)</string>
+    <string name="insufficient_records">(The Average Home BP was calculated based on inadequate home BP readings.)</string>
+    <string name="average_days_message">The Average Home BP was calculated using Day(s) %1$s.</string>
     <string name="old_scan_records">(This record has been scanned before record counts are taken into account.)</string>
     <string name="no_recommendations">No Recomendations.\n</string>
     <string name="well_controlled_bp_recommendation_medical">- Reinforce medication adherence to medications, and continue with lifestyle maintenance. \n</string>
@@ -243,7 +244,6 @@
 
     <!-- activity_recommendation -->
     <string name="enhance_recco_header">The following are the recommendations based on the %1$s scanned BP records:</string>
-    <string name="average_days_message">The average was calculated using Day(s) %1$s.</string>
     <string name="enhance_recco_do">Do:</string>
     <string name="enhance_recco_dont">Don\'t:</string>
     <string name="bpDivider" translatable="false">/</string>

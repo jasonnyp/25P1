@@ -26,13 +26,14 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
+import com.google.firebase.auth.auth
 import com.google.firebase.firestore.SetOptions
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.singhealth.enhance.R
+import com.singhealth.enhance.security.LogOutTimerUtil
 import com.singhealth.enhance.activities.MainActivity
-import com.singhealth.enhance.activities.diagnosis.hypertensionStatus
-import com.singhealth.enhance.activities.diagnosis.sortPatientVisits
+import com.singhealth.enhance.activities.authentication.LoginActivity
 import com.singhealth.enhance.activities.validation.errorDialogBuilder
 import com.singhealth.enhance.activities.validation.firebaseErrorDialog
 import com.singhealth.enhance.activities.validation.patientNotFoundInSessionErrorDialog
@@ -42,7 +43,6 @@ import com.singhealth.enhance.security.AESEncryption
 import com.singhealth.enhance.security.SecureSharedPreferences
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
-import kotlin.math.max
 import kotlin.math.roundToInt
 
 object ResourcesHelper {
@@ -62,7 +62,7 @@ object ResourcesHelper {
     }
 }
 
-class VerifyScanActivity : AppCompatActivity() {
+class VerifyScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
     private lateinit var binding: ActivityVerifyScanBinding
 
     private lateinit var progressDialog: ProgressDialog
@@ -106,6 +106,18 @@ class VerifyScanActivity : AppCompatActivity() {
 
     private val typingDelayHandler = Handler(Looper.getMainLooper())
     private var typingRunnable: Runnable? = null
+
+    // Used for Session Timeout
+    override fun onUserInteraction() {
+        super.onUserInteraction()
+        LogOutTimerUtil.startLogoutTimer(this, this)
+    }
+
+    override fun doLogout() {
+        com.google.firebase.Firebase.auth.signOut()
+        startActivity(Intent(this, LoginActivity::class.java))
+        finish()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
