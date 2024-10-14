@@ -10,10 +10,13 @@ import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
+import com.google.firebase.auth.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.singhealth.enhance.R
+import com.singhealth.enhance.security.LogOutTimerUtil
 import com.singhealth.enhance.activities.MainActivity
+import com.singhealth.enhance.activities.authentication.LoginActivity
 import com.singhealth.enhance.activities.diagnosis.bpControlStatus
 import com.singhealth.enhance.activities.diagnosis.colourSet
 import com.singhealth.enhance.activities.diagnosis.hypertensionStatus
@@ -31,7 +34,7 @@ object ResourcesHelper {
     }
 }
 
-class RecommendationActivity : AppCompatActivity() {
+class RecommendationActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
     private lateinit var binding: ActivityRecommendationBinding
 
     private var patientID: String? = null
@@ -48,6 +51,18 @@ class RecommendationActivity : AppCompatActivity() {
     private lateinit var validDaysList: List<String>
 
     private val db = Firebase.firestore
+
+    // Used for Session Timeout
+    override fun onUserInteraction() {
+        super.onUserInteraction()
+        LogOutTimerUtil.startLogoutTimer(this, this)
+    }
+
+    override fun doLogout() {
+        com.google.firebase.Firebase.auth.signOut()
+        startActivity(Intent(this, LoginActivity::class.java))
+        finish()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
