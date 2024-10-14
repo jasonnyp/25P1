@@ -17,7 +17,7 @@ class LogOutTimerUtil {
     companion object {
         var longTimer: Timer? = null
         val LOGOUT_TIME =
-            300000 // delay in milliseconds i.e. 5 min = 300000 ms or use timeout argument
+            12000000 // 20 min is 1200000 ms, for testing use 5 sec which is 5000 ms
 
         fun startLogoutTimer(context: Context?, logOutListener: LogOutListener) {
             if (longTimer != null) {
@@ -28,11 +28,13 @@ class LogOutTimerUtil {
                 longTimer = Timer()
                 longTimer!!.schedule(object : TimerTask() {
                     override fun run() {
+                        println("longTimer")
                         cancel()
                         longTimer = null
                         try {
                             val foreGround = ForegroundCheckTask().execute(context).get()
                             if (!foreGround) {
+                                println("logout")
                                 logOutListener.doLogout()
                             } else {
                                 startLogoutTimer(context, logOutListener)
@@ -49,6 +51,7 @@ class LogOutTimerUtil {
 
         fun stopLogoutTimer() {
             if (longTimer != null) {
+                println("stop")
                 longTimer!!.cancel()
                 longTimer = null
             }

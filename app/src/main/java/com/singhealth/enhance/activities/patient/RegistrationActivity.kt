@@ -14,18 +14,22 @@ import android.widget.Toast
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
+import com.google.firebase.auth.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 import com.singhealth.enhance.R
 import com.singhealth.enhance.activities.MainActivity
+import com.singhealth.enhance.activities.authentication.LoginActivity
 import com.singhealth.enhance.activities.validation.errorDialogBuilder
 import com.singhealth.enhance.activities.validation.firebaseErrorDialog
 import com.singhealth.enhance.activities.validation.internetConnectionCheck
 import com.singhealth.enhance.activities.settings.SettingsActivity
 import com.singhealth.enhance.databinding.ActivityRegistrationBinding
 import com.singhealth.enhance.security.AESEncryption
+import com.singhealth.enhance.security.LogOutTimerUtil
 import com.singhealth.enhance.security.SecureSharedPreferences
 import com.singhealth.enhance.security.StaffSharedPreferences
 import java.io.ByteArrayOutputStream
@@ -33,7 +37,7 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 
-class RegistrationActivity : BaseActivity() {
+class RegistrationActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener{
     lateinit var binding: ActivityRegistrationBinding
 
     private lateinit var actionBarDrawerToggle: ActionBarDrawerToggle
@@ -43,6 +47,18 @@ class RegistrationActivity : BaseActivity() {
 
     private val db = Firebase.firestore
     private val storage = Firebase.storage
+
+    // Used for Session Timeout
+    override fun onUserInteraction() {
+        super.onUserInteraction()
+        LogOutTimerUtil.startLogoutTimer(this, this)
+    }
+
+    override fun doLogout() {
+        com.google.firebase.Firebase.auth.signOut()
+        startActivity(Intent(this, LoginActivity::class.java))
+        finish()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
