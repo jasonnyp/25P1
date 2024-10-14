@@ -19,10 +19,13 @@ import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.utils.EntryXComparator
+import com.google.firebase.auth.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.singhealth.enhance.R
+import com.singhealth.enhance.security.LogOutTimerUtil
 import com.singhealth.enhance.activities.MainActivity
+import com.singhealth.enhance.activities.authentication.LoginActivity
 import com.singhealth.enhance.activities.history.HistoryActivity
 import com.singhealth.enhance.activities.history.HistoryData
 import com.singhealth.enhance.activities.ocr.ScanActivity
@@ -39,7 +42,7 @@ import java.util.Collections
 import java.util.Locale
 
 
-class DashboardActivity : AppCompatActivity() {
+class DashboardActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
 
     private lateinit var binding: DashboardBinding
 
@@ -54,6 +57,19 @@ class DashboardActivity : AppCompatActivity() {
 
     private lateinit var lineChart: LineChart
     private lateinit var diastolicLineChart: LineChart
+
+    // Used for Session Timeout
+
+    override fun onUserInteraction() {
+        super.onUserInteraction()
+        LogOutTimerUtil.startLogoutTimer(this, this)
+    }
+
+    override fun doLogout() {
+        com.google.firebase.Firebase.auth.signOut()
+        startActivity(Intent(this, LoginActivity::class.java))
+        finish()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

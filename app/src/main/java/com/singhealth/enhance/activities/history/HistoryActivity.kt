@@ -7,10 +7,13 @@ import android.view.View
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.firebase.auth.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.singhealth.enhance.R
+import com.singhealth.enhance.security.LogOutTimerUtil
 import com.singhealth.enhance.activities.MainActivity
+import com.singhealth.enhance.activities.authentication.LoginActivity
 import com.singhealth.enhance.activities.dashboard.SimpleDashboardActivity
 import com.singhealth.enhance.activities.ocr.ScanActivity
 import com.singhealth.enhance.activities.patient.ProfileActivity
@@ -24,7 +27,7 @@ import com.singhealth.enhance.security.SecureSharedPreferences
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
-class HistoryActivity : AppCompatActivity(), HistoryAdapter.OnItemClickListener {
+class HistoryActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener, HistoryAdapter.OnItemClickListener {
     private lateinit var binding: ActivityHistoryBinding
 
     private lateinit var actionBarDrawerToggle: ActionBarDrawerToggle
@@ -35,6 +38,18 @@ class HistoryActivity : AppCompatActivity(), HistoryAdapter.OnItemClickListener 
 
     private val db = Firebase.firestore
     private var history = ArrayList<HistoryData>()
+
+    // Used for Session Timeout
+    override fun onUserInteraction() {
+        super.onUserInteraction()
+        LogOutTimerUtil.startLogoutTimer(this, this)
+    }
+
+    override fun doLogout() {
+        com.google.firebase.Firebase.auth.signOut()
+        startActivity(Intent(this, LoginActivity::class.java))
+        finish()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

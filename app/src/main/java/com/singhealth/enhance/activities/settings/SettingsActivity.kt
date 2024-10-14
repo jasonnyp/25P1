@@ -13,6 +13,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import com.singhealth.enhance.R
+import com.singhealth.enhance.security.LogOutTimerUtil
 import com.singhealth.enhance.activities.MainActivity
 import com.singhealth.enhance.activities.authentication.LoginActivity
 import com.singhealth.enhance.activities.patient.ProfileActivity
@@ -21,10 +22,22 @@ import com.singhealth.enhance.activities.settings.guide.UserGuideActivity
 import com.singhealth.enhance.databinding.ActivitySettingsBinding
 import com.singhealth.enhance.security.SecureSharedPreferences
 
-class SettingsActivity : AppCompatActivity() {
+class SettingsActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
     private lateinit var binding: ActivitySettingsBinding
 
     private lateinit var actionBarDrawerToggle: ActionBarDrawerToggle
+
+    // Used for Session Timeout
+    override fun onUserInteraction() {
+        super.onUserInteraction()
+        LogOutTimerUtil.startLogoutTimer(this, this)
+    }
+
+    override fun doLogout() {
+        com.google.firebase.Firebase.auth.signOut()
+        startActivity(Intent(this, LoginActivity::class.java))
+        finish()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

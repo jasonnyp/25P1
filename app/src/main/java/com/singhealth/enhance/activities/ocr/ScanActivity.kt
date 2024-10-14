@@ -20,12 +20,15 @@ import com.canhub.cropper.CropImageContract
 import com.canhub.cropper.CropImageContractOptions
 import com.canhub.cropper.CropImageOptions
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.firebase.auth.auth
 import com.google.firebase.ml.vision.FirebaseVision
 import com.google.firebase.ml.vision.common.FirebaseVisionImage
 import com.google.firebase.ml.vision.document.FirebaseVisionCloudDocumentRecognizerOptions
 import com.google.firebase.ml.vision.document.FirebaseVisionDocumentText
 import com.singhealth.enhance.R
+import com.singhealth.enhance.security.LogOutTimerUtil
 import com.singhealth.enhance.activities.MainActivity
+import com.singhealth.enhance.activities.authentication.LoginActivity
 import com.singhealth.enhance.activities.dashboard.SimpleDashboardActivity
 import com.singhealth.enhance.activities.history.HistoryActivity
 import com.singhealth.enhance.activities.patient.ProfileActivity
@@ -40,7 +43,7 @@ import com.singhealth.enhance.security.SecureSharedPreferences
 import kotlin.math.abs
 import kotlin.math.max
 
-class ScanActivity : AppCompatActivity() {
+class ScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
     private lateinit var binding: ActivityScanBinding
     private lateinit var actionBarDrawerToggle: ActionBarDrawerToggle
     private lateinit var cameraPermissions: Array<String>
@@ -55,6 +58,18 @@ class ScanActivity : AppCompatActivity() {
     private var clinicSysBP: String? = null
     private var clinicDiaBP: String? = null
     private var direction: String = ""
+
+    // Used for Session Timeout
+    override fun onUserInteraction() {
+        super.onUserInteraction()
+        LogOutTimerUtil.startLogoutTimer(this, this)
+    }
+
+    override fun doLogout() {
+        com.google.firebase.Firebase.auth.signOut()
+        startActivity(Intent(this, LoginActivity::class.java))
+        finish()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
