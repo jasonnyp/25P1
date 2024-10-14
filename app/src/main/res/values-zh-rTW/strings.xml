@@ -17,7 +17,7 @@
     <string name="dashboard_no_records_found">未找到記錄。</string>
 
     <!-- ScanActivity strings -->
-    <string name="ocr_instructions">請確保僅顯示血壓值，裁剪時排除所有標題。</string>
+    <string name="ocr_instructions">" 重要提示：\n請確保僅顯示血壓值（收縮壓/舒張壓）。 \n請注意在更近的範圍內拍照，以便更好地檢測。 \n\n自動檢測/自動裁剪所需的標題：診所/辦公室血壓：，收縮壓和血壓舒張期，第 1 天 - 第 7 天"</string>
     <string name="ocr_app_permissions_header">啟用應用權限</string>
     <string name="ocr_app_permissions_body">要使用 OCR 功能，您需要允許訪問您的相機、圖庫和外部存儲。</string>
     <string name="ocr_image_error_header">處理圖像時出錯</string>

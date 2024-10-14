@@ -98,7 +98,8 @@ class VerifyScanActivity : AppCompatActivity() {
 
     private val validDayIndices = mutableListOf<Int>() // To track the days used for calculating average
 
-    private val undoStack = mutableListOf<Pair<MutableList<String>, MutableList<String>>>()
+    private val undoStackOld = mutableListOf<Pair<MutableList<String>, MutableList<String>>>()
+    private val undoStackCurrent = mutableListOf<Pair<MutableList<String>, MutableList<String>>>()
     private val maxUndoStackSize = 10
 
     private val db = Firebase.firestore
@@ -269,7 +270,6 @@ class VerifyScanActivity : AppCompatActivity() {
         }
 
         if (sevenDay) {
-            findViewById<Button>(R.id.addRowBtn).visibility = View.GONE
             sevenDayCheck()
         } else {
             println("Not seven day check")
@@ -405,9 +405,6 @@ class VerifyScanActivity : AppCompatActivity() {
 
         // Check BP records for errors
         postScanValidation()
-
-        // Add new row
-        binding.addRowBtn.setOnClickListener { addRow(null, null) }
 
         // More options button
         binding.moreOptionsBtn.setOnClickListener {
@@ -843,17 +840,19 @@ class VerifyScanActivity : AppCompatActivity() {
         println("Current diaBPList: $diaBPList")
 
         // Check if the current state is different from the last saved state
-        if (undoStack.isEmpty() || !listsAreEqual(undoStack.last().first, sysBPList) || !listsAreEqual(undoStack.last().second, diaBPList)) {
-            if (undoStack.size >= maxUndoStackSize) {
+        if (undoStackCurrent.isEmpty() || !listsAreEqual(undoStackCurrent.last().first, sysBPList) || !listsAreEqual(undoStackCurrent.last().second, diaBPList) || undoStackOld.isEmpty() || !listsAreEqual(undoStackOld.last().first, sysBPListHistory) || !listsAreEqual(undoStackOld.last().second, diaBPListHistory)) {
+            if (undoStackCurrent.size >= maxUndoStackSize) {
                 println("Undo stack is full. Removing oldest state.")
-                undoStack.removeAt(0)
+                undoStackCurrent.removeAt(0)
+                undoStackOld.removeAt(0)
             }
             println("Adding current state to undo stack.")
-            undoStack.add(Pair(sysBPList.toMutableList(), diaBPList.toMutableList()))
-        } else {
+            undoStackCurrent.add(Pair(sysBPList.toMutableList(), diaBPList.toMutableList()))
+            undoStackOld.add(Pair(sysBPListHistory.toMutableList(), diaBPListHistory.toMutableList()))
+        }  else {
             println("Current state is the same as the last state in the undo stack. Not adding.")
         }
-        println("Undo stack size after save: ${undoStack.size}")
+        println("Undo stack size after save: ${undoStackOld.size}")
     }
 
     private fun listsAreEqual(list1: MutableList<String>, list2: MutableList<String>): Boolean {
@@ -862,20 +861,30 @@ class VerifyScanActivity : AppCompatActivity() {
 
     fun undo() {
         println("Performing undo...")
-        if (undoStack.isNotEmpty()) {
+        if (undoStackCurrent.isNotEmpty() || undoStackOld.isNotEmpty()) {
             // Remove the last state from the undo stack after restoring
-            val lastState = undoStack.removeAt(undoStack.size - 1)
+            val lastStateCurrent = undoStackCurrent.removeAt(undoStackCurrent.size - 1)
+            val lastStateOld = undoStackOld.removeAt(undoStackOld.size - 1)
             println("Restoring state from undo stack...")
-            println("Last saved sysBPList: ${lastState.first}")
-            println("Last saved diaBPList: ${lastState.second}")
+            println("Last saved sysBPList: ${lastStateCurrent.first}")
+            println("Last saved diaBPList: ${lastStateCurrent.second}")
+            println("Last saved sysBPListHistory: ${lastStateOld.first}")
+            println("Last saved diaBPListHistory: ${lastStateOld.second}")
 
             sysBPList.clear()
-            sysBPList.addAll(lastState.first)
+            sysBPList.addAll(lastStateCurrent.first)
             diaBPList.clear()
-            diaBPList.addAll(lastState.second)
+            diaBPList.addAll(lastStateCurrent.second)
+
+            sysBPListHistory.clear()
+            sysBPListHistory.addAll(lastStateOld.first)
+            diaBPListHistory.clear()
+            diaBPListHistory.addAll(lastStateOld.second)
 
             println("Restored sysBPList: $sysBPList")
             println("Restored diaBPList: $diaBPList")
+            println("Restored sysBPListHistory: $sysBPListHistory")
+            println("Restored diaBPListHistory: $diaBPListHistory")
             Toast.makeText(this, "Undo successful", Toast.LENGTH_SHORT).show()
             refreshViews()
         } else {
@@ -1449,7 +1458,7 @@ class VerifyScanActivity : AppCompatActivity() {
                 validConsecutiveDays.add(dayReadings[i])
                 validConsecutiveDays.add(dayReadings[i - 1])
                 validConsecutiveDays.add(dayReadings[i - 2])
-                // Collect indices of all valid days, why +2 for each under? cus day 1 was removed earlier so +1 so list size is 6 instead of 7, and index starts with 0 instead of 1 so + another 1
+                // Collect indices of all valid days, why +2 for each under? +1 cus day 1 was removed earlier so list size is 6 instead of 7, and index starts with 0 instead of 1 so + another 1
                 validDayIndices.add(i + 2)
                 validDayIndices.add(i + 1)
                 validDayIndices.add(i)
@@ -1548,10 +1557,7 @@ class VerifyScanActivity : AppCompatActivity() {
 
            println("Days used for average calculation: ${validDayIndices.distinct().joinToString(", ")}")
        }
-       else if (validConsecutiveDays.size < 3 && dayReadings.size >= 1) {
-
-           totalSysBP = 0
-           totalDiaBP = 0
+       else if (validConsecutiveDays.size < 3) {
 
            val SysBPList = mutableListOf<String>()
            val DiaBPList = mutableListOf<String>()
@@ -1598,37 +1604,6 @@ class VerifyScanActivity : AppCompatActivity() {
 
            println("Days used for average calculation: ${validDayIndices.distinct().joinToString(", ")}")
        }
-        else if (dayReadings.size == 0) {
-
-           totalSysBP = 0
-           totalDiaBP = 0
-
-           val SysBPList = mutableListOf<String>()
-           val DiaBPList = mutableListOf<String>()
-
-           for (day in incompleteDayReadings) {
-               for ((sysBP, diaBP) in day) {
-                   SysBPList.add(sysBP)
-                   DiaBPList.add(diaBP)
-               }
-           }
-
-           totalSysBP = 0
-           totalDiaBP = 0
-
-           for (field in SysBPList) {
-               totalSysBP += field.toInt()
-           }
-
-           for (field in DiaBPList) {
-               totalDiaBP += field.toInt()
-           }
-
-           avgSysBP = (totalSysBP.toFloat() / SysBPList.size).roundToInt()
-           avgDiaBP = (totalDiaBP.toFloat() / DiaBPList.size).roundToInt()
-
-           println("Days used for average calculation: ${validDayIndices.distinct().joinToString(", ")}")
-        }
     }
 
     private fun sevenDayCheck() {
@@ -2281,16 +2256,6 @@ class VerifyScanActivity : AppCompatActivity() {
         }
 
         binding.rowBPRecordLL.addView(rowBPRecordLayout)
-
-        // Refresh views so it shows error on empty blanks when clicked on add row for general scan
-        if (!sevenDay){
-            if (sysBP == null && diaBP == null) {
-                binding.rowBPRecordLL.removeAllViews()
-                sysBPFields.clear()
-                diaBPFields.clear()
-                refreshViews()
-            }
-        }
     }
 
     private fun addDivider() {
@@ -2317,20 +2282,38 @@ class VerifyScanActivity : AppCompatActivity() {
                                                 "targetHomeDia" to AESEncryption().encrypt(binding.homeTargetDia.text.toString()),)
                             docRef.set(data, SetOptions.merge())
 
+                            // Updates UI to hide options and show view
                             binding.editHomeBPLayout.visibility = View.VISIBLE
                             binding.verifyEditHomeBPTarget.visibility = View.GONE
                             binding.verifyEditHomeBPTextFields.visibility = View.GONE
                             binding.homeBPTargetTV.visibility = View.VISIBLE
 
+                            // Updates components
                             homeSysBPTarget = binding.homeTargetSys.text.toString().toInt()
                             homeDiaBPTarget = binding.homeTargetDia.text.toString().toInt()
+
+                            // Updates UI to show updated value
                             binding.verifyHomeTargetSys.text = homeSysBPTarget.toString()
                             binding.verifyHomeTargetDia.text = homeDiaBPTarget.toString()
+
+                            // Updates hidden view to save data into firebase when clicked on 7 day calc
                             binding.homeBPTargetTV.text = String.format(
                                 "%s / %s",
                                 homeSysBPTarget.toString(),
                                 homeDiaBPTarget.toString()
                             )
+
+                            // Updates the values used for comparison in 7 day calc
+                            targetHomeSysBP = homeSysBPTarget.toString()
+                            targetHomeDiaBP = homeDiaBPTarget.toString()
+
+                            // Updates the values stored in secured shared preferences
+                            SecureSharedPreferences.getSharedPreferences(applicationContext)
+                                .edit()
+                                .putString("targetHomeSysBP", targetHomeSysBP)
+                                .putString("targetHomeDiaBP", targetHomeDiaBP)
+                                .apply()
+
                             progressDialog.dismiss()
                         }
                         else{
@@ -2379,13 +2362,25 @@ class VerifyScanActivity : AppCompatActivity() {
 
                             clinicSysBPTarget = binding.clinicTargetSys.text.toString().toInt()
                             clinicDiaBPTarget = binding.clinicTargetDia.text.toString().toInt()
+
                             binding.verifyClinicTargetSys.text = clinicSysBPTarget.toString()
                             binding.verifyClinicTargetDia.text = clinicDiaBPTarget.toString()
+
                             binding.clinicBPTargetTV.text = String.format(
                                 "%s / %s",
                                 clinicSysBPTarget.toString(),
                                 clinicDiaBPTarget.toString()
                             )
+
+                            targetClinicSysBP = clinicSysBPTarget.toString()
+                            targetClinicDiaBP = clinicDiaBPTarget.toString()
+
+                            SecureSharedPreferences.getSharedPreferences(applicationContext)
+                                .edit()
+                                .putString("targetClinicSysBP", targetClinicSysBP)
+                                .putString("targetClinicDiaBP", targetClinicDiaBP)
+                                .apply()
+
                             progressDialog.dismiss()
                         }
                         else{

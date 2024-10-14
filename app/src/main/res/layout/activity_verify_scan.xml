@@ -611,26 +611,6 @@
                         android:textStyle="bold" />
                 </LinearLayout>
 
-                <!-- Add an empty column to the right -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:paddingBottom="8dp">
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="8dp"
-                        android:src="@drawable/ic_letter_r"
-                        android:contentDescription="@string/add_empty_column_right" />
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textAppearance="?attr/textAppearanceBodyMedium"
-                        android:text="@string/add_empty_column_right"
-                        android:textStyle="bold" />
-                </LinearLayout>
-
                 <!-- Swap the Systolic and Diastolic values -->
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -648,6 +628,26 @@
                         android:layout_height="wrap_content"
                         android:textAppearance="?attr/textAppearanceBodyMedium"
                         android:text="@string/swap_values"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <!-- Add an empty column to the right -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingBottom="8dp">
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="8dp"
+                        android:src="@drawable/ic_letter_r"
+                        android:contentDescription="@string/add_empty_column_right" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?attr/textAppearanceBodyMedium"
+                        android:text="@string/add_empty_column_right"
                         android:textStyle="bold" />
                 </LinearLayout>
 
@@ -715,17 +715,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
-
-                <Button
-                    android:id="@+id/addRowBtn"
-                    style="?attr/materialButtonOutlinedStyle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
-                    android:text="@string/enhance_verify_add_row"
-                    android:textSize="16sp"
-                    android:textColor="@color/text_color"
-                    android:backgroundTint="@color/setting_option_background" />
 
                 <Button
                     android:id="@+id/moreOptionsBtn"
