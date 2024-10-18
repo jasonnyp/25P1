@@ -26,7 +26,6 @@ import com.google.firebase.ml.vision.common.FirebaseVisionImage
 import com.google.firebase.ml.vision.document.FirebaseVisionCloudDocumentRecognizerOptions
 import com.google.firebase.ml.vision.document.FirebaseVisionDocumentText
 import com.singhealth.enhance.R
-import com.singhealth.enhance.security.LogOutTimerUtil
 import com.singhealth.enhance.activities.MainActivity
 import com.singhealth.enhance.activities.authentication.LoginActivity
 import com.singhealth.enhance.activities.dashboard.SimpleDashboardActivity
@@ -39,6 +38,7 @@ import com.singhealth.enhance.activities.validation.ocrTextErrorDialog
 import com.singhealth.enhance.activities.validation.patientNotFoundInSessionErrorDialog
 import com.singhealth.enhance.databinding.ActivityScanBinding
 import com.singhealth.enhance.security.AESEncryption
+import com.singhealth.enhance.security.LogOutTimerUtil
 import com.singhealth.enhance.security.SecureSharedPreferences
 import kotlin.math.abs
 import kotlin.math.max
@@ -60,10 +60,10 @@ class ScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
     private var direction: String = ""
 
     // Used for Session Timeout
-    override fun onUserInteraction() {
-        super.onUserInteraction()
-        LogOutTimerUtil.startLogoutTimer(this, this)
-    }
+//    override fun onUserInteraction() {
+//        super.onUserInteraction()
+//        LogOutTimerUtil.startLogoutTimer(this, this)
+//    }
 
     override fun doLogout() {
         com.google.firebase.Firebase.auth.signOut()
@@ -98,10 +98,12 @@ class ScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
 
         binding.generalSourceBtn.setOnClickListener {
             sevenDay = false
+            LogOutTimerUtil.stopLogoutTimer()
             onClickRequestPermission()
         }
         binding.sevenDaySourceBtn.setOnClickListener {
             sevenDay = true
+            LogOutTimerUtil.stopLogoutTimer()
             onClickRequestPermission()
         }
     }
@@ -160,7 +162,7 @@ class ScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
         } else {
             patientID = patientSharedPreferences.getString("patientID", null).toString()
             binding.patientIdValueTextView.text = AESEncryption().decrypt(patientID)
-            binding.patientNameValueTextView.text = patientSharedPreferences.getString("legalName", null).toString()
+//            binding.patientNameValueTextView.text = patientSharedPreferences.getString("legalName", null).toString()
         }
     }
 
@@ -189,6 +191,7 @@ class ScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
     }
 
     private val customCropImage = registerForActivityResult(CropImageContract()) {
+        LogOutTimerUtil.startLogoutTimer(this, this)
         if (it !is CropImage.CancelledResult) {
             handleCropImageResultForAutocrop(it.uriContent.toString())
         }

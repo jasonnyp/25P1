@@ -80,92 +80,92 @@ class EditProfileActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener 
         })
 
         // Upload photo
-        binding.editPhotoIV.setOnClickListener { uploadPhoto() }
+//        binding.editPhotoIV.setOnClickListener { uploadPhoto() }
 
         // Date of birth
-        val cal = Calendar.getInstance()
+//        val cal = Calendar.getInstance()
 
-        val dobSetListener = DatePickerDialog.OnDateSetListener { _, year, month, dayOfMonth ->
-            cal.set(Calendar.YEAR, year)
-            cal.set(Calendar.MONTH, month)
-            cal.set(Calendar.DAY_OF_MONTH, dayOfMonth)
-
-            val calFormat = "dd/MM/yyyy"
-            val sdf = SimpleDateFormat(calFormat, Locale.ENGLISH)
-            binding.editDateOfBirthTIET.setText(sdf.format(cal.time).toString())
-        }
-
-        binding.editDateOfBirthTIET.setOnClickListener {
-            val datePickerDialog = DatePickerDialog(
-                this,
-                dobSetListener,
-                cal.get(Calendar.YEAR),
-                cal.get(Calendar.MONTH),
-                cal.get(Calendar.DAY_OF_MONTH)
-            )
-            datePickerDialog.datePicker.maxDate = System.currentTimeMillis()
-            datePickerDialog.show()
-        }
+//        val dobSetListener = DatePickerDialog.OnDateSetListener { _, year, month, dayOfMonth ->
+//            cal.set(Calendar.YEAR, year)
+//            cal.set(Calendar.MONTH, month)
+//            cal.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+//
+//            val calFormat = "dd/MM/yyyy"
+//            val sdf = SimpleDateFormat(calFormat, Locale.ENGLISH)
+//            binding.editDateOfBirthTIET.setText(sdf.format(cal.time).toString())
+//        }
+//
+//        binding.editDateOfBirthTIET.setOnClickListener {
+//            val datePickerDialog = DatePickerDialog(
+//                this,
+//                dobSetListener,
+//                cal.get(Calendar.YEAR),
+//                cal.get(Calendar.MONTH),
+//                cal.get(Calendar.DAY_OF_MONTH)
+//            )
+//            datePickerDialog.datePicker.maxDate = System.currentTimeMillis()
+//            datePickerDialog.show()
+//        }
 
         // Gender
-        val genderItems = listOf(getString(R.string.register_gender_male), getString(R.string.register_gender_female))
-        val genderAdapter = ArrayAdapter(this, R.layout.list_gender_item, genderItems)
-        binding.editGenderACTV.setAdapter(genderAdapter)
+//        val genderItems = listOf(getString(R.string.register_gender_male), getString(R.string.register_gender_female))
+//        val genderAdapter = ArrayAdapter(this, R.layout.list_gender_item, genderItems)
+//        binding.editGenderACTV.setAdapter(genderAdapter)
 
         // Dismiss error messages
-        binding.editLegalNameTIET.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                binding.editLegalNameTIL.error = null
-            }
+//        binding.editLegalNameTIET.addTextChangedListener(object : TextWatcher {
+//            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+//            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+//                binding.editLegalNameTIL.error = null
+//            }
+//
+//            override fun afterTextChanged(s: Editable?) {}
+//        })
+//
+//        binding.editClinicIdTIET.addTextChangedListener(object : TextWatcher {
+//            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+//            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+//                binding.editClinicIdTIET.error = null
+//            }
+//
+//            override fun afterTextChanged(s: Editable?) {}
+//        })
+//
+//        binding.editDateOfBirthTIET.addTextChangedListener(object : TextWatcher {
+//            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+//            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+//                binding.editDateOfBirthTIL.error = null
+//            }
+//
+//            override fun afterTextChanged(s: Editable?) {}
+//        })
+//
+//        binding.editGenderACTV.addTextChangedListener(object : TextWatcher {
+//            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+//            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+//                binding.editGenderTIL.error = null
+//            }
+//
+//            override fun afterTextChanged(s: Editable?) {}
+//        })
 
-            override fun afterTextChanged(s: Editable?) {}
-        })
-
-        binding.editClinicIdTIET.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                binding.editClinicIdTIET.error = null
-            }
-
-            override fun afterTextChanged(s: Editable?) {}
-        })
-
-        binding.editDateOfBirthTIET.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                binding.editDateOfBirthTIL.error = null
-            }
-
-            override fun afterTextChanged(s: Editable?) {}
-        })
-
-        binding.editGenderACTV.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                binding.editGenderTIL.error = null
-            }
-
-            override fun afterTextChanged(s: Editable?) {}
-        })
-
-        binding.editWeightTIET.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                binding.editWeightTIL.error = null
-            }
-
-            override fun afterTextChanged(s: Editable?) {}
-        })
-
-        binding.editHeightTIET.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                binding.editHeightTIL.error = null
-            }
-
-            override fun afterTextChanged(s: Editable?) {}
-        })
+//        binding.editWeightTIET.addTextChangedListener(object : TextWatcher {
+//            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+//            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+//                binding.editWeightTIL.error = null
+//            }
+//
+//            override fun afterTextChanged(s: Editable?) {}
+//        })
+//
+//        binding.editHeightTIET.addTextChangedListener(object : TextWatcher {
+//            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+//            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+//                binding.editHeightTIL.error = null
+//            }
+//
+//            override fun afterTextChanged(s: Editable?) {}
+//        })
 
         binding.editRegisterHomeSysInput.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
@@ -235,94 +235,94 @@ class EditProfileActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener 
         }
     }
 
-    private fun uploadPhoto() {
-        val browseImageIntent = Intent(Intent.ACTION_GET_CONTENT).apply {
-            type = "image/*"
-        }
-        if (browseImageIntent.resolveActivity(packageManager) != null) {
-            activityResultLauncher.launch(browseImageIntent)
-        }
-    }
+//    private fun uploadPhoto() {
+//        val browseImageIntent = Intent(Intent.ACTION_GET_CONTENT).apply {
+//            type = "image/*"
+//        }
+//        if (browseImageIntent.resolveActivity(packageManager) != null) {
+//            activityResultLauncher.launch(browseImageIntent)
+//        }
+//    }
 
-    private val activityResultLauncher =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
-            if (result.resultCode == RESULT_OK) {
-                val uri = result.data?.data ?: return@registerForActivityResult
-                try {
-                    contentResolver.openInputStream(uri)?.use { inputStream ->
-                        val bitmap = BitmapFactory.decodeStream(inputStream)
-                        val squareBitmap = cropToSquare(bitmap) // Convert the image to a square (No cropping)
-                        val stream = ByteArrayOutputStream()
-
-                        squareBitmap.compress(Bitmap.CompressFormat.PNG, 100, stream)
-                        photoBA = stream.toByteArray()
-                        binding.editPhotoIV.setImageBitmap(squareBitmap)
-
-                        binding.editPhotoTV.text = getString(R.string.profile_picture_info)
-                    }
-                } catch (e: Exception) {
-                    Toast.makeText(this, e.message.toString(), Toast.LENGTH_LONG).show()
-                }
-            }
-        }
+//    private val activityResultLauncher =
+//        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
+//            if (result.resultCode == RESULT_OK) {
+//                val uri = result.data?.data ?: return@registerForActivityResult
+//                try {
+//                    contentResolver.openInputStream(uri)?.use { inputStream ->
+//                        val bitmap = BitmapFactory.decodeStream(inputStream)
+//                        val squareBitmap = cropToSquare(bitmap) // Convert the image to a square (No cropping)
+//                        val stream = ByteArrayOutputStream()
+//
+//                        squareBitmap.compress(Bitmap.CompressFormat.PNG, 100, stream)
+//                        photoBA = stream.toByteArray()
+//                        binding.editPhotoIV.setImageBitmap(squareBitmap)
+//
+//                        binding.editPhotoTV.text = getString(R.string.profile_picture_info)
+//                    }
+//                } catch (e: Exception) {
+//                    Toast.makeText(this, e.message.toString(), Toast.LENGTH_LONG).show()
+//                }
+//            }
+//        }
 
     // Cropping the image to be a square
-    private fun cropToSquare(bitmap: Bitmap): Bitmap {
-        val width = bitmap.width
-        val height = bitmap.height
-
-        val newWidth = if (width < height) width else height
-        val newHeight = if (width < height) width else height
-
-        val cropW = (width - newWidth) / 2
-        val cropH = (height - newHeight) / 2
-
-        return Bitmap.createBitmap(bitmap, cropW, cropH, newWidth, newHeight)
-    }
+//    private fun cropToSquare(bitmap: Bitmap): Bitmap {
+//        val width = bitmap.width
+//        val height = bitmap.height
+//
+//        val newWidth = if (width < height) width else height
+//        val newHeight = if (width < height) width else height
+//
+//        val cropW = (width - newWidth) / 2
+//        val cropH = (height - newHeight) / 2
+//
+//        return Bitmap.createBitmap(bitmap, cropW, cropH, newWidth, newHeight)
+//    }
 
     private fun validateFields(): Boolean {
         var valid = true
 
-        if (!::photoBA.isInitialized) {
-            valid = false
-            errorDialogBuilder(this, getString(R.string.register_image_verification_header), getString(R.string.register_image_verification_body))
-        }
+//        if (!::photoBA.isInitialized) {
+//            valid = false
+//            errorDialogBuilder(this, getString(R.string.register_image_verification_header), getString(R.string.register_image_verification_body))
+//        }
 
-        if (binding.editLegalNameTIET.text.isNullOrEmpty()) {
-            valid = false
-            binding.editLegalNameTIL.error = getString(R.string.register_empty_field_verification)
-        }
-
-        if (binding.editClinicIdTIET.text.isNullOrEmpty()) {
-            valid = false
-            binding.editClinicIdTIET.error = getString(R.string.register_empty_field_verification)
-        }
-
-        if (binding.editDateOfBirthTIET.text.isNullOrEmpty()) {
-            valid = false
-            binding.editDateOfBirthTIL.error = getString(R.string.register_empty_field_verification)
-        }
-
-        if (binding.editGenderACTV.text.isNullOrEmpty()) {
-            valid = false
-            binding.editGenderTIL.error = getString(R.string.register_empty_field_verification)
-        }
-
-        if (binding.editWeightTIET.text.isNullOrEmpty()) {
-            valid = false
-            binding.editWeightTIL.error = getString(R.string.register_empty_field_verification)
-        } else if (binding.editWeightTIET.text.toString().toFloatOrNull() == null) {
-            valid = false
-            binding.editWeightTIL.error = getString(R.string.register_invalid_value_verification)
-        }
-
-        if (binding.editHeightTIET.text.isNullOrEmpty()) {
-            valid = false
-            binding.editHeightTIL.error = getString(R.string.register_empty_field_verification)
-        } else if (binding.editHeightTIET.text.toString().toFloatOrNull() == null) {
-            valid = false
-            binding.editHeightTIL.error = getString(R.string.register_invalid_value_verification)
-        }
+//        if (binding.editLegalNameTIET.text.isNullOrEmpty()) {
+//            valid = false
+//            binding.editLegalNameTIL.error = getString(R.string.register_empty_field_verification)
+//        }
+//
+//        if (binding.editClinicIdTIET.text.isNullOrEmpty()) {
+//            valid = false
+//            binding.editClinicIdTIET.error = getString(R.string.register_empty_field_verification)
+//        }
+//
+//        if (binding.editDateOfBirthTIET.text.isNullOrEmpty()) {
+//            valid = false
+//            binding.editDateOfBirthTIL.error = getString(R.string.register_empty_field_verification)
+//        }
+//
+//        if (binding.editGenderACTV.text.isNullOrEmpty()) {
+//            valid = false
+//            binding.editGenderTIL.error = getString(R.string.register_empty_field_verification)
+//        }
+//
+//        if (binding.editWeightTIET.text.isNullOrEmpty()) {
+//            valid = false
+//            binding.editWeightTIL.error = getString(R.string.register_empty_field_verification)
+//        } else if (binding.editWeightTIET.text.toString().toFloatOrNull() == null) {
+//            valid = false
+//            binding.editWeightTIL.error = getString(R.string.register_invalid_value_verification)
+//        }
+//
+//        if (binding.editHeightTIET.text.isNullOrEmpty()) {
+//            valid = false
+//            binding.editHeightTIL.error = getString(R.string.register_empty_field_verification)
+//        } else if (binding.editHeightTIET.text.toString().toFloatOrNull() == null) {
+//            valid = false
+//            binding.editHeightTIL.error = getString(R.string.register_invalid_value_verification)
+//        }
 
         if (binding.editRegisterHomeSysInput.text.isNullOrEmpty()) {
             valid = false
@@ -390,33 +390,33 @@ class EditProfileActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener 
                 if (documentSnapshot.exists()) {
                     val patientData = documentSnapshot.data ?: return@addOnSuccessListener
 
-                    binding.editLegalNameTIET.setText(AESEncryption().decrypt(patientData["legalName"].toString()))
-                    binding.editClinicIdTIET.setText(patientData["clinicId"].toString())
-                    binding.editDateOfBirthTIET.setText(AESEncryption().decrypt(patientData["dateOfBirth"].toString()))
-                    binding.editGenderACTV.setText(
-                        when (patientData["gender"].toString().toInt()) {
-                            1 -> getString(R.string.register_gender_male)
-                            2 -> getString(R.string.register_gender_female)
-                            else -> ""
-                        },
-                        false
-                    )
-                    binding.editWeightTIET.setText(AESEncryption().decrypt(patientData["weight"].toString()))
-                    binding.editHeightTIET.setText(AESEncryption().decrypt(patientData["height"].toString()))
+//                    binding.editLegalNameTIET.setText(AESEncryption().decrypt(patientData["legalName"].toString()))
+//                    binding.editClinicIdTIET.setText(patientData["clinicId"].toString())
+//                    binding.editDateOfBirthTIET.setText(AESEncryption().decrypt(patientData["dateOfBirth"].toString()))
+//                    binding.editGenderACTV.setText(
+//                        when (patientData["gender"].toString().toInt()) {
+//                            1 -> getString(R.string.register_gender_male)
+//                            2 -> getString(R.string.register_gender_female)
+//                            else -> ""
+//                        },
+//                        false
+//                    )
+//                    binding.editWeightTIET.setText(AESEncryption().decrypt(patientData["weight"].toString()))
+//                    binding.editHeightTIET.setText(AESEncryption().decrypt(patientData["height"].toString()))
                     binding.editRegisterHomeSysInput.setText(AESEncryption().decrypt(patientData["targetHomeSys"].toString()))
                     binding.editRegisterHomeDiaInput.setText(AESEncryption().decrypt(patientData["targetHomeDia"].toString()))
                     binding.editRegisterClinicSysInput.setText(AESEncryption().decrypt(patientData["targetClinicSys"].toString()))
                     binding.editRegisterClinicDiaInput.setText(AESEncryption().decrypt(patientData["targetClinicDia"].toString()))
 
-                    val photoUrl = patientData["photoUrl"].toString()
-                    if (photoUrl.isNotEmpty()) {
-                        storage.getReferenceFromUrl(photoUrl).getBytes(Long.MAX_VALUE).addOnSuccessListener { bytes ->
-                            val bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
-                            binding.editPhotoIV.setImageBitmap(bitmap)
-                            binding.editPhotoTV.text = getString(R.string.profile_picture_info)
-                            photoBA = bytes
-                        }
-                    }
+//                    val photoUrl = patientData["photoUrl"].toString()
+//                    if (photoUrl.isNotEmpty()) {
+//                        storage.getReferenceFromUrl(photoUrl).getBytes(Long.MAX_VALUE).addOnSuccessListener { bytes ->
+//                            val bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
+//                            binding.editPhotoIV.setImageBitmap(bitmap)
+//                            binding.editPhotoTV.text = getString(R.string.profile_picture_info)
+//                            photoBA = bytes
+//                        }
+//                    }
 
                     progressDialog.dismiss()
                 } else {
@@ -435,37 +435,37 @@ class EditProfileActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener 
         progressDialog.setMessage(getString(R.string.update_loading_dialog))
         progressDialog.show()
 
-        val photo = photoBA
+//        val photo = photoBA
 
-        var gender = 0
-        when (binding.editGenderACTV.text.toString()) {
-            getString(R.string.register_gender_male) -> gender = 1
-            getString(R.string.register_gender_female) -> gender = 2
-        }
+//        var gender = 0
+//        when (binding.editGenderACTV.text.toString()) {
+//            getString(R.string.register_gender_male) -> gender = 1
+//            getString(R.string.register_gender_female) -> gender = 2
+//        }
 
         val patient: MutableMap<String, Any> = hashMapOf(
-            "legalName" to AESEncryption().encrypt(binding.editLegalNameTIET.text.toString().uppercase()),
-            "dateOfBirth" to AESEncryption().encrypt(binding.editDateOfBirthTIET.text.toString()),
-            "gender" to gender,
-            "weight" to AESEncryption().encrypt(binding.editWeightTIET.text.toString()),
-            "height" to AESEncryption().encrypt(binding.editHeightTIET.text.toString()),
+//            "legalName" to AESEncryption().encrypt(binding.editLegalNameTIET.text.toString().uppercase()),
+//            "dateOfBirth" to AESEncryption().encrypt(binding.editDateOfBirthTIET.text.toString()),
+//            "gender" to gender,
+//            "weight" to AESEncryption().encrypt(binding.editWeightTIET.text.toString()),
+//            "height" to AESEncryption().encrypt(binding.editHeightTIET.text.toString()),
             "targetHomeSys" to AESEncryption().encrypt(binding.editRegisterHomeSysInput.text.toString()),
             "targetHomeDia" to AESEncryption().encrypt(binding.editRegisterHomeDiaInput.text.toString()),
             "targetClinicSys" to AESEncryption().encrypt(binding.editRegisterClinicSysInput.text.toString()),
             "targetClinicDia" to AESEncryption().encrypt(binding.editRegisterClinicDiaInput.text.toString()),
-            "clinicId" to binding.editClinicIdTIET.text.toString().trim(),
+//            "clinicId" to binding.editClinicIdTIET.text.toString().trim(),
             "bpStage" to "N/A"
         )
 
         val docRef = db.collection("patients").document(id)
         docRef.get().addOnSuccessListener { documentSnapshot ->
             if (documentSnapshot.exists()) {
-                val nricDecrypted = AESEncryption().decrypt(id)
-                val storageRef = storage.reference.child("images/$nricDecrypted.jpg")
-                storageRef.putBytes(photo).addOnSuccessListener {
-                    storageRef.downloadUrl.addOnSuccessListener { uri ->
-                        val photoUrl = uri.toString()
-                        patient["photoUrl"] = photoUrl
+//                val nricDecrypted = AESEncryption().decrypt(id)
+//                val storageRef = storage.reference.child("images/$nricDecrypted.jpg")
+//                storageRef.putBytes(photo).addOnSuccessListener {
+//                    storageRef.downloadUrl.addOnSuccessListener { uri ->
+//                        val photoUrl = uri.toString()
+//                        patient["photoUrl"] = photoUrl
 
                         docRef.update(patient)
                             .addOnSuccessListener {
@@ -507,14 +507,14 @@ class EditProfileActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener 
                                 progressDialog.dismiss()
                                 firebaseErrorDialog(this, e, docRef)
                             }
-                    }.addOnFailureListener { e ->
-                        progressDialog.dismiss()
-                        firebaseErrorDialog(this, e, storageRef, photo)
-                    }
-                }.addOnFailureListener { e ->
-                    progressDialog.dismiss()
-                    firebaseErrorDialog(this, e, storageRef, photo)
-                }
+//                    }.addOnFailureListener { e ->
+//                        progressDialog.dismiss()
+//                        firebaseErrorDialog(this, e, storageRef, photo)
+//                    }
+//                }.addOnFailureListener { e ->
+//                    progressDialog.dismiss()
+//                    firebaseErrorDialog(this, e, storageRef, photo)
+//                }
             } else {
                 progressDialog.dismiss()
                 errorDialogBuilder(this, getString(R.string.update_error_header), getString(R.string.update_error_body), MainActivity::class.java)

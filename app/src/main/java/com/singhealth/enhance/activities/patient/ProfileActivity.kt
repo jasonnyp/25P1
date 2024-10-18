@@ -196,22 +196,26 @@ class ProfileActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
                                 // Call sorting function to sort previous visits
                                 val sortedArr = sortPatientVisits(documents)
                                 // Get the first item in the array (most recent reading)
-                                val recentSys = sortedArr[0].avgSysBP as Long
-                                val recentDia = sortedArr[0].avgDiaBP as Long
+                                val recentHomeSys = sortedArr[0].avgSysBP as Long
+                                val recentHomeDia = sortedArr[0].avgDiaBP as Long
                                 val recentClinicSys = sortedArr[0].clinicSys as Long
                                 val recentClinicDia = sortedArr[0].clinicDia as Long
                                 val targetHomeSys = sortedArr[0].targetHomeSys as Long
                                 val targetHomeDia = sortedArr[0].targetHomeDia as Long
+                                val targetClinicSys = sortedArr[0].targetClinicSys as Long
+                                val targetClinicDia = sortedArr[0].targetClinicDia as Long
                                 val recentDate = sortedArr[0].date as String
                                 // Determine BP Stage based on most recent readings
                                 val bpStage = hypertensionStatus(
                                     this,
-                                    recentSys,
-                                    recentDia,
+                                    recentHomeSys,
+                                    recentHomeDia,
                                     recentClinicSys,
                                     recentClinicDia,
                                     targetHomeSys,
-                                    targetHomeDia
+                                    targetHomeDia,
+                                    targetClinicSys,
+                                    targetClinicDia
                                 )
 
                                 // Set UI BP Stage
@@ -244,40 +248,40 @@ class ProfileActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
     }
 
     private fun updateUIWithPatientData(document: DocumentSnapshot, patientID: String) {
-        val imageUrl = document.getString("photoUrl")
-        if (imageUrl != null) {
-            loadImageFromUrl(imageUrl)
-        }
+//        val imageUrl = document.getString("photoUrl")
+//        if (imageUrl != null) {
+//            loadImageFromUrl(imageUrl)
+//        }
 
-        val legalName = document.getString("legalName")
-        if (legalName != null) {
-            val decryptedLegalName = AESEncryption().decrypt(legalName)
-            binding.legalNameTV.text = decryptedLegalName
-
-            SecureSharedPreferences.getSharedPreferences(applicationContext)
-                .edit()
-                .putString("legalName", decryptedLegalName)
-                .apply()
-        }
+//        val legalName = document.getString("legalName")
+//        if (legalName != null) {
+//            val decryptedLegalName = AESEncryption().decrypt(legalName)
+//            binding.legalNameTV.text = decryptedLegalName
+//
+//            SecureSharedPreferences.getSharedPreferences(applicationContext)
+//                .edit()
+//                .putString("legalName", decryptedLegalName)
+//                .apply()
+//        }
 
         binding.nricTV.text = AESEncryption().decrypt(patientID)
 
-        binding.dobTV.text = AESEncryption().decrypt(document.getString("dateOfBirth").toString())
+//        binding.dobTV.text = AESEncryption().decrypt(document.getString("dateOfBirth").toString())
 
-        when (document.getLong("gender")?.toInt()) {
-            1 -> binding.genderTV.text = getString(R.string.profile_gender_male)
-            2 -> binding.genderTV.text = getString(R.string.profile_gender_female)
-        }
+//        when (document.getLong("gender")?.toInt()) {
+//            1 -> binding.genderTV.text = getString(R.string.profile_gender_male)
+//            2 -> binding.genderTV.text = getString(R.string.profile_gender_female)
+//        }
 
-        binding.weightTV.text = getString(
-            R.string.profile_patient_weight,
-            AESEncryption().decrypt(document.getString("weight").toString())
-        )
+//        binding.weightTV.text = getString(
+//            R.string.profile_patient_weight,
+//            AESEncryption().decrypt(document.getString("weight").toString())
+//        )
 
-        binding.heightTV.text = getString(
-            R.string.profile_patient_height,
-            AESEncryption().decrypt(document.getString("height").toString())
-        )
+//        binding.heightTV.text = getString(
+//            R.string.profile_patient_height,
+//            AESEncryption().decrypt(document.getString("height").toString())
+//        )
 
         // Decrypt targetSys and targetDia, and handle empty values
         val targetHomeSys = document.getString("targetHomeSys")?.let {
@@ -322,22 +326,22 @@ class ProfileActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
             targetClinicDia
         )
 
-        binding.clinicId.text = document.getString("clinicId").toString()
+//        binding.clinicId.text = document.getString("clinicId").toString()
     }
 
 
-    private fun loadImageFromUrl(imageUrl: String) {
-        val imageRef = storage.getReferenceFromUrl(imageUrl)
-
-        imageRef.getBytes(10 * 1024 * 1024)
-            .addOnSuccessListener {
-                val bitmap = BitmapFactory.decodeByteArray(it, 0, it.size)
-                binding.photoIV.setImageBitmap(bitmap)
-            }
-            .addOnFailureListener { e ->
-                firebaseErrorDialog(this, e, ::loadImageFromUrl, imageUrl)
-            }
-    }
+//    private fun loadImageFromUrl(imageUrl: String) {
+//        val imageRef = storage.getReferenceFromUrl(imageUrl)
+//
+//        imageRef.getBytes(10 * 1024 * 1024)
+//            .addOnSuccessListener {
+//                val bitmap = BitmapFactory.decodeByteArray(it, 0, it.size)
+//                binding.photoIV.setImageBitmap(bitmap)
+//            }
+//            .addOnFailureListener { e ->
+//                firebaseErrorDialog(this, e, ::loadImageFromUrl, imageUrl)
+//            }
+//    }
 
     // Method to show the delete confirmation dialog
     private fun showDeleteConfirmationDialog() {
@@ -370,23 +374,41 @@ class ProfileActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
         db.collection("patients").document(patientID)
             .delete()
             .addOnSuccessListener {
-                val nricDecrypted = AESEncryption().decrypt(patientID)
-                val storageRef = storage.reference.child("images/$nricDecrypted.jpg")
-                storageRef.delete().addOnSuccessListener {
-                    progressDialog.dismiss()
-                    Toast.makeText(
-                        this,
-                        getString(R.string.patient_deleted_success),
-                        Toast.LENGTH_SHORT
-                    ).show()
+                db.collection("patients").document(patientID).collection("visits").get()
+                    .addOnSuccessListener { documents ->
+                        for(document in documents){
+                            db.collection("patients").document(patientID).collection("visits").document(document.id).delete()
+                        }
 
-                    // Navigate to MainActivity after deletion
-                    val intent = Intent(this, MainActivity::class.java)
-                    intent.flags =
-                        Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
-                    startActivity(intent)
-                    finish()
-                }
+//                        val nricDecrypted = AESEncryption().decrypt(patientID)
+//                        val storageRef = storage.reference.child("images/$nricDecrypted.jpg")
+//                        storageRef.delete().addOnSuccessListener {
+//                            progressDialog.dismiss()
+//                            Toast.makeText(
+//                                this,
+//                                getString(R.string.patient_deleted_success),
+//                                Toast.LENGTH_SHORT
+//                            ).show()
+//                        }
+
+
+                        // Navigate to MainActivity after deletion
+                        progressDialog.dismiss()
+                        Toast.makeText(
+                            this,
+                            getString(R.string.patient_deleted_success),
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        val intent = Intent(this, MainActivity::class.java)
+                        intent.flags =
+                            Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
+                        startActivity(intent)
+                        finish()
+                    }
+                    .addOnFailureListener { e ->
+                        progressDialog.dismiss()
+                        firebaseErrorDialog(this, e, db.collection("patients").document(patientID))
+                    }
             }
             .addOnFailureListener { e ->
                 progressDialog.dismiss()
