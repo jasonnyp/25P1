@@ -201,7 +201,9 @@ class RecommendationActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListen
                     clinicSysBP,
                     clinicDiaBP,
                     patientTargetSys,
-                    patientTargetDia
+                    patientTargetDia,
+                    clinicTargetSys,
+                    clinicTargetDia
                 )
                 binding.recommendationBpPhenotype.text = hypertension
                 binding.recommendationBpControl.text = bpControlStatus(this, hypertension)

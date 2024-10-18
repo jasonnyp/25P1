@@ -17,7 +17,7 @@ class LogOutTimerUtil {
     companion object {
         var longTimer: Timer? = null
         val LOGOUT_TIME =
-            300000 // delay in milliseconds i.e. 5 min = 300000 ms or use timeout argument
+            1200000 // delay in milliseconds i.e. 5 min = 300000 ms or use timeout argument
 
         fun startLogoutTimer(context: Context?, logOutListener: LogOutListener) {
             if (longTimer != null) {

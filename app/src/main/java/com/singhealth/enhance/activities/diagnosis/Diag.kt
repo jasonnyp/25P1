@@ -7,5 +7,7 @@ class Diag(
     val clinicSys: Long?,
     val clinicDia: Long?,
     val targetHomeSys: Long?,
-    val targetHomeDia: Long?
+    val targetHomeDia: Long?,
+    val targetClinicSys: Long?,
+    val targetClinicDia: Long?
 )

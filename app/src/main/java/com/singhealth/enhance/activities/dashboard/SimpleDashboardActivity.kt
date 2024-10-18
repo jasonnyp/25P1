@@ -162,7 +162,7 @@ class SimpleDashboardActivity : AppCompatActivity() {
         } else {
             patientID = patientSharedPreferences.getString("patientID", null).toString()
             decryptedPatientID = AESEncryption().decrypt(patientID)
-            patientName = patientSharedPreferences.getString("legalName", null).toString()
+//            patientName = patientSharedPreferences.getString("legalName", null).toString()
         }
 
         binding.printSourceBtn.setOnClickListener {
@@ -235,7 +235,9 @@ class SimpleDashboardActivity : AppCompatActivity() {
                         sortedHistory[0].clinicSysBP ?: 0L,
                         sortedHistory[0].clinicDiaBP ?: 0L,
                         sortedHistory[0].homeSysBPTarget ?: 0L,
-                        sortedHistory[0].homeDiaBPTarget ?: 0L
+                        sortedHistory[0].homeDiaBPTarget ?: 0L,
+                        sortedHistory[0].clinicSysBPTarget ?: 0L,
+                        sortedHistory[0].clinicDiaBPTarget ?: 0L
                     )
                     bpHomeControlStatus = bpControlStatus(this, bpHypertensionStatus)
                     bpReccomendation = showRecommendation(this, bpHomeControlStatus, "en")
@@ -495,8 +497,8 @@ class SimpleDashboardActivity : AppCompatActivity() {
                 // Draw patient information with bold values
                 canvas.drawText("ID:", padding, startY, smallNormalPaint)
                 canvas.drawText(decryptedPatientID, padding + 50f, startY, smallBoldPaint) // Adjust x offset as needed
-                canvas.drawText("Name:", padding + columnSpacing, startY, smallNormalPaint)
-                canvas.drawText(patientName, padding + columnSpacing + 110f, startY, smallBoldPaint) // Adjust x offset as needed
+//                canvas.drawText("Name:", padding + columnSpacing, startY, smallNormalPaint)
+//                canvas.drawText(patientName, padding + columnSpacing + 110f, startY, smallBoldPaint) // Adjust x offset as needed
                 canvas.drawText("Average BP:", padding, startY + lineHeight, smallNormalPaint)
                 canvas.drawText(avgBP, padding + 200f, startY + lineHeight, smallBoldPaint) // Adjust x offset as needed
                 canvas.drawText("Date & Time:", padding + columnSpacing, startY + lineHeight, smallNormalPaint)
