@@ -38,7 +38,7 @@ import com.singhealth.enhance.activities.validation.ocrTextErrorDialog
 import com.singhealth.enhance.activities.validation.patientNotFoundInSessionErrorDialog
 import com.singhealth.enhance.databinding.ActivityScanBinding
 import com.singhealth.enhance.security.AESEncryption
-import com.singhealth.enhance.security.LogOutTimerUtil
+import com.singhealth.enhance.security.LogOutTimerUtil.Companion.stopLogoutTimer
 import com.singhealth.enhance.security.SecureSharedPreferences
 import kotlin.math.abs
 import kotlin.math.max
@@ -98,12 +98,12 @@ class ScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
 
         binding.generalSourceBtn.setOnClickListener {
             sevenDay = false
-            LogOutTimerUtil.stopLogoutTimer()
+            stopLogoutTimer()
             onClickRequestPermission()
         }
         binding.sevenDaySourceBtn.setOnClickListener {
             sevenDay = true
-            LogOutTimerUtil.stopLogoutTimer()
+            stopLogoutTimer()
             onClickRequestPermission()
         }
     }
@@ -194,6 +194,8 @@ class ScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
         LogOutTimerUtil.startLogoutTimer(this, this)
         if (it !is CropImage.CancelledResult) {
             handleCropImageResultForAutocrop(it.uriContent.toString())
+        } else {
+            LogOutTimerUtil.startLogoutTimer(this, this)
         }
     }
 

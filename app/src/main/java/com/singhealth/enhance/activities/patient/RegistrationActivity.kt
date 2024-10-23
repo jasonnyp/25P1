@@ -37,6 +37,7 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 
+
 class RegistrationActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
     lateinit var binding: ActivityRegistrationBinding
 
@@ -59,7 +60,7 @@ class RegistrationActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener
         startActivity(Intent(this, LoginActivity::class.java))
         finish()
     }
-    
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
