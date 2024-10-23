@@ -258,7 +258,7 @@
     <string name="enhance_register_photo">Photo</string>
     <string name="enhance_register_photo_desc">Upload Photo</string>
     <string name="enhance_register_upload_photo">Tap on the file upload icon to select a photo from your gallery.</string>
-    <string name="enhance_register_particulars">Personal Particulars</string>
+    <string name="enhance_register_particulars">Patient Information</string>
     <string name="enhance_register_legal_name">Legal Name</string>
     <string name="enhance_register_patient_id">Patient ID No.</string>
     <string name="enhance_register_dob">Date of Birth</string>
@@ -277,7 +277,7 @@
     <string name="enhance_edit_photo">Edit Photo</string>
     <string name="enhance_edit_photo_desc">Upload Photo</string>
     <string name="enhance_edit_upload_photo">Tap to change profile picture</string>
-    <string name="enhance_edit_particulars">Edit Particulars</string>
+    <string name="enhance_edit_particulars">Edit Information</string>
     <string name="enhance_edit_legal_name">Legal Name</string>
     <string name="enhance_edit_patient_id">Patient ID</string>
     <string name="enhance_edit_dob">Date of Birth</string>

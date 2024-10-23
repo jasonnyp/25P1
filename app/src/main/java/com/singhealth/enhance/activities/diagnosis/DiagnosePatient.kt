@@ -34,6 +34,8 @@ fun sortPatientVisits(documents: QuerySnapshot) : List<Diag> {
         val clinicDia = document.get("clinicDiaBP") as? Long
         val targetHomeSys = document.get("homeSysBPTarget") as? Long
         val targetHomeDia = document.get("homeDiaBPTarget") as? Long
+        val targetClinicSys = document.get("clinicSysBPTarget") as? Long
+        val targetClinicDia = document.get("clinicDiaBPTarget") as? Long
         arr.add(
             Diag(
                 dateTime.toString(),
@@ -42,7 +44,9 @@ fun sortPatientVisits(documents: QuerySnapshot) : List<Diag> {
                 clinicSys,
                 clinicDia,
                 targetHomeSys,
-                targetHomeDia
+                targetHomeDia,
+                targetClinicSys,
+                targetClinicDia
             )
         )
     }
@@ -142,10 +146,8 @@ fun hypertensionStatus(
     avgHomeSys: Long, avgHomeDia: Long,
     clinicSys: Long, clinicDia: Long,
     targetHomeSys: Long, targetHomeDia: Long,
+    targetClinicSys: Long, targetClinicDia: Long,
 ):String {
-    val targetClinicSys = targetHomeSys + 5
-    val targetClinicDia = targetHomeDia + 5
-
     val controlledHomeBP: Boolean = (avgHomeSys < targetHomeSys && avgHomeDia < targetHomeDia)
     val controlledClinicBP: Boolean = (clinicSys < targetClinicSys && clinicDia < targetClinicDia)
 

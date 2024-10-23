@@ -59,28 +59,28 @@
                             android:textStyle="bold" />
                     </LinearLayout>
 
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
+<!--                    <LinearLayout-->
+<!--                        android:layout_width="0dp"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_weight="1"-->
+<!--                        android:orientation="vertical">-->
 
-                        <TextView
-                            android:id="@+id/patientNameTextView"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/enhance_scan_name"
-                            android:textColor="@color/text_black_white"
-                            android:textSize="16sp" />
+<!--                        <TextView-->
+<!--                            android:id="@+id/patientNameTextView"-->
+<!--                            android:layout_width="wrap_content"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:text="@string/enhance_scan_name"-->
+<!--                            android:textColor="@color/text_black_white"-->
+<!--                            android:textSize="16sp" />-->
 
-                        <TextView
-                            android:id="@+id/patientNameValueTextView"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textStyle="bold"
-                            android:textColor="@color/text_black_white"
-                            android:textSize="16sp" />
-                    </LinearLayout>
+<!--                        <TextView-->
+<!--                            android:id="@+id/patientNameValueTextView"-->
+<!--                            android:layout_width="wrap_content"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:textStyle="bold"-->
+<!--                            android:textColor="@color/text_black_white"-->
+<!--                            android:textSize="16sp" />-->
+<!--                    </LinearLayout>-->
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
