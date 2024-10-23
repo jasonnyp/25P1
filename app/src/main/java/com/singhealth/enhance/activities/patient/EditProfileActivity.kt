@@ -471,19 +471,19 @@ class EditProfileActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener 
                             .addOnSuccessListener {
                                 // Retrieve the document again to check the clinic ID
                                 docRef.get().addOnSuccessListener { updatedSnapshot ->
-                                    val updatedClinicId = updatedSnapshot.getString("clinicId").toString()
-
-                                    // Check if the clinic ID matches the one in StaffSharedPreferences
-                                    val staffClinicId = StaffSharedPreferences.getSharedPreferences(applicationContext).getString("clinicId", "")
-
-                                    if (updatedClinicId != staffClinicId) {
-                                        errorClinicDialogBuilder(
-                                            this,
-                                            getString(R.string.enhance_edit_clinic_id_mismatch),
-                                            getString(R.string.enhance_edit_clinic_id_error),
-                                            MainActivity::class.java
-                                        )
-                                    } else {
+//                                    val updatedClinicId = updatedSnapshot.getString("clinicId").toString()
+//
+//                                    // Check if the clinic ID matches the one in StaffSharedPreferences
+//                                    val staffClinicId = StaffSharedPreferences.getSharedPreferences(applicationContext).getString("clinicId", "")
+//
+//                                    if (updatedClinicId != staffClinicId) {
+//                                        errorClinicDialogBuilder(
+//                                            this,
+//                                            getString(R.string.enhance_edit_clinic_id_mismatch),
+//                                            getString(R.string.enhance_edit_clinic_id_error),
+//                                            MainActivity::class.java
+//                                        )
+//                                    } else {
                                         // If everything is fine, show success toast and navigate to ProfileActivity
                                         progressDialog.dismiss()
 
@@ -497,7 +497,7 @@ class EditProfileActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener 
                                         profileActivityIntent.extras?.putString("Source", "EditProfileActivity")
                                         startActivity(profileActivityIntent)
                                         finish()
-                                    }
+//                                    }
                                 }.addOnFailureListener { e ->
                                     progressDialog.dismiss()
                                     firebaseErrorDialog(this, e, docRef)

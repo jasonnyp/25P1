@@ -98,12 +98,10 @@ class ScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
 
         binding.generalSourceBtn.setOnClickListener {
             sevenDay = false
-            LogOutTimerUtil.stopLogoutTimer()
             onClickRequestPermission()
         }
         binding.sevenDaySourceBtn.setOnClickListener {
             sevenDay = true
-            LogOutTimerUtil.stopLogoutTimer()
             onClickRequestPermission()
         }
     }
@@ -169,6 +167,7 @@ class ScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
     private fun onClickRequestPermission() {
         when (PackageManager.PERMISSION_GRANTED) {
             ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) -> {
+                LogOutTimerUtil.stopLogoutTimer()
                 startCameraWithoutUri(includeCamera = true, includeGallery = true)
             }
             else -> {
@@ -401,7 +400,7 @@ class ScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
                 leftGap = block.boundingBox!!.left - 30
                 println("First Left:$leftGap")
             }
-            else if (block.boundingBox!!.left < leftGap){
+            else if (block.boundingBox!!.left - 30 < leftGap){
                 leftGap = block.boundingBox!!.left - 30
                 println("New Left:$leftGap")
 
@@ -410,7 +409,7 @@ class ScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
                 topGap = block.boundingBox!!.top - 30
                 println("First Top:$topGap")
             }
-            else if (block.boundingBox!!.top < topGap){
+            else if (block.boundingBox!!.top - 30 < topGap){
                 topGap = block.boundingBox!!.top - 30
                 println("New Top:$topGap")
 
@@ -419,7 +418,7 @@ class ScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
                 rightGap = block.boundingBox!!.right + 30
                 println("First Right:$rightGap")
             }
-            else if (block.boundingBox!!.right > rightGap){
+            else if (block.boundingBox!!.right + 30 > rightGap){
                 rightGap = block.boundingBox!!.right + 30
                 println("New Right:$rightGap")
 
@@ -428,7 +427,7 @@ class ScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
                 bottomGap = block.boundingBox!!.bottom + 30
                 println("First Bottom:$bottomGap")
             }
-            else if (block.boundingBox!!.bottom > bottomGap){
+            else if (block.boundingBox!!.bottom + 30 > bottomGap){
                 bottomGap = block.boundingBox!!.bottom + 30
                 println("New Bottom:$bottomGap")
 

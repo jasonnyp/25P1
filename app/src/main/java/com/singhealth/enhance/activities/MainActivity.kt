@@ -149,25 +149,25 @@ class MainActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
         docRef.get()
             .addOnSuccessListener { document ->
                 if (document.exists()) {
-                    val patientClinicId = document.getString("clinicId")
-                    val staffClinicId = StaffSharedPreferences.getSharedPreferences(applicationContext).getString("clinicId", "")
-                    println("Patient Clinic ID: $patientClinicId")
-                    println("Staff Clinic ID: $staffClinicId")
-
-                    if (staffClinicId != patientClinicId) {
-                        // Clinic ID mismatch, show error dialog
-                        errorDialogBuilder(
-                            this,
-                            getString(R.string.enhance_edit_clinic_id_mismatch),
-                            getString(R.string.enhance_edit_clinic_id_error)
-                        )
-                    } else {
+//                    val patientClinicId = document.getString("clinicId")
+//                    val staffClinicId = StaffSharedPreferences.getSharedPreferences(applicationContext).getString("clinicId", "")
+//                    println("Patient Clinic ID: $patientClinicId")
+//                    println("Staff Clinic ID: $staffClinicId")
+//
+//                    if (staffClinicId != patientClinicId) {
+//                        // Clinic ID mismatch, show error dialog
+//                        errorDialogBuilder(
+//                            this,
+//                            getString(R.string.enhance_edit_clinic_id_mismatch),
+//                            getString(R.string.enhance_edit_clinic_id_error)
+//                        )
+//                    } else {
                         // Clinic ID matches, proceed to save patient data and navigate to ProfileActivity
                         savePatientData(patientID)
                         val profileActivityIntent = Intent(this, ProfileActivity::class.java)
                         profileActivityIntent.putExtra("Source", "MainActivity")
                         startActivity(profileActivityIntent)
-                    }
+//                    }
                 } else {
                     errorDialogBuilder(
                         this,
