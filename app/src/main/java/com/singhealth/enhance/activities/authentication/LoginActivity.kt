@@ -80,13 +80,13 @@ class LoginActivity : AppCompatActivity() {
                                         val staffData = document.data
                                         val accountNumber = staffData?.get("account_number") as? String
                                         if (accountNumber == uid) {
-                                            val clinicId = staffData["clinicId"] as? String
-                                            if (clinicId != null) {
-                                                StaffSharedPreferences.getSharedPreferences(applicationContext).edit().apply {
-                                                    putString("clinicId", clinicId)
-                                                    apply()
-                                                }
-                                                println("Clinic ID successfully saved: ${StaffSharedPreferences.getSharedPreferences(applicationContext).getString("clinicId", "")}")
+//                                            val clinicId = staffData["clinicId"] as? String
+//                                            if (clinicId != null) {
+//                                                StaffSharedPreferences.getSharedPreferences(applicationContext).edit().apply {
+//                                                    putString("clinicId", clinicId)
+//                                                    apply()
+//                                                }
+//                                                println("Clinic ID successfully saved: ${StaffSharedPreferences.getSharedPreferences(applicationContext).getString("clinicId", "")}")
                                                 Toast.makeText(
                                                     this,
                                                     getString(R.string.login_success_header),
@@ -96,7 +96,7 @@ class LoginActivity : AppCompatActivity() {
                                                 finish()
                                                 staffFound = true
                                                 break
-                                            }
+//                                            }
                                         }
                                     }
                                     if (!staffFound) {
