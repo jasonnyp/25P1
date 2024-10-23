@@ -58,6 +58,11 @@ class ScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
     private var clinicSysBP: String? = null
     private var clinicDiaBP: String? = null
     private var direction: String = ""
+    private var currentDay: String? = null
+    private var timeOfDay: String? = null
+    private var readingOfDay: String? = null
+    private var currentDayReadings = mutableListOf<String>()
+    private var allDayReadings = mutableListOf<String>()
 
     // Used for Session Timeout
 //    override fun onUserInteraction() {
@@ -341,6 +346,31 @@ class ScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
         }
     }
 
+    private fun suckItUp(value: String) {
+        try {
+            val number = value.toInt()
+            if (number in 20..220 && number != 202) { // 202 because if date is left unfilled, 202_ will be read as 202
+                currentDayReadings.add(number.toString())
+            }
+        } catch (e: NumberFormatException) {}
+    }
+    
+    private fun suckItUpCheck() {
+        if (currentDayReadings.size == 2) {
+            allDayReadings.add(currentDayReadings.toString())
+        } else if (currentDayReadings.size == 1) {
+            allDayReadings.add(currentDayReadings.toString())
+            while (currentDayReadings.size < 2) {
+                allDayReadings.add("")
+            }
+        } else if (currentDayReadings.size == 0) {
+            while (currentDayReadings.size < 2) {
+                allDayReadings.add("")
+            }
+        }
+        currentDayReadings.clear()
+    }
+
     private fun extractWordsFromBlocks(blocks: List<FirebaseVisionDocumentText.Block>): MutableList<FirebaseVisionDocumentText.Word> {
         val words = mutableListOf<FirebaseVisionDocumentText.Word>()
         var totalCount = 0
@@ -351,6 +381,7 @@ class ScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
         var topGap: Int? = null
         var rightGap: Int? = null
         var bottomGap: Int? = null
+
         for (block in blocks) {
             var accumulatedWords = ""
             totalCount += 1
@@ -371,7 +402,7 @@ class ScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
                     }
 
                     // Search clinicBP in this and next bounding Box, flow must be in this order of sequence or would not detect
-                    if (searchNextBoundingBox){
+                    if (searchNextBoundingBox) {
                         val targetClinicBP = word.text.split("/").toTypedArray()
                         if (targetClinicBP.size == 2) {
                             clinicSysBP = targetClinicBP[0]
@@ -380,10 +411,10 @@ class ScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
                         }
                         searchNextBoundingBox = false
                     }
-                    if (accumulatedWords == "Clinic/OfficeBP"){
+                    if (accumulatedWords == "Clinic/OfficeBP") {
                         searchNextBoundingBox = true
                     }
-                    if (accumulatedWords == "Clinic/OfficeBP:"){
+                    if (accumulatedWords == "Clinic/OfficeBP:") {
                         val targetClinicBP = word.text.split("/").toTypedArray()
                         if (targetClinicBP.size == 2) {
                             clinicSysBP = targetClinicBP[0]
@@ -394,7 +425,134 @@ class ScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
                     }
                     accumulatedWords += word.text
 
-                    // Get word list for each day to detect if there are missing values
+                    when (accumulatedWords) {
+                        "DAY1" -> {
+                            currentDay = "Day 1"
+                        }
+                        "DAY2" -> {
+                            currentDay = "Day 2"
+                        }
+                        "DAY3" -> {
+                            currentDay = "Day 3"
+                        }
+                        "DAY4" -> {
+                            currentDay = "Day 4"
+                        }
+                        "DAY5" -> {
+                            currentDay = "Day 5"
+                        }
+                        "DAY6" -> {
+                            currentDay = "Day 7"
+                        }
+                        "DAY7" -> {
+                            currentDay = "Day 7"
+                        }
+                        "Morning", "morning" -> {
+                            timeOfDay = "Morning"
+                        }
+                        "Evening", "evening" -> {
+                            timeOfDay = "Evening"
+                        }
+                         in "1st" -> {
+                            readingOfDay = "1st"
+                             suckItUpCheck()
+                        }
+                         in "2nd" -> {
+                            readingOfDay = "2nd"
+                             suckItUpCheck()
+                        }
+                    }
+
+                    if (currentDay == "Day 1" && timeOfDay == "Morning" && readingOfDay == "1st") {
+                        suckItUp(word.text)
+                    }
+                    if (currentDay == "Day 1" && timeOfDay == "Morning" && readingOfDay == "2nd") {
+                        suckItUp(word.text)
+                    }
+                    if (currentDay == "Day 1" && timeOfDay == "Evening" && readingOfDay == "1st") {
+                        suckItUp(word.text)
+                    }
+                    if (currentDay == "Day 1" && timeOfDay == "Evening" && readingOfDay == "2nd") {
+                        suckItUp(word.text)
+                    }
+
+                    if (currentDay == "Day 2" && timeOfDay == "Morning" && readingOfDay == "1st") {
+                        suckItUp(word.text)
+                    }
+                    if (currentDay == "Day 2" && timeOfDay == "Morning" && readingOfDay == "2nd") {
+                        suckItUp(word.text)
+                    }
+                    if (currentDay == "Day 2" && timeOfDay == "Evening" && readingOfDay == "1st") {
+                        suckItUp(word.text)
+                    }
+                    if (currentDay == "Day 2" && timeOfDay == "Evening" && readingOfDay == "2nd") {
+                        suckItUp(word.text)
+                    }
+
+                    if (currentDay == "Day 3" && timeOfDay == "Morning" && readingOfDay == "1st") {
+                        suckItUp(word.text)
+                    }
+                    if (currentDay == "Day 3" && timeOfDay == "Morning" && readingOfDay == "2nd") {
+                        suckItUp(word.text)
+                    }
+                    if (currentDay == "Day 3" && timeOfDay == "Evening" && readingOfDay == "1st") {
+                        suckItUp(word.text)
+                    }
+                    if (currentDay == "Day 3" && timeOfDay == "Evening" && readingOfDay == "2nd") {
+                        suckItUp(word.text)
+                    }
+
+                    if (currentDay == "Day 4" && timeOfDay == "Morning" && readingOfDay == "1st") {
+                        suckItUp(word.text)
+                    }
+                    if (currentDay == "Day 4" && timeOfDay == "Morning" && readingOfDay == "2nd") {
+                        suckItUp(word.text)
+                    }
+                    if (currentDay == "Day 4" && timeOfDay == "Evening" && readingOfDay == "1st") {
+                        suckItUp(word.text)
+                    }
+                    if (currentDay == "Day 4" && timeOfDay == "Evening" && readingOfDay == "2nd") {
+                        suckItUp(word.text)
+                    }
+
+                    if (currentDay == "Day 5" && timeOfDay == "Morning" && readingOfDay == "1st") {
+                        suckItUp(word.text)
+                    }
+                    if (currentDay == "Day 5" && timeOfDay == "Morning" && readingOfDay == "2nd") {
+                        suckItUp(word.text)
+                    }
+                    if (currentDay == "Day 5" && timeOfDay == "Evening" && readingOfDay == "1st") {
+                        suckItUp(word.text)
+                    }
+                    if (currentDay == "Day 5" && timeOfDay == "Evening" && readingOfDay == "2nd") {
+                        suckItUp(word.text)
+                    }
+
+                    if (currentDay == "Day 6" && timeOfDay == "Morning" && readingOfDay == "1st") {
+                        suckItUp(word.text)
+                    }
+                    if (currentDay == "Day 6" && timeOfDay == "Morning" && readingOfDay == "2nd") {
+                        suckItUp(word.text)
+                    }
+                    if (currentDay == "Day 6" && timeOfDay == "Evening" && readingOfDay == "1st") {
+                        suckItUp(word.text)
+                    }
+                    if (currentDay == "Day 6" && timeOfDay == "Evening" && readingOfDay == "2nd") {
+                        suckItUp(word.text)
+                    }
+
+                    if (currentDay == "Day 7" && timeOfDay == "Morning" && readingOfDay == "1st") {
+                        suckItUp(word.text)
+                    }
+                    if (currentDay == "Day 7" && timeOfDay == "Morning" && readingOfDay == "2nd") {
+                        suckItUp(word.text)
+                    }
+                    if (currentDay == "Day 7" && timeOfDay == "Evening" && readingOfDay == "1st") {
+                        suckItUp(word.text)
+                    }
+                    if (currentDay == "Day 7" && timeOfDay == "Evening" && readingOfDay == "2nd") {
+                        suckItUp(word.text)
+                    }
                 }
             }
 
@@ -436,6 +594,9 @@ class ScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
 
             }
         }
+
+        println("Finalized list of day readings: $allDayReadings")
+        println("Total number of readings: ${allDayReadings.count()}")
 
         // Comparison to detect the direction
         if (firstBoundingBox != Rect(0, 0, 0, 0) && secondBoundingBox != Rect(0, 0, 0, 0)) {
