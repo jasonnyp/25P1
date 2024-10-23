@@ -59,7 +59,7 @@ class RegistrationActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener
         startActivity(Intent(this, LoginActivity::class.java))
         finish()
     }
-    
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
