@@ -37,7 +37,6 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 
-
 class RegistrationActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
     lateinit var binding: ActivityRegistrationBinding
 
