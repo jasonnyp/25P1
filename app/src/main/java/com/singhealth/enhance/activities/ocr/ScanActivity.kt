@@ -38,7 +38,7 @@ import com.singhealth.enhance.activities.validation.ocrTextErrorDialog
 import com.singhealth.enhance.activities.validation.patientNotFoundInSessionErrorDialog
 import com.singhealth.enhance.databinding.ActivityScanBinding
 import com.singhealth.enhance.security.AESEncryption
-import com.singhealth.enhance.security.LogOutTimerUtil.Companion.stopLogoutTimer
+import com.singhealth.enhance.security.LogOutTimerUtil
 import com.singhealth.enhance.security.SecureSharedPreferences
 import kotlin.math.abs
 import kotlin.math.max
@@ -58,11 +58,9 @@ class ScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
     private var clinicSysBP: String? = null
     private var clinicDiaBP: String? = null
     private var direction: String = ""
-    private var currentDay: String? = null
-    private var timeOfDay: String? = null
-    private var readingOfDay: String? = null
     private var currentDayReadings = mutableListOf<String>()
     private var allDayReadings = mutableListOf<String>()
+    private var ranFirstTime: Boolean = false
 
     // Used for Session Timeout
 //    override fun onUserInteraction() {
@@ -103,12 +101,10 @@ class ScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
 
         binding.generalSourceBtn.setOnClickListener {
             sevenDay = false
-            stopLogoutTimer()
             onClickRequestPermission()
         }
         binding.sevenDaySourceBtn.setOnClickListener {
             sevenDay = true
-            stopLogoutTimer()
             onClickRequestPermission()
         }
     }
@@ -174,6 +170,7 @@ class ScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
     private fun onClickRequestPermission() {
         when (PackageManager.PERMISSION_GRANTED) {
             ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) -> {
+                LogOutTimerUtil.stopLogoutTimer()
                 startCameraWithoutUri(includeCamera = true, includeGallery = true)
             }
             else -> {
@@ -199,8 +196,6 @@ class ScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
         LogOutTimerUtil.startLogoutTimer(this, this)
         if (it !is CropImage.CancelledResult) {
             handleCropImageResultForAutocrop(it.uriContent.toString())
-        } else {
-            LogOutTimerUtil.startLogoutTimer(this, this)
         }
     }
 
@@ -273,6 +268,8 @@ class ScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
             handleCropImageResult(it.uriContent.toString())
         }
         else{
+            ranFirstTime = false
+            allDayReadings.clear()
             binding.cropIV.visibility = View.GONE
             binding.ocrInstructionsTextViewValue.visibility = View.VISIBLE
             binding.scanStatusTextView.visibility = View.VISIBLE
@@ -352,20 +349,48 @@ class ScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
             if (number in 20..220 && number != 202) { // 202 because if date is left unfilled, 202_ will be read as 202
                 currentDayReadings.add(number.toString())
             }
-        } catch (e: NumberFormatException) {}
+        } catch (_: NumberFormatException) {}
     }
-    
+
     private fun suckItUpCheck() {
         if (currentDayReadings.size == 2) {
             allDayReadings.add(currentDayReadings.toString())
-        } else if (currentDayReadings.size == 1) {
-            allDayReadings.add(currentDayReadings.toString())
+        }
+        else if (currentDayReadings.size == 1) {
             while (currentDayReadings.size < 2) {
-                allDayReadings.add("")
+                currentDayReadings.add("")
             }
-        } else if (currentDayReadings.size == 0) {
+            allDayReadings.add(currentDayReadings.toString())
+        }
+        else if (currentDayReadings.size == 0) {
             while (currentDayReadings.size < 2) {
-                allDayReadings.add("")
+                currentDayReadings.add("")
+            }
+            allDayReadings.add(currentDayReadings.toString())
+        }
+        // Experimental Even Values > 2
+        else if (currentDayReadings.size % 2 == 0){
+            println("Test Even $currentDayReadings")
+            while (currentDayReadings.size != 2) {
+                val templist = currentDayReadings.slice(0..1)
+                currentDayReadings.removeAt(1)
+                currentDayReadings.removeAt(0)
+                allDayReadings.add(templist.toString())
+            }
+            allDayReadings.add(currentDayReadings.toString())
+        }
+        // Experimental Odd Values > 2
+        else if (currentDayReadings.size % 2 == 1){
+            println("Test Odd $currentDayReadings")
+            while (currentDayReadings.size != 2 && currentDayReadings.size != 0) {
+                if (currentDayReadings.size < 2){
+                    currentDayReadings.add("")
+                }
+                println("Updated $currentDayReadings")
+                val templist = currentDayReadings.slice(0..1)
+                currentDayReadings.removeAt(1)
+                currentDayReadings.removeAt(0)
+                allDayReadings.add(templist.toString())
             }
         }
         currentDayReadings.clear()
@@ -381,7 +406,10 @@ class ScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
         var topGap: Int? = null
         var rightGap: Int? = null
         var bottomGap: Int? = null
-
+        var afterDay1First = false
+        var currentDay: String? = null
+        var timeOfDay: String? = null
+        var readingOfDay: String? = null
         for (block in blocks) {
             var accumulatedWords = ""
             totalCount += 1
@@ -425,133 +453,156 @@ class ScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
                     }
                     accumulatedWords += word.text
 
-                    when (accumulatedWords) {
-                        "DAY1" -> {
-                            currentDay = "Day 1"
-                        }
-                        "DAY2" -> {
-                            currentDay = "Day 2"
-                        }
-                        "DAY3" -> {
-                            currentDay = "Day 3"
-                        }
-                        "DAY4" -> {
-                            currentDay = "Day 4"
-                        }
-                        "DAY5" -> {
-                            currentDay = "Day 5"
-                        }
-                        "DAY6" -> {
-                            currentDay = "Day 7"
-                        }
-                        "DAY7" -> {
-                            currentDay = "Day 7"
-                        }
-                        "Morning", "morning" -> {
-                            timeOfDay = "Morning"
-                        }
-                        "Evening", "evening" -> {
-                            timeOfDay = "Evening"
-                        }
-                         in "1st" -> {
-                            readingOfDay = "1st"
-                             suckItUpCheck()
-                        }
-                         in "2nd" -> {
-                            readingOfDay = "2nd"
-                             suckItUpCheck()
-                        }
-                    }
+                    // Get word list for each day to detect if there are missing values
+                    if(!ranFirstTime) {
+                        when (accumulatedWords) {
+                            "DAY1" -> {
+                                currentDay = "Day 1"
+                            }
 
-                    if (currentDay == "Day 1" && timeOfDay == "Morning" && readingOfDay == "1st") {
-                        suckItUp(word.text)
-                    }
-                    if (currentDay == "Day 1" && timeOfDay == "Morning" && readingOfDay == "2nd") {
-                        suckItUp(word.text)
-                    }
-                    if (currentDay == "Day 1" && timeOfDay == "Evening" && readingOfDay == "1st") {
-                        suckItUp(word.text)
-                    }
-                    if (currentDay == "Day 1" && timeOfDay == "Evening" && readingOfDay == "2nd") {
-                        suckItUp(word.text)
-                    }
+                            "DAY2" -> {
+                                currentDay = "Day 2"
+                            }
 
-                    if (currentDay == "Day 2" && timeOfDay == "Morning" && readingOfDay == "1st") {
-                        suckItUp(word.text)
-                    }
-                    if (currentDay == "Day 2" && timeOfDay == "Morning" && readingOfDay == "2nd") {
-                        suckItUp(word.text)
-                    }
-                    if (currentDay == "Day 2" && timeOfDay == "Evening" && readingOfDay == "1st") {
-                        suckItUp(word.text)
-                    }
-                    if (currentDay == "Day 2" && timeOfDay == "Evening" && readingOfDay == "2nd") {
-                        suckItUp(word.text)
-                    }
+                            "DAY3" -> {
+                                currentDay = "Day 3"
+                            }
 
-                    if (currentDay == "Day 3" && timeOfDay == "Morning" && readingOfDay == "1st") {
-                        suckItUp(word.text)
-                    }
-                    if (currentDay == "Day 3" && timeOfDay == "Morning" && readingOfDay == "2nd") {
-                        suckItUp(word.text)
-                    }
-                    if (currentDay == "Day 3" && timeOfDay == "Evening" && readingOfDay == "1st") {
-                        suckItUp(word.text)
-                    }
-                    if (currentDay == "Day 3" && timeOfDay == "Evening" && readingOfDay == "2nd") {
-                        suckItUp(word.text)
-                    }
+                            "DAY4" -> {
+                                currentDay = "Day 4"
+                            }
 
-                    if (currentDay == "Day 4" && timeOfDay == "Morning" && readingOfDay == "1st") {
-                        suckItUp(word.text)
-                    }
-                    if (currentDay == "Day 4" && timeOfDay == "Morning" && readingOfDay == "2nd") {
-                        suckItUp(word.text)
-                    }
-                    if (currentDay == "Day 4" && timeOfDay == "Evening" && readingOfDay == "1st") {
-                        suckItUp(word.text)
-                    }
-                    if (currentDay == "Day 4" && timeOfDay == "Evening" && readingOfDay == "2nd") {
-                        suckItUp(word.text)
-                    }
+                            "DAY5" -> {
+                                currentDay = "Day 5"
+                            }
 
-                    if (currentDay == "Day 5" && timeOfDay == "Morning" && readingOfDay == "1st") {
-                        suckItUp(word.text)
-                    }
-                    if (currentDay == "Day 5" && timeOfDay == "Morning" && readingOfDay == "2nd") {
-                        suckItUp(word.text)
-                    }
-                    if (currentDay == "Day 5" && timeOfDay == "Evening" && readingOfDay == "1st") {
-                        suckItUp(word.text)
-                    }
-                    if (currentDay == "Day 5" && timeOfDay == "Evening" && readingOfDay == "2nd") {
-                        suckItUp(word.text)
-                    }
+                            "DAY6" -> {
+                                currentDay = "Day 6"
+                            }
 
-                    if (currentDay == "Day 6" && timeOfDay == "Morning" && readingOfDay == "1st") {
-                        suckItUp(word.text)
-                    }
-                    if (currentDay == "Day 6" && timeOfDay == "Morning" && readingOfDay == "2nd") {
-                        suckItUp(word.text)
-                    }
-                    if (currentDay == "Day 6" && timeOfDay == "Evening" && readingOfDay == "1st") {
-                        suckItUp(word.text)
-                    }
-                    if (currentDay == "Day 6" && timeOfDay == "Evening" && readingOfDay == "2nd") {
-                        suckItUp(word.text)
-                    }
+                            "DAY7" -> {
+                                currentDay = "Day 7"
+                            }
 
-                    if (currentDay == "Day 7" && timeOfDay == "Morning" && readingOfDay == "1st") {
-                        suckItUp(word.text)
-                    }
-                    if (currentDay == "Day 7" && timeOfDay == "Morning" && readingOfDay == "2nd") {
-                        suckItUp(word.text)
-                    }
-                    if (currentDay == "Day 7" && timeOfDay == "Evening" && readingOfDay == "1st") {
-                        suckItUp(word.text)
-                    }
-                    if (currentDay == "Day 7" && timeOfDay == "Evening" && readingOfDay == "2nd") {
-                        suckItUp(word.text)
+                            "Morning", "morning" -> {
+                                timeOfDay = "Morning"
+                            }
+
+                            "Evening", "evening" -> {
+                                timeOfDay = "Evening"
+                            }
+
+                            "1", "1st", "st", "1s" -> {
+                                readingOfDay = "1st"
+                                if (afterDay1First) {
+                                    suckItUpCheck()
+                                }
+                            }
+
+                            "2", "2nd", "nd", "2n" -> {
+                                if (currentDay == "Day 6" && timeOfDay == "Evening") {
+                                    println("Test $currentDayReadings")
+                                }
+                                readingOfDay = "2nd"
+                                afterDay1First = true
+                                suckItUpCheck()
+                            }
+
+                            "ENHANCE" -> {
+                                suckItUpCheck()
+                            }
+                        }
+
+                        if (currentDay == "Day 1" && timeOfDay == "Morning" && readingOfDay == "1st") {
+                            suckItUp(word.text)
+                        }
+                        if (currentDay == "Day 1" && timeOfDay == "Morning" && readingOfDay == "2nd") {
+                            suckItUp(word.text)
+                        }
+                        if (currentDay == "Day 1" && timeOfDay == "Evening" && readingOfDay == "1st") {
+                            suckItUp(word.text)
+                        }
+                        if (currentDay == "Day 1" && timeOfDay == "Evening" && readingOfDay == "2nd") {
+                            suckItUp(word.text)
+                        }
+
+                        if (currentDay == "Day 2" && timeOfDay == "Morning" && readingOfDay == "1st") {
+                            suckItUp(word.text)
+                        }
+                        if (currentDay == "Day 2" && timeOfDay == "Morning" && readingOfDay == "2nd") {
+                            suckItUp(word.text)
+                        }
+                        if (currentDay == "Day 2" && timeOfDay == "Evening" && readingOfDay == "1st") {
+                            suckItUp(word.text)
+                        }
+                        if (currentDay == "Day 2" && timeOfDay == "Evening" && readingOfDay == "2nd") {
+                            suckItUp(word.text)
+                        }
+
+                        if (currentDay == "Day 3" && timeOfDay == "Morning" && readingOfDay == "1st") {
+                            suckItUp(word.text)
+                        }
+                        if (currentDay == "Day 3" && timeOfDay == "Morning" && readingOfDay == "2nd") {
+                            suckItUp(word.text)
+                        }
+                        if (currentDay == "Day 3" && timeOfDay == "Evening" && readingOfDay == "1st") {
+                            suckItUp(word.text)
+                        }
+                        if (currentDay == "Day 3" && timeOfDay == "Evening" && readingOfDay == "2nd") {
+                            suckItUp(word.text)
+                        }
+
+                        if (currentDay == "Day 4" && timeOfDay == "Morning" && readingOfDay == "1st") {
+                            suckItUp(word.text)
+                        }
+                        if (currentDay == "Day 4" && timeOfDay == "Morning" && readingOfDay == "2nd") {
+                            suckItUp(word.text)
+                        }
+                        if (currentDay == "Day 4" && timeOfDay == "Evening" && readingOfDay == "1st") {
+                            suckItUp(word.text)
+                        }
+                        if (currentDay == "Day 4" && timeOfDay == "Evening" && readingOfDay == "2nd") {
+                            suckItUp(word.text)
+                        }
+
+                        if (currentDay == "Day 5" && timeOfDay == "Morning" && readingOfDay == "1st") {
+                            suckItUp(word.text)
+                        }
+                        if (currentDay == "Day 5" && timeOfDay == "Morning" && readingOfDay == "2nd") {
+                            suckItUp(word.text)
+                        }
+                        if (currentDay == "Day 5" && timeOfDay == "Evening" && readingOfDay == "1st") {
+                            suckItUp(word.text)
+                        }
+                        if (currentDay == "Day 5" && timeOfDay == "Evening" && readingOfDay == "2nd") {
+                            suckItUp(word.text)
+                        }
+
+                        if (currentDay == "Day 6" && timeOfDay == "Morning" && readingOfDay == "1st") {
+                            suckItUp(word.text)
+                        }
+                        if (currentDay == "Day 6" && timeOfDay == "Morning" && readingOfDay == "2nd") {
+                            suckItUp(word.text)
+                        }
+                        if (currentDay == "Day 6" && timeOfDay == "Evening" && readingOfDay == "1st") {
+                            suckItUp(word.text)
+                        }
+                        if (currentDay == "Day 6" && timeOfDay == "Evening" && readingOfDay == "2nd") {
+                            suckItUp(word.text)
+                        }
+
+                        if (currentDay == "Day 7" && timeOfDay == "Morning" && readingOfDay == "1st") {
+                            suckItUp(word.text)
+                        }
+                        if (currentDay == "Day 7" && timeOfDay == "Morning" && readingOfDay == "2nd") {
+                            suckItUp(word.text)
+                        }
+                        if (currentDay == "Day 7" && timeOfDay == "Evening" && readingOfDay == "1st") {
+                            suckItUp(word.text)
+                        }
+                        if (currentDay == "Day 7" && timeOfDay == "Evening" && readingOfDay == "2nd") {
+                            suckItUp(word.text)
+                        }
                     }
                 }
             }
@@ -561,7 +612,7 @@ class ScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
                 leftGap = block.boundingBox!!.left - 30
                 println("First Left:$leftGap")
             }
-            else if (block.boundingBox!!.left < leftGap){
+            else if (block.boundingBox!!.left - 30 < leftGap){
                 leftGap = block.boundingBox!!.left - 30
                 println("New Left:$leftGap")
 
@@ -570,7 +621,7 @@ class ScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
                 topGap = block.boundingBox!!.top - 30
                 println("First Top:$topGap")
             }
-            else if (block.boundingBox!!.top < topGap){
+            else if (block.boundingBox!!.top - 30 < topGap){
                 topGap = block.boundingBox!!.top - 30
                 println("New Top:$topGap")
 
@@ -579,7 +630,7 @@ class ScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
                 rightGap = block.boundingBox!!.right + 30
                 println("First Right:$rightGap")
             }
-            else if (block.boundingBox!!.right > rightGap){
+            else if (block.boundingBox!!.right + 30 > rightGap){
                 rightGap = block.boundingBox!!.right + 30
                 println("New Right:$rightGap")
 
@@ -588,13 +639,14 @@ class ScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
                 bottomGap = block.boundingBox!!.bottom + 30
                 println("First Bottom:$bottomGap")
             }
-            else if (block.boundingBox!!.bottom > bottomGap){
+            else if (block.boundingBox!!.bottom + 30 > bottomGap){
                 bottomGap = block.boundingBox!!.bottom + 30
                 println("New Bottom:$bottomGap")
 
             }
         }
 
+        ranFirstTime = true
         println("Finalized list of day readings: $allDayReadings")
         println("Total number of readings: ${allDayReadings.count()}")
 

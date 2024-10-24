@@ -28,13 +28,13 @@ class LogOutTimerUtil {
                 longTimer = Timer()
                 longTimer!!.schedule(object : TimerTask() {
                     override fun run() {
-                        println("longTimer")
+                        println("Timer Started")
                         cancel()
                         longTimer = null
                         try {
                             val foreGround = ForegroundCheckTask().execute(context).get()
                             if (!foreGround) {
-                                println("logout")
+                                println("Session Logout")
                                 logOutListener.doLogout()
                             } else {
                                 startLogoutTimer(context, logOutListener)
@@ -51,7 +51,7 @@ class LogOutTimerUtil {
 
         fun stopLogoutTimer() {
             if (longTimer != null) {
-                println("stop")
+                println("Timer Stopped")
                 longTimer!!.cancel()
                 longTimer = null
             }

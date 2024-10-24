@@ -407,7 +407,7 @@ class RegistrationActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener
 //            ),
 //            "dateOfBirth" to AESEncryption().encrypt(binding.dateOfBirthTIET.text.toString()),
 //            "gender" to gender,
-            "clinicId" to StaffSharedPreferences.getSharedPreferences(applicationContext).getString("clinicId", ""),
+//            "clinicId" to StaffSharedPreferences.getSharedPreferences(applicationContext).getString("clinicId", ""),
 //            "weight" to AESEncryption().encrypt(binding.weightTIET.text.toString()),
 //            "height" to AESEncryption().encrypt(binding.heightTIET.text.toString()),
             "targetHomeSys" to AESEncryption().encrypt(binding.registerHomeSysInput.text.toString()),
