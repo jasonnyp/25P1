@@ -42,6 +42,7 @@ import com.singhealth.enhance.security.LogOutTimerUtil
 import com.singhealth.enhance.security.SecureSharedPreferences
 import kotlin.math.abs
 import kotlin.math.max
+import kotlin.math.min
 
 class ScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
     private lateinit var binding: ActivityScanBinding
@@ -513,7 +514,7 @@ class ScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
                             }
                         }
 
-                        if (currentDay == "Day 1" && timeOfDay == "Morning" && readingOfDay == "1st") {
+                        if (currentDay == "Day 1" && timeOfDay == "Morning" && readingOfDay == "1st" && block.boundingBox!!.left < secondBoundingBox.right + 30) {
                             suckItUp(word.text)
                         }
                         if (currentDay == "Day 1" && timeOfDay == "Morning" && readingOfDay == "2nd") {
@@ -697,7 +698,7 @@ class ScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
                     }
                 } else {
                     val left = firstBoundingBox.left - 100
-                    val top = max(firstBoundingBox.top, secondBoundingBox.top)
+                    val top = min(firstBoundingBox.top, secondBoundingBox.top)
                     val right = secondBoundingBox.right + 100
                     if (bottomGap != null) {
                         boundingBox.set(left, top, right, bottomGap)
@@ -762,7 +763,7 @@ class ScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
                         boundingBox.set(left, top, 0, bottom)
                     }
                 } else {
-                    val left = max(firstBoundingBox.left, secondBoundingBox.left)
+                    val left = min(firstBoundingBox.left, secondBoundingBox.left)
                     val top = secondBoundingBox.top - 100
                     val bottom = firstBoundingBox.bottom + 100
                     if (rightGap != null) {
