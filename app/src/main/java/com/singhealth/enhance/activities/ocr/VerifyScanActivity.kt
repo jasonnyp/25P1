@@ -321,8 +321,6 @@ class VerifyScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
 
         println("sysBPFields: ${sysBPFields.size}")
         println("diaBPFields: ${diaBPFields.size}")
-        println("sysBPFields after adding new scans: $sysBPFields")
-        println("diaBPFields after adding new scans: $diaBPFields")
 
         // Display toast for current number of records detected
         if (currentRows > 1 && totalRows <= 1) {
