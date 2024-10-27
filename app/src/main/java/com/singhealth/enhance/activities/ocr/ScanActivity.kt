@@ -58,10 +58,16 @@ class ScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
     private var showContinueScan: Boolean = false
     private var clinicSysBP: String? = null
     private var clinicDiaBP: String? = null
+    private val sysBPList = mutableListOf<String>()
+    private val diaBPList = mutableListOf<String>()
     private var direction: String = ""
     private var currentDayReadings = mutableListOf<String>()
     private var allDayReadings = mutableListOf<String>()
     private var ranFirstTime: Boolean = false
+    private val populatedSystolic = mutableListOf<String>()
+    private val populatedDiastolic = mutableListOf<String>()
+    private val allDayReadingsFinal = mutableListOf<String>()
+    private val numbersFinal = mutableListOf<String>()
 
     // Used for Session Timeout
 //    override fun onUserInteraction() {
@@ -317,8 +323,8 @@ class ScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
 
     // New Algorithm
     private fun processDocumentTextBlock(result: FirebaseVisionDocumentText) {
-        val sysBPList = mutableListOf<String>()
-        val diaBPList = mutableListOf<String>()
+//        val sysBPList = mutableListOf<String>()
+//        val diaBPList = mutableListOf<String>()
         val blocks = result.blocks
 
         if (blocks.isEmpty()) {
@@ -336,9 +342,54 @@ class ScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
                 .filter{ it.lowercase() !in "systolic" && it.lowercase() !in "diastolic" && it.lowercase() !in "pulse" && it.lowercase() !in "morning" && it.lowercase() !in "evening" && it.lowercase() !in "1st" && it.lowercase() !in "2nd" && it.length in 2..3}
                 .toMutableList()
             println("Filtered numbers: $numbers")
+
+            // Compare numbers list with populated list that includes empty values
+            splitAllDayReadings()
+            println("All Day Readings Final (before comparison): $allDayReadingsFinal")
+
+//            for (index in allDayReadingsFinal.indices) {
+//                if (allDayReadingsFinal[index] == "") {
+//                    numbers.add(index, "") // Add a blank
+//                }
+//            }
+
+            var notConsecutiveBlanks = true
+            var savedCurrentIndex = 0
+            var useSavedCurrentIndex = false
+            for (i in allDayReadingsFinal.indices) {
+                if (allDayReadingsFinal[i] == "") {
+                    if (notConsecutiveBlanks) {
+                        savedCurrentIndex = i
+                    }
+                    notConsecutiveBlanks = false
+                    useSavedCurrentIndex = true
+                }
+                if (allDayReadingsFinal[i] != "") {
+                    notConsecutiveBlanks = true
+                    if (i < numbers.size) {
+                        if (allDayReadingsFinal[i] != numbers[i]) {
+                            if (useSavedCurrentIndex){
+                                allDayReadingsFinal[i] = numbers[savedCurrentIndex].toString()
+                                savedCurrentIndex += 1
+                            } else {
+                                allDayReadingsFinal[i] = numbers[i].toString()
+                            }
+                        }
+                    }
+                }
+            }
+
+            println("Numbers List: $numbers")
+            println("All Day Readings Final (after comparison): $allDayReadingsFinal")
+
             processNumbers(numbers, sysBPList, diaBPList)
             println("sysBPList after fixing common errors: $sysBPList")
             println("diaBPList after fixing common errors: $diaBPList")
+
+//            println("All Day Readings: $allDayReadings")
+//            splitAllDayReadings()
+//            println("Populated Systolic Split: $populatedSystolic")
+//            println("Populated Diastolic Split: $populatedDiastolic")
 
             navigateToVerifyScanActivity(sysBPList, diaBPList, sevenDay)
         }
@@ -359,7 +410,7 @@ class ScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
         }
         else if (currentDayReadings.size == 1) {
             while (currentDayReadings.size < 2) {
-                currentDayReadings.add("")
+                currentDayReadings.add("-1")
             }
             allDayReadings.add(currentDayReadings.toString())
         }
@@ -385,7 +436,7 @@ class ScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
             println("Test Odd $currentDayReadings")
             while (currentDayReadings.size != 2 && currentDayReadings.size != 0) {
                 if (currentDayReadings.size < 2){
-                    currentDayReadings.add("")
+                    currentDayReadings.add("-1")
                 }
                 println("Updated $currentDayReadings")
                 val templist = currentDayReadings.slice(0..1)
@@ -395,6 +446,17 @@ class ScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
             }
         }
         currentDayReadings.clear()
+    }
+
+    private fun splitAllDayReadings() {
+        println("All Day Readings $allDayReadings")
+        for (pair in allDayReadings) {
+            val readings = pair.removeSurrounding("[", "]").split(", ") // Clean the string and split the readings
+            if (readings.size == 2) {
+                allDayReadingsFinal.add(readings[0])
+                allDayReadingsFinal.add(readings[1])
+            }
+        }
     }
 
     private fun extractWordsFromBlocks(blocks: List<FirebaseVisionDocumentText.Block>): MutableList<FirebaseVisionDocumentText.Word> {
@@ -408,8 +470,6 @@ class ScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
         var rightGap: Int? = null
         var bottomGap: Int? = null
         var afterDay1First = false
-        var currentDay: String? = null
-        var timeOfDay: String? = null
         var readingOfDay: String? = null
         for (block in blocks) {
             var accumulatedWords = ""
@@ -457,41 +517,6 @@ class ScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
                     // Get word list for each day to detect if there are missing values
                     if(!ranFirstTime) {
                         when (accumulatedWords) {
-                            "DAY1" -> {
-                                currentDay = "Day 1"
-                            }
-
-                            "DAY2" -> {
-                                currentDay = "Day 2"
-                            }
-
-                            "DAY3" -> {
-                                currentDay = "Day 3"
-                            }
-
-                            "DAY4" -> {
-                                currentDay = "Day 4"
-                            }
-
-                            "DAY5" -> {
-                                currentDay = "Day 5"
-                            }
-
-                            "DAY6" -> {
-                                currentDay = "Day 6"
-                            }
-
-                            "DAY7" -> {
-                                currentDay = "Day 7"
-                            }
-
-                            "Morning", "morning" -> {
-                                timeOfDay = "Morning"
-                            }
-
-                            "Evening", "evening" -> {
-                                timeOfDay = "Evening"
-                            }
 
                             "1", "1st", "st", "1s" -> {
                                 readingOfDay = "1st"
@@ -501,9 +526,6 @@ class ScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
                             }
 
                             "2", "2nd", "nd", "2n" -> {
-                                if (currentDay == "Day 6" && timeOfDay == "Evening") {
-                                    println("Test $currentDayReadings")
-                                }
                                 readingOfDay = "2nd"
                                 afterDay1First = true
                                 suckItUpCheck()
@@ -514,94 +536,7 @@ class ScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
                             }
                         }
 
-                        if (currentDay == "Day 1" && timeOfDay == "Morning" && readingOfDay == "1st" && block.boundingBox!!.left < secondBoundingBox.right + 30) {
-                            suckItUp(word.text)
-                        }
-                        if (currentDay == "Day 1" && timeOfDay == "Morning" && readingOfDay == "2nd") {
-                            suckItUp(word.text)
-                        }
-                        if (currentDay == "Day 1" && timeOfDay == "Evening" && readingOfDay == "1st") {
-                            suckItUp(word.text)
-                        }
-                        if (currentDay == "Day 1" && timeOfDay == "Evening" && readingOfDay == "2nd") {
-                            suckItUp(word.text)
-                        }
-
-                        if (currentDay == "Day 2" && timeOfDay == "Morning" && readingOfDay == "1st") {
-                            suckItUp(word.text)
-                        }
-                        if (currentDay == "Day 2" && timeOfDay == "Morning" && readingOfDay == "2nd") {
-                            suckItUp(word.text)
-                        }
-                        if (currentDay == "Day 2" && timeOfDay == "Evening" && readingOfDay == "1st") {
-                            suckItUp(word.text)
-                        }
-                        if (currentDay == "Day 2" && timeOfDay == "Evening" && readingOfDay == "2nd") {
-                            suckItUp(word.text)
-                        }
-
-                        if (currentDay == "Day 3" && timeOfDay == "Morning" && readingOfDay == "1st") {
-                            suckItUp(word.text)
-                        }
-                        if (currentDay == "Day 3" && timeOfDay == "Morning" && readingOfDay == "2nd") {
-                            suckItUp(word.text)
-                        }
-                        if (currentDay == "Day 3" && timeOfDay == "Evening" && readingOfDay == "1st") {
-                            suckItUp(word.text)
-                        }
-                        if (currentDay == "Day 3" && timeOfDay == "Evening" && readingOfDay == "2nd") {
-                            suckItUp(word.text)
-                        }
-
-                        if (currentDay == "Day 4" && timeOfDay == "Morning" && readingOfDay == "1st") {
-                            suckItUp(word.text)
-                        }
-                        if (currentDay == "Day 4" && timeOfDay == "Morning" && readingOfDay == "2nd") {
-                            suckItUp(word.text)
-                        }
-                        if (currentDay == "Day 4" && timeOfDay == "Evening" && readingOfDay == "1st") {
-                            suckItUp(word.text)
-                        }
-                        if (currentDay == "Day 4" && timeOfDay == "Evening" && readingOfDay == "2nd") {
-                            suckItUp(word.text)
-                        }
-
-                        if (currentDay == "Day 5" && timeOfDay == "Morning" && readingOfDay == "1st") {
-                            suckItUp(word.text)
-                        }
-                        if (currentDay == "Day 5" && timeOfDay == "Morning" && readingOfDay == "2nd") {
-                            suckItUp(word.text)
-                        }
-                        if (currentDay == "Day 5" && timeOfDay == "Evening" && readingOfDay == "1st") {
-                            suckItUp(word.text)
-                        }
-                        if (currentDay == "Day 5" && timeOfDay == "Evening" && readingOfDay == "2nd") {
-                            suckItUp(word.text)
-                        }
-
-                        if (currentDay == "Day 6" && timeOfDay == "Morning" && readingOfDay == "1st") {
-                            suckItUp(word.text)
-                        }
-                        if (currentDay == "Day 6" && timeOfDay == "Morning" && readingOfDay == "2nd") {
-                            suckItUp(word.text)
-                        }
-                        if (currentDay == "Day 6" && timeOfDay == "Evening" && readingOfDay == "1st") {
-                            suckItUp(word.text)
-                        }
-                        if (currentDay == "Day 6" && timeOfDay == "Evening" && readingOfDay == "2nd") {
-                            suckItUp(word.text)
-                        }
-
-                        if (currentDay == "Day 7" && timeOfDay == "Morning" && readingOfDay == "1st") {
-                            suckItUp(word.text)
-                        }
-                        if (currentDay == "Day 7" && timeOfDay == "Morning" && readingOfDay == "2nd") {
-                            suckItUp(word.text)
-                        }
-                        if (currentDay == "Day 7" && timeOfDay == "Evening" && readingOfDay == "1st") {
-                            suckItUp(word.text)
-                        }
-                        if (currentDay == "Day 7" && timeOfDay == "Evening" && readingOfDay == "2nd") {
+                        if ((readingOfDay == "1st" || readingOfDay == "2nd") && block.boundingBox!!.left < secondBoundingBox!!.right) {
                             suckItUp(word.text)
                         }
                     }
@@ -679,6 +614,8 @@ class ScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
                 direction = "Right"
             } else if (firstBoundingBox.left > secondBoundingBox.left && abs(firstBoundingBox.left - secondBoundingBox.left) > 180){
                 direction = "Down"
+            } else {
+                direction = "Top"
             }
         }
 
