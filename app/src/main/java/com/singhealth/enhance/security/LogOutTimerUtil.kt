@@ -17,7 +17,7 @@ class LogOutTimerUtil {
     companion object {
         var longTimer: Timer? = null
         val LOGOUT_TIME =
-            12000000 // 20 min is 1200000 ms, for testing use 5 sec which is 5000 ms
+            1200000 // 20 min is 1200000 ms, for testing use 5 sec which is 5000 ms
 
         fun startLogoutTimer(context: Context?, logOutListener: LogOutListener) {
             if (longTimer != null) {
