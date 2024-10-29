@@ -102,6 +102,39 @@ class RegistrationActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener
             }
         }
 
+        progressDialog = ProgressDialog(this)
+        progressDialog.setCanceledOnTouchOutside(false)
+
+        progressDialog.setMessage(getString(R.string.register_loading_page))
+        progressDialog.show()
+
+        // Auto input a patient ID
+        db.collection("patients").get()
+            .addOnSuccessListener { querySnapshot ->
+                val listOfPatients = querySnapshot.documents
+                val listOfDecryptedPatientIDs = listOfPatients.map { AESEncryption().decrypt(it.id) }
+                var largestIDNo = 0
+                for (value in listOfDecryptedPatientIDs){
+                    val newIDNo = value.substring(1 until value.length)
+                    if (newIDNo.toIntOrNull() != null) {
+                        if (newIDNo.toInt() > largestIDNo) {
+                            largestIDNo = newIDNo.toInt()
+                        }
+                    }
+                }
+                val suggestedID = "S" + (largestIDNo + 1).toString()
+                binding.idTIET.setText(suggestedID)
+                progressDialog.dismiss()
+            }
+            .addOnFailureListener {
+                progressDialog.dismiss()
+                Toast.makeText(
+                    this,
+                    getString(R.string.register_failed_suggestion),
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+
         // Upload photo
 //        binding.photoIV.setOnClickListener { uploadPhoto() }
 
@@ -225,9 +258,6 @@ class RegistrationActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener
 
             override fun afterTextChanged(s: Editable?) {}
         })
-
-        progressDialog = ProgressDialog(this)
-        progressDialog.setCanceledOnTouchOutside(false)
 
         // Register patient
         binding.registerBtn.setOnClickListener {

@@ -52,22 +52,16 @@ class ScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
     private lateinit var progressDialog: ProgressDialog
     private lateinit var outputUri: Uri
     private lateinit var patientID: String
-    private lateinit var orientation: String
     private var boundingBox: Rect = Rect(0,0,0,0)
     private var sevenDay: Boolean = false
     private var showContinueScan: Boolean = false
     private var clinicSysBP: String? = null
     private var clinicDiaBP: String? = null
-    private val sysBPList = mutableListOf<String>()
-    private val diaBPList = mutableListOf<String>()
     private var direction: String = ""
     private var currentDayReadings = mutableListOf<String>()
     private var allDayReadings = mutableListOf<String>()
     private var ranFirstTime: Boolean = false
-    private val populatedSystolic = mutableListOf<String>()
-    private val populatedDiastolic = mutableListOf<String>()
     private val allDayReadingsFinal = mutableListOf<String>()
-    private val numbersFinal = mutableListOf<String>()
 
     // Used for Session Timeout
 //    override fun onUserInteraction() {
@@ -208,14 +202,6 @@ class ScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
 
     private fun handleCropImageResultForAutocrop(uri: String) {
         outputUri = Uri.parse(uri.replace("file:", ""))
-        contentResolver.openInputStream(outputUri)?.use { inputStream ->
-            val bitmap = BitmapFactory.decodeStream(inputStream)
-            orientation = if (bitmap.width > bitmap.height){
-                "Horizontal"
-            } else{
-                "Vertical"
-            }
-        }
 
         if (outputUri.toString().isNotEmpty()) {
             processDocumentImageForAutoCrop()
@@ -323,8 +309,8 @@ class ScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
 
     // New Algorithm
     private fun processDocumentTextBlock(result: FirebaseVisionDocumentText) {
-//        val sysBPList = mutableListOf<String>()
-//        val diaBPList = mutableListOf<String>()
+        val sysBPList = mutableListOf<String>()
+        val diaBPList = mutableListOf<String>()
         val blocks = result.blocks
 
         if (blocks.isEmpty()) {
@@ -355,41 +341,84 @@ class ScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
 
             var notConsecutiveBlanks = true
             var savedCurrentIndex = 0
+            var lastSavedIndex = 0
             var useSavedCurrentIndex = false
+            var numberOfBlanksAccumulated = 0
+            var savedNumberOfBlanks = 0
+            var blanksBeenSaved = false
+            var numberOfTimesBlanksSpotted = 0
+            var indexChanged = false
             for (i in allDayReadingsFinal.indices) {
                 if (allDayReadingsFinal[i] == "") {
+                    if (!blanksBeenSaved) {
+                        savedNumberOfBlanks = numberOfBlanksAccumulated
+                        blanksBeenSaved = true
+                    }
                     if (notConsecutiveBlanks) {
                         savedCurrentIndex = i
+                        numberOfTimesBlanksSpotted += 1
+                        println("A new index has been saved $savedCurrentIndex")
                     }
+                    indexChanged = false
+                    numberOfBlanksAccumulated += 1
                     notConsecutiveBlanks = false
                     useSavedCurrentIndex = true
                 }
                 if (allDayReadingsFinal[i] != "") {
                     notConsecutiveBlanks = true
-                    if (i < numbers.size) {
-                        if (allDayReadingsFinal[i] != numbers[i]) {
-                            if (useSavedCurrentIndex){
+                    blanksBeenSaved = false
+                    if (useSavedCurrentIndex){
+                        if (numberOfTimesBlanksSpotted > 1 && !indexChanged){
+                            savedCurrentIndex -= savedNumberOfBlanks
+                            indexChanged = true
+                            println("New saved index $savedCurrentIndex")
+                        }
+                        if (savedCurrentIndex < numbers.size) {
+                            if (allDayReadingsFinal[i] != numbers[savedCurrentIndex]) {
+                                println("A change has happened after blanks ${numbers[savedCurrentIndex]}")
                                 allDayReadingsFinal[i] = numbers[savedCurrentIndex].toString()
-                                savedCurrentIndex += 1
-                            } else {
+                            }
+                            lastSavedIndex = savedCurrentIndex
+                            savedCurrentIndex += 1
+                        }
+                    } else{
+                        if (i < numbers.size) {
+                            if (allDayReadingsFinal[i] != numbers[i]) {
+                                println("A change has happened before blanks ${numbers[i]}")
                                 allDayReadingsFinal[i] = numbers[i].toString()
                             }
+                            lastSavedIndex = i
                         }
                     }
                 }
             }
 
-            println("Numbers List: $numbers")
+//            println("Numbers List: $numbers")
             println("All Day Readings Final (after comparison): $allDayReadingsFinal")
 
-            processNumbers(numbers, sysBPList, diaBPList)
+            lastSavedIndex += 1
+            println("Fill up index $lastSavedIndex")
+            println("Numbers size ${numbers.size}")
+
+            if (lastSavedIndex < numbers.size) {
+                while (lastSavedIndex != numbers.size) {
+                    println("Numbers added")
+                    allDayReadingsFinal.add(numbers[lastSavedIndex])
+                    lastSavedIndex += 1
+                }
+            }
+
+            println("All Day Readings Final after filling up $allDayReadingsFinal")
+
+            if (allDayReadingsFinal.size > numbers.size) {
+                processNumbers(allDayReadingsFinal, sysBPList, diaBPList)
+                println("Used list allDayReadings")
+            } else {
+                processNumbers(numbers, sysBPList, diaBPList)
+                println("Used list numbers")
+            }
             println("sysBPList after fixing common errors: $sysBPList")
             println("diaBPList after fixing common errors: $diaBPList")
-
-//            println("All Day Readings: $allDayReadings")
-//            splitAllDayReadings()
-//            println("Populated Systolic Split: $populatedSystolic")
-//            println("Populated Diastolic Split: $populatedDiastolic")
 
             navigateToVerifyScanActivity(sysBPList, diaBPList, sevenDay)
         }
@@ -398,9 +427,10 @@ class ScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
     private fun suckItUp(value: String) {
         try {
             val number = value.toInt()
-            if (number in 20..220 && number != 202) { // 202 because if date is left unfilled, 202_ will be read as 202
-                currentDayReadings.add(number.toString())
-            }
+//            if (number in 20..220 && number != 202) { // 202 because if date is left unfilled, 202_ will be read as 202
+//                currentDayReadings.add(number.toString())
+//            }
+            currentDayReadings.add(number.toString())
         } catch (_: NumberFormatException) {}
     }
 
@@ -410,7 +440,7 @@ class ScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
         }
         else if (currentDayReadings.size == 1) {
             while (currentDayReadings.size < 2) {
-                currentDayReadings.add("-1")
+                currentDayReadings.add("")
             }
             allDayReadings.add(currentDayReadings.toString())
         }
@@ -432,11 +462,14 @@ class ScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
             allDayReadings.add(currentDayReadings.toString())
         }
         // Experimental Odd Values > 2
+        // Only odd if OCR detect headers as values, so size could be 5, 11 in this instance since it would be +3 everytime instead of 2, not 8 because its even if 2 headers gets detected, can't do anything which is why we do a list comparison
         else if (currentDayReadings.size % 2 == 1){
             println("Test Odd $currentDayReadings")
+            // Hardcoded way in the event it reaches 5, highly likely as OCR should not miss 2 headers in a row, but if it does it would come to 11 which would be flawed
+//            currentDayReadings.removeAt(2)
             while (currentDayReadings.size != 2 && currentDayReadings.size != 0) {
                 if (currentDayReadings.size < 2){
-                    currentDayReadings.add("-1")
+                    currentDayReadings.add("")
                 }
                 println("Updated $currentDayReadings")
                 val templist = currentDayReadings.slice(0..1)
@@ -449,7 +482,7 @@ class ScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
     }
 
     private fun splitAllDayReadings() {
-        println("All Day Readings $allDayReadings")
+//        println("All Day Readings $allDayReadings")
         for (pair in allDayReadings) {
             val readings = pair.removeSurrounding("[", "]").split(", ") // Clean the string and split the readings
             if (readings.size == 2) {
@@ -471,6 +504,9 @@ class ScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
         var bottomGap: Int? = null
         var afterDay1First = false
         var readingOfDay: String? = null
+        var savedCount = 0
+        var lastSaved = false
+        var detectedBPHeader = false
         for (block in blocks) {
             var accumulatedWords = ""
             totalCount += 1
@@ -485,9 +521,11 @@ class ScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
                     if (word.text == "Systolic") {
                         println("Bounding Box ${block.boundingBox} with Systolic")
                         firstBoundingBox = block.boundingBox!!
+                        detectedBPHeader = true
                     } else if (word.text == "Diastolic") {
                         println("Bounding Box ${block.boundingBox} with Diastolic")
                         secondBoundingBox = block.boundingBox!!
+                        detectedBPHeader = true
                     }
 
                     // Search clinicBP in this and next bounding Box, flow must be in this order of sequence or would not detect
@@ -500,10 +538,10 @@ class ScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
                         }
                         searchNextBoundingBox = false
                     }
-                    if (accumulatedWords == "Clinic/OfficeBP") {
+                    if (accumulatedWords.contains("Clinic/OfficeBP")) {
                         searchNextBoundingBox = true
                     }
-                    if (accumulatedWords == "Clinic/OfficeBP:") {
+                    if (accumulatedWords.contains("Clinic/OfficeBP:")) {
                         val targetClinicBP = word.text.split("/").toTypedArray()
                         if (targetClinicBP.size == 2) {
                             clinicSysBP = targetClinicBP[0]
@@ -517,26 +555,42 @@ class ScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
                     // Get word list for each day to detect if there are missing values
                     if(!ranFirstTime) {
                         when (accumulatedWords) {
-
                             "1", "1st", "st", "1s" -> {
-                                readingOfDay = "1st"
-                                if (afterDay1First) {
+                                if (detectedBPHeader && block.boundingBox!!.top > firstBoundingBox.top) {
+                                    readingOfDay = "1st"
+                                    if (afterDay1First) {
+                                        suckItUpCheck()
+                                    }
+                                }
+                            }
+                            "2", "2nd", "nd", "2n" -> {
+                                if (detectedBPHeader && block.boundingBox!!.top > firstBoundingBox.top) {
+                                    readingOfDay = "2nd"
+                                    afterDay1First = true
                                     suckItUpCheck()
                                 }
                             }
-
-                            "2", "2nd", "nd", "2n" -> {
-                                readingOfDay = "2nd"
-                                afterDay1First = true
-                                suckItUpCheck()
+                            // Multiple in case OCR can't detect a certain day, used to make sure pulse/enhance saves only after day 7 records are detected
+                            "DAY3", "DAY4", "DAY5", "DAY6", "DAY7" -> {
+                                savedCount = totalCount
                             }
-
+                            // Saves for Day 7, use pulse as well in case image does not contain ENHaNCe
                             "ENHANCE" -> {
-                                suckItUpCheck()
+                                if ((totalCount > savedCount) && !lastSaved) {
+                                    suckItUpCheck()
+                                    lastSaved = true
+                                }
+                            }
+                            // Make sure bounding box that detects Pulse is not within the one with Systolic and Diastolic, prevents the check
+                            "Pulse" -> {
+                                if ((totalCount > savedCount) && !lastSaved) {
+                                    suckItUpCheck()
+                                    lastSaved = true
+                                }
                             }
                         }
 
-                        if ((readingOfDay == "1st" || readingOfDay == "2nd") && block.boundingBox!!.left < secondBoundingBox!!.right) {
+                        if ((readingOfDay == "1st" || readingOfDay == "2nd") && block.boundingBox!!.left < secondBoundingBox.right && block.boundingBox!!.right > firstBoundingBox.left) {
                             suckItUp(word.text)
                         }
                     }
@@ -588,21 +642,6 @@ class ScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
 
         // Comparison to detect the direction
         if (firstBoundingBox != Rect(0, 0, 0, 0) && secondBoundingBox != Rect(0, 0, 0, 0)) {
-            println("Orientation:$orientation")
-            // Comparison in regards to orientation of image flaws: could be vertical picture taken in landscape
-//            if (orientation == "Vertical"){
-//                if (firstBoundingBox.left < secondBoundingBox.left) {
-//                    direction = "Top"
-//                } else if (firstBoundingBox.left > secondBoundingBox.left) {
-//                    direction = "Down"
-//                }
-//            } else if (orientation == "Horizontal") {
-//                if (firstBoundingBox.top > secondBoundingBox.top) {
-//                    direction = "Left"
-//                } else if (firstBoundingBox.top < secondBoundingBox.left) {
-//                    direction = "Right"
-//                }
-//            }
 
             // Comparison in regards to difference in distances flaws: uses hardcoded values which means the difference changes depending on how near/far its taken
             // Further the image, the difference will be lesser

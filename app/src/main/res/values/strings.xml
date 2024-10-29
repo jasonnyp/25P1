@@ -95,6 +95,7 @@
     <!-- RegistrationActivity strings -->
     <string name="register_gender_male">Male</string>
     <string name="register_gender_female">Female</string>
+    <string name="register_failed_suggestion">Unable to autofill patient ID</string>
     <string name="register_field_verification">Please correct all errors before proceeding.</string>
     <string name="profile_picture_info">To select another photo, tap on the current photo to open your gallery.</string>
     <string name="register_image_verification_header">No photo uploaded</string>
@@ -103,6 +104,7 @@
     <string name="register_empty_bp_verification">Field cannot be empty. If you desire a default value, enter %1$d</string>
     <string name="register_invalid_value_verification">Invalid value</string>
     <string name="register_invalid_number_verification">Number too high or low</string>
+    <string name="register_loading_page">Please wait while the patient ID is being auto generated.</string>
     <string name="register_loading_dialog">Please wait while the patient is being registered.</string>
     <string name="register_exist_error_header">Patient already registered</string>
     <string name="register_exist_error_body">Would you like to search the patient instead?</string>
