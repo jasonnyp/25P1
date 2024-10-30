@@ -61,7 +61,7 @@ class ScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
     private var currentDayReadings = mutableListOf<String>()
     private var allDayReadings = mutableListOf<String>()
     private var ranFirstTime: Boolean = false
-    private val allDayReadingsFinal = mutableListOf<String>()
+    private var allDayReadingsFinal = mutableListOf<String>()
 
     // Used for Session Timeout
 //    override fun onUserInteraction() {
@@ -312,6 +312,16 @@ class ScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
         val sysBPList = mutableListOf<String>()
         val diaBPList = mutableListOf<String>()
         val blocks = result.blocks
+        var notConsecutiveBlanks = true
+        var savedCurrentIndex = 0
+        var lastSavedIndex = 0
+        var useSavedCurrentIndex = false
+        var numberOfTimesConsecutiveBlanksSpotted = 0
+        var numberOfBlanksAccumulated = 0
+        var savedNumberOfBlanks = 0
+        var blanksBeenSaved = false
+        var indexChanged = false
+        var listIsNotEmptyStrings = false
 
         if (blocks.isEmpty()) {
             progressDialog.dismiss()
@@ -339,55 +349,54 @@ class ScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
 //                }
 //            }
 
-            var notConsecutiveBlanks = true
-            var savedCurrentIndex = 0
-            var lastSavedIndex = 0
-            var useSavedCurrentIndex = false
-            var numberOfBlanksAccumulated = 0
-            var savedNumberOfBlanks = 0
-            var blanksBeenSaved = false
-            var numberOfTimesBlanksSpotted = 0
-            var indexChanged = false
             for (i in allDayReadingsFinal.indices) {
-                if (allDayReadingsFinal[i] == "") {
-                    if (!blanksBeenSaved) {
-                        savedNumberOfBlanks = numberOfBlanksAccumulated
-                        blanksBeenSaved = true
-                    }
-                    if (notConsecutiveBlanks) {
-                        savedCurrentIndex = i
-                        numberOfTimesBlanksSpotted += 1
-                        println("A new index has been saved $savedCurrentIndex")
-                    }
-                    indexChanged = false
-                    numberOfBlanksAccumulated += 1
-                    notConsecutiveBlanks = false
-                    useSavedCurrentIndex = true
-                }
-                if (allDayReadingsFinal[i] != "") {
-                    notConsecutiveBlanks = true
-                    blanksBeenSaved = false
-                    if (useSavedCurrentIndex){
-                        if (numberOfTimesBlanksSpotted > 1 && !indexChanged){
-                            savedCurrentIndex -= savedNumberOfBlanks
-                            indexChanged = true
-                            println("New saved index $savedCurrentIndex")
+                if (i < allDayReadingsFinal.size) {
+                    if (allDayReadingsFinal[i] == "") {
+                        if (!blanksBeenSaved) {
+                            savedNumberOfBlanks = numberOfBlanksAccumulated
+                            blanksBeenSaved = true
                         }
-                        if (savedCurrentIndex < numbers.size) {
-                            if (allDayReadingsFinal[i] != numbers[savedCurrentIndex]) {
-                                println("A change has happened after blanks ${numbers[savedCurrentIndex]}")
-                                allDayReadingsFinal[i] = numbers[savedCurrentIndex].toString()
-                            }
-                            lastSavedIndex = savedCurrentIndex
-                            savedCurrentIndex += 1
+                        if (notConsecutiveBlanks) {
+                            savedCurrentIndex = i
+                            numberOfTimesConsecutiveBlanksSpotted += 1
+                            println("A new index has been saved $savedCurrentIndex")
                         }
-                    } else{
-                        if (i < numbers.size) {
-                            if (allDayReadingsFinal[i] != numbers[i]) {
-                                println("A change has happened before blanks ${numbers[i]}")
-                                allDayReadingsFinal[i] = numbers[i].toString()
+                        indexChanged = false
+                        numberOfBlanksAccumulated += 1
+                        notConsecutiveBlanks = false
+                        useSavedCurrentIndex = true
+                    }
+                    if (allDayReadingsFinal[i] != "") {
+                        notConsecutiveBlanks = true
+                        blanksBeenSaved = false
+                        listIsNotEmptyStrings = true
+                        if (useSavedCurrentIndex) {
+                            if (numberOfTimesConsecutiveBlanksSpotted > 1 && !indexChanged) {
+                                savedCurrentIndex -= savedNumberOfBlanks
+                                indexChanged = true
+                                println("New saved index $savedCurrentIndex")
                             }
-                            lastSavedIndex = i
+                            if (savedCurrentIndex < numbers.size) {
+                                if (allDayReadingsFinal[i] != numbers[savedCurrentIndex]) {
+                                    println("A change has happened after blanks ${numbers[savedCurrentIndex]}")
+                                    allDayReadingsFinal[i] = numbers[savedCurrentIndex].toString()
+                                }
+                                lastSavedIndex = savedCurrentIndex
+                                savedCurrentIndex += 1
+                            } else {
+                                // Remove every value after since all of numbers been replaced
+                                allDayReadingsFinal = allDayReadingsFinal.subList(0, i - 1)
+                            }
+                        } else {
+                            if (i < numbers.size) {
+                                if (allDayReadingsFinal[i] != numbers[i]) {
+                                    println("A change has happened before blanks ${numbers[i]}")
+                                    allDayReadingsFinal[i] = numbers[i].toString()
+                                }
+                                lastSavedIndex = i
+                            } else {
+                                allDayReadingsFinal = allDayReadingsFinal.subList(0, i - 1)
+                            }
                         }
                     }
                 }
@@ -400,7 +409,8 @@ class ScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
             println("Fill up index $lastSavedIndex")
             println("Numbers size ${numbers.size}")
 
-            if (lastSavedIndex < numbers.size) {
+            //  Add remaining numbers not added into allDayReadingsFinal
+            if (lastSavedIndex < numbers.size && lastSavedIndex != 1) {
                 while (lastSavedIndex != numbers.size) {
                     println("Numbers added")
                     allDayReadingsFinal.add(numbers[lastSavedIndex])
@@ -410,7 +420,7 @@ class ScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
 
             println("All Day Readings Final after filling up $allDayReadingsFinal")
 
-            if (allDayReadingsFinal.size > numbers.size) {
+            if (allDayReadingsFinal.size > numbers.size && listIsNotEmptyStrings) {
                 processNumbers(allDayReadingsFinal, sysBPList, diaBPList)
                 println("Used list allDayReadings")
             } else {
@@ -435,12 +445,14 @@ class ScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
     }
 
     private fun suckItUpCheck() {
+        println("Suck it up called $currentDayReadings")
         if (currentDayReadings.size == 2) {
             allDayReadings.add(currentDayReadings.toString())
         }
         else if (currentDayReadings.size == 1) {
             while (currentDayReadings.size < 2) {
-                currentDayReadings.add("")
+                currentDayReadings.add("-1")
+                println("OCR could not detect ${currentDayReadings}")
             }
             allDayReadings.add(currentDayReadings.toString())
         }
@@ -464,12 +476,10 @@ class ScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
         // Experimental Odd Values > 2
         // Only odd if OCR detect headers as values, so size could be 5, 11 in this instance since it would be +3 everytime instead of 2, not 8 because its even if 2 headers gets detected, can't do anything which is why we do a list comparison
         else if (currentDayReadings.size % 2 == 1){
-            println("Test Odd $currentDayReadings")
-            // Hardcoded way in the event it reaches 5, highly likely as OCR should not miss 2 headers in a row, but if it does it would come to 11 which would be flawed
-//            currentDayReadings.removeAt(2)
+            println("Test Odd due to OCR not detecting $currentDayReadings")
             while (currentDayReadings.size != 2 && currentDayReadings.size != 0) {
                 if (currentDayReadings.size < 2){
-                    currentDayReadings.add("")
+                    currentDayReadings.add("-1")
                 }
                 println("Updated $currentDayReadings")
                 val templist = currentDayReadings.slice(0..1)
@@ -507,6 +517,8 @@ class ScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
         var savedCount = 0
         var lastSaved = false
         var detectedBPHeader = false
+        var clinicBPFound = false
+        var countBeenSaved = false
         for (block in blocks) {
             var accumulatedWords = ""
             totalCount += 1
@@ -538,60 +550,288 @@ class ScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
                         }
                         searchNextBoundingBox = false
                     }
-                    if (accumulatedWords.contains("Clinic/OfficeBP")) {
+                    if (accumulatedWords.contains("Clinic/OfficeBP") && !clinicBPFound) {
                         searchNextBoundingBox = true
                     }
-                    if (accumulatedWords.contains("Clinic/OfficeBP:")) {
+                    if (accumulatedWords.contains("Clinic/OfficeBP:") && !clinicBPFound) {
                         val targetClinicBP = word.text.split("/").toTypedArray()
                         if (targetClinicBP.size == 2) {
                             clinicSysBP = targetClinicBP[0]
                             clinicDiaBP = targetClinicBP[1]
                             searchNextBoundingBox = false
                         }
+                        clinicBPFound = true
                         println("Clinic BP detected ${word.text}")
                     }
                     accumulatedWords += word.text
 
-                    // Get word list for each day to detect if there are missing values
+                    // Comparison to detect the direction
+                    if (firstBoundingBox != Rect(0, 0, 0, 0) && secondBoundingBox != Rect(0, 0, 0, 0)) {
+                        // Comparison in regards to difference in distances flaws: uses hardcoded values which means the difference changes depending on how near/far its taken
+                        // Further the image, the difference will be lesser
+                        if (firstBoundingBox.top > secondBoundingBox.top && abs(firstBoundingBox.top - secondBoundingBox.top) > 180){
+                            direction = "Left"
+                        } else if (firstBoundingBox.left < secondBoundingBox.left && abs(firstBoundingBox.left - secondBoundingBox.left) > 180){
+                            direction = "Top"
+                        } else if (firstBoundingBox.top < secondBoundingBox.top && abs(firstBoundingBox.top - secondBoundingBox.top) > 180){
+                            direction = "Right"
+                        } else if (firstBoundingBox.left > secondBoundingBox.left && abs(firstBoundingBox.left - secondBoundingBox.left) > 180){
+                            direction = "Down"
+                        } else {
+                            direction = "Top"
+                        }
+                    }
+
+                    // Get word list for each day to detect if there are missing values wrt. direction
                     if(!ranFirstTime) {
-                        when (accumulatedWords) {
-                            "1", "1st", "st", "1s" -> {
-                                if (detectedBPHeader && block.boundingBox!!.top > firstBoundingBox.top) {
-                                    readingOfDay = "1st"
-                                    if (afterDay1First) {
+                        if (direction == "Top") {
+                            when (accumulatedWords) {
+                                "1", "1st", "st", "1s" -> {
+                                    if (detectedBPHeader && block.boundingBox!!.top > firstBoundingBox.top) {
+                                        readingOfDay = "1st"
+                                        if (afterDay1First) {
+                                            suckItUpCheck()
+                                        }
+                                    }
+                                }
+
+                                "2", "2nd", "nd", "2n" -> {
+                                    if (detectedBPHeader && block.boundingBox!!.top > firstBoundingBox.top) {
+                                        readingOfDay = "2nd"
+                                        afterDay1First = true
                                         suckItUpCheck()
                                     }
                                 }
-                            }
-                            "2", "2nd", "nd", "2n" -> {
-                                if (detectedBPHeader && block.boundingBox!!.top > firstBoundingBox.top) {
-                                    readingOfDay = "2nd"
-                                    afterDay1First = true
-                                    suckItUpCheck()
+                                // Multiple in case OCR can't detect a certain day, used to make sure pulse/enhance saves only after day 7 records are detected
+                                "DAY3", "DAY4", "DAY5", "DAY6", "DAY7" -> {
+                                    savedCount = totalCount
+                                    countBeenSaved = true
+                                }
+                                // Saves for Day 7, use pulse as well in case image does not contain ENHaNCe
+                                "ENHANCE" -> {
+                                    if ((totalCount > savedCount) && !lastSaved && countBeenSaved) {
+                                        suckItUpCheck()
+                                        lastSaved = true
+                                    }
+                                }
+                                // Make sure bounding box that detects Pulse is not within the one with Systolic and Diastolic, prevents the check
+                                "Pulse" -> {
+                                    if ((totalCount > savedCount) && !lastSaved && countBeenSaved) {
+                                        suckItUpCheck()
+                                        lastSaved = true
+                                    }
                                 }
                             }
-                            // Multiple in case OCR can't detect a certain day, used to make sure pulse/enhance saves only after day 7 records are detected
-                            "DAY3", "DAY4", "DAY5", "DAY6", "DAY7" -> {
-                                savedCount = totalCount
-                            }
-                            // Saves for Day 7, use pulse as well in case image does not contain ENHaNCe
-                            "ENHANCE" -> {
-                                if ((totalCount > savedCount) && !lastSaved) {
-                                    suckItUpCheck()
-                                    lastSaved = true
-                                }
-                            }
-                            // Make sure bounding box that detects Pulse is not within the one with Systolic and Diastolic, prevents the check
-                            "Pulse" -> {
-                                if ((totalCount > savedCount) && !lastSaved) {
-                                    suckItUpCheck()
-                                    lastSaved = true
-                                }
-                            }
-                        }
 
-                        if ((readingOfDay == "1st" || readingOfDay == "2nd") && block.boundingBox!!.left < secondBoundingBox.right && block.boundingBox!!.right > firstBoundingBox.left) {
-                            suckItUp(word.text)
+                            if (firstBoundingBox != Rect(0, 0, 0, 0) && secondBoundingBox != Rect(
+                                    0,
+                                    0,
+                                    0,
+                                    0
+                                )
+                            ) {
+                                if ((readingOfDay == "1st" || readingOfDay == "2nd") && block.boundingBox!!.left < secondBoundingBox.right && block.boundingBox!!.right > firstBoundingBox.left) {
+                                    suckItUp(word.text)
+                                }
+                            } else if (firstBoundingBox != Rect(0, 0, 0, 0)) {
+                                if ((readingOfDay == "1st" || readingOfDay == "2nd") && block.boundingBox!!.right > firstBoundingBox.left) {
+                                    suckItUp(word.text)
+                                }
+                            } else if (secondBoundingBox != Rect(0, 0, 0, 0)) {
+                                if ((readingOfDay == "1st" || readingOfDay == "2nd") && block.boundingBox!!.left < secondBoundingBox.right) {
+                                    suckItUp(word.text)
+                                }
+                            } else {
+                                if (readingOfDay == "1st" || readingOfDay == "2nd") {
+                                    suckItUp(word.text)
+                                }
+                            }
+                        } else if (direction == "Left") {
+                            when (accumulatedWords) {
+                                "1", "1st", "st", "1s" -> {
+                                    if (detectedBPHeader && block.boundingBox!!.left > firstBoundingBox.left) {
+                                        readingOfDay = "1st"
+                                        if (afterDay1First) {
+                                            suckItUpCheck()
+                                        }
+                                    }
+                                }
+
+                                "2", "2nd", "nd", "2n" -> {
+                                    if (detectedBPHeader && block.boundingBox!!.left > firstBoundingBox.left) {
+                                        readingOfDay = "2nd"
+                                        afterDay1First = true
+                                        suckItUpCheck()
+                                    }
+                                }
+                                // Multiple in case OCR can't detect a certain day, used to make sure pulse/enhance saves only after day 7 records are detected
+                                "DAY3", "DAY4", "DAY5", "DAY6", "DAY7" -> {
+                                    savedCount = totalCount
+                                    countBeenSaved = true
+                                }
+                                // Saves for Day 7, use pulse as well in case image does not contain ENHaNCe
+                                "ENHANCE" -> {
+                                    if ((totalCount > savedCount) && !lastSaved && countBeenSaved) {
+                                        suckItUpCheck()
+                                        lastSaved = true
+                                    }
+                                }
+                                // Make sure bounding box that detects Pulse is not within the one with Systolic and Diastolic, prevents the check
+                                "Pulse" -> {
+                                    if ((totalCount > savedCount) && !lastSaved && countBeenSaved) {
+                                        suckItUpCheck()
+                                        lastSaved = true
+                                    }
+                                }
+                            }
+
+                            if (firstBoundingBox != Rect(0, 0, 0, 0) && secondBoundingBox != Rect(
+                                    0,
+                                    0,
+                                    0,
+                                    0
+                                )
+                            ) {
+                                if ((readingOfDay == "1st" || readingOfDay == "2nd") && block.boundingBox!!.bottom > secondBoundingBox.top && block.boundingBox!!.top < firstBoundingBox.bottom) {
+                                    suckItUp(word.text)
+                                }
+                            } else if (firstBoundingBox != Rect(0, 0, 0, 0)) {
+                                if ((readingOfDay == "1st" || readingOfDay == "2nd") && block.boundingBox!!.top < firstBoundingBox.bottom) {
+                                    suckItUp(word.text)
+                                }
+                            } else if (secondBoundingBox != Rect(0, 0, 0, 0)) {
+                                if ((readingOfDay == "1st" || readingOfDay == "2nd") && block.boundingBox!!.bottom > secondBoundingBox.top) {
+                                    suckItUp(word.text)
+                                }
+                            } else {
+                                if (readingOfDay == "1st" || readingOfDay == "2nd") {
+                                    suckItUp(word.text)
+                                }
+                            }
+                        } else if (direction == "Right") {
+                            when (accumulatedWords) {
+                                "1", "1st", "st", "1s" -> {
+                                    if (detectedBPHeader && block.boundingBox!!.right < firstBoundingBox.right) {
+                                        readingOfDay = "1st"
+                                        if (afterDay1First) {
+                                            suckItUpCheck()
+                                        }
+                                    }
+                                }
+
+                                "2", "2nd", "nd", "2n" -> {
+                                    if (detectedBPHeader && block.boundingBox!!.right < firstBoundingBox.right) {
+                                        readingOfDay = "2nd"
+                                        afterDay1First = true
+                                        suckItUpCheck()
+                                    }
+                                }
+                                // Multiple in case OCR can't detect a certain day, used to make sure pulse/enhance saves only after day 7 records are detected
+                                "DAY3", "DAY4", "DAY5", "DAY6", "DAY7" -> {
+                                    savedCount = totalCount
+                                    countBeenSaved = true
+                                }
+                                // Saves for Day 7, use pulse as well in case image does not contain ENHaNCe
+                                "ENHANCE" -> {
+                                    if ((totalCount > savedCount) && !lastSaved && countBeenSaved) {
+                                        suckItUpCheck()
+                                        lastSaved = true
+                                    }
+                                }
+                                // Make sure bounding box that detects Pulse is not within the one with Systolic and Diastolic, prevents the check
+                                "Pulse" -> {
+                                    if ((totalCount > savedCount) && !lastSaved && countBeenSaved) {
+                                        suckItUpCheck()
+                                        lastSaved = true
+                                    }
+                                }
+                            }
+
+                            if (firstBoundingBox != Rect(0, 0, 0, 0) && secondBoundingBox != Rect(
+                                    0,
+                                    0,
+                                    0,
+                                    0
+                                )
+                            ) {
+                                if ((readingOfDay == "1st" || readingOfDay == "2nd") && block.boundingBox!!.top < secondBoundingBox.bottom && block.boundingBox!!.bottom > firstBoundingBox.top) {
+                                    suckItUp(word.text)
+                                }
+                            } else if (firstBoundingBox != Rect(0, 0, 0, 0)) {
+                                if ((readingOfDay == "1st" || readingOfDay == "2nd") && block.boundingBox!!.bottom > firstBoundingBox.top) {
+                                    suckItUp(word.text)
+                                }
+                            } else if (secondBoundingBox != Rect(0, 0, 0, 0)) {
+                                if ((readingOfDay == "1st" || readingOfDay == "2nd") && block.boundingBox!!.top < secondBoundingBox.bottom) {
+                                    suckItUp(word.text)
+                                }
+                            } else {
+                                if (readingOfDay == "1st" || readingOfDay == "2nd") {
+                                    suckItUp(word.text)
+                                }
+                            }
+                        } else if (direction == "Down") {
+                            when (accumulatedWords) {
+                                "1", "1st", "st", "1s" -> {
+                                    if (detectedBPHeader && block.boundingBox!!.bottom < firstBoundingBox.bottom) {
+                                        readingOfDay = "1st"
+                                        if (afterDay1First) {
+                                            suckItUpCheck()
+                                        }
+                                    }
+                                }
+
+                                "2", "2nd", "nd", "2n" -> {
+                                    if (detectedBPHeader && block.boundingBox!!.bottom < firstBoundingBox.bottom) {
+                                        readingOfDay = "2nd"
+                                        afterDay1First = true
+                                        suckItUpCheck()
+                                    }
+                                }
+                                // Multiple in case OCR can't detect a certain day, used to make sure pulse/enhance saves only after day 7 records are detected
+                                "DAY3", "DAY4", "DAY5", "DAY6", "DAY7" -> {
+                                    savedCount = totalCount
+                                    countBeenSaved = true
+                                }
+                                // Saves for Day 7, use pulse as well in case image does not contain ENHaNCe
+                                "ENHANCE" -> {
+                                    if ((totalCount > savedCount) && !lastSaved && countBeenSaved) {
+                                        suckItUpCheck()
+                                        lastSaved = true
+                                    }
+                                }
+                                // Make sure bounding box that detects Pulse is not within the one with Systolic and Diastolic, prevents the check
+                                "Pulse" -> {
+                                    if ((totalCount > savedCount) && !lastSaved && countBeenSaved) {
+                                        suckItUpCheck()
+                                        lastSaved = true
+                                    }
+                                }
+                            }
+
+                            if (firstBoundingBox != Rect(0, 0, 0, 0) && secondBoundingBox != Rect(
+                                    0,
+                                    0,
+                                    0,
+                                    0
+                                )
+                            ) {
+                                if ((readingOfDay == "1st" || readingOfDay == "2nd") && block.boundingBox!!.right > secondBoundingBox.left && block.boundingBox!!.left < firstBoundingBox.right) {
+                                    suckItUp(word.text)
+                                }
+                            } else if (firstBoundingBox != Rect(0, 0, 0, 0)) {
+                                if ((readingOfDay == "1st" || readingOfDay == "2nd") && block.boundingBox!!.left < firstBoundingBox.right) {
+                                    suckItUp(word.text)
+                                }
+                            } else if (secondBoundingBox != Rect(0, 0, 0, 0)) {
+                                if ((readingOfDay == "1st" || readingOfDay == "2nd") && block.boundingBox!!.right > secondBoundingBox.left) {
+                                    suckItUp(word.text)
+                                }
+                            } else {
+                                if (readingOfDay == "1st" || readingOfDay == "2nd") {
+                                    suckItUp(word.text)
+                                }
+                            }
                         }
                     }
                 }
@@ -639,24 +879,6 @@ class ScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
         ranFirstTime = true
         println("Finalized list of day readings: $allDayReadings")
         println("Total number of readings: ${allDayReadings.count()}")
-
-        // Comparison to detect the direction
-        if (firstBoundingBox != Rect(0, 0, 0, 0) && secondBoundingBox != Rect(0, 0, 0, 0)) {
-
-            // Comparison in regards to difference in distances flaws: uses hardcoded values which means the difference changes depending on how near/far its taken
-            // Further the image, the difference will be lesser
-            if (firstBoundingBox.top > secondBoundingBox.top && abs(firstBoundingBox.top - secondBoundingBox.top) > 180){
-                direction = "Left"
-            } else if (firstBoundingBox.left < secondBoundingBox.left && abs(firstBoundingBox.left - secondBoundingBox.left) > 180){
-                direction = "Top"
-            } else if (firstBoundingBox.top < secondBoundingBox.top && abs(firstBoundingBox.top - secondBoundingBox.top) > 180){
-                direction = "Right"
-            } else if (firstBoundingBox.left > secondBoundingBox.left && abs(firstBoundingBox.left - secondBoundingBox.left) > 180){
-                direction = "Down"
-            } else {
-                direction = "Top"
-            }
-        }
 
         // Setting the bounding box to be used for the autocrop library
         if (firstBoundingBox != Rect(0, 0, 0, 0) && secondBoundingBox != Rect(0, 0, 0, 0)){
