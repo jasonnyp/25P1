@@ -385,7 +385,7 @@ class ScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
                                 savedCurrentIndex += 1
                             } else {
                                 // Remove every value after since all of numbers been replaced
-                                allDayReadingsFinal = allDayReadingsFinal.subList(0, i - 1)
+                                allDayReadingsFinal = allDayReadingsFinal.subList(0, i)
                             }
                         } else {
                             if (i < numbers.size) {
@@ -395,7 +395,7 @@ class ScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
                                 }
                                 lastSavedIndex = i
                             } else {
-                                allDayReadingsFinal = allDayReadingsFinal.subList(0, i - 1)
+                                allDayReadingsFinal = allDayReadingsFinal.subList(0, i)
                             }
                         }
                     }
