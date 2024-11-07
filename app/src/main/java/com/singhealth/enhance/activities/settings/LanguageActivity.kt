@@ -61,31 +61,6 @@ class LanguageActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
             // languageBuilder(this, curLanguage, "ms", "MY")
             errorDialogBuilder(this, getString(R.string.language_unsupported_header), getString(R.string.language_unsupported_body))
         }
-
-        binding.enhanceTamil.setOnClickListener {
-            // languageBuilder(this, curLanguage, "ta", "IN")
-            errorDialogBuilder(this, getString(R.string.language_unsupported_header), getString(R.string.language_unsupported_body))
-        }
-
-        binding.enhanceThai.setOnClickListener {
-            // languageBuilder(this, curLanguage, "th", "TH")
-            errorDialogBuilder(this, getString(R.string.language_unsupported_header), getString(R.string.language_unsupported_body))
-        }
-
-        binding.enhanceVietnamese.setOnClickListener {
-            // languageBuilder(this, curLanguage, "vi", "VN")
-            errorDialogBuilder(this, getString(R.string.language_unsupported_header), getString(R.string.language_unsupported_body))
-        }
-
-        binding.enhanceKorean.setOnClickListener {
-            // languageBuilder(this, curLanguage, "ko", "KR")
-            errorDialogBuilder(this, getString(R.string.language_unsupported_header), getString(R.string.language_unsupported_body))
-        }
-
-        binding.enhanceJapanese.setOnClickListener {
-            // languageBuilder(this, curLanguage, "ja", "JP")
-            errorDialogBuilder(this, getString(R.string.language_unsupported_header), getString(R.string.language_unsupported_body))
-        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

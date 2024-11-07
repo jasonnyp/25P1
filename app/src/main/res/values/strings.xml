@@ -366,7 +366,7 @@
     <string name="enhance_verify_clinic_bp">Clinic BP:</string>
     <string name="enhance_verify_add_row">Add Row</string>
     <string name="enhance_verify_more_options">More Options</string>
-    <string name="enhance_verify_disclaimer">Disclaimer: The scanner is not perfect and may yield erroneous results at times. The onus is on you to ensure the accuracy of these results before calculating the average blood pressure for this patient.</string>
+    <string name="enhance_verify_disclaimer">Disclaimer: The OCR may not work well if the handwriting is untidy. For a more accurate average home BP, do check and amend any incorrect value(s) before proceeding to Calculate Average BP.</string>
     <string name="enhance_verify_calculate_bp">Calculate Average BP</string>
     <string name="update_bp_error_header">Update Error</string>
     <string name="update_bp_error_body">Unable to update target BP. Please try again.</string>
