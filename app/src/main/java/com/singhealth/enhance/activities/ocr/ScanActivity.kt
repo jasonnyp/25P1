@@ -420,10 +420,12 @@ class ScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
 
             println("All Day Readings Final after filling up $allDayReadingsFinal")
 
+            // Use allDayReadings if there are empty blanks
             if (allDayReadingsFinal.size > numbers.size && listIsNotEmptyStrings) {
                 processNumbers(allDayReadingsFinal, sysBPList, diaBPList)
                 println("Used list allDayReadings")
             } else {
+                // Defaults to numberlist if both have equal length
                 processNumbers(numbers, sysBPList, diaBPList)
                 println("Used list numbers")
             }
@@ -474,7 +476,7 @@ class ScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
             allDayReadings.add(currentDayReadings.toString())
         }
         // Experimental Odd Values > 2
-        // Only odd if OCR detect headers as values, so size could be 5, 11 in this instance since it would be +3 everytime instead of 2, not 8 because its even if 2 headers gets detected, can't do anything which is why we do a list comparison
+        // Only odd if OCR didn't detect header and not detecting some values and continue adding values, so size could be 5, 11 in this instance since it would be +3 everytime instead of 2, not 8 because its even if 2 headers gets detected, can't do anything which is why we do a list comparison
         else if (currentDayReadings.size % 2 == 1){
             println("Test Odd due to OCR not detecting $currentDayReadings")
             while (currentDayReadings.size != 2 && currentDayReadings.size != 0) {
