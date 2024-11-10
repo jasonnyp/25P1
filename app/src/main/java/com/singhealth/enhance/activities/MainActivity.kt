@@ -23,7 +23,6 @@ import com.singhealth.enhance.databinding.ActivityMainBinding
 import com.singhealth.enhance.security.AESEncryption
 import com.singhealth.enhance.security.LogOutTimerUtil
 import com.singhealth.enhance.security.SecureSharedPreferences
-import com.singhealth.enhance.security.StaffSharedPreferences
 
 
 class MainActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
