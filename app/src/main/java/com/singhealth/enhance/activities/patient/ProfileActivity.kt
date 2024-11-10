@@ -3,7 +3,6 @@ package com.singhealth.enhance.activities.patient
 import android.app.ProgressDialog
 import android.content.Context
 import android.content.Intent
-import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View

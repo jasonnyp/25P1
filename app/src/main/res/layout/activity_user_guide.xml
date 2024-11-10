@@ -11,15 +11,16 @@
         android:padding="16dp">
 
         <!-- Example Guide Section -->
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/theme_secondary_variant"
             android:padding="16dp"
             android:text="@string/enhance_user_patient"
             android:textColor="@color/theme_secondary"
             android:textSize="18sp"
-            android:textStyle="bold"
-            android:background="@color/theme_secondary_variant" />
+            android:textStyle="bold" />
 
         <TextView
             android:layout_width="match_parent"
