@@ -1,18 +1,12 @@
 package com.singhealth.enhance.activities.patient
 
-import android.app.DatePickerDialog
 import android.app.ProgressDialog
 import android.content.Intent
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.MenuItem
-import android.widget.ArrayAdapter
 import android.widget.Toast
-import androidx.activity.result.ActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
@@ -31,11 +25,6 @@ import com.singhealth.enhance.databinding.ActivityRegistrationBinding
 import com.singhealth.enhance.security.AESEncryption
 import com.singhealth.enhance.security.LogOutTimerUtil
 import com.singhealth.enhance.security.SecureSharedPreferences
-import com.singhealth.enhance.security.StaffSharedPreferences
-import java.io.ByteArrayOutputStream
-import java.text.SimpleDateFormat
-import java.util.Calendar
-import java.util.Locale
 
 class RegistrationActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
     lateinit var binding: ActivityRegistrationBinding

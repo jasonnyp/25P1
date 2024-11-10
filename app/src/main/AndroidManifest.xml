@@ -1,32 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
-
     <!-- To check if app is connected to the Internet -->
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-
-    <!-- To access the Internet -->
-    <uses-permission android:name="android.permission.INTERNET" />
-
-    <!-- To access the camera -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> <!-- To access the Internet -->
+    <uses-permission android:name="android.permission.INTERNET" /> <!-- To access the camera -->
     <uses-permission android:name="android.permission.CAMERA" />
+
     <uses-feature
         android:name="android.hardware.camera"
         android:required="false" />
-
-    <!-- To read/write images from the gallery (Legacy Android versions) -->
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="32" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="28"/>
-
-    <!-- To read/write images from the gallery (Newer Android versions) -->
-    <uses-permission android:name="android.permission.READ_MEDIA_VISUAL_USER_SELECTED" android:minSdkVersion="33"/>
+    <uses-feature
+        android:name="android.hardware.telephony"
+        android:required="false" /> <!-- To read/write images from the gallery (Legacy Android versions) -->
+    <uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32" />
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="28" /> <!-- To read/write images from the gallery (Newer Android versions) -->
+    <uses-permission
+        android:name="android.permission.READ_MEDIA_VISUAL_USER_SELECTED"
+        android:minSdkVersion="33" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
 
     <application
         android:name=".LanguageApplication"
         android:allowBackup="false"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
-        android:usesCleartextTraffic="true"
         android:hardwareAccelerated="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -34,25 +35,20 @@
         android:screenOrientation="portrait"
         android:supportsRtl="true"
         android:theme="@style/Theme.ENHANCe"
-        tools:targetApi="31"
+        android:usesCleartextTraffic="true"
         tools:ignore="DiscouragedApi"
-        >
-
+        tools:targetApi="31">
         <activity
             android:name=".activities.authentication.LoginActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:exported="false"
             android:theme="@style/Theme.ENHANCe.NoActionBar"
-            android:windowSoftInputMode="adjustResize" />
-
-        <!-- history -->
+            android:windowSoftInputMode="adjustResize" /> <!-- history -->
         <activity
             android:name=".activities.history.HistoryActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:exported="false"
-            android:label="@string/history_title" />
-
-        <!-- ocr -->
+            android:label="@string/history_title" /> <!-- ocr -->
         <activity
             android:name=".activities.ocr.ScanActivity"
             android:configChanges="orientation|screenSize"
@@ -71,9 +67,7 @@
             android:exported="false"
             android:label="@string/verify_scan_results"
             android:parentActivityName=".activities.ocr.ScanActivity"
-            android:windowSoftInputMode="adjustResize" />
-
-        <!-- patient -->
+            android:windowSoftInputMode="adjustResize" /> <!-- patient -->
         <activity
             android:name=".activities.patient.ProfileActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
@@ -85,21 +79,19 @@
             android:exported="false"
             android:label="@string/patient_registration_title"
             android:windowSoftInputMode="adjustResize" />
-        <activity android:name=".activities.patient.EditProfileActivity"
+        <activity
+            android:name=".activities.patient.EditProfileActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:exported="false"
             android:label="@string/enhance_edit_particulars"
             android:parentActivityName=".activities.patient.ProfileActivity"
-            android:windowSoftInputMode="adjustResize" />
-        <!-- result -->
+            android:windowSoftInputMode="adjustResize" /> <!-- result -->
         <activity
             android:name=".activities.result.RecommendationActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:exported="false"
             android:label="@string/outcome_and_recommendation"
-            android:parentActivityName=".activities.history.HistoryActivity" />
-
-        <!-- settings -->
+            android:parentActivityName=".activities.history.HistoryActivity" /> <!-- settings -->
         <activity
             android:name=".activities.settings.AboutAppActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
@@ -117,6 +109,12 @@
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:exported="false"
             android:label="@string/enhance_settings_language"
+            android:parentActivityName=".activities.settings.SettingsActivity" />
+        <activity
+            android:name=".activities.settings.ContactHelpdesk"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:exported="false"
+            android:label="@string/enhance_settings_contact_helpdesk"
             android:parentActivityName=".activities.settings.SettingsActivity" />
         <activity
             android:name=".activities.settings.PrivacyStatementActivity"
@@ -140,9 +138,7 @@
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:exported="false"
             android:label="@string/enhance_settings_theme"
-            android:parentActivityName=".activities.settings.ThemeActivity" />
-
-        <!-- MainActivity and SplashScreenActivity -->
+            android:parentActivityName=".activities.settings.ThemeActivity" /> <!-- MainActivity and SplashScreenActivity -->
         <activity android:name=".activities.BaseActivity" />
         <activity
             android:name=".activities.MainActivity"
@@ -157,25 +153,20 @@
             android:theme="@style/Theme.ENHANCe.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-
-        <!-- Dashboard -->
+        </activity> <!-- Dashboard -->
         <activity
             android:name=".activities.dashboard.DashboardActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:exported="false"
-            android:label="@string/dashboard_title"
-            >
-        </activity>
+            android:label="@string/dashboard_title"></activity>
         <activity
             android:name=".activities.dashboard.SimpleDashboardActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:exported="false"
-            android:label="@string/dashboard_title"
-            >
-        </activity>
-
+            android:label="@string/dashboard_title"></activity>
     </application>
+
 </manifest>

@@ -4,7 +4,6 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.MenuItem
-import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
@@ -114,11 +113,13 @@ class SettingsActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
 
         // Contact Helpdesk
         binding.contactHelpdeskRL.setOnClickListener {
-            Toast.makeText(
-                this,
-                getString(R.string.settings_contact_helpdesk),
-                Toast.LENGTH_SHORT
-            ).show()
+//            Toast.makeText(
+//                this,
+//                getString(R.string.settings_contact_helpdesk),
+//                Toast.LENGTH_SHORT
+//            ).show()
+            startActivity(Intent(this, ContactHelpdesk::class.java))
+            finish()
         }
 
         // About ENHANCe
