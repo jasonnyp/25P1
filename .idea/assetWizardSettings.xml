@@ -33,7 +33,8 @@
                         </option>
                         <option name="values">
                           <map>
-                            <entry key="outputName" value="enhance_phone_icon" />
+                            <entry key="color" value="3bb143" />
+                            <entry key="outputName" value="enhance_phone_icon_green" />
                             <entry key="sourceFile" value="/C:\save (1).svg" />
                           </map>
                         </option>
