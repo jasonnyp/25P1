@@ -49,32 +49,32 @@ class ContactHelpdesk : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
         })
 
         binding.enhanceCallMrJason.setOnClickListener {
-            val phoneNumber = "tel:+6565501712"  // Replace with the actual number
-            val callIntent = Intent(Intent.ACTION_CALL)
-            callIntent.data = Uri.parse(phoneNumber)
+            val emailAddress = "mailto:jason_chung@nyp.edu.sg"  // Replace with the actual number
+            val emailIntent = Intent(Intent.ACTION_SENDTO)
+            emailIntent.data = Uri.parse(emailAddress)
 
             // Check if the permission to make a call is granted
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.INTERNET) == PackageManager.PERMISSION_GRANTED) {
                 // Permission is granted, initiate the call
-                startActivity(callIntent)
+                startActivity(emailIntent)
             } else {
                 // Request the permission if not already granted
-                ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.CALL_PHONE), 1)
+                ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.INTERNET), 1)
             }
         }
 
         binding.enhanceCallMrLoh.setOnClickListener {
-            val phoneNumber = "tel:+6565500737"  // Replace with the actual number
-            val callIntent = Intent(Intent.ACTION_CALL)
-            callIntent.data = Uri.parse(phoneNumber)
+            val emailAddress = "mailto:loh_chao_hong@nyp.edu.sg"  // Replace with the actual number
+            val emailIntent = Intent(Intent.ACTION_SENDTO)
+            emailIntent.data = Uri.parse(emailAddress)
 
             // Check if the permission to make a call is granted
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.INTERNET) == PackageManager.PERMISSION_GRANTED) {
                 // Permission is granted, initiate the call
-                startActivity(callIntent)
+                startActivity(emailIntent)
             } else {
                 // Request the permission if not already granted
-                ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.CALL_PHONE), 2)
+                ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.INTERNET), 2)
             }
         }
     }
@@ -84,23 +84,23 @@ class ContactHelpdesk : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
 
         if (requestCode == 1 && grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             // Permission was granted, initiate the call
-            val phoneNumber = "tel:+6565501712"
-            val callIntent = Intent(Intent.ACTION_CALL)
-            callIntent.data = Uri.parse(phoneNumber)
+            val emailAddress = "mailto:jason_chung@nyp.edu.sg"
+            val emailIntent = Intent(Intent.ACTION_SENDTO)
+            emailIntent.data = Uri.parse(emailAddress)
 
             // Ensure the permission is granted before starting the activity
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED) {
-                startActivity(callIntent)
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.INTERNET) == PackageManager.PERMISSION_GRANTED) {
+                startActivity(emailIntent)
             }
         } else if (requestCode == 2 && grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             // Permission was granted, initiate the call
-            val phoneNumber = "tel:+6565500737"
-            val callIntent = Intent(Intent.ACTION_CALL)
-            callIntent.data = Uri.parse(phoneNumber)
+            val emailAddress = "mailto:loh_chao_hong@nyp.edu.sg"
+            val emailIntent = Intent(Intent.ACTION_SENDTO)
+            emailIntent.data = Uri.parse(emailAddress)
 
             // Ensure the permission is granted before starting the activity
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED) {
-                startActivity(callIntent)
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.INTERNET) == PackageManager.PERMISSION_GRANTED) {
+                startActivity(emailIntent)
             }
         } else {
             // Permission denied, show Toast display
