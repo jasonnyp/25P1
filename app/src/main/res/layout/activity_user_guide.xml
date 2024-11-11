@@ -102,6 +102,40 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="16dp"
+            android:text="@string/enhance_user_recommendation"
+            android:textColor="@color/theme_secondary"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:background="@color/theme_secondary_variant" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="8dp"
+            android:text="@string/enhance_user_recommendation_body"
+            android:textSize="16sp" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:text="@string/enhance_user_dashboard"
+            android:textColor="@color/theme_secondary"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:background="@color/theme_secondary_variant" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="8dp"
+            android:text="@string/enhance_user_dashboard_body"
+            android:textSize="16sp" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
             android:text="@string/enhance_user_faq"
             android:textColor="@color/theme_secondary"
             android:textSize="18sp"
