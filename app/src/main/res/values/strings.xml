@@ -1,5 +1,5 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="app_name" translatable="false" tools:ignore="Typos">ENHANCe</string>
+    <string name="app_name" tools:ignore="Typos" translatable="false">ENHANCe</string>
 
     <!-- AndroidManifest.xml (Some of the strings are in different segments) -->
     <string name="outcome_and_recommendation">Outcome and Recommendation</string>
@@ -63,7 +63,7 @@
     <string name="verify_scan_discard_body">Do you want to discard all progress and start over?</string>
     <string name="verify_scan_empty_field">Field is empty.</string>
     <string name="verify_scan_whole_number">Field must only contain whole number.</string>
-    <string name="verify_scan_valid_value">Value cannot be below %1d or above %2d.</string>
+    <string name="verify_scan_valid_value" translatable="false">Value cannot be below %1d or above %2d.</string>
     <string name="verify_scan_invalid_value">Invalid value.</string>
     <string name="verify_scan_replace_value">Replace the value</string>
     <string name="verify_scan_abnormal_value">Abnormal value.</string>

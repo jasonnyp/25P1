@@ -1,0 +1,348 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="outcome_and_recommendation">Keputusan dan Cadangan</string>
+    <string name="verify_scan_results">Verifikasi Hasil Imbasan</string>
+
+    <string name="good_morning">Selamat Pagi!</string>
+    <string name="good_afternoon">Selamat Petang!</string>
+    <string name="good_evening">Selamat Malam!</string>
+    <string name="login_validate_staff">ID Staf tidak boleh kosong!</string>
+    <string name="login_validate_password">Kata laluan tidak boleh kosong!</string>
+    <string name="login_success_header">Log Masuk Berjaya</string>
+
+    <string name="dashboard_no_records_found">Tiada rekod dijumpai.</string>
+
+    <string name="ocr_instructions">PENTING: \nSila pastikan hanya nilai tekanan darah (Sistolik/Diastolik) sahaja yang kelihatan. \nAmbil perhatian untuk mengambil gambar pada jarak yang lebih dekat untuk pengesanan yang lebih baik. \n\nTajuk diperlukan untuk Pengesanan/Pemangkasan Automatik: Klinik/Pejabat BP:, Sistolik dan Diastolik, Hari 1 - Hari 7</string>
+    <string name="ocr_app_permissions_header">Dayakan kebenaran aplikasi</string>
+    <string name="ocr_app_permissions_body">Untuk menggunakan fungsi OCR, anda perlu membenarkan akses ke kamera, galeri dan storan luaran anda.</string>
+    <string name="ocr_image_error_header">Ralat memproses imej</string>
+    <string name="ocr_image_error_body">Imej tidak dapat diproses kerana ralat.\n\nSila hubungi sokongan IT dengan kod ralat berikut jika masalah berterusan: %1$s</string>
+    <string name="ocr_text_error_header">Tiada apa-apa untuk diproses</string>
+    <string name="ocr_text_error_body">Kami tidak dapat mencari tulisan tangan atau teks untuk diproses.\n\nPetua: Pastikan imej jelas dan dipotong hanya kepada nilai, dan tidak termasuk tajuk (seperti \'Sistolik\' dan \'Diastolik\').</string>
+    <string name="resuming_scan">Menyambung imbasan</string>
+
+    <string name="verify_scan_update_target_home_header">Kemas kini Sasaran BP Rumah</string>
+    <string name="verify_scan_update_target_home_body">Adakah anda pasti ingin mengemas kini BP sasaran rumah pesakit?</string>
+    <string name="verify_scan_exit_target_home_header">Buang Perubahan</string>
+    <string name="verify_scan_exit_target_home_body">Adakah anda pasti ingin membuang sebarang perubahan pada BP sasaran rumah yang telah anda buat?</string>
+    <string name="verify_scan_update_target_clinic_header">Kemas kini Sasaran BP Klinik</string>
+    <string name="verify_scan_update_target_clinic_body">Adakah anda pasti ingin mengemas kini BP sasaran klinik pesakit?</string>
+    <string name="verify_scan_exit_target_clinic_header">Buang Perubahan</string>
+    <string name="verify_scan_exit_target_clinic_body">Adakah anda pasti ingin membuang sebarang perubahan pada BP sasaran klinik yang telah anda buat?</string>
+    <string name="verify_scan_update_data">Mengemas kini data sasaran BP</string>
+    <string name="verify_scan_update_data_caption">Sila tunggu sebentar…</string>
+    <string name="update">Kemas Kini</string>
+    <string name="exit">Keluar</string>
+    <string name="verify_scan_no_update">Tiada perubahan dibuat</string>
+    <string name="verify_scan_no_update_caption">Ini disebabkan oleh nilai yang sama dengan sasaran BP semasa</string>
+    <string name="ok">OK</string>
+    <string name="add_empty_column_left">Tambah lajur kosong ke kiri</string>
+    <string name="add_empty_column_right">Tambah lajur kosong ke kanan</string>
+    <string name="swap_values">Tukar nilai Sistolik dan Diastolik</string>
+    <string name="remove_row">Padam baris</string>
+    <string name="add_new_row">Tambah baris baru</string>
+    <string name="functionality">Fungsi: </string>
+    <string name="verify_scan_rows">%1$d rekod telah dikesan.\n\nJumlah rekod: %2$d</string>
+    <string name="verify_scan_no_records">Tiada rekod dikesan. Imbas semula atau masukkan secara manual dengan menambah baris baru.</string>
+    <string name="verify_scan_inadequate_reading_header">Bilangan bacaan tidak mencukupi</string>
+    <string name="verify_scan_inadequate_reading_body">Adakah anda ingin mengimbas semula untuk lebih banyak</string>
+    <string name="verify_scan_calculation_successful">Pengiraan disimpan dengan jayanya.</string>
+    <string name="verify_scan_saving_header">Ralat menyimpan rekod</string>
+    <string name="verify_scan_saving_body">Aplikasi tidak dapat menyimpan rekod semasa. \n\nJika masalah berterusan, sila hubungi sokongan IT dengan kod ralat berikut: %1$s</string>
+    <string name="verify_scan_error_header">Ralat dikesan</string>
+    <string name="verify_scan_error_body">Betulkan semua ralat sebelum meneruskan.</string>
+    <string name="verify_scan_rescan_header">Imbas semula rekod semasa</string>
+    <string name="verify_scan_rescan_body">Adakah anda ingin mengimbas semula rekod semasa? \n\n(nota: rekod yang telah diimbas sebelum ini akan disimpan)</string>
+    <string name="verify_scan_discard_header">Buang kemajuan</string>
+    <string name="verify_scan_discard_body">Adakah anda ingin membuang semua kemajuan dan mulakan semula?</string>
+    <string name="verify_scan_empty_field">Ruangan kosong.</string>
+    <string name="verify_scan_whole_number">Ruangan hanya boleh mengandungi nombor bulat.</string>
+    <string name="verify_scan_invalid_value">Nilai tidak sah.</string>
+    <string name="verify_scan_replace_value">Gantikan nilai</string>
+    <string name="verify_scan_abnormal_value">Nilai luar biasa.</string>
+    <string name="verify_scan_erroneous_header">Terlalu banyak keputusan ralat</string>
+    <string name="verify_scan_erroneous_body">Adakah anda ingin mengimbas semula rekod semasa untuk mencapai ketepatan yang lebih baik? \n\n(nota: rekod yang telah diimbas sebelum ini akan disimpan)</string>
+    <string name="verify_scan_remove_row_header">Padam baris</string>
+    <string name="verify_scan_remove_row_body">Adakah anda ingin memadam baris yang dipilih?</string>
+
+    <string name="profile_gender_male">LELAKI</string>
+    <string name="profile_gender_female">PEREMPUAN</string>
+    <string name="profile_retrieve_data">Mengambil data pesakit</string>
+    <string name="profile_retrieve_data_caption">Sila tunggu sebentar…</string>
+    <string name="profile_document_error_header">Ralat mendapatkan Rekod Pesakit</string>
+    <string name="profile_document_error_body">Terdapat ralat semasa mendapatkan maklumat pesakit. \n\nJika masalah berterusan, sila hubungi sokongan IT dengan kod ralat berikut: %1$s</string>
+    <string name="profile_patient_weight">%1$s kg</string>
+    <string name="profile_patient_height">%1$s cm</string>
+    <string name="profile_edit_button">Edit</string>
+    <string name="profile_delete_button">Padam</string>
+    <string name="delete_confirmation_title">Padam Profil</string>
+    <string name="delete_confirmation_message">Adakah anda pasti ingin memadam profil ini?</string>
+    <string name="cancel">Batal</string>
+    <string name="delete">Padam</string>
+    <string name="deleting">Membuang</string>
+    <string name="please_wait">Sila tunggu…</string>
+    <string name="patient_deleted_success">Profil pesakit telah dipadamkan dengan jayanya.</string>
+
+    <string name="register_gender_male">Lelaki</string>
+    <string name="register_gender_female">Perempuan</string>
+    <string name="register_failed_suggestion">Tidak dapat mengisi ID pesakit secara automatik</string>
+    <string name="register_field_verification">Sila betulkan semua ralat sebelum meneruskan.</string>
+    <string name="profile_picture_info">Untuk memilih foto lain, ketik pada foto semasa untuk membuka galeri anda.</string>
+    <string name="register_image_verification_header">Tiada foto dimuat naik</string>
+    <string name="register_image_verification_body">Sila muat naik foto pesakit sebelum meneruskan.</string>
+    <string name="register_empty_field_verification">Ruangan tidak boleh kosong</string>
+    <string name="register_empty_bp_verification">Ruangan tidak boleh kosong. Jika anda ingin nilai lalai, masukkan %1$d</string>
+    <string name="register_invalid_value_verification">Nilai tidak sah</string>
+    <string name="register_invalid_number_verification">Nombor terlalu tinggi atau rendah</string>
+    <string name="register_loading_page">Sila tunggu sementara ID pesakit sedang dijana secara automatik.</string>
+    <string name="register_loading_dialog">Sila tunggu sementara pesakit sedang didaftarkan.</string>
+    <string name="register_exist_error_header">Pesakit sudah didaftarkan</string>
+    <string name="register_exist_error_body">Adakah anda ingin mencari pesakit sebaliknya?</string>
+    <string name="register_successful">Berjaya mendaftarkan %1$s ke dalam sistem.</string>
+
+    <string name="controlled_bp">(BP Terkawal)</string>
+    <string name="uncontrolled_bp">(BP Tidak Terkawal)</string>
+
+    <string name="well_controlled_hypertension">Hipertensi Terkawal Baik</string>
+    <string name="white_coat_uncontrolled_hypertension">Hipertensi Tidak Terkawal Kot Putih</string>
+    <string name="masked_hypertension">Hipertensi Tersembunyi</string>
+    <string name="uncontrolled_hypertension">Hipertensi Tidak Terkawal</string>
+
+    <string name="suboptimum">(Suboptimum)</string>
+    <string name="well_controlled">(Terkawal Baik)</string>
+    <string name="unknown_hypertension_status">(Tidak Diketahui)</string>
+
+    <string name="insufficient_records">(Purata BP Rumah dikira berdasarkan bacaan BP rumah yang tidak mencukupi.)</string>
+    <string name="average_days_message">Purata BP Rumah dikira menggunakan Hari(s) %1$s.</string>
+    <string name="old_scan_records">(Rekod ini telah diimbas sebelum kiraan rekod diambil kira.)</string>
+    <string name="no_recommendations">Tiada Cadangan.\n</string>
+    <string name="well_controlled_bp_recommendation_medical">- Perkukuhkan pematuhan ubat-ubatan, dan teruskan dengan penyelenggaraan gaya hidup. \n</string>
+    <string name="suboptimum_bp_recommendation_medical">- Nilaikan pematuhan ubat-ubatan, pertimbangkan perubahan gaya hidup dan titrasi antihipertensi ke atas.\n</string>
+
+    <string name="language_current_error_header">Bahasa Semasa Digunakan</string>
+    <string name="language_current_error_body">Ini adalah bahasa aplikasi semasa anda. Sila pilih bahasa lain.</string>
+    <string name="language_unsupported_header">Bahasa tidak disokong buat masa ini</string>
+    <string name="language_unsupported_body">Penterjemahan bahasa ini sedang dijalankan. Sila pilih bahasa lain.</string>
+
+    <string name="settings_logout_activity_header">Pengesahan log keluar</string>
+    <string name="settings_logout_activity_body">Adakah anda pasti ingin keluar?</string>
+    <string name="settings_contact_helpdesk">Hubungi 6451–5115 untuk maklumat Helpdesk lanjut</string>
+
+    <string name="main_activity_patient_header">Pesakit tidak dijumpai.</string>
+    <string name="main_activity_patient_body">Pastikan maklumat pesakit dimasukkan dengan betul. Jika tidak, sila sahkan sama ada ini adalah lawatan pertama pesakit dan teruskan untuk mendaftar maklumat mereka.</string>
+    <string name="main_activity_patient_validation">ID tidak boleh kosong</string>
+
+    <string name="home_title">Laman Utama</string>
+    <string name="patient_registration_title">Pendaftaran Pesakit</string>
+    <string name="settings_title">Tetapan</string>
+
+    <string name="profile_title">Profil</string>
+    <string name="scan_title">Imbas</string>
+    <string name="history_title">Sejarah</string>
+    <string name="dashboard_title">Papan Pemuka</string>
+
+    <string name="ok_dialog">OK</string>
+    <string name="yes_dialog">Ya</string>
+    <string name="no_dialog">Tidak</string>
+    <string name="cancel_dialog">Batal</string>
+    <string name="try_again_dialog">Cuba lagi</string>
+
+    <string name="firebase_error_header">Ralat Sambungan Firebase</string>
+    <string name="firebase_error_body">Aplikasi sedang mengalami masalah berkomunikasi dengan Pangkalan Data Firestore.\n\nJika masalah berterusan, sila hubungi sokongan IT dengan kod ralat berikut: %1$s</string>
+    <string name="firebase_error_return_to_main">Kembali ke Utama</string>
+
+    <string name="reconnect_dialog_button">SAMBUNG SEMULA</string>
+    <string name="reconnect_error_header">Tiada Sambungan Internet</string>
+    <string name="reconnect_error_body">Anda tidak disambungkan ke internet. Banyak fungsi aplikasi bergantung pada sambungan internet, dan kemajuan anda mungkin tidak disimpan. \n\nJika masalah berterusan, sila hubungi bantuan IT untuk bantuan lanjut.</string>
+
+    <string name="login_error_header">Kegagalan Pengesahan</string>
+    <string name="login_error_body">Kredensial yang dikaitkan dengan ID Staf atau kata laluan yang anda berikan tidak sepadan dengan rekod kami.\n\n(Nota: Jika anda terlupa kelayakan log masuk anda, sila hubungi bantuan IT untuk bantuan lanjut.)</string>
+
+    <string name="patient_info_session_error_header">ID Pesakit Tidak Dijumpai</string>
+    <string name="patient_info_session_error_body">ID Pesakit yang dikaitkan tidak berada dalam sesi semasa.\n\nSila hubungi bantuan IT untuk bantuan lanjut.</string>
+
+    <string name="patient_history_not_found_error_header">Sejarah Pesakit Tidak Dijumpai</string>
+    <string name="patient_history_not_found_error_body">Sejarah Pesakit yang dikaitkan tidak dapat dipaparkan.\n\nJika masalah berterusan, sila hubungi sokongan IT dengan kod ralat berikut: %1$s</string>
+
+    <string name="patient_info_not_found">Maklumat pesakit tidak dapat dijumpai dalam sesi semasa. Sila cuba lagi.</string>
+    <string name="dialog_positive_ok">OK</string>
+    <string name="bp_stage">Tahap BP</string>
+    <string name="clinic_id">ID Klinik</string>
+    <string name="date_format">dd MMM yyyy, HH:mm:ss</string>
+
+    <string name="enhance_about_info">ENHANCe ialah alat sokongan keputusan klinikal digital untuk menangkap rekod tekanan darah tinggi daripada kertas dan diari digital dan menyokong pengambilan keputusan klinikal doktor penjagaan primer dalam menguruskan pesakit yang memantau tekanan darah di rumah.</string>
+    <string name="enhance_about_purpose">Alat ini menggabungkan teknologi pengenalan aksara optik untuk mengenali kebanyakan nilai tekanan darah tulisan tangan, dan secara automatik mengira purata tekanan darah. Ini menggantikan proses membaca dan mengira tekanan darah secara manual yang meletihkan, akhirnya mengurangkan beban kerja dan ralat manusia.</string>
+    <string name="enhance_about_collab">Kerjasama dengan:</string>
+    <string name="enhance_about_enhance">Logo ENHANCe</string>
+    <string name="enhance_about_singhealth">Logo Singhealth</string>
+    <string name="enhance_about_nyp">Logo NYP</string>
+    <string name="enhance_about_app_ver">Versi aplikasi:</string>
+
+    <string name="enhance_auth_2fa">Pengesahan Dua Faktor</string>
+    <string name="enhance_auth_2fa_body">Masukkan kod yang dihantar ke nombor berdaftar anda melalui SMS.</string>
+    <string name="enhance_auth_code">Kod</string>
+    <string name="enhance_auth_verify">Verifikasi</string>
+
+    <string name="enhance_history_past">Tiada rekod lampau dijumpai.</string>
+
+    <string name="enhance_login_icon_desc">Simbol ENHANCe</string>
+    <string name="enhance_login_staff_id">ID Staf</string>
+    <string name="enhance_login_password">Kata Laluan</string>
+    <string name="enhance_login_login">Log Masuk</string>
+
+    <string name="enhance_main_welcome_message">Selamat Datang ke ENHANCe!</string>
+    <string name="enhance_main_register_patient">Daftar Pesakit Baru</string>
+    <string name="enhance_main_existing_patient">Cari pesakit sedia ada:</string>
+    <string name="enhance_main_patient_id">ID Pesakit</string>
+    <string name="enhance_main_search_record">Cari Rekod</string>
+
+    <string name="enhance_profile_legal_name">Nama Penuh</string>
+    <string name="enhance_profile_patient_id">ID Pesakit</string>
+    <string name="enhance_profile_dob">Tarikh Lahir</string>
+    <string name="enhance_profile_gender">Jantina</string>
+    <string name="enhance_profile_weight">Berat Badan</string>
+    <string name="enhance_profile_height">Tinggi Badan</string>
+    <string name="enhance_profile_target_home_bp">Sasaran BP Rumah</string>
+    <string name="enhance_profile_target_clinic_bp">Sasaran BP Klinik</string>
+
+    <string name="enhance_recco_header">Berikut adalah cadangan berdasarkan %1$s rekod BP yang diimbas:</string>
+    <string name="enhance_recco_do">Buat:</string>
+    <string name="enhance_recco_dont">Jangan:</string>
+    <string name="enhance_recco_target_home_bp">Sasaran BP Rumah</string>
+    <string name="enhance_recco_target_clinic_bp">Sasaran BP Klinik</string>
+    <string name="enhance_recco_average_home_bp">Purata BP Rumah</string>
+    <string name="enhance_recco_clinic_bp">BP Klinik</string>
+    <string name="enhance_recco_hypertension_status">Status Hipertensi</string>
+    <string name="enhance_recco_recommendation">Cadangan</string>
+
+    <string name="enhance_register_photo">Foto</string>
+    <string name="enhance_register_photo_desc">Muat Naik Foto</string>
+    <string name="enhance_register_upload_photo">Ketik pada ikon muat naik fail untuk memilih foto dari galeri anda.</string>
+    <string name="enhance_register_particulars">Maklumat Pesakit</string>
+    <string name="enhance_register_legal_name">Nama Penuh</string>
+    <string name="enhance_register_patient_id">No. ID Pesakit</string>
+    <string name="enhance_register_dob">Tarikh Lahir</string>
+    <string name="enhance_register_gender">Jantina</string>
+    <string name="enhance_register_target_home_bp">Sasaran BP Rumah</string>
+    <string name="enhance_register_target_clinic_bp">Sasaran BP Klinik</string>
+    <string name="enhance_register_target_sys">Sistolik BP</string>
+    <string name="enhance_register_target_dia">Diastolik BP</string>
+    <string name="enhance_register_health_info">Maklumat Kesihatan</string>
+    <string name="enhance_register_weight">Berat Badan</string>
+    <string name="enhance_register_height">Tinggi Badan</string>
+    <string name="enhance_register_button">Daftar</string>
+
+    <string name="enhance_edit_photo">Edit Foto</string>
+    <string name="enhance_edit_photo_desc">Muat Naik Foto</string>
+    <string name="enhance_edit_upload_photo">Ketik untuk tukar gambar profil</string>
+    <string name="enhance_edit_particulars">Edit Maklumat</string>
+    <string name="enhance_edit_legal_name">Nama Penuh</string>
+    <string name="enhance_edit_patient_id">ID Pesakit</string>
+    <string name="enhance_edit_dob">Tarikh Lahir</string>
+    <string name="enhance_edit_gender">Jantina</string>
+    <string name="enhance_clinic_id">ID Klinik</string>
+    <string name="enhance_edit_clinic_id_mismatch">ID Klinik Tidak Secocok</string>
+    <string name="enhance_edit_clinic_id_error">"ID klinik tidak sepadan dengan yang terdapat dalam profil kakitangan. Sila hubungi pentadbir."</string>
+    <string name="enhance_edit_health_info">Edit Maklumat Kesihatan</string>
+    <string name="enhance_edit_weight">Berat Badan</string>
+    <string name="enhance_edit_height">Tinggi Badan</string>
+    <string name="enhance_edit_target_home_bp">Sasaran BP Rumah</string>
+    <string name="enhance_edit_target_clinic_bp">Sasaran BP Klinik</string>
+    <string name="enhance_edit_target_sys">Sistolik BP</string>
+    <string name="enhance_edit_target_dia">Diastolik BP</string>
+    <string name="enhance_update_button">Kemas Kini</string>
+    <string name="update_successful">Profil dikemas kini dengan jayanya</string>
+    <string name="loading_patient_data">Memuatkan data pesakit…</string>
+    <string name="update_loading_dialog">Mengemas kini profil…</string>
+    <string name="update_error_header">Ralat Kemas Kini</string>
+    <string name="update_error_body">Tidak dapat mengemas kini profil. Sila cuba lagi.</string>
+
+    <string name="enhance_scan_error_desc">Ralat</string>
+    <string name="enhance_scan_patient_id"> ID Pesakit: </string>
+    <string name="enhance_scan_name"> Nama: </string>
+    <string name="enhance_general_scan">Imbasan Umum</string>
+    <string name="enhance_7_day_scan">Imbasan 7 Hari</string>
+
+    <string name="enhance_settings_account">Akaun</string>
+    <string name="enhance_settings_logout">Log Keluar</string>
+    <string name="enhance_settings_help_support">Bantuan dan Sokongan</string>
+    <string name="enhance_settings_app">Tetapan Aplikasi</string>
+    <string name="enhance_settings_theme">Tema</string>
+    <string name="enhance_settings_user_guide">Panduan Pengguna</string>
+    <string name="enhance_settings_language">Pilihan Bahasa</string>
+    <string name="enhance_settings_contact_helpdesk">Hubungi Helpdesk</string>
+    <string name="enhance_settings_about">Mengenai ENHANCe</string>
+    <string name="enhance_settings_terms_of_use">Terma Penggunaan</string>
+    <string name="enhance_settings_privacy_statement">Penyataan Privasi</string>
+    <string name="enhance_settings_report_vulnerability">Laporkan Kelemahan</string>
+
+    <string name="enhance_helpdesk">Untuk pertanyaan atau bantuan yang diperlukan, sila hubungi salah seorang individu di bawah.</string>
+    <string name="enhance_mr_chung">Encik Jason Chung</string>
+    <string name="enhance_mr_loh">Encik Loh Chao Hong</string>
+    <string name="enhance_mr_chung_no">+65 6550 1712</string>
+    <string name="enhance_mr_loh_no">+65 6550 0737</string>
+
+    <string name="enhance_s_dashboard_systolic_header">Carta Perbandingan Sistolik</string>
+    <string name="enhance_s_dashboard_diastolic_header">Carta Perbandingan Diastolik</string>
+    <string name="enhance_s_dashboard_sys_label">Sistolik BP</string>
+    <string name="enhance_s_dashboard_dia_label">Diastolik BP</string>
+    <string name="enhance_s_dashboard_sys_target_label">Sasaran Sistolik BP</string>
+    <string name="enhance_s_dashboard_dia_target_label">Sasaran Diastolik BP</string>
+    <string name="enhance_s_dashboard_print">Cetak</string>
+
+    <string name="enhance_terms_header">Ini adalah aktiviti Terma Penggunaan.</string>
+
+    <string name="enhance_user_patient">Pendaftaran dan Carian Pesakit</string>
+    <string name="enhance_user_patient_body">Daftar pesakit baru dengan memasukkan ID pesakit, sasaran BP rumah dan sasaran BP klinik.\n\nBagi pesakit yang telah didaftarkan, hanya cari mereka menggunakan ID pesakit mereka</string>
+    <string name="enhance_user_scan">Imbas Rekod</string>
+    <string name="enhance_user_scan_body">Terdapat 2 pilihan imbasan. Imbasan Umum untuk bacaan BP yang tidak berformat dan Imbasan 7 Hari untuk format carta 7 hari. Imbas rekod tekanan darah (BP) menggunakan kamera peranti, atau pilih imej dari galeri. \n\nPENTING: \nUntuk memastikan ketepatan pengesanan tulisan tangan/teks untuk bahagian seterusnya, anda MESTI memastikan bahawa teks \'Klinik/Pejabat BP\' dan baris terakhir bacaan BP berada dalam bingkai. \n\nKotak pemangkasan automatik akan muncul selepas itu dan anda MESTI memastikan bahawa kedua-dua lajur bacaan BP (sistolik dan diastolik), berada dalam bingkai kotak yang dipotong.</string>
+    <string name="enhance_user_verify_scan">Verifikasi Imbasan - Semak</string>
+    <string name="enhance_user_verify_scan_body">Algoritma akan mengesahkan kehadiran lebih daripada 12 rekod. Jika tidak, ia akan meminta anda untuk mengimbas semula atau meneruskan dengan analisis. \n\nAlgoritma juga akan meminta anda mengimbas semula rekod semasa sekiranya ia melebihi enam ralat sistem.</string>
+    <string name="enhance_user_edit">Verifikasi Imbasan - Edit Nilai</string>
+    <string name="enhance_user_edit_body">Anda akan dimaklumkan tentang sebarang nilai BP yang dianggap tidak normal/tidak betul oleh algoritma (alasan yang diberikan).\n\nAnda juga boleh mengedit nilai BP sekiranya terdapat sebarang ralat. Cuma gunakan mana-mana 5 butang di sebelah kanan setiap rekod yang diimbas untuk membuat perubahan yang diperlukan.\n\nNOTA: Sekiranya anda memutuskan untuk mengimbas semula rekod semasa dalam imbasan umum, kemajuan semasa anda KECUALI kemajuan sebelumnya akan dipadamkan. Sebaik sahaja semua nilai tekanan darah telah diperiksa, klik pada \'kira purata\' untuk meneruskan.</string>
+    <string name="enhance_user_history">Sejarah</string>
+    <string name="enhance_user_history_body">Anda boleh melihat nilai purata tekanan darah yang direkodkan sebelum ini, tarikh dan masa ia diambil, sasaran BP rumah dan sasaran BP klinik pesakit yang dipilih. Dengan mengklik pada setiap kotak ini, anda boleh melihat hasil dan cadangan setiap lawatan.</string>
+    <string name="enhance_user_recommendation">Keputusan dan Cadangan</string>
+    <string name="enhance_user_recommendation_body">Anda boleh melihat hasil dan cadangan lawatan selepas mengklik \'kira purata\' atau lawatan individu pada halaman sejarah.\n\nHalaman ini akan membolehkan anda melihat purata BP rumah, BP klinik, sasaran BP rumah dan klinik, diagnosis status hipertensi dan langkah-langkah yang disyorkan untuk diambil selepas didiagnosis untuk lawatan itu.</string>
+    <string name="enhance_user_dashboard">Papan Pemuka</string>
+    <string name="enhance_user_dashboard_body">Anda boleh melihat carta Sistolik dan Diastolik bagi 3 lawatan terakhir untuk membandingkan nilai purata BP yang direkodkan bersama-sama dengan nilai sasaran BP masing-masing. Selain itu, dengan mengklik pada butang cetak, anda boleh mencetak carta atau menyimpannya sebagai PDF.</string>
+
+    <string name="enhance_verify_patient_id">ID Pesakit:</string>
+    <string name="enhance_verify_edit">Edit</string>
+    <string name="enhance_verify_update">Kemas Kini</string>
+    <string name="enhance_verify_exit">Keluar</string>
+    <string name="enhance_verify_home_target_bp">Sasaran BP Rumah:</string>
+    <string name="enhance_verify_clinic_target_bp">Sasaran BP Klinik:</string>
+    <string name="enhance_verify_clinic_bp">BP Klinik:</string>
+    <string name="enhance_verify_add_row">Tambah Baris</string>
+    <string name="enhance_verify_more_options">Pilihan Lebih Lanjut</string>
+    <string name="enhance_verify_disclaimer">Penafian: OCR mungkin tidak berfungsi dengan baik jika tulisan tangan tidak kemas. Untuk purata BP rumah yang lebih tepat, sila semak dan betulkan sebarang nilai yang tidak betul sebelum meneruskan ke Kira Purata BP.</string>
+    <string name="enhance_verify_calculate_bp">Kira Purata BP</string>
+    <string name="update_bp_error_header">Ralat Kemas Kini</string>
+    <string name="update_bp_error_body">Tidak dapat mengemas kini sasaran BP. Sila cuba lagi.</string>
+
+    <string name="enhance_verify_bottom_option">Pilih pilihan:</string>
+    <string name="enhance_verify_bottom_continue_scan">Teruskan imbasan</string>
+    <string name="enhance_verify_bottom_rescan">Imbas semula rekod semasa</string>
+    <string name="enhance_verify_bottom_undo">Batal</string>
+    <string name="enhance_verify_bottom_discard">Buang semua kemajuan</string>
+
+    <string name="enhance_dashboard_reload">Muat Semula</string>
+
+    <string name="enhance_divider_old_new_current_scan_results">Hasil imbasan semasa:</string>
+
+    <string name="enhance_history_item_avgbp">Purata BP:</string>
+    <string name="enhance_history_item_clinicbp">BP Klinik:</string>
+    <string name="enhance_history_item_target_homebp">Sasaran BP Rumah:</string>
+    <string name="enhance_history_item_target_clinicbp">Sasaran BP Klinik:</string>
+
+    <string name="enhance_row_bp_add_row">Tambah Baris</string>
+
+    <string name="enhance_theme_light">Terang (Lalai)</string>
+    <string name="enhance_theme_dark">Gelap</string>
+    <string name="enhance_theme_system">Gunakan Tema Sistem</string>
+
+    <string name="enhance_user_faq">Soalan Lazim</string>
+    <string name="enhance_user_faq_body">S. Bagaimana untuk mengakses halaman rekod imbasan?\n\nJ: Anda perlu mencari pesakit sebelum anda boleh memilih \'Rekod Imbasan\' di bar navigasi bawah.\n\nS. Bahagian manakah imej yang perlu disimpan untuk ketepatan pengesanan tulisan tangan/teks maksimum?\n\nJ: Selaraskan kamera anda supaya hanya carta mengisi bahagian atas dan bawah skrin untuk ketepatan terbaik.\n\nSekiranya OCR tidak memotong secara automatik, cuba hanya memotong imej SECARA VERTIKAL dan tinggalkan hanya nilai BP sistolik dan diastolik dalam imej yang dipotong.</string>
+</resources>
