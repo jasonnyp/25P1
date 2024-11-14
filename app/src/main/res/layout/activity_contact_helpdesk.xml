@@ -44,14 +44,16 @@
                 android:layout_marginHorizontal="16dp"
                 android:background="@color/light_grey" />
 
-            <RelativeLayout
-                android:id="@+id/enhanceLight"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_marginBottom="6dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/ripple_settings_item"
                 android:clickable="true"
                 android:focusable="true"
-                android:padding="16dp">
+                android:paddingTop="16dp"
+                android:paddingLeft="16dp"
+                android:orientation="vertical">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -60,34 +62,75 @@
                     android:text="@string/enhance_mr_chung"
                     android:textSize="16dp"/>
 
-                <RelativeLayout
+                <LinearLayout
+                    android:layout_marginBottom="6dp"
                     android:id="@+id/enhanceCallMrJason"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:clickable="true"
                     android:padding="16dp" >
 
-                <TextView
-                    android:id="@+id/enhance_jason_no"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:text="@string/enhance_mr_chung_no"
-                    android:textSize="16dp"
-                    android:textStyle="bold"
-                    android:layout_toStartOf="@id/enhance_call_icon"/>
-
-                    <ImageView
-                        android:id="@+id/enhance_call_icon"
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentEnd="true"
-                        android:layout_centerVertical="true"
-                        android:layout_marginStart="10dp"
-                        android:src="@drawable/enhance_phone_icon_green" />
+                        android:orientation="vertical"
+                        android:layout_alignParentEnd="true">
 
-                </RelativeLayout>
-            </RelativeLayout>
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <ImageView
+                                android:layout_gravity="center"
+                                android:layout_width="15dp"
+                                android:layout_height="15dp"
+                                android:layout_alignParentEnd="true"
+                                android:layout_centerVertical="true"
+                                android:layout_marginEnd="3dp"
+                                android:src="@drawable/baseline_email_24"
+                                android:layout_marginStart="10dp"/>
+
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerVertical="true"
+                                android:layout_marginBottom="6dp"
+                                android:text="@string/enhance_mr_chung_email"
+                                android:textSize="16dp"
+                                android:textStyle="bold" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <ImageView
+                                android:layout_gravity="center"
+                                android:layout_width="15dp"
+                                android:layout_height="15dp"
+                                android:layout_alignParentEnd="true"
+                                android:layout_centerVertical="true"
+                                android:layout_marginEnd="3dp"
+                                android:src="@drawable/enhance_phone_icon"
+                                android:layout_marginStart="10dp"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerVertical="true"
+                                android:text="@string/enhance_mr_chung_no"
+                                android:textSize="16dp"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+            </LinearLayout>
 
             <View
                 android:layout_width="match_parent"
@@ -95,14 +138,17 @@
                 android:layout_marginHorizontal="16dp"
                 android:background="@color/light_grey" />
 
-            <RelativeLayout
+            <LinearLayout
+                android:layout_marginBottom="6dp"
                 android:id="@+id/enhanceDark"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/ripple_settings_item"
                 android:clickable="true"
                 android:focusable="true"
-                android:padding="16dp">
+                android:paddingTop="16dp"
+                android:paddingLeft="16dp"
+                android:orientation="vertical">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -111,34 +157,75 @@
                     android:text="@string/enhance_mr_loh"
                     android:textSize="16dp"/>
 
-                <RelativeLayout
+                <LinearLayout
+                    android:layout_marginBottom="6dp"
                     android:id="@+id/enhanceCallMrLoh"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:clickable="true"
                     android:padding="16dp" >
 
-                    <TextView
-                        android:id="@+id/enhance_loh_no"
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:text="@string/enhance_mr_loh_no"
-                        android:textSize="16dp"
-                        android:textStyle="bold"
-                        android:layout_toStartOf="@id/enhance_call_icon2"/>
+                        android:orientation="vertical"
+                        android:layout_alignParentEnd="true">
 
-                    <ImageView
-                        android:id="@+id/enhance_call_icon2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentEnd="true"
-                        android:layout_centerVertical="true"
-                        android:src="@drawable/enhance_phone_icon_green"
-                        android:layout_marginStart="10dp"/>
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
 
-                </RelativeLayout>
-            </RelativeLayout>
+                            <ImageView
+                                android:layout_gravity="center"
+                                android:layout_width="15dp"
+                                android:layout_height="15dp"
+                                android:layout_alignParentEnd="true"
+                                android:layout_centerVertical="true"
+                                android:layout_marginEnd="3dp"
+                                android:src="@drawable/baseline_email_24"
+                                android:layout_marginStart="10dp"/>
+
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerVertical="true"
+                                android:layout_marginBottom="6dp"
+                                android:text="@string/enhance_mr_loh_email"
+                                android:textSize="16dp"
+                                android:textStyle="bold" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <ImageView
+                                android:layout_gravity="center"
+                                android:layout_width="15dp"
+                                android:layout_height="15dp"
+                                android:layout_alignParentEnd="true"
+                                android:layout_centerVertical="true"
+                                android:layout_marginEnd="3dp"
+                                android:src="@drawable/enhance_phone_icon"
+                                android:layout_marginStart="10dp"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerVertical="true"
+                                android:text="@string/enhance_mr_loh_no"
+                                android:textSize="16dp"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+            </LinearLayout>
         </LinearLayout>
     </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>
