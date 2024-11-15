@@ -278,10 +278,6 @@
     <string name="enhance_settings_report_vulnerability">Laporkan Kelemahan</string>
 
     <string name="enhance_helpdesk">Untuk pertanyaan atau bantuan yang diperlukan, sila hubungi salah seorang individu di bawah.</string>
-    <string name="enhance_mr_chung">Encik Jason Chung</string>
-    <string name="enhance_mr_loh">Encik Loh Chao Hong</string>
-    <string name="enhance_mr_chung_no">+65 6550 1712</string>
-    <string name="enhance_mr_loh_no">+65 6550 0737</string>
 
     <string name="enhance_s_dashboard_systolic_header">Carta Perbandingan Sistolik</string>
     <string name="enhance_s_dashboard_diastolic_header">Carta Perbandingan Diastolik</string>
@@ -345,4 +341,8 @@
 
     <string name="enhance_user_faq">Soalan Lazim</string>
     <string name="enhance_user_faq_body">S. Bagaimana untuk mengakses halaman rekod imbasan?\n\nJ: Anda perlu mencari pesakit sebelum anda boleh memilih \'Rekod Imbasan\' di bar navigasi bawah.\n\nS. Bahagian manakah imej yang perlu disimpan untuk ketepatan pengesanan tulisan tangan/teks maksimum?\n\nJ: Selaraskan kamera anda supaya hanya carta mengisi bahagian atas dan bawah skrin untuk ketepatan terbaik.\n\nSekiranya OCR tidak memotong secara automatik, cuba hanya memotong imej SECARA VERTIKAL dan tinggalkan hanya nilai BP sistolik dan diastolik dalam imej yang dipotong.</string>
+
+
+    <string name="verify_scan_valid_value">Nilai tidak boleh kurang daripada %1d atau lebih daripada %2d.</string>
+
 </resources>
