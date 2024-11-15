@@ -63,7 +63,7 @@
     <string name="verify_scan_discard_body">Do you want to discard all progress and start over?</string>
     <string name="verify_scan_empty_field">Field is empty.</string>
     <string name="verify_scan_whole_number">Field must only contain whole number.</string>
-    <string name="verify_scan_valid_value" translatable="false">Value cannot be below %1d or above %2d.</string>
+    <string name="verify_scan_valid_value">Value cannot be below %1d or above %2d.</string>
     <string name="verify_scan_invalid_value">Invalid value.</string>
     <string name="verify_scan_replace_value">Replace the value</string>
     <string name="verify_scan_abnormal_value">Abnormal value.</string>
@@ -325,12 +325,12 @@
 
     <!-- activity_contact_helpdesk.xml -->
     <string name="enhance_helpdesk">For queries or assistance required, please contact either of the individuals below.</string>
-    <string name="enhance_mr_chung">Mr. Jason Chung</string>
-    <string name="enhance_mr_loh">Mr. Loh Chao Hong</string>
-    <string name="enhance_mr_chung_email">jason_chung@nyp.edu.sg</string>
-    <string name="enhance_mr_loh_email">loh_chao_hong@nyp.edu.sg</string>
-    <string name="enhance_mr_chung_no">+65 6550 1712</string>
-    <string name="enhance_mr_loh_no">+65 6550 0737</string>
+    <string name="enhance_mr_chung" translatable="false">Mr. Jason Chung</string>
+    <string name="enhance_mr_loh" translatable="false">Mr. Loh Chao Hong</string>
+    <string name="enhance_mr_chung_email" translatable="false">jason_chung@nyp.edu.sg</string>
+    <string name="enhance_mr_loh_email" translatable="false">loh_chao_hong@nyp.edu.sg</string>
+    <string name="enhance_mr_chung_no" translatable="false">+65 6550 1712</string>
+    <string name="enhance_mr_loh_no" translatable="false">+65 6550 0737</string>
 
     <!-- activity_simple_dashboard.xml -->
     <string name="enhance_s_dashboard_systolic_header">Systolic Comparison Chart</string>

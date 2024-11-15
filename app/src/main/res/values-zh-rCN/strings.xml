@@ -307,10 +307,6 @@
 
     <!-- activity_contact_helpdesk.xml -->
     <string name="enhance_helpdesk">如需查询或协助，请联系以下人员之一。</string>
-    <string name="enhance_mr_chung">钟先生</string>
-    <string name="enhance_mr_loh">罗兆鸿先生</string>
-    <string name="enhance_mr_chung_no">+65 6550 1712</string>
-    <string name="enhance_mr_loh_no">+65 6550 0737</string>
 
     <!-- activity_simple_dashboard.xml -->
     <string name="enhance_s_dashboard_systolic_header">收缩压比较图表</string>
