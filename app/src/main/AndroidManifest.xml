@@ -139,7 +139,6 @@
             android:exported="false"
             android:label="@string/enhance_settings_theme"
             android:parentActivityName=".activities.settings.ThemeActivity" /> <!-- MainActivity and SplashScreenActivity -->
-        <activity android:name=".activities.BaseActivity" />
         <activity
             android:name=".activities.MainActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
@@ -161,12 +160,12 @@
             android:name=".activities.dashboard.DashboardActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:exported="false"
-            android:label="@string/dashboard_title"></activity>
+            android:label="@string/dashboard_title"/>
         <activity
             android:name=".activities.dashboard.SimpleDashboardActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:exported="false"
-            android:label="@string/dashboard_title"></activity>
+            android:label="@string/dashboard_title"/>
     </application>
 
 </manifest>

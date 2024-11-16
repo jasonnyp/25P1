@@ -27,6 +27,27 @@
     <string name="resuming_scan">點擊「常規掃描」以添加更多掃描</string>
 
     <!-- VerifyScanActivity.kt -->
+    <string name="verify_scan_update_target_home_header">更新目標居家血壓</string>
+    <string name="verify_scan_update_target_home_body">您確定要更新病人的目標居家血壓嗎？</string>
+    <string name="verify_scan_exit_target_home_header">丟棄變更</string>
+    <string name="verify_scan_exit_target_home_body">您確定要丟棄對目標居家血壓所做的任何變更嗎？</string>
+    <string name="verify_scan_update_target_clinic_header">更新目標診所血壓</string>
+    <string name="verify_scan_update_target_clinic_body">您確定要更新病人的目標診所血壓嗎？</string>
+    <string name="verify_scan_exit_target_clinic_header">丟棄變更</string>
+    <string name="verify_scan_exit_target_clinic_body">您確定要丟棄對目標診所血壓所做的任何變更嗎？</string>
+    <string name="verify_scan_update_data">更新血壓目標數據</string>
+    <string name="verify_scan_update_data_caption">請稍候…</string>
+    <string name="update">更新</string>
+    <string name="exit">退出</string>
+    <string name="verify_scan_no_update">沒有做出任何變更</string>
+    <string name="verify_scan_no_update_caption">這是因為值與目前的 BP 目標相同</string>
+    <string name="ok">確定</string>
+    <string name="add_empty_column_left">在左側添加一個空白列</string>
+    <string name="add_empty_column_right">在右側添加一個空白列</string>
+    <string name="swap_values">交換收縮壓和舒張壓值</string>
+    <string name="remove_row">移除該行</string>
+    <string name="add_new_row">添加新行</string>
+    <string name="functionality">功能：</string>
     <string name="verify_scan_rows">已檢測到 %1$d 條記錄。\n\n總記錄數：%2$d</string>
     <string name="verify_scan_no_records">未檢測到記錄。請重新掃描或通過手動插入新行。</string>
     <string name="verify_scan_inadequate_reading_header">讀數數量不足</string>
@@ -42,7 +63,6 @@
     <string name="verify_scan_discard_body">您要放棄所有進度並重新開始嗎？</string>
     <string name="verify_scan_empty_field">字段為空。</string>
     <string name="verify_scan_whole_number">字段必須只包含整數。</string>
-    <string name="verify_scan_valid_value">值不能超過200或低於0。</string>
     <string name="verify_scan_invalid_value">無效值。</string>
     <string name="verify_scan_replace_value">替換值</string>
     <string name="verify_scan_abnormal_value">異常值。</string>
@@ -50,12 +70,6 @@
     <string name="verify_scan_erroneous_body">您要重新掃描當前記錄以獲得更高的準確性嗎？\n\n（注意：您之前掃描的記錄將會被保存）</string>
     <string name="verify_scan_remove_row_header">移除行</string>
     <string name="verify_scan_remove_row_body">您要移除選中的行嗎？</string>
-    <string name="add_empty_column_left">在左側添加一個空白列</string>
-    <string name="add_empty_column_right">在右側添加一個空白列</string>
-    <string name="swap_values">交換收縮壓和舒張壓值</string>
-    <string name="remove_row">移除該行</string>
-    <string name="add_new_row">添加新行</string>
-    <string name="functionality">功能：</string>
 
     <!-- ProfileActivity strings -->
     <string name="profile_gender_male">男</string>
@@ -269,7 +283,6 @@
     <string name="enhance_general_scan">常規掃描</string>
     <string name="enhance_7_day_scan">七天掃描</string>
 
-
     <!-- activity_settings.xml -->
     <string name="enhance_settings_account">帳戶</string>
     <string name="enhance_settings_logout">登出</string>
@@ -302,6 +315,10 @@
     <string name="enhance_theme_system">使用系統主題</string>
 
     <!-- activity_user_guide.xml -->
+    <string name="enhance_user_user_manual">使用手冊電子版</string>
+    <string name="enhance_user_user_manual_body">您可以點擊上方圖示下載使用手冊的電子版。</string>
+    <string name="enhance_user_user_manual_file">ENHANCe 使用手冊</string>
+    <string name="enhance_user_user_guide">使用指南</string>
     <string name="enhance_user_patient"><![CDATA[患者註冊與搜索]]></string>
     <string name="enhance_user_patient_body">註冊新患者，包括他們的頭像、NRIC 號碼、法定姓名、性別、出生日期、地址、身高和體重。\n\n對於已註冊的患者，只需使用其 NRIC 和法定姓名進行搜索。</string>
     <string name="enhance_user_scan">掃描記錄</string>
@@ -317,7 +334,6 @@
 
     <!-- activity_verify_scan.xml -->
     <string name="enhance_verify_patient_id">患者ID：</string>
-    <string name="enhance_verify_home_bp">家庭血壓目標：</string>
     <string name="enhance_verify_clinic_target_bp">診所血壓目標：</string>
     <string name="enhance_verify_clinic_bp">診所血壓</string>
     <string name="enhance_verify_add_row">添加行</string>
@@ -343,6 +359,35 @@
     <string name="enhance_history_item_clinicbp">診所血壓：</string>
     <string name="enhance_history_item_target_homebp">家庭血壓目標：</string>
     <string name="enhance_history_item_target_clinicbp">診所血壓目標：</string>
+
+    <string name="verify_scan_valid_value">值不能低於 %1d 或高於 %2d。</string>
+
+    <string name="enhance_user_recommendation">結果與建議</string>
+    <string name="enhance_user_recommendation_body">您可以在點擊「計算平均值」或歷史頁面中的個別訪問後查看訪問的結果和建議。\n\n此頁面將允許您查看平均居家血壓、診所血壓、目標居家和診所血壓、高血壓狀態診斷以及診斷後建議採取的步驟。</string>
+    <string name="enhance_user_dashboard">儀表板</string>
+    <string name="enhance_user_dashboard_body">您可以查看最近 3 次訪問的收縮壓和舒張壓圖表，以比較記錄的平均血壓值及其各自的目標血壓值。此外，點擊「列印」按鈕將允許您列印圖表或將其保存為 PDF。</string>
+
+    <string name="enhance_verify_edit">編輯</string>
+    <string name="enhance_verify_update">更新</string>
+    <string name="enhance_verify_exit">退出</string>
+    <string name="enhance_verify_home_target_bp">目標居家血壓：</string>
+
+    <string name="update_bp_error_header">更新錯誤</string>
+    <string name="update_bp_error_body">無法更新目標血壓。請再試一次。</string>
+
+    <string name="register_failed_suggestion">無法自動填寫病人 ID</string>
+
+    <string name="register_loading_page">請稍候，病人 ID 正在自動生成中。</string>
+
+    <string name="average_days_message">平均居家血壓是使用 %1$s 天計算的。</string>
+
+    <string name="enhance_register_target_home_bp">目標居家血壓</string>
+    <string name="enhance_register_target_clinic_bp">目標診所血壓</string>
+
+    <string name="enhance_edit_target_home_bp">目標居家血壓</string>
+    <string name="enhance_edit_target_clinic_bp">目標診所血壓</string>
+
+    <string name="enhance_helpdesk">如有任何疑問或需要協助，請聯繫以下人員之一。</string>
 
     <!-- row_bp_record.xml -->
     <string name="enhance_row_bp_add_row">新增行</string>
