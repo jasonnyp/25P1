@@ -27,6 +27,21 @@
     <string name="resuming_scan">点击“常规扫描”以添加更多扫描</string>
 
     <!-- VerifyScanActivity.kt -->
+    <string name="verify_scan_update_target_home_header">更新目标家庭血压</string>
+    <string name="verify_scan_update_target_home_body">您确定要更新目标血压家庭患者吗？</string>
+    <string name="verify_scan_exit_target_home_header">丢弃更改</string>
+    <string name="verify_scan_exit_target_home_body">您确定要丢弃对目标血压家庭所做的更改吗？</string>
+    <string name="verify_scan_update_target_clinic_header">更新目标诊所血压</string>
+    <string name="verify_scan_update_target_clinic_body">您确定要更新目标血压诊所患者吗？</string>
+    <string name="verify_scan_exit_target_clinic_header">丢弃更改</string>
+    <string name="verify_scan_exit_target_clinic_body">您确定要丢弃对目标血压诊所所做的更改吗？</string>
+    <string name="verify_scan_update_data">正在更新数据目标血压</string>
+    <string name="verify_scan_update_data_caption">请稍候…</string>
+    <string name="update">更新</string>
+    <string name="exit">退出</string>
+    <string name="verify_scan_no_update">没有更改</string>
+    <string name="verify_scan_no_update_caption">这是因为值与当前目标血压相同</string>
+    <string name="ok">好的</string>
     <string name="verify_scan_rows">已检测到 %1$d 条记录。\n\n总记录数：%2$d</string>
     <string name="verify_scan_no_records">未检测到记录。请重新扫描或通过添加新行手动插入记录。</string>
     <string name="verify_scan_inadequate_reading_header">读数数量不足</string>
@@ -91,6 +106,8 @@
     <string name="register_exist_error_header">病人已经注册</string>
     <string name="register_exist_error_body">您想要搜索该病人吗？</string>
     <string name="register_successful">成功将 %1$s 注册到系统中。</string>
+    <string name="register_failed_suggestion">无法自动填充患者 ID</string>
+    <string name="register_loading_page">请稍候，系统正在自动生成患者 ID。</string>
 
     <!-- DiagnosePatient.kt -->
     <string name="controlled_bp">您的血压目前处于控制状态。继续保持良好的工作！</string>
@@ -111,6 +128,7 @@
     <string name="no_recommendations">没有建议。\n</string>
     <string name="well_controlled_bp_recommendation_medical">- 强调药物依从性，并继续保持健康的生活方式。\n</string>
     <string name="suboptimum_bp_recommendation_medical">- 评估药物依从性，考虑生活方式改变和升级抗高血压药物。\n</string>
+    <string name="average_days_message">平均家庭血压是使用第 %1$s 天计算的。</string>
 
     <!-- LanguageActivity.kt -->
     <string name="language_current_error_header">当前使用的语言</string>
@@ -237,6 +255,8 @@
     <string name="enhance_register_weight">体重</string>
     <string name="enhance_register_height">身高</string>
     <string name="enhance_register_button">注册</string>
+    <string name="enhance_register_target_home_bp">目标家庭血压</string>
+    <string name="enhance_register_target_clinic_bp">目标诊所血压</string>
 
     <!-- activity_edit_patient.xml -->
     <string name="enhance_edit_photo">编辑照片</string>
@@ -261,6 +281,8 @@
     <string name="update_loading_dialog">正在更新档案…</string>
     <string name="update_error_header">更新错误</string>
     <string name="update_error_body">无法更新档案。请重试。</string>
+    <string name="enhance_edit_target_home_bp">目标家庭血压</string>
+    <string name="enhance_edit_target_clinic_bp">目标诊所血压</string>
 
     <!-- activity_scan.xml -->
     <string name="enhance_scan_error_desc">错误</string>
@@ -282,6 +304,9 @@
     <string name="enhance_settings_terms_of_use">使用条款</string>
     <string name="enhance_settings_privacy_statement">隐私声明</string>
     <string name="enhance_settings_report_vulnerability">报告漏洞</string>
+
+    <!-- activity_contact_helpdesk.xml -->
+    <string name="enhance_helpdesk">如需查询或协助，请联系以下人员之一。</string>
 
     <!-- activity_simple_dashboard.xml -->
     <string name="enhance_s_dashboard_systolic_header">收缩压比较图表</string>
@@ -313,16 +338,25 @@
     <string name="enhance_user_history_body">您可以查看所选患者先前记录的平均血压值、家庭血压目标和诊所血压目标。</string>
     <string name="enhance_user_faq">常见问题</string>
     <string name="enhance_user_faq_body">问：如何访问扫描记录页面？\n\n答：您需要先搜索患者，然后才能在底部导航栏选择“扫描记录”。\n\n问：为了最大限度地提高手写/文本检测准确性，图像的哪部分应保留？\n\n答：调整相机，使其填满屏幕的顶部和底部。尝试仅水平裁剪图像，并在裁剪的图像中仅保留收缩压和舒张压值（排除标题；仅保留数字）。</string>
+    <string name="enhance_user_recommendation">结果和建议</string>
+    <string name="enhance_user_recommendation_body">您可以在点击计算平均值或历史记录页面中的单个访问后查看访问的结果和建议。\n\n此页面将允许您查看平均家庭血压、诊所血压、目标家庭和诊所血压、高血压状态诊断以及诊断后建议采取的步骤。</string>
+    <string name="enhance_user_dashboard">仪表板</string>
+    <string name="enhance_user_dashboard_body">您可以查看最近 3 次访问的收缩压和舒张压图表，以比较记录的平均血压值及其各自的目标血压值。此外，单击打印按钮将允许您打印图表或将其保存为 PDF。</string>
 
     <!-- activity_verify_scan.xml -->
     <string name="enhance_verify_patient_id">患者ID：</string>
-    <string name="enhance_verify_home_bp">家庭血压目标：</string>
     <string name="enhance_verify_clinic_target_bp">诊所血压目标：</string>
     <string name="enhance_verify_clinic_bp">诊所血压</string>
     <string name="enhance_verify_add_row">添加行</string>
     <string name="enhance_verify_more_options">更多选项</string>
     <string name="enhance_verify_disclaimer">免责声明：扫描仪并非完美，有时可能产生错误结果。在计算此患者的平均血压之前，请确保这些结果的准确性由您负责。</string>
     <string name="enhance_verify_calculate_bp">计算平均血压</string>
+    <string name="enhance_verify_edit">编辑</string>
+    <string name="enhance_verify_update">更新</string>
+    <string name="enhance_verify_exit">退出</string>
+    <string name="enhance_verify_home_target_bp">目标家庭血压：</string>
+    <string name="update_bp_error_header">更新错误</string>
+    <string name="update_bp_error_body">无法更新目标血压。请重试。</string>
 
     <!-- bottom_sheet_verify_scan.xml -->
     <string name="enhance_verify_bottom_option">选择一个选项：</string>

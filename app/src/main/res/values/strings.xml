@@ -1,5 +1,5 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="app_name" translatable="false" tools:ignore="Typos">ENHANCe</string>
+    <string name="app_name" tools:ignore="Typos" translatable="false">ENHANCe</string>
 
     <!-- AndroidManifest.xml (Some of the strings are in different segments) -->
     <string name="outcome_and_recommendation">Outcome and Recommendation</string>
@@ -325,12 +325,12 @@
 
     <!-- activity_contact_helpdesk.xml -->
     <string name="enhance_helpdesk">For queries or assistance required, please contact either of the individuals below.</string>
-    <string name="enhance_mr_chung">Mr. Jason Chung</string>
-    <string name="enhance_mr_loh">Mr. Loh Chao Hong</string>
-    <string name="enhance_mr_chung_email">jason_chung@nyp.edu.sg</string>
-    <string name="enhance_mr_loh_email">loh_chao_hong@nyp.edu.sg</string>
-    <string name="enhance_mr_chung_no">+65 6550 1712</string>
-    <string name="enhance_mr_loh_no">+65 6550 0737</string>
+    <string name="enhance_mr_chung" translatable="false">Mr. Jason Chung</string>
+    <string name="enhance_mr_loh" translatable="false">Mr. Loh Chao Hong</string>
+    <string name="enhance_mr_chung_email" translatable="false">jason_chung@nyp.edu.sg</string>
+    <string name="enhance_mr_loh_email" translatable="false">loh_chao_hong@nyp.edu.sg</string>
+    <string name="enhance_mr_chung_no" translatable="false">+65 6550 1712</string>
+    <string name="enhance_mr_loh_no" translatable="false">+65 6550 0737</string>
 
     <!-- activity_simple_dashboard.xml -->
     <string name="enhance_s_dashboard_systolic_header">Systolic Comparison Chart</string>

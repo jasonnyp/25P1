@@ -58,8 +58,7 @@ class LanguageActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
         }
 
         binding.enhanceMalay.setOnClickListener {
-            // languageBuilder(this, curLanguage, "ms", "MY")
-            errorDialogBuilder(this, getString(R.string.language_unsupported_header), getString(R.string.language_unsupported_body))
+             languageBuilder(this, curLanguage, "ms", "MY")
         }
     }
 
