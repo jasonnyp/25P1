@@ -24,6 +24,10 @@ class UserGuideActivity : AppCompatActivity() {
                 finish()
             }
         })
+
+        binding.userManualDoc.setOnClickListener{
+
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
