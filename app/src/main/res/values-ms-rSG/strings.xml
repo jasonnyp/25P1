@@ -289,6 +289,10 @@
 
     <string name="enhance_terms_header">Ini adalah aktiviti Terma Penggunaan.</string>
 
+    <string name="enhance_user_user_manual">Salinan Lembut Manual Pengguna</string>
+    <string name="enhance_user_user_manual_body">Anda boleh memuat turun salinan lembut manual pengguna dengan menekan ikon di atas.</string>
+    <string name="enhance_user_user_manual_file">Manual Pengguna ENHANCe</string>
+    <string name="enhance_user_user_guide">Panduan Pengguna</string>
     <string name="enhance_user_patient">Pendaftaran dan Carian Pesakit</string>
     <string name="enhance_user_patient_body">Daftar pesakit baru dengan memasukkan ID pesakit, sasaran BP rumah dan sasaran BP klinik.\n\nBagi pesakit yang telah didaftarkan, hanya cari mereka menggunakan ID pesakit mereka</string>
     <string name="enhance_user_scan">Imbas Rekod</string>
@@ -341,7 +345,6 @@
 
     <string name="enhance_user_faq">Soalan Lazim</string>
     <string name="enhance_user_faq_body">S. Bagaimana untuk mengakses halaman rekod imbasan?\n\nJ: Anda perlu mencari pesakit sebelum anda boleh memilih \'Rekod Imbasan\' di bar navigasi bawah.\n\nS. Bahagian manakah imej yang perlu disimpan untuk ketepatan pengesanan tulisan tangan/teks maksimum?\n\nJ: Selaraskan kamera anda supaya hanya carta mengisi bahagian atas dan bawah skrin untuk ketepatan terbaik.\n\nSekiranya OCR tidak memotong secara automatik, cuba hanya memotong imej SECARA VERTIKAL dan tinggalkan hanya nilai BP sistolik dan diastolik dalam imej yang dipotong.</string>
-
 
     <string name="verify_scan_valid_value">Nilai tidak boleh kurang daripada %1d atau lebih daripada %2d.</string>
 

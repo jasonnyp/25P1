@@ -326,6 +326,10 @@
     <string name="enhance_theme_system">使用系统主题</string>
 
     <!-- activity_user_guide.xml -->
+    <string name="enhance_user_user_manual">用户手册电子版</string>
+    <string name="enhance_user_user_manual_body">您可以点击上方图标下载用户手册的电子版。</string>
+    <string name="enhance_user_user_manual_file">ENHANCe 用户手册</string>
+    <string name="enhance_user_user_guide">用户指南</string>
     <string name="enhance_user_patient"><![CDATA[患者注册与搜索]]></string>
     <string name="enhance_user_patient_body">注册新患者，包括他们的头像、NRIC 号码、法定姓名、性别、出生日期、地址、身高和体重。\n\n对于已注册的患者，只需使用其 NRIC 和法定姓名进行搜索。</string>
     <string name="enhance_user_scan">扫描记录</string>

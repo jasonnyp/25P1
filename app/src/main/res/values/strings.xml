@@ -350,6 +350,10 @@
     <string name="enhance_theme_system">Use System Theme</string>
 
     <!-- activity_user_guide.xml -->
+    <string name="enhance_user_user_manual">Softcopy of User Manual</string>
+    <string name="enhance_user_user_manual_body">You can download the softcopy of the user manual by clicking on the icon above.</string>
+    <string name="enhance_user_user_manual_file">ENHANCe User Manual</string>
+    <string name="enhance_user_user_guide">User Guide</string>
     <string name="enhance_user_patient"><![CDATA[Patient Registration & Search]]></string>
     <string name="enhance_user_patient_body">Register a new patient by entering their patient ID, target home BP and target clinic BP.\n\nFor registered patients, simply search for them using his/her patient ID</string>
     <string name="enhance_user_scan">Scan Records</string>
