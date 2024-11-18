@@ -30,8 +30,8 @@
                 android:layout_marginRight="15dp"
                 android:layout_marginBottom="15dp"
                 android:layout_marginTop="20dp"
-                android:textColor="@color/theme_secondary"
-                android:background="@color/theme_secondary_variant"
+                android:textColor="@color/theme_primary"
+                android:background="@color/theme_primary_variant"
                 android:textSize="16dp"
                 android:padding="10dp"
                 android:textStyle="bold"/>
