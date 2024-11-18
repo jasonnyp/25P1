@@ -14,7 +14,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/theme_secondary"
+            android:background="@color/theme_primary"
             android:padding="16dp"
             android:layout_marginBottom="10dp"
             android:text="@string/enhance_user_user_manual"
@@ -26,7 +26,7 @@
             android:clickable="true"
             android:layout_gravity="center"
             android:id="@+id/userManualDoc"
-            android:background="@color/theme_secondary_variant"
+            android:background="@color/theme_primary_variant"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:weightSum="1"
@@ -44,7 +44,7 @@
                 android:layout_height="match_parent"
                 android:gravity="center"
                 android:text="@string/enhance_user_user_manual_file"
-                android:textColor="@color/theme_secondary"
+                android:textColor="@color/theme_primary"
                 android:textSize="18sp"
                 android:textStyle="bold"/>
 
@@ -70,7 +70,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/theme_secondary"
+            android:background="@color/theme_primary"
             android:padding="16dp"
             android:text="@string/enhance_user_user_guide"
             android:textColor="@color/white"
@@ -80,10 +80,10 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/theme_secondary_variant"
+            android:background="@color/theme_primary_variant"
             android:padding="16dp"
             android:text="@string/enhance_user_patient"
-            android:textColor="@color/theme_secondary"
+            android:textColor="@color/theme_primary"
             android:textSize="18sp"
             android:textStyle="bold" />
 
@@ -100,10 +100,10 @@
             android:layout_height="wrap_content"
             android:padding="16dp"
             android:text="@string/enhance_user_scan"
-            android:textColor="@color/theme_secondary"
+            android:textColor="@color/theme_primary"
             android:textSize="18sp"
             android:textStyle="bold"
-            android:background="@color/theme_secondary_variant" />
+            android:background="@color/theme_primary_variant" />
 
         <TextView
             android:layout_width="match_parent"
@@ -117,10 +117,10 @@
             android:layout_height="wrap_content"
             android:padding="16dp"
             android:text="@string/enhance_user_verify_scan"
-            android:textColor="@color/theme_secondary"
+            android:textColor="@color/theme_primary"
             android:textSize="18sp"
             android:textStyle="bold"
-            android:background="@color/theme_secondary_variant" />
+            android:background="@color/theme_primary_variant" />
 
         <TextView
             android:layout_width="match_parent"
@@ -134,10 +134,10 @@
             android:layout_height="wrap_content"
             android:padding="16dp"
             android:text="@string/enhance_user_edit"
-            android:textColor="@color/theme_secondary"
+            android:textColor="@color/theme_primary"
             android:textSize="18sp"
             android:textStyle="bold"
-            android:background="@color/theme_secondary_variant" />
+            android:background="@color/theme_primary_variant" />
 
         <TextView
             android:layout_width="match_parent"
@@ -151,10 +151,10 @@
             android:layout_height="wrap_content"
             android:padding="16dp"
             android:text="@string/enhance_user_history"
-            android:textColor="@color/theme_secondary"
+            android:textColor="@color/theme_primary"
             android:textSize="18sp"
             android:textStyle="bold"
-            android:background="@color/theme_secondary_variant" />
+            android:background="@color/theme_primary_variant" />
 
         <TextView
             android:layout_width="match_parent"
@@ -168,10 +168,10 @@
             android:layout_height="wrap_content"
             android:padding="16dp"
             android:text="@string/enhance_user_recommendation"
-            android:textColor="@color/theme_secondary"
+            android:textColor="@color/theme_primary"
             android:textSize="18sp"
             android:textStyle="bold"
-            android:background="@color/theme_secondary_variant" />
+            android:background="@color/theme_primary_variant" />
 
         <TextView
             android:layout_width="match_parent"
@@ -185,10 +185,10 @@
             android:layout_height="wrap_content"
             android:padding="16dp"
             android:text="@string/enhance_user_dashboard"
-            android:textColor="@color/theme_secondary"
+            android:textColor="@color/theme_primary"
             android:textSize="18sp"
             android:textStyle="bold"
-            android:background="@color/theme_secondary_variant" />
+            android:background="@color/theme_primary_variant" />
 
         <TextView
             android:layout_width="match_parent"
@@ -202,10 +202,10 @@
             android:layout_height="wrap_content"
             android:padding="16dp"
             android:text="@string/enhance_user_faq"
-            android:textColor="@color/theme_secondary"
+            android:textColor="@color/theme_primary"
             android:textSize="18sp"
             android:textStyle="bold"
-            android:background="@color/theme_secondary_variant" />
+            android:background="@color/theme_primary_variant" />
 
         <TextView
             android:layout_width="match_parent"
