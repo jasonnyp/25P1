@@ -34,7 +34,7 @@ class UserGuideActivity : AppCompatActivity() {
         })
 
         binding.userManualDoc.setOnClickListener{
-            val manualUrl = "https://firebasestorage.googleapis.com/v0/b/enhance-bdc3f.appspot.com/o/user-manual%2FENHANCe%20User%20Manual%20v3.docx?alt=media&token=ddfe2291-3b1a-4ba3-95b6-7e481e239932"
+            val manualUrl = "https://firebasestorage.googleapis.com/v0/b/enhance-bdc3f.appspot.com/o/user-manual%2FENHANCe%20User%20Manual%20v3.pdf?alt=media&token=36cd0677-6b0a-48a7-95fa-b97c481384cc2"
             downloadUserManual(manualUrl)
         }
     }
