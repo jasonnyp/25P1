@@ -26,4 +26,7 @@
 
     <color name="red">#ff0000</color>
     <color name="green">#008000</color>
+
+    <color name="general">#555555</color>
+    <color name="sevenday">#0073e6</color>
 </resources>

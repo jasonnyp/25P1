@@ -156,11 +156,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity> <!-- Dashboard -->
-        <activity
-            android:name=".activities.dashboard.DashboardActivity"
-            android:configChanges="orientation|screenSize|keyboardHidden"
-            android:exported="false"
-            android:label="@string/dashboard_title"/>
+<!--        <activity-->
+<!--            android:name=".activities.dashboard.DashboardActivity"-->
+<!--            android:configChanges="orientation|screenSize|keyboardHidden"-->
+<!--            android:exported="false"-->
+<!--            android:label="@string/dashboard_title"/>-->
         <activity
             android:name=".activities.dashboard.SimpleDashboardActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"

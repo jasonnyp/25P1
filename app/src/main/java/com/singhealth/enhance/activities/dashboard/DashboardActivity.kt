@@ -193,7 +193,8 @@
 //                            clinicSysBP,
 //                            clinicDiaBP,
 //                            scanRecordCount,
-//                            validDayIndices
+//                            validDayIndices,
+//                            sevenDay = true
 //                        )
 //                    )
 //                }

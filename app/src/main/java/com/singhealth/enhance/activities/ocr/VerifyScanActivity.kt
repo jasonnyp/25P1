@@ -559,7 +559,7 @@ class VerifyScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 val input = s?.toString()?.toIntOrNull()
-                if (input != null && input in 50..220) {
+                if (input != null && input in 100..200) {
                     // Valid range for verifyClinicSys (91 to 209) <- Outdated values from last batch, copied verifyclinic as reference, change/remove if needed
                     setError(binding.homeTargetSysBox, null)
                 } else {
@@ -569,8 +569,8 @@ class VerifyScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
                         ResourcesHelper.getString(
                             this@VerifyScanActivity,
                             R.string.verify_scan_valid_value,
-                            50,
-                            220
+                            100,
+                            200
                         )
                     )
                 }
@@ -584,7 +584,7 @@ class VerifyScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 val input = s?.toString()?.toIntOrNull()
-                if (input != null && input in 20..160) {
+                if (input != null && input in 50..99) {
                     // Valid range for verifyClinicDia (61 to 119) <- Outdated values from last batch, copied verifyclinic as reference, change/remove if needed
                     setError(binding.homeTargetDiaBox, null)
                 } else {
@@ -594,8 +594,8 @@ class VerifyScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
                         ResourcesHelper.getString(
                             this@VerifyScanActivity,
                             R.string.verify_scan_valid_value,
-                            20,
-                            160
+                            50,
+                            99
                         )
                     )
                 }
@@ -609,7 +609,7 @@ class VerifyScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 val input = s?.toString()?.toIntOrNull()
-                if (input != null && input in 50..220) {
+                if (input != null && input in 100..200) {
                     // Valid range for verifyClinicSys (91 to 209) <- Outdated values from last batch, copied verifyclinic as reference, change/remove if needed
                     setError(binding.clinicTargetSysBox, null)
                 } else {
@@ -619,8 +619,8 @@ class VerifyScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
                         ResourcesHelper.getString(
                             this@VerifyScanActivity,
                             R.string.verify_scan_valid_value,
-                            50,
-                            220
+                            100,
+                            200
                         )
                     )
                 }
@@ -634,7 +634,7 @@ class VerifyScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 val input = s?.toString()?.toIntOrNull()
-                if (input != null && input in 20..160) {
+                if (input != null && input in 50..99) {
                     // Valid range for verifyClinicDia (61 to 119) <- Outdated values from last batch, copied verifyclinic as reference, change/remove if needed
                     setError(binding.clinicTargetDiaBox, null)
                 } else {
@@ -644,8 +644,8 @@ class VerifyScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
                         ResourcesHelper.getString(
                             this@VerifyScanActivity,
                             R.string.verify_scan_valid_value,
-                            20,
-                            160
+                            50,
+                            99
                         )
                     )
                 }
@@ -659,7 +659,7 @@ class VerifyScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 val input = s?.toString()?.toIntOrNull()
-                if (input != null && input in 50..220) {
+                if (input != null && input in 100..200) {
                     // Valid range for verifyClinicSys (91 to 209) <- Outdated values from last batch, change/remove if needed
                     setError(binding.verifyClinicSysBox, null)
                 } else {
@@ -669,8 +669,8 @@ class VerifyScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
                         ResourcesHelper.getString(
                             this@VerifyScanActivity,
                             R.string.verify_scan_valid_value,
-                            50,
-                            220
+                            100,
+                            200
                         )
                     )
                 }
@@ -684,7 +684,7 @@ class VerifyScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 val input = s?.toString()?.toIntOrNull()
-                if (input != null && input in 20..160) {
+                if (input != null && input in 50..99) {
                     // Valid range for verifyClinicDia (61 to 119) <- Outdated values from last batch, change/remove if needed
                     setError(binding.verifyClinicDiaBox, null)
                 } else {
@@ -694,8 +694,8 @@ class VerifyScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
                         ResourcesHelper.getString(
                             this@VerifyScanActivity,
                             R.string.verify_scan_valid_value,
-                            20,
-                            160
+                            50,
+                            99
                         )
                     )
                 }
@@ -948,7 +948,7 @@ class VerifyScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
                 } else if (sysBPFields[i].text.toString().length !in 2..3) {
                     errorCount += 1
                     sysBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_invalid_value)
-                } else if (sysBPFields[i].text.toString().toInt() !in 50..220) {
+                } else if (sysBPFields[i].text.toString().toInt() !in 100..200) {
                     errorCount += 1
                     sysBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_abnormal_value)
                 }
@@ -967,7 +967,7 @@ class VerifyScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
                 } else if (diaBPFields[i].text.toString().length !in 2..3) {
                     errorCount += 1
                     diaBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_invalid_value)
-                } else if (diaBPFields[i].text.toString().toInt() !in 20..160) {
+                } else if (diaBPFields[i].text.toString().toInt() !in 50..99) {
                     errorCount += 1
                     diaBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_abnormal_value)
                 }
@@ -996,7 +996,7 @@ class VerifyScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
                         errorCount += 1
                         sysBPFields[i].error =
                             ResourcesHelper.getString(this, R.string.verify_scan_invalid_value)
-                    } else if (sysBPFields[i].text.toString().toInt() !in 50..220) {
+                    } else if (sysBPFields[i].text.toString().toInt() !in 100..200) {
                         errorCount += 1
                         sysBPFields[i].error =
                             ResourcesHelper.getString(this, R.string.verify_scan_abnormal_value)
@@ -1022,7 +1022,7 @@ class VerifyScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
                         errorCount += 1
                         diaBPFields[i].error =
                             ResourcesHelper.getString(this, R.string.verify_scan_invalid_value)
-                    } else if (diaBPFields[i].text.toString().toInt() !in 20..160) {
+                    } else if (diaBPFields[i].text.toString().toInt() !in 50..99) {
                         errorCount += 1
                         diaBPFields[i].error =
                             ResourcesHelper.getString(this, R.string.verify_scan_abnormal_value)
@@ -1051,7 +1051,7 @@ class VerifyScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
                         errorCount += 1
                         sysBPFields[i + sysBPListHistory.size].error =
                             ResourcesHelper.getString(this, R.string.verify_scan_invalid_value)
-                    } else if (sysBPFields[i + sysBPListHistory.size].text.toString().toInt() !in 50..220) {
+                    } else if (sysBPFields[i + sysBPListHistory.size].text.toString().toInt() !in 100..200) {
                         errorCount += 1
                         sysBPFields[i + sysBPListHistory.size].error =
                             ResourcesHelper.getString(this, R.string.verify_scan_abnormal_value)
@@ -1077,7 +1077,7 @@ class VerifyScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
                         errorCount += 1
                         diaBPFields[i + diaBPListHistory.size].error =
                             ResourcesHelper.getString(this, R.string.verify_scan_invalid_value)
-                    } else if (diaBPFields[i + diaBPListHistory.size].text.toString().toInt() !in 20..160) {
+                    } else if (diaBPFields[i + diaBPListHistory.size].text.toString().toInt() !in 50..99) {
                         errorCount += 1
                         diaBPFields[i + diaBPListHistory.size].error =
                             ResourcesHelper.getString(this, R.string.verify_scan_abnormal_value)
@@ -1095,7 +1095,7 @@ class VerifyScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
                         sysBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_replace_value)
                     } else if (currentValueLength !in 2..3) {
                         sysBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_invalid_value)
-                    } else if (sysBPFields[i].text.toString().toInt() !in 50..220) {
+                    } else if (sysBPFields[i].text.toString().toInt() !in 100..200) {
                         sysBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_abnormal_value)
                     }
                 }
@@ -1111,7 +1111,7 @@ class VerifyScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
                         diaBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_replace_value)
                     } else if (currentValueLength !in 2..3) {
                         diaBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_invalid_value)
-                    } else if (diaBPFields[i].text.toString().toInt() !in 20..160) {
+                    } else if (diaBPFields[i].text.toString().toInt() !in 50..99) {
                         diaBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_abnormal_value)
                     }
                 }
@@ -1209,7 +1209,7 @@ class VerifyScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
         } else if (!binding.homeTargetSys.text!!.isDigitsOnly()) {
             valid = false
             binding.homeTargetSys.error = ResourcesHelper.getString(this, R.string.verify_scan_whole_number)
-        } else if (binding.homeTargetSys.text.toString().toInt() !in 50..220) {
+        } else if (binding.homeTargetSys.text.toString().toInt() !in 100..200) {
             valid = false
             binding.homeTargetSys.error = ResourcesHelper.getString(this, R.string.verify_scan_abnormal_value)
         }
@@ -1221,7 +1221,7 @@ class VerifyScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
         } else if (!binding.homeTargetDia.text!!.isDigitsOnly()) {
             valid = false
             binding.homeTargetDia.error = ResourcesHelper.getString(this, R.string.verify_scan_whole_number)
-        } else if (binding.homeTargetDia.text.toString().toInt() !in 20..160) {
+        } else if (binding.homeTargetDia.text.toString().toInt() !in 50..99) {
             valid = false
             binding.homeTargetDia.error = ResourcesHelper.getString(this, R.string.verify_scan_abnormal_value)
         }
@@ -1239,7 +1239,7 @@ class VerifyScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
         } else if (!binding.clinicTargetSys.text!!.isDigitsOnly()) {
             valid = false
             binding.clinicTargetSys.error = ResourcesHelper.getString(this, R.string.verify_scan_whole_number)
-        } else if (binding.clinicTargetSys.text.toString().toInt() !in 50..220) {
+        } else if (binding.clinicTargetSys.text.toString().toInt() !in 100..200) {
             valid = false
             binding.clinicTargetSys.error = ResourcesHelper.getString(this, R.string.verify_scan_abnormal_value)
         }
@@ -1251,7 +1251,7 @@ class VerifyScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
         } else if (!binding.clinicTargetDia.text!!.isDigitsOnly()) {
             valid = false
             binding.clinicTargetDia.error = ResourcesHelper.getString(this, R.string.verify_scan_whole_number)
-        } else if (binding.clinicTargetDia.text.toString().toInt() !in 20..160) {
+        } else if (binding.clinicTargetDia.text.toString().toInt() !in 50..99) {
             valid = false
             binding.clinicTargetDia.error = ResourcesHelper.getString(this, R.string.verify_scan_abnormal_value)
         }
@@ -1269,7 +1269,7 @@ class VerifyScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
         } else if (!binding.verifyClinicSys.text!!.isDigitsOnly()) {
             valid = false
             binding.verifyClinicSys.error = ResourcesHelper.getString(this, R.string.verify_scan_whole_number)
-        } else if (binding.verifyClinicSys.text.toString().toInt() !in 50..220) {
+        } else if (binding.verifyClinicSys.text.toString().toInt() !in 100..200) {
             valid = false
             binding.verifyClinicSys.error = ResourcesHelper.getString(this, R.string.verify_scan_abnormal_value)
         }
@@ -1281,7 +1281,7 @@ class VerifyScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
         } else if (!binding.verifyClinicDia.text!!.isDigitsOnly()) {
             valid = false
             binding.verifyClinicDia.error = ResourcesHelper.getString(this, R.string.verify_scan_whole_number)
-        } else if (binding.verifyClinicDia.text.toString().toInt() !in 20..160) {
+        } else if (binding.verifyClinicDia.text.toString().toInt() !in 50..99) {
             valid = false
             binding.verifyClinicDia.error = ResourcesHelper.getString(this, R.string.verify_scan_abnormal_value)
         }
@@ -1300,7 +1300,7 @@ class VerifyScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
                 } else if (sysField.text!!.length !in 2..3) {
                     valid = false
                     sysField.error = ResourcesHelper.getString(this, R.string.verify_scan_invalid_value)
-                } else if (sysField.text.toString().toInt() !in 50..220) {
+                } else if (sysField.text.toString().toInt() !in 100..200) {
                     valid = false
                     sysField.error = ResourcesHelper.getString(this, R.string.verify_scan_abnormal_value)
                 }
@@ -1319,7 +1319,7 @@ class VerifyScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
                 } else if (diaField.text!!.length !in 2..3) {
                     valid = false
                     diaField.error = ResourcesHelper.getString(this, R.string.verify_scan_invalid_value)
-                } else if (diaField.text.toString().toInt() !in 20..160) {
+                } else if (diaField.text.toString().toInt() !in 50..99) {
                     valid = false
                     diaField.error = ResourcesHelper.getString(this, R.string.verify_scan_abnormal_value)
                 }
@@ -1339,7 +1339,7 @@ class VerifyScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
                 } else if (sysText.length !in 2..3) {
                     valid = false
                     sysField.error = ResourcesHelper.getString(this, R.string.verify_scan_invalid_value)
-                } else if (sysText.toInt() !in 50..220) {
+                } else if (sysText.toInt() !in 100..200) {
                     valid = false
                     sysField.error = ResourcesHelper.getString(this, R.string.verify_scan_abnormal_value)
                 }
@@ -1358,7 +1358,7 @@ class VerifyScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
                 } else if (diaText.length !in 2..3) {
                     valid = false
                     diaField.error = ResourcesHelper.getString(this, R.string.verify_scan_invalid_value)
-                } else if (diaText.toInt() !in 20..160) {
+                } else if (diaText.toInt() !in 50..99) {
                     valid = false
                     diaField.error = ResourcesHelper.getString(this, R.string.verify_scan_abnormal_value)
                 }
