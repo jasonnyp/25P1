@@ -95,13 +95,21 @@ class ScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
             }
         }
 
+        binding.generalSourceBtnDev.setOnClickListener {
+            sevenDay = false
+            onClickRequestPermission()
+        }
         binding.generalSourceBtn.setOnClickListener {
             sevenDay = false
+            onClickRequestPermissionNoGallery()
+        }
+        binding.sevenDaySourceBtnDev.setOnClickListener {
+            sevenDay = true
             onClickRequestPermission()
         }
         binding.sevenDaySourceBtn.setOnClickListener {
             sevenDay = true
-            onClickRequestPermission()
+            onClickRequestPermissionNoGallery()
         }
     }
 
@@ -168,6 +176,18 @@ class ScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
             ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) -> {
                 LogOutTimerUtil.stopLogoutTimer()
                 startCameraWithoutUri(includeCamera = true, includeGallery = true)
+            }
+            else -> {
+                requestPermissionLauncher.launch(Manifest.permission.CAMERA)
+            }
+        }
+    }
+
+    private fun onClickRequestPermissionNoGallery() {
+        when (PackageManager.PERMISSION_GRANTED) {
+            ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) -> {
+                LogOutTimerUtil.stopLogoutTimer()
+                startCameraWithoutUri(includeCamera = true, includeGallery = false)
             }
             else -> {
                 requestPermissionLauncher.launch(Manifest.permission.CAMERA)
@@ -1067,7 +1087,7 @@ class ScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
                 .show()
         }
         else {
-            onClickRequestPermission()
+            onClickRequestPermissionNoGallery()
         }
     }
 
