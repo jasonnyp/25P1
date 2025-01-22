@@ -123,6 +123,7 @@ class RecommendationActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListen
                     if (scanRecordCount == null) {
                         scanRecordCount = 0
                     }
+                    val sevenDay = document.get("sevenDay") as? Boolean ?: false
                     history.add(
                         HistoryData(
                             dateTime.toString(),
@@ -136,7 +137,8 @@ class RecommendationActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListen
                             clinicSysBP,
                             clinicDiaBP,
                             scanRecordCount,
-                            validDayIndices
+                            validDayIndices,
+                            sevenDay
                         )
                     )
                 }
@@ -205,7 +207,7 @@ class RecommendationActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListen
                     clinicTargetSys,
                     clinicTargetDia
                 )
-                binding.recommendationBpPhenotype.text = hypertension
+                binding.recommendationBpPhenotype.text = "(${hypertension})"
                 binding.recommendationBpControl.text = bpControlStatus(this, hypertension)
                 binding.recommendationDo.text =
                     showRecommendation(this, bpControlStatus(this, hypertension))

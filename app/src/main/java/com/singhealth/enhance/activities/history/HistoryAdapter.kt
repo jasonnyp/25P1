@@ -23,8 +23,15 @@ class HistoryAdapter(
         holder.dateTV.text = currentItem.dateFormatted.toString()
         holder.avgBPTV.text = String.format("%s / %s", currentItem.avgSysBP, currentItem.avgDiaBP)
         holder.clinicTV.text = String.format("%s / %s", currentItem.clinicSysBP, currentItem.clinicDiaBP)
-        holder.homeBPTargetTV.text = String.format("%s / %s", currentItem.homeSysBPTarget, currentItem.homeDiaBPTarget)
-        holder.clinicBPTargetTV.text = String.format("%s / %s", currentItem.clinicSysBPTarget, currentItem.clinicDiaBPTarget)
+        if (currentItem.sevenDay) {
+            holder.statusContainer.text = "7-Day"
+            holder.statusContainer.setBackgroundResource(R.color.lifestyle) // Replace with your 7-day color
+        } else {
+            holder.statusContainer.text = "General"
+            holder.statusContainer.setBackgroundResource(R.color.medical) // Replace with your General color
+        }
+//        holder.homeBPTargetTV.text = String.format("%s / %s", currentItem.homeSysBPTarget, currentItem.homeDiaBPTarget)
+//        holder.clinicBPTargetTV.text = String.format("%s / %s", currentItem.clinicSysBPTarget, currentItem.clinicDiaBPTarget)
     }
 
     override fun getItemCount() = historyList.size
@@ -34,8 +41,9 @@ class HistoryAdapter(
         val dateTV: TextView = itemView.findViewById(R.id.dateTV)
         val avgBPTV: TextView = itemView.findViewById(R.id.avgBPTV)
         val clinicTV: TextView = itemView.findViewById(R.id.clinicTV)
-        val homeBPTargetTV: TextView = itemView.findViewById(R.id.homeBPTargetTV)
-        val clinicBPTargetTV: TextView = itemView.findViewById(R.id.clinicBPTargetTV)
+        val statusContainer: TextView = itemView.findViewById(R.id.statusContainer)
+//        val homeBPTargetTV: TextView = itemView.findViewById(R.id.homeBPTargetTV)
+//        val clinicBPTargetTV: TextView = itemView.findViewById(R.id.clinicBPTargetTV)
 
         init {
             itemView.setOnClickListener(this)

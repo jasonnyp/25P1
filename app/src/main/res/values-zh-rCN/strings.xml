@@ -118,9 +118,9 @@
     <string name="masked_hypertension">隐匿性高血压</string>
     <string name="uncontrolled_hypertension">未受控高血压</string>
 
-    <string name="suboptimum">（亚最佳）</string>
-    <string name="well_controlled">（控制良好）</string>
-    <string name="unknown_hypertension_status">（未知）</string>
+    <string name="suboptimum">亚最佳</string>
+    <string name="well_controlled">控制良好</string>
+    <string name="unknown_hypertension_status">未知</string>
 
     <!-- RecommendationActivity.kt -->
     <string name="insufficient_records">（此记录的血压是基于不足的家庭血压读数计算得出的。）</string>
@@ -383,4 +383,6 @@
 
     <!-- row_bp_record.xml -->
     <string name="enhance_row_bp_add_row">添加行</string>
+    <string name="general_scan_description">常规扫描：用于扫描除 7 天家庭血压图之外的其他来源的血压图。</string>
+    <string name="seven_day_scan_description">" 7 天扫描：用于从 7 天家庭血压表扫描血压表。"</string>
 </resources>

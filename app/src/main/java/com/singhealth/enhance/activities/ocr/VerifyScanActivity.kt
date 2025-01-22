@@ -490,7 +490,8 @@ class VerifyScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
                         "clinicSysBP" to clinicSysBP,
                         "clinicDiaBP" to clinicDiaBP,
                         "scanRecordCount" to finalRows,
-                        "validDayIndices" to validDayIndices.distinct().reversed()
+                        "validDayIndices" to validDayIndices.distinct().reversed(),
+                        "sevenDay" to sevenDay  // Add the sevenDay field here
                     )
                 } else{
                     visit = hashMapOf(
@@ -505,6 +506,7 @@ class VerifyScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
                         "clinicSysBP" to clinicSysBP,
                         "clinicDiaBP" to clinicDiaBP,
                         "scanRecordCount" to finalRows,
+                        "sevenDay" to sevenDay  // Add the sevenDay field here
                     )
                 }
 
@@ -528,6 +530,7 @@ class VerifyScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
                         bundle.putInt("clinicDiaBP", clinicDiaBP)
                         bundle.putInt("scanRecordCount", finalRows)
                         bundle.putString("Source", "Scan")
+                        bundle.putBoolean("sevenDay", sevenDay)  // Pass sevenDay to the next activity
 
                         val recommendationIntent = Intent(this, RecommendationActivity::class.java)
 

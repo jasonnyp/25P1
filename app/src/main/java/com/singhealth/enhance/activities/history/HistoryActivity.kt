@@ -155,6 +155,7 @@ class HistoryActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener, His
                         if (scanRecordCount == null) {
                             scanRecordCount = 0
                         }
+                        val sevenDay = document.get("sevenDay") as? Boolean ?: false
                         history.add(
                             HistoryData(
                                 dateTime.toString(),
@@ -168,7 +169,8 @@ class HistoryActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener, His
                                 clinicSysBP,
                                 clinicDiaBP,
                                 scanRecordCount,
-                                validDayIndices
+                                validDayIndices,
+                                sevenDay
                             )
                         )
                     }

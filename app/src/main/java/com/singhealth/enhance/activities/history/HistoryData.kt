@@ -12,5 +12,6 @@ data class HistoryData(
     val clinicSysBP: Long?,
     val clinicDiaBP: Long?,
     val scanRecordCount: Long?,
-    val validDayIndices: List<*>?
+    val validDayIndices: List<*>?,
+    val sevenDay: Boolean
 )

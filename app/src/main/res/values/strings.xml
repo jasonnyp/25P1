@@ -17,7 +17,7 @@
     <string name="dashboard_no_records_found">No records found.</string>
 
     <!-- ScanActivity strings -->
-    <string name="ocr_instructions">IMPORTANT: \nPlease ensure that only the blood pressure values (Systolic/Diastolic) are visible.\nDo take note to take the picture at a closer range for better detection.\n\nHeaders required for Auto-Detection/Auto-Cropping: Clinic/Office BP:, Systolic &amp; Diastolic, Day 1 - Day 7</string>
+    <string name="ocr_instructions">IMPORTANT:  Please ensure that the blood pressure values (Systolic/Diastolic) are visible. Take the picture at a closer range for better detection.  Headers required for Auto-Cropping: Clinic/Office BP:, Systolic &amp; Diastolic, Day 1 - Day 7</string>
     <string name="ocr_app_permissions_header">Enable app permissions</string>
     <string name="ocr_app_permissions_body">To use the OCR functionality, you need to allow access to your camera, gallery and external storage.</string>
     <string name="ocr_image_error_header">Error processing image</string>
@@ -111,17 +111,17 @@
     <string name="register_successful">Successfully registered %1$s into the system.</string>
 
     <!-- DiagnosePatient.kt -->
-    <string name="controlled_bp">(Controlled BP)</string>
-    <string name="uncontrolled_bp">(Uncontrolled BP)</string>
+    <string name="controlled_bp">Controlled BP</string>
+    <string name="uncontrolled_bp">Uncontrolled BP</string>
 
     <string name="well_controlled_hypertension">Well Controlled Hypertension</string>
     <string name="white_coat_uncontrolled_hypertension">White Coat Uncontrolled Hypertension</string>
     <string name="masked_hypertension">Masked Hypertension</string>
     <string name="uncontrolled_hypertension">Uncontrolled Hypertension</string>
 
-    <string name="suboptimum">(Supobtimum)</string>
-    <string name="well_controlled">(Well Controlled)</string>
-    <string name="unknown_hypertension_status">(Unknown)</string>
+    <string name="suboptimum">Supobtimum</string>
+    <string name="well_controlled">Well Controlled</string>
+    <string name="unknown_hypertension_status">Unknown</string>
 
     <!-- RecommendationActivity.kt -->
     <string name="insufficient_records">(The Average Home BP was calculated based on inadequate home BP readings.)</string>
@@ -410,4 +410,6 @@
     <!-- row_bp_record.xml -->
     <string name="enhance_row_bp_divider" translatable="false">/</string>
     <string name="enhance_row_bp_add_row">Add Row</string>
+    <string name="general_scan_description"><b>General Scan</b>: For Scanning BP charts from sources other than 7-Day Home BP chart.</string>
+    <string name="seven_day_scan_description"><b>7 Day Scan</b>: For Scanning BP charts from 7-Day Home BP chart.</string>
 </resources>

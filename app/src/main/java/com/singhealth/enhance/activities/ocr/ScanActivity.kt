@@ -231,7 +231,7 @@ class ScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
         progressDialog.show()
 
         val options = FirebaseVisionCloudDocumentRecognizerOptions.Builder()
-            .setLanguageHints(listOf("kr")) // Set language hints if needed
+            .setLanguageHints(listOf("ko")) // Set language hints if needed
             .build()
 
         val ocrEngine = FirebaseVision.getInstance().getCloudDocumentTextRecognizer(options)

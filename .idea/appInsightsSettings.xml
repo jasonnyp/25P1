@@ -9,7 +9,7 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="com.singhealth.enhance1" />
+                  <option name="appId" value="com.singhealth.enhance" />
                   <option name="mobileSdkAppId" value="1:924716684543:android:0c51e110cf7840944828ca" />
                   <option name="projectId" value="enhance-bdc3f" />
                   <option name="projectNumber" value="924716684543" />

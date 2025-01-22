@@ -199,6 +199,7 @@ class SimpleDashboardActivity : AppCompatActivity() {
                     if (scanRecordCount == null) {
                         scanRecordCount = 0
                     }
+                    val sevenDay = document.get("sevenDay") as? Boolean ?: false
                     history.add(
                         HistoryData(
                             dateTime.toString(),
@@ -212,7 +213,8 @@ class SimpleDashboardActivity : AppCompatActivity() {
                             clinicSysBP,
                             clinicDiaBP,
                             scanRecordCount,
-                            validDayIndices
+                            validDayIndices,
+                            sevenDay
                         )
                     )
                 }

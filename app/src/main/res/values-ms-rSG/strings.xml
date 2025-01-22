@@ -101,16 +101,16 @@
     <string name="register_exist_error_body">Adakah anda ingin mencari pesakit sebaliknya?</string>
     <string name="register_successful">Berjaya mendaftarkan %1$s ke dalam sistem.</string>
 
-    <string name="controlled_bp">(BP Terkawal)</string>
-    <string name="uncontrolled_bp">(BP Tidak Terkawal)</string>
+    <string name="controlled_bp">BP Terkawal</string>
+    <string name="uncontrolled_bp">BP Tidak Terkawal</string>
 
     <string name="well_controlled_hypertension">Hipertensi Terkawal Baik</string>
     <string name="white_coat_uncontrolled_hypertension">Hipertensi Tidak Terkawal Kot Putih</string>
     <string name="masked_hypertension">Hipertensi Tersembunyi</string>
     <string name="uncontrolled_hypertension">Hipertensi Tidak Terkawal</string>
 
-    <string name="suboptimum">(Suboptimum)</string>
-    <string name="well_controlled">(Terkawal Baik)</string>
+    <string name="suboptimum">Suboptimum</string>
+    <string name="well_controlled">Terkawal Baik</string>
     <string name="unknown_hypertension_status">(Tidak Diketahui)</string>
 
     <string name="insufficient_records">(Purata BP Rumah dikira berdasarkan bacaan BP rumah yang tidak mencukupi.)</string>
@@ -347,5 +347,7 @@
     <string name="enhance_user_faq_body">S. Bagaimana untuk mengakses halaman rekod imbasan?\n\nJ: Anda perlu mencari pesakit sebelum anda boleh memilih \'Rekod Imbasan\' di bar navigasi bawah.\n\nS. Bahagian manakah imej yang perlu disimpan untuk ketepatan pengesanan tulisan tangan/teks maksimum?\n\nJ: Selaraskan kamera anda supaya hanya carta mengisi bahagian atas dan bawah skrin untuk ketepatan terbaik.\n\nSekiranya OCR tidak memotong secara automatik, cuba hanya memotong imej SECARA VERTIKAL dan tinggalkan hanya nilai BP sistolik dan diastolik dalam imej yang dipotong.</string>
 
     <string name="verify_scan_valid_value">Nilai tidak boleh kurang daripada %1d atau lebih daripada %2d.</string>
+    <string name="general_scan_description">Imbasan Umum: Untuk mengimbas carta BP daripada sumber selain daripada carta BP rumah 7 hari.</string>
+    <string name="seven_day_scan_description">" Imbasan 7 Hari: Untuk mengimbas carta BP dari carta BP rumah 7 hari."</string>
 
 </resources>
