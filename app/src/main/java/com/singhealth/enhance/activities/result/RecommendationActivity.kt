@@ -207,7 +207,13 @@ class RecommendationActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListen
                     clinicTargetSys,
                     clinicTargetDia
                 )
-                binding.recommendationBpPhenotype.text = "(${hypertension})"
+                if (hypertension == ResourcesHelper.getString(binding.root.context, R.string.well_controlled_hypertension) ||
+                    hypertension == ResourcesHelper.getString(binding.root.context, R.string.uncontrolled_hypertension)) {
+                    binding.recommendationBpPhenotype.visibility = View.GONE
+                } else {
+                    binding.recommendationBpPhenotype.text = "(${hypertension})"
+                    binding.recommendationBpPhenotype.visibility = View.VISIBLE
+                }
                 binding.recommendationBpControl.text = bpControlStatus(this, hypertension)
                 binding.recommendationDo.text =
                     showRecommendation(this, bpControlStatus(this, hypertension))
