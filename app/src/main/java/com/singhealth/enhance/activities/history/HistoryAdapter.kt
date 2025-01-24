@@ -25,10 +25,10 @@ class HistoryAdapter(
         holder.clinicTV.text = String.format("%s / %s", currentItem.clinicSysBP, currentItem.clinicDiaBP)
         if (currentItem.sevenDay) {
             holder.statusContainer.text = "7-Day"
-            holder.statusContainer.setBackgroundResource(R.color.sevenday) // Replace with your 7-day color
+            holder.statusContainer.setBackgroundResource(R.drawable.rounded_background_7days)
         } else {
             holder.statusContainer.text = "General"
-            holder.statusContainer.setBackgroundResource(R.color.general) // Replace with your General color
+            holder.statusContainer.setBackgroundResource(R.drawable.rounded_background)
         }
 //        holder.homeBPTargetTV.text = String.format("%s / %s", currentItem.homeSysBPTarget, currentItem.homeDiaBPTarget)
 //        holder.clinicBPTargetTV.text = String.format("%s / %s", currentItem.clinicSysBPTarget, currentItem.clinicDiaBPTarget)
