@@ -1399,9 +1399,9 @@ class VerifyScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
         totalSysBP = 0
         totalDiaBP = 0
 
-        // Convert the values from sysBPFields and diaBPFields into lists
-        val sysBPValues = sysBPFields.map { it.text.toString() }
-        val diaBPValues = diaBPFields.map { it.text.toString() }
+        // Convert the values from sysBPFields and diaBPFields into validated lists
+        val sysBPValues = sysBPFields.map { validateBPValue(it.text.toString()) }
+        val diaBPValues = diaBPFields.map { validateBPValue(it.text.toString()) }
 
         // Print the lists
         println("sysBPFields values: $sysBPValues")
@@ -2280,7 +2280,7 @@ class VerifyScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
         if (value == "|||" || value == "!!!" || value == "III") {
             return "111"
         }
-        return value?.toIntOrNull()?.toString() ?: "-2"
+        return value?.toIntOrNull()?.toString() ?: ""
     }
 
     private fun addDivider() {

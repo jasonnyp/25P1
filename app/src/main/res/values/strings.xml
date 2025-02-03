@@ -402,7 +402,7 @@
     <string name="enhance_divider_old_new_current_scan_results">Current scan results:</string>
 
     <!-- history_item.xml -->
-    <string name="enhance_history_item_avgbp">Average BP:</string>
+    <string name="enhance_history_item_avgbp">Average Home BP:</string>
     <string name="enhance_history_item_clinicbp">Clinic BP:</string>
     <string name="enhance_history_item_target_homebp">Home BP Target:</string>
     <string name="enhance_history_item_target_clinicbp">Clinic BP Target:</string>
