@@ -95,18 +95,18 @@ class ScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
             }
         }
 
-        binding.generalSourceBtnDev.setOnClickListener {
-            sevenDay = false
-            onClickRequestPermission()
-        }
+//        binding.generalSourceBtnDev.setOnClickListener {
+//            sevenDay = false
+//            onClickRequestPermission()
+//        }
         binding.generalSourceBtn.setOnClickListener {
             sevenDay = false
             onClickRequestPermissionNoGallery()
         }
-        binding.sevenDaySourceBtnDev.setOnClickListener {
-            sevenDay = true
-            onClickRequestPermission()
-        }
+//        binding.sevenDaySourceBtnDev.setOnClickListener {
+//            sevenDay = true
+//            onClickRequestPermission()
+//        }
         binding.sevenDaySourceBtn.setOnClickListener {
             sevenDay = true
             onClickRequestPermissionNoGallery()

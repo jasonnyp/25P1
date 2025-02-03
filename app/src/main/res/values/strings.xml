@@ -17,7 +17,7 @@
     <string name="dashboard_no_records_found">No records found.</string>
 
     <!-- ScanActivity strings -->
-    <string name="ocr_instructions">IMPORTANT:  Please ensure that the blood pressure values (Systolic/Diastolic) are visible. Take the picture at a close range for better detection.  Headers required for Auto-Cropping: Systolic &amp; Diastolic</string>
+    <string name="ocr_instructions">IMPORTANT:  Please ensure that the blood pressure values (Systolic/Diastolic) are visible. \nTake the picture at close range for better detection.  Headers required for Auto-Cropping: Systolic &amp; Diastolic.</string>
     <string name="ocr_app_permissions_header">Enable app permissions</string>
     <string name="ocr_app_permissions_body">To use the OCR functionality, you need to allow access to your camera, gallery and external storage.</string>
     <string name="ocr_image_error_header">Error processing image</string>

@@ -167,7 +167,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_below="@id/instructioncontainer"
+            android:layout_above="@id/buttonsContainer"
             android:paddingBottom="16sp"
             android:paddingLeft="16sp"
             android:paddingRight="16sp">
@@ -208,44 +208,44 @@
             android:layout_marginBottom="16dp"
             android:paddingTop="16dp"/>
         <!-- Buttons Container -->
-        <LinearLayout
-            android:id="@+id/buttonsContainerDev"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_above="@id/buttonsContainer"
-            android:gravity="center"
-            android:orientation="horizontal"
-            android:paddingLeft="16dp"
-            android:paddingTop="20dp"
-            android:paddingRight="16dp">
+<!--        <LinearLayout-->
+<!--            android:id="@+id/buttonsContainerDev"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_above="@id/buttonsContainer"-->
+<!--            android:gravity="center"-->
+<!--            android:orientation="horizontal"-->
+<!--            android:paddingLeft="16dp"-->
+<!--            android:paddingTop="20dp"-->
+<!--            android:paddingRight="16dp">-->
 
-            <Button
-                android:id="@+id/generalSourceBtnDev"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
-                android:layout_weight="0.9"
-                android:text="GENERAL SCAN DEV"
-                android:textAllCaps="true"
-                android:backgroundTint="@color/black" />
+<!--            <Button-->
+<!--                android:id="@+id/generalSourceBtnDev"-->
+<!--                android:layout_width="0dp"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginBottom="12dp"-->
+<!--                android:layout_weight="0.9"-->
+<!--                android:text="GENERAL SCAN DEV"-->
+<!--                android:textAllCaps="true"-->
+<!--                android:backgroundTint="@color/black" />-->
 
-            <Space
-                android:id="@+id/spaceBetweenButtonsDev"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.1" />
+<!--            <Space-->
+<!--                android:id="@+id/spaceBetweenButtonsDev"-->
+<!--                android:layout_width="0dp"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_weight="0.1" />-->
 
-            <Button
-                android:id="@+id/sevenDaySourceBtnDev"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
-                android:layout_weight="0.9"
-                android:text="7 DAY SCAN DEV"
-                android:textAllCaps="true"
-                android:backgroundTint="@color/black" />
+<!--            <Button-->
+<!--                android:id="@+id/sevenDaySourceBtnDev"-->
+<!--                android:layout_width="0dp"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginBottom="12dp"-->
+<!--                android:layout_weight="0.9"-->
+<!--                android:text="7 DAY SCAN DEV"-->
+<!--                android:textAllCaps="true"-->
+<!--                android:backgroundTint="@color/black" />-->
 
-        </LinearLayout>
+<!--        </LinearLayout>-->
         <!-- Buttons Container -->
         <LinearLayout
             android:id="@+id/buttonsContainer"
