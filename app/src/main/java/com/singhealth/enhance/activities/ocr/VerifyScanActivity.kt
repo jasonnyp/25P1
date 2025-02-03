@@ -1430,6 +1430,11 @@ class VerifyScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
         sysBPList = sysBPList.subList(0, 28).toMutableList()
         diaBPList = diaBPList.subList(0, 28).toMutableList()
 
+
+        // Validate and update sysBPList and diaBPList values
+        sysBPList = sysBPList.map { validateBPValue(it).toString() }.toMutableList()
+        diaBPList = diaBPList.map { validateBPValue(it).toString() }.toMutableList()
+
         for (i in sysBPList.indices) {
             if (sysBPList[i].isNotBlank() && sysBPList[i] != "-2" && diaBPList[i].isNotBlank() && diaBPList[i] != "-2") {
                 currentDayReadings.add(Pair(sysBPList[i], diaBPList[i]))
@@ -2272,13 +2277,10 @@ class VerifyScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
     }
 
     private fun validateBPValue(value: String?): String {
-        // Example validation logic
-        return when (value) {
-            "|||" -> "111"
-            "!!!" -> "111"
-            "III" -> "111"
-            else -> value ?: ""
+        if (value == "|||" || value == "!!!" || value == "III") {
+            return "111"
         }
+        return value?.toIntOrNull()?.toString() ?: "-2"
     }
 
     private fun addDivider() {
