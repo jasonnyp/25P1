@@ -1806,8 +1806,8 @@ class VerifyScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
             } else {
                 bpRowContainer.visibility = View.VISIBLE
                 addOneRowBtn.visibility = View.GONE
-                sysBPTIET.setText(sysBP)
-                diaBPTIET.setText(diaBP)
+                sysBPTIET.setText(validateBPValue(sysBP))
+                diaBPTIET.setText(validateBPValue(diaBP))
             }
             if (day != -1 && time != -1 && showHeader) {
                 headerRowContainer.visibility = View.VISIBLE
@@ -1817,8 +1817,8 @@ class VerifyScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
             }
         } else {
             bpRowContainer.visibility = View.VISIBLE
-            sysBPTIET.setText(sysBP)
-            diaBPTIET.setText(diaBP)
+            sysBPTIET.setText(validateBPValue(sysBP))
+            diaBPTIET.setText(validateBPValue(diaBP))
             if (sysBP == null && diaBP == null) {
                 sysBPList.add("")
                 diaBPList.add("")
@@ -2269,6 +2269,16 @@ class VerifyScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
         }
 
         binding.rowBPRecordLL.addView(rowBPRecordLayout)
+    }
+
+    private fun validateBPValue(value: String?): String {
+        // Example validation logic
+        return when (value) {
+            "|||" -> "111"
+            "!!!" -> "111"
+            "III" -> "111"
+            else -> value ?: ""
+        }
     }
 
     private fun addDivider() {
