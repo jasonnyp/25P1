@@ -66,6 +66,13 @@
     <string name="verify_scan_remove_row_header">Padam baris</string>
     <string name="verify_scan_remove_row_body">Adakah anda ingin memadam baris yang dipilih?</string>
 
+    <!-- added new ones (17 march)-->
+    <string name="verify_scan_out_of_range_header">Di luar jangkauan</string>
+    <string name="verify_scan_impossible_value">Nilai yang mustahil</string>
+    <string name="verify_scan_error_body_clinic_bp">Sila isikan nilai BP Klinik.</string>
+    <string name="pop_up_message">Adakah anda pasti mahu kembali ke Halaman Utama? Semua data akan hilang.</string>
+
+
     <string name="profile_gender_male">LELAKI</string>
     <string name="profile_gender_female">PEREMPUAN</string>
     <string name="profile_retrieve_data">Mengambil data pesakit</string>

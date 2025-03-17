@@ -72,6 +72,13 @@
     <string name="add_new_row">添加新行</string>
     <string name="functionality">功能：</string>
 
+    <!-- added new ones (17 march)-->
+    <string name="verify_scan_out_of_range_header">超出范围</string>
+    <string name="verify_scan_impossible_value">数值不可能</string>
+    <string name="verify_scan_error_body_clinic_bp">请填写诊所血压值。</string>
+    <string name="pop_up_message">您确定要返回主页吗？所有数据都将丢失。</string>
+
+
     <!-- ProfileActivity strings -->
     <string name="profile_gender_male">男</string>
     <string name="profile_gender_female">女</string>

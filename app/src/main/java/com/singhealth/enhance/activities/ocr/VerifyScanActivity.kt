@@ -14,6 +14,7 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -21,6 +22,7 @@ import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.text.isDigitsOnly
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -125,14 +127,24 @@ class VerifyScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
         binding = ActivityVerifyScanBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        setupValidation()
+
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
+//        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+//            override fun handleOnBackPressed() {
+//                startActivity(Intent(this@VerifyScanActivity, ScanActivity::class.java))
+//                finish()
+//            }
+//        })
+
+        // Handle the physical back button
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                startActivity(Intent(this@VerifyScanActivity, ScanActivity::class.java))
-                finish()
+                showExitConfirmationDialog()
             }
         })
+
 
         val patientSharedPreferences =
             SecureSharedPreferences.getSharedPreferences(applicationContext)
@@ -460,6 +472,10 @@ class VerifyScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
 
         // Calculate and save average BP, home BP and clinic BP targets, then display outcome and recommendation (separate activity)
         binding.calculateAvgBPBtn.setOnClickListener {
+            if (!validateClinicBPFields()) {
+                return@setOnClickListener
+            }
+
             if (validateFields()) {
                 getBPTarget()
                 val filteredSysBPList = sysBPList.filter { it.isNotBlank() && it != "-2" }
@@ -702,22 +718,55 @@ class VerifyScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
             }
 
             override fun afterTextChanged(s: Editable?) {}
+
+
         })
 
         progressDialog.dismiss()
     }
 
+//    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+//        return when (item.itemId) {
+//            android.R.id.home -> {
+//                startActivity(Intent(this, ScanActivity::class.java))
+//                finish()
+//                true
+//            }
+//
+//            else -> super.onOptionsItemSelected(item)
+//        }
+//    }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             android.R.id.home -> {
-                startActivity(Intent(this, ScanActivity::class.java))
-                finish()
+                showExitConfirmationDialog()
                 true
             }
-
             else -> super.onOptionsItemSelected(item)
         }
     }
+
+    private fun showExitConfirmationDialog() {
+        MaterialAlertDialogBuilder(this)
+            .setTitle(getString(R.string.app_name))
+            .setMessage(getString(R.string.pop_up_message))
+            .setPositiveButton(getString(R.string.yes_dialog)) { _, _ ->
+                navigateToHome()
+            }
+            .setNegativeButton(getString(R.string.no_dialog)) { dialog, _ ->
+                dialog.dismiss()
+            }
+            .show()
+    }
+
+    private fun navigateToHome() {
+        val intent = Intent(this, MainActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+        startActivity(intent)
+        finish()
+    }
+
 
     fun continueScan() {
         sysBPListHistory.clear()
@@ -929,6 +978,285 @@ class VerifyScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
         println("diaBPList after adding updating scans: $diaBPList")
     }
 
+    // edited (17 march)
+//    private fun postScanValidation() {
+//        var errorCount = 0
+//        if (sevenDay) {
+//            println("sysBPlist size is ${sysBPList.size}")
+//            println("sysBPFields size is ${sysBPFields.size}")
+//
+//            for (i in 0 until sysBPFields.size) {
+//
+//                if (sysBPFields[i].text.isNullOrEmpty()) {
+//                    continue
+//                } else if (!sysBPFields[i].text!!.isDigitsOnly()) {
+//                    errorCount += 1
+//                    sysBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_whole_number)
+//                } else if (sysBPFields[i].text!!.toString().toInt() == -1) {
+//                    errorCount += 1
+//                    sysBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_abnormal_value)
+//                } else if (sysBPFields[i].text.toString().length !in 2..3) {
+//                    errorCount += 1
+//                    sysBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_invalid_value)
+//                } else if (sysBPFields[i].text.toString().toInt() !in 90..179) { // change range to 90 - 179 (17 march)
+//                    errorCount += 1
+//                    sysBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_abnormal_value)
+//                }
+//            }
+//
+//            for (i in 0 until diaBPFields.size) {
+//
+//                if (diaBPFields[i].text.isNullOrEmpty()) {
+//                    continue
+//                } else if (!diaBPFields[i].text!!.isDigitsOnly()) {
+//                    errorCount += 1
+//                    diaBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_whole_number)
+//                } else if (diaBPFields[i].text!!.toString().toInt() == -1) {
+//                    errorCount += 1
+//                    diaBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_replace_value)
+//                } else if (diaBPFields[i].text.toString().length !in 2..3) {
+//                    errorCount += 1
+//                    diaBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_invalid_value)
+//                } else if (diaBPFields[i].text.toString().toInt() !in 50..99) { // change range to 50 - 99 (17 march)
+//                    errorCount += 1
+//                    diaBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_abnormal_value)
+//                }
+//            }
+//
+//        } else {
+//            if (sysBPListHistory.isEmpty() && diaBPListHistory.isEmpty()) {
+//                // Outdated values, could refer to guidelines if there is a need to change systolic and diastolic values
+//                // With reference from MOH clinical practice guidelines 1/2017 @ https://www.moh.gov.sg/docs/librariesprovider4/guidelines/cpg_hypertension-booklet---nov-2017.pdf
+//                for (i in 0 until sysBPList.size) {
+//                    val currentValueLength = sysBPFields[i].text.toString().length
+//
+//                    if (sysBPFields[i].text.isNullOrEmpty()) {
+//                        errorCount += 1
+//                        sysBPFields[i].error =
+//                            ResourcesHelper.getString(this, R.string.verify_scan_empty_field)
+//                    } else if (!sysBPFields[i].text!!.isDigitsOnly()) {
+//                        errorCount += 1
+//                        sysBPFields[i].error =
+//                            ResourcesHelper.getString(this, R.string.verify_scan_whole_number)
+//                    } else if (sysBPFields[i].text!!.toString().toInt() == -1) {
+//                        errorCount += 1
+//                        sysBPFields[i].error =
+//                            ResourcesHelper.getString(this, R.string.verify_scan_replace_value)
+//                    } else if (currentValueLength !in 2..3) {
+//                        errorCount += 1
+//                        sysBPFields[i].error =
+//                            ResourcesHelper.getString(this, R.string.verify_scan_invalid_value)
+//                    } else if (sysBPFields[i].text.toString().toInt() !in 100..200) {
+//                        errorCount += 1
+//                        sysBPFields[i].error =
+//                            ResourcesHelper.getString(this, R.string.verify_scan_abnormal_value)
+//                    }
+//                }
+//
+//                for (i in 0 until diaBPList.size) {
+//                    val currentValueLength = diaBPFields[i].text.toString().length
+//
+//                    if (diaBPFields[i].text.isNullOrEmpty()) {
+//                        errorCount += 1
+//                        diaBPFields[i].error =
+//                            ResourcesHelper.getString(this, R.string.verify_scan_empty_field)
+//                    } else if (!diaBPFields[i].text!!.isDigitsOnly()) {
+//                        errorCount += 1
+//                        diaBPFields[i].error =
+//                            ResourcesHelper.getString(this, R.string.verify_scan_whole_number)
+//                    } else if (diaBPFields[i].text!!.toString().toInt() == -1) {
+//                        errorCount += 1
+//                        diaBPFields[i].error =
+//                            ResourcesHelper.getString(this, R.string.verify_scan_replace_value)
+//                    } else if (currentValueLength !in 2..3) {
+//                        errorCount += 1
+//                        diaBPFields[i].error =
+//                            ResourcesHelper.getString(this, R.string.verify_scan_invalid_value)
+//                    } else if (diaBPFields[i].text.toString().toInt() !in 50..99) {
+//                        errorCount += 1
+//                        diaBPFields[i].error =
+//                            ResourcesHelper.getString(this, R.string.verify_scan_abnormal_value)
+//                    }
+//                }
+//            }
+//            else{
+//                // Outdated values, could refer to guidelines if there is a need to change systolic and diastolic values
+//                // With reference from MOH clinical practice guidelines 1/2017 @ https://www.moh.gov.sg/docs/librariesprovider4/guidelines/cpg_hypertension-booklet---nov-2017.pdf
+//                for (i in 0 until sysBPList.size) {
+//                    val currentValueLength = sysBPFields[i + sysBPListHistory.size].text.toString().length
+//
+//                    if (sysBPFields[i + sysBPListHistory.size].text.isNullOrEmpty()) {
+//                        errorCount += 1
+//                        sysBPFields[i + sysBPListHistory.size].error =
+//                            ResourcesHelper.getString(this, R.string.verify_scan_empty_field)
+//                    } else if (!sysBPFields[i + sysBPListHistory.size].text!!.isDigitsOnly()) {
+//                        errorCount += 1
+//                        sysBPFields[i + sysBPListHistory.size].error =
+//                            ResourcesHelper.getString(this, R.string.verify_scan_whole_number)
+//                    } else if (sysBPFields[i + sysBPListHistory.size].text!!.toString().toInt() == -1) {
+//                        errorCount += 1
+//                        sysBPFields[i + sysBPListHistory.size].error =
+//                            ResourcesHelper.getString(this, R.string.verify_scan_replace_value)
+//                    } else if (currentValueLength !in 2..3) {
+//                        errorCount += 1
+//                        sysBPFields[i + sysBPListHistory.size].error =
+//                            ResourcesHelper.getString(this, R.string.verify_scan_invalid_value)
+//                    } else if (sysBPFields[i + sysBPListHistory.size].text.toString().toInt() !in 100..200) {
+//                        errorCount += 1
+//                        sysBPFields[i + sysBPListHistory.size].error =
+//                            ResourcesHelper.getString(this, R.string.verify_scan_abnormal_value)
+//                    }
+//                }
+//
+//                for (i in 0 until diaBPList.size) {
+//                    val currentValueLength = diaBPFields[i + diaBPListHistory.size].text.toString().length
+//
+//                    if (diaBPFields[i + diaBPListHistory.size].text.isNullOrEmpty()) {
+//                        errorCount += 1
+//                        diaBPFields[i + diaBPListHistory.size].error =
+//                            ResourcesHelper.getString(this, R.string.verify_scan_empty_field)
+//                    } else if (!diaBPFields[i + diaBPListHistory.size].text!!.isDigitsOnly()) {
+//                        errorCount += 1
+//                        diaBPFields[i + diaBPListHistory.size].error =
+//                            ResourcesHelper.getString(this, R.string.verify_scan_whole_number)
+//                    } else if (diaBPFields[i + diaBPListHistory.size].text!!.toString().toInt() == -1) {
+//                        errorCount += 1
+//                        diaBPFields[i + diaBPListHistory.size].error =
+//                            ResourcesHelper.getString(this, R.string.verify_scan_replace_value)
+//                    } else if (currentValueLength !in 2..3) {
+//                        errorCount += 1
+//                        diaBPFields[i + diaBPListHistory.size].error =
+//                            ResourcesHelper.getString(this, R.string.verify_scan_invalid_value)
+//                    } else if (diaBPFields[i + diaBPListHistory.size].text.toString().toInt() !in 50..99) {
+//                        errorCount += 1
+//                        diaBPFields[i + diaBPListHistory.size].error =
+//                            ResourcesHelper.getString(this, R.string.verify_scan_abnormal_value)
+//                    }
+//                }
+//                // Show error text but doesn't add to error count of current records
+//                for (i in 0 until sysBPListHistory.size) {
+//                    val currentValueLength = sysBPFields[i].text.toString().length
+//
+//                    if (sysBPFields[i].text.isNullOrEmpty()) {
+//                        sysBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_empty_field)
+//                    } else if (!sysBPFields[i].text!!.isDigitsOnly()) {
+//                        sysBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_whole_number)
+//                    } else if (sysBPFields[i].text!!.toString().toInt() == -1) {
+//                        sysBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_replace_value)
+//                    } else if (currentValueLength !in 2..3) {
+//                        sysBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_invalid_value)
+//                    } else if (sysBPFields[i].text.toString().toInt() !in 100..200) {
+//                        sysBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_abnormal_value)
+//                    }
+//                }
+//
+//                for (i in 0 until diaBPListHistory.size) {
+//                    val currentValueLength = diaBPFields[i].text.toString().length
+//
+//                    if (diaBPFields[i].text.isNullOrEmpty()) {
+//                        diaBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_empty_field)
+//                    } else if (!diaBPFields[i].text!!.isDigitsOnly()) {
+//                        diaBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_whole_number)
+//                    } else if (diaBPFields[i].text!!.toString().toInt() == -1) {
+//                        diaBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_replace_value)
+//                    } else if (currentValueLength !in 2..3) {
+//                        diaBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_invalid_value)
+//                    } else if (diaBPFields[i].text.toString().toInt() !in 50..99) {
+//                        diaBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_abnormal_value)
+//                    }
+//                }
+//            }
+//        }
+//        if (errorCount == 6 && !errorchecked) {
+//            errorchecked = true
+//            MaterialAlertDialogBuilder(this)
+//                .setIcon(R.drawable.ic_error)
+//                .setTitle(ResourcesHelper.getString(this, R.string.verify_scan_erroneous_header))
+//                .setMessage(ResourcesHelper.getString(this, R.string.verify_scan_erroneous_body))
+//                .setNegativeButton(
+//                    ResourcesHelper.getString(
+//                        this,
+//                        R.string.no_dialog
+//                    )
+//                ) { dialog, _ -> dialog.dismiss() }
+//                .setPositiveButton(ResourcesHelper.getString(this, R.string.yes_dialog)) { _, _ ->
+//                    val scanIntent = Intent(this, ScanActivity::class.java)
+//
+//                    binding.verifyHomeTargetSys?.let {
+//                        scanIntent.putExtra(
+//                            "homeSysBPTarget",
+//                            binding.verifyHomeTargetSys.text.toString()
+//                        )
+//                    }
+//                    binding.verifyHomeTargetDia?.let {
+//                        scanIntent.putExtra(
+//                            "homeDiaBPTarget",
+//                            binding.verifyHomeTargetDia.text.toString()
+//                        )
+//                    }
+//                    binding.verifyClinicTargetSys?.let {
+//                        scanIntent.putExtra(
+//                            "clinicSysBPTarget",
+//                            binding.verifyClinicTargetSys.text.toString()
+//                        )
+//                    }
+//                    binding.verifyClinicTargetDia?.let {
+//                        scanIntent.putExtra(
+//                            "clinicDiaBPTarget",
+//                            binding.verifyClinicTargetDia.text.toString()
+//                        )
+//                    }
+//                    binding.verifyClinicSys?.let {
+//                        scanIntent.putExtra(
+//                            "clinicSysBP",
+//                            binding.verifyClinicSys.text.toString()
+//                        )
+//                    }
+//                    binding.verifyClinicDia?.let {
+//                        scanIntent.putExtra(
+//                            "clinicDiaBP",
+//                            binding.verifyClinicDia.text.toString()
+//                        )
+//                    }
+//
+//                    if (!sysBPListHistory.isNullOrEmpty()) {
+//                        scanIntent.putStringArrayListExtra(
+//                            "sysBPListHistory",
+//                            ArrayList(sysBPListHistory)
+//                        )
+//                    }
+//                    if (!diaBPListHistory.isNullOrEmpty()) {
+//                        scanIntent.putStringArrayListExtra(
+//                            "diaBPListHistory",
+//                            ArrayList(diaBPListHistory)
+//                        )
+//                    }
+//
+//                    startActivity(scanIntent)
+//                    finish()
+//                }
+//                .show()
+//        }
+//    }
+    private fun setErrorIcon(field: EditText, colorResId: Int) {
+        val drawable = ContextCompat.getDrawable(this, R.drawable.ic_error)?.mutate()
+        drawable?.setTint(ContextCompat.getColor(this, colorResId))
+
+        // Remove previous drawable first to avoid caching issues
+        field.setCompoundDrawables(null, null, null, null)
+
+        // Explicitly assign the mutated drawable again
+        field.setCompoundDrawablesWithIntrinsicBounds(null, null, drawable, null)
+
+        // Invalidate view to force UI refresh
+        field.invalidate()
+    }
+
+    private fun clearError(field: EditText) {
+        field.error = null
+        field.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null)
+    }
+
     private fun postScanValidation() {
         var errorCount = 0
         if (sevenDay) {
@@ -936,186 +1264,241 @@ class VerifyScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
             println("sysBPFields size is ${sysBPFields.size}")
 
             for (i in 0 until sysBPFields.size) {
+                val value = sysBPFields[i].text.toString()
 
-                if (sysBPFields[i].text.isNullOrEmpty()) {
-                    continue
-                } else if (!sysBPFields[i].text!!.isDigitsOnly()) {
+                if (value.isEmpty() || value.length == 1 || value.length >= 4) {
+                    // Mark as empty with an error, color-coded red
+                    errorCount += 1
+                    sysBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_empty_field)
+                    setErrorIcon(sysBPFields[i], R.color.red)
+                } else if (!value.isDigitsOnly()) {
+                    // Invalid characters like abc, !@#, set as blank
+                    sysBPFields[i].setText("")
+                } else if (value.toInt() < 0) {
+                    // Negative value, show error and color red
                     errorCount += 1
                     sysBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_whole_number)
+                    setErrorIcon(sysBPFields[i], R.color.red)
                 } else if (sysBPFields[i].text!!.toString().toInt() == -1) {
                     errorCount += 1
                     sysBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_abnormal_value)
-                } else if (sysBPFields[i].text.toString().length !in 2..3) {
+                } else if (value.toInt() in 90..179) {
+                    // Normal range, no error
+                    sysBPFields[i].error = null
+                } else if (value.toInt() in 50..300) {
+                    // Out-of-range but acceptable, color-coded orange
+                    sysBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_out_of_range_header)
+                    setErrorIcon(sysBPFields[i], R.color.orange)
+                } else {
+                    // Impossible value, color-coded red
                     errorCount += 1
-                    sysBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_invalid_value)
-                } else if (sysBPFields[i].text.toString().toInt() !in 100..200) {
-                    errorCount += 1
-                    sysBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_abnormal_value)
+                    sysBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_impossible_value)
+                    setErrorIcon(sysBPFields[i], R.color.red)
                 }
             }
 
             for (i in 0 until diaBPFields.size) {
+                val value = diaBPFields[i].text.toString()
 
-                if (diaBPFields[i].text.isNullOrEmpty()) {
-                    continue
-                } else if (!diaBPFields[i].text!!.isDigitsOnly()) {
+                if (value.isEmpty() || value.length == 1 || value.length >= 4) {
+                    // Mark as empty with an error, color-coded red
+                    errorCount += 1
+                    diaBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_empty_field)
+                    setErrorIcon(diaBPFields[i], R.color.red)
+                } else if (!value.isDigitsOnly()) {
+                    // Invalid characters like abc, !@#, set as blank
+                    diaBPFields[i].setText("")
+                } else if (value.toInt() < 0) {
+                    // Negative value, show error and color red
                     errorCount += 1
                     diaBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_whole_number)
+                    setErrorIcon(diaBPFields[i], R.color.red)
                 } else if (diaBPFields[i].text!!.toString().toInt() == -1) {
                     errorCount += 1
-                    diaBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_replace_value)
-                } else if (diaBPFields[i].text.toString().length !in 2..3) {
-                    errorCount += 1
-                    diaBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_invalid_value)
-                } else if (diaBPFields[i].text.toString().toInt() !in 50..99) {
-                    errorCount += 1
                     diaBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_abnormal_value)
+                } else if (value.toInt() in 50..99) {
+                    // Normal range, no error
+                    diaBPFields[i].error = null
+                } else if (value.toInt() in 30..180) {
+                    // Out-of-range but acceptable, color-coded orange
+                    diaBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_out_of_range_header)
+                    setErrorIcon(diaBPFields[i], R.color.orange)
+                } else {
+                    // Impossible value, color-coded red
+                    errorCount += 1
+                    diaBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_impossible_value)
+                    setErrorIcon(diaBPFields[i], R.color.red)
                 }
             }
 
-        } else {
+        } else { // need to chnage this
             if (sysBPListHistory.isEmpty() && diaBPListHistory.isEmpty()) {
                 // Outdated values, could refer to guidelines if there is a need to change systolic and diastolic values
                 // With reference from MOH clinical practice guidelines 1/2017 @ https://www.moh.gov.sg/docs/librariesprovider4/guidelines/cpg_hypertension-booklet---nov-2017.pdf
                 for (i in 0 until sysBPList.size) {
-                    val currentValueLength = sysBPFields[i].text.toString().length
+                    val value = sysBPFields[i].text.toString()
 
-                    if (sysBPFields[i].text.isNullOrEmpty()) {
+                    if (value.isEmpty() || value.length == 1 || value.length >= 4) {
+                        // Mark as empty with an error, color-coded red
                         errorCount += 1
-                        sysBPFields[i].error =
-                            ResourcesHelper.getString(this, R.string.verify_scan_empty_field)
-                    } else if (!sysBPFields[i].text!!.isDigitsOnly()) {
-                        errorCount += 1
-                        sysBPFields[i].error =
-                            ResourcesHelper.getString(this, R.string.verify_scan_whole_number)
-                    } else if (sysBPFields[i].text!!.toString().toInt() == -1) {
-                        errorCount += 1
-                        sysBPFields[i].error =
-                            ResourcesHelper.getString(this, R.string.verify_scan_replace_value)
-                    } else if (currentValueLength !in 2..3) {
-                        errorCount += 1
-                        sysBPFields[i].error =
-                            ResourcesHelper.getString(this, R.string.verify_scan_invalid_value)
-                    } else if (sysBPFields[i].text.toString().toInt() !in 100..200) {
-                        errorCount += 1
-                        sysBPFields[i].error =
-                            ResourcesHelper.getString(this, R.string.verify_scan_abnormal_value)
-                    }
-                }
-
-                for (i in 0 until diaBPList.size) {
-                    val currentValueLength = diaBPFields[i].text.toString().length
-
-                    if (diaBPFields[i].text.isNullOrEmpty()) {
-                        errorCount += 1
-                        diaBPFields[i].error =
-                            ResourcesHelper.getString(this, R.string.verify_scan_empty_field)
-                    } else if (!diaBPFields[i].text!!.isDigitsOnly()) {
-                        errorCount += 1
-                        diaBPFields[i].error =
-                            ResourcesHelper.getString(this, R.string.verify_scan_whole_number)
-                    } else if (diaBPFields[i].text!!.toString().toInt() == -1) {
-                        errorCount += 1
-                        diaBPFields[i].error =
-                            ResourcesHelper.getString(this, R.string.verify_scan_replace_value)
-                    } else if (currentValueLength !in 2..3) {
-                        errorCount += 1
-                        diaBPFields[i].error =
-                            ResourcesHelper.getString(this, R.string.verify_scan_invalid_value)
-                    } else if (diaBPFields[i].text.toString().toInt() !in 50..99) {
-                        errorCount += 1
-                        diaBPFields[i].error =
-                            ResourcesHelper.getString(this, R.string.verify_scan_abnormal_value)
-                    }
-                }
-            }
-            else{
-                // Outdated values, could refer to guidelines if there is a need to change systolic and diastolic values
-                // With reference from MOH clinical practice guidelines 1/2017 @ https://www.moh.gov.sg/docs/librariesprovider4/guidelines/cpg_hypertension-booklet---nov-2017.pdf
-                for (i in 0 until sysBPList.size) {
-                    val currentValueLength = sysBPFields[i + sysBPListHistory.size].text.toString().length
-
-                    if (sysBPFields[i + sysBPListHistory.size].text.isNullOrEmpty()) {
-                        errorCount += 1
-                        sysBPFields[i + sysBPListHistory.size].error =
-                            ResourcesHelper.getString(this, R.string.verify_scan_empty_field)
-                    } else if (!sysBPFields[i + sysBPListHistory.size].text!!.isDigitsOnly()) {
-                        errorCount += 1
-                        sysBPFields[i + sysBPListHistory.size].error =
-                            ResourcesHelper.getString(this, R.string.verify_scan_whole_number)
-                    } else if (sysBPFields[i + sysBPListHistory.size].text!!.toString().toInt() == -1) {
-                        errorCount += 1
-                        sysBPFields[i + sysBPListHistory.size].error =
-                            ResourcesHelper.getString(this, R.string.verify_scan_replace_value)
-                    } else if (currentValueLength !in 2..3) {
-                        errorCount += 1
-                        sysBPFields[i + sysBPListHistory.size].error =
-                            ResourcesHelper.getString(this, R.string.verify_scan_invalid_value)
-                    } else if (sysBPFields[i + sysBPListHistory.size].text.toString().toInt() !in 100..200) {
-                        errorCount += 1
-                        sysBPFields[i + sysBPListHistory.size].error =
-                            ResourcesHelper.getString(this, R.string.verify_scan_abnormal_value)
-                    }
-                }
-
-                for (i in 0 until diaBPList.size) {
-                    val currentValueLength = diaBPFields[i + diaBPListHistory.size].text.toString().length
-
-                    if (diaBPFields[i + diaBPListHistory.size].text.isNullOrEmpty()) {
-                        errorCount += 1
-                        diaBPFields[i + diaBPListHistory.size].error =
-                            ResourcesHelper.getString(this, R.string.verify_scan_empty_field)
-                    } else if (!diaBPFields[i + diaBPListHistory.size].text!!.isDigitsOnly()) {
-                        errorCount += 1
-                        diaBPFields[i + diaBPListHistory.size].error =
-                            ResourcesHelper.getString(this, R.string.verify_scan_whole_number)
-                    } else if (diaBPFields[i + diaBPListHistory.size].text!!.toString().toInt() == -1) {
-                        errorCount += 1
-                        diaBPFields[i + diaBPListHistory.size].error =
-                            ResourcesHelper.getString(this, R.string.verify_scan_replace_value)
-                    } else if (currentValueLength !in 2..3) {
-                        errorCount += 1
-                        diaBPFields[i + diaBPListHistory.size].error =
-                            ResourcesHelper.getString(this, R.string.verify_scan_invalid_value)
-                    } else if (diaBPFields[i + diaBPListHistory.size].text.toString().toInt() !in 50..99) {
-                        errorCount += 1
-                        diaBPFields[i + diaBPListHistory.size].error =
-                            ResourcesHelper.getString(this, R.string.verify_scan_abnormal_value)
-                    }
-                }
-                // Show error text but doesn't add to error count of current records
-                for (i in 0 until sysBPListHistory.size) {
-                    val currentValueLength = sysBPFields[i].text.toString().length
-
-                    if (sysBPFields[i].text.isNullOrEmpty()) {
                         sysBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_empty_field)
-                    } else if (!sysBPFields[i].text!!.isDigitsOnly()) {
+                        setErrorIcon(sysBPFields[i], R.color.red)
+                    } else if (!value.isDigitsOnly()) {
+                        // Invalid characters like abc, !@#, set as blank
+                        sysBPFields[i].setText("")
+                    } else if (value.toInt() < 0) {
+                        // Negative value, show error and color red
+                        errorCount += 1
                         sysBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_whole_number)
+                        setErrorIcon(sysBPFields[i], R.color.red)
                     } else if (sysBPFields[i].text!!.toString().toInt() == -1) {
-                        sysBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_replace_value)
-                    } else if (currentValueLength !in 2..3) {
-                        sysBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_invalid_value)
-                    } else if (sysBPFields[i].text.toString().toInt() !in 100..200) {
+                        errorCount += 1
                         sysBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_abnormal_value)
+                    } else if (value.toInt() in 90..179) {
+                        // Normal range, no error
+                        sysBPFields[i].error = null
+                    } else if (value.toInt() in 50..300) {
+                        // Out-of-range but acceptable, color-coded orange
+                        sysBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_out_of_range_header)
+                        setErrorIcon(sysBPFields[i], R.color.orange)
+                    } else {
+                        // Impossible value, color-coded red
+                        errorCount += 1
+                        sysBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_impossible_value)
+                        setErrorIcon(sysBPFields[i], R.color.red)
                     }
                 }
 
-                for (i in 0 until diaBPListHistory.size) {
-                    val currentValueLength = diaBPFields[i].text.toString().length
+                for (i in 0 until diaBPList.size) {
+                    val value = diaBPFields[i].text.toString()
 
-                    if (diaBPFields[i].text.isNullOrEmpty()) {
+                    if (value.isEmpty() || value.length == 1 || value.length >= 4) {
+                        // Mark as empty with an error, color-coded red
+                        errorCount += 1
                         diaBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_empty_field)
-                    } else if (!diaBPFields[i].text!!.isDigitsOnly()) {
+                        setErrorIcon(diaBPFields[i], R.color.red)
+                    } else if (!value.isDigitsOnly()) {
+                        // Invalid characters like abc, !@#, set as blank
+                        diaBPFields[i].setText("")
+                    } else if (value.toInt() < 0) {
+                        // Negative value, show error and color red
+                        errorCount += 1
                         diaBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_whole_number)
+                        setErrorIcon(diaBPFields[i], R.color.red)
                     } else if (diaBPFields[i].text!!.toString().toInt() == -1) {
-                        diaBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_replace_value)
-                    } else if (currentValueLength !in 2..3) {
-                        diaBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_invalid_value)
-                    } else if (diaBPFields[i].text.toString().toInt() !in 50..99) {
+                        errorCount += 1
                         diaBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_abnormal_value)
+                    } else if (value.toInt() in 50..99) {
+                        // Normal range, no error
+                        diaBPFields[i].error = null
+                    } else if (value.toInt() in 30..180) {
+                        // Out-of-range but acceptable, color-coded orange
+                        diaBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_out_of_range_header)
+                        setErrorIcon(diaBPFields[i], R.color.orange)
+                    } else {
+                        // Impossible value, color-coded red
+                        errorCount += 1
+                        diaBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_impossible_value)
+                        setErrorIcon(diaBPFields[i], R.color.red)
                     }
                 }
             }
+            else {
+                // Validate current sysBPFields
+                for (i in 0 until sysBPList.size) {
+                    val field = sysBPFields[i + sysBPListHistory.size]
+                    val value = field.text.toString()
+
+                    if (value.isEmpty() || value.length == 1 || value.length >= 4) {
+                        errorCount += 1
+                        field.error = ResourcesHelper.getString(this, R.string.verify_scan_empty_field)
+                        setErrorIcon(field, R.color.red)
+                    } else if (!value.isDigitsOnly()) {
+                        field.setText("")
+                    } else if (value.toInt() < 0) {
+                        errorCount += 1
+                        field.error = ResourcesHelper.getString(this, R.string.verify_scan_whole_number)
+                        setErrorIcon(field, R.color.red)
+                    } else if (value.toInt() in 90..179) {
+                        field.error = null
+                        setErrorIcon(field, android.R.color.transparent)
+                    } else if (value.toInt() in 50..300) {
+                        field.error = ResourcesHelper.getString(this, R.string.verify_scan_out_of_range_header)
+                        setErrorIcon(field, R.color.orange)
+                    } else {
+                        errorCount += 1
+                        field.error = ResourcesHelper.getString(this, R.string.verify_scan_impossible_value)
+                        setErrorIcon(field, R.color.red)
+                    }
+                }
+
+                // Validate current diaBPFields
+                for (i in 0 until diaBPList.size) {
+                    val field = diaBPFields[i + diaBPListHistory.size]
+                    val value = field.text.toString()
+
+                    if (value.isEmpty() || value.length == 1 || value.length >= 4) {
+                        errorCount += 1
+                        field.error = ResourcesHelper.getString(this, R.string.verify_scan_empty_field)
+                        setErrorIcon(field, R.color.red)
+                    } else if (!value.isDigitsOnly()) {
+                        field.setText("")
+                    } else if (value.toInt() < 0) {
+                        errorCount += 1
+                        field.error = ResourcesHelper.getString(this, R.string.verify_scan_whole_number)
+                        setErrorIcon(field, R.color.red)
+                    } else if (value.toInt() in 50..99) {
+                        field.error = null
+                        setErrorIcon(field, android.R.color.transparent)
+                    } else if (value.toInt() in 30..180) {
+                        field.error = ResourcesHelper.getString(this, R.string.verify_scan_out_of_range_header)
+                        setErrorIcon(field, R.color.orange)
+                    } else {
+                        errorCount += 1
+                        field.error = ResourcesHelper.getString(this, R.string.verify_scan_impossible_value)
+                        setErrorIcon(field, R.color.red)
+                    }
+                }
+
+                // Historical Data Validation (without incrementing errorCount)
+                sysBPFields.take(sysBPListHistory.size).forEach { field ->
+                    val value = field.text.toString()
+
+                    if (value.isEmpty() || value.length == 1 || value.length >= 4) {
+                        field.error = ResourcesHelper.getString(this, R.string.verify_scan_empty_field)
+                        setErrorIcon(field, R.color.red)
+                    } else if (!value.isDigitsOnly()) {
+                        field.setText("")
+                    } else if (value.toInt() < 0) {
+                        field.error = ResourcesHelper.getString(this, R.string.verify_scan_whole_number)
+                        setErrorIcon(field, R.color.red)
+                    } else if (value.toInt() in 50..300) {
+                        field.error = ResourcesHelper.getString(this, R.string.verify_scan_out_of_range_header)
+                        setErrorIcon(field, R.color.orange)
+                    } else {
+                        field.error = ResourcesHelper.getString(this, R.string.verify_scan_impossible_value)
+                        setErrorIcon(field, R.color.red)
+                    }
+                }
+
+                diaBPFields.take(diaBPListHistory.size).forEach { field ->
+                    val value = field.text.toString()
+
+                    if (value.isEmpty() || value.length == 1 || value.length >= 4) {
+                        field.error = ResourcesHelper.getString(this, R.string.verify_scan_empty_field)
+                        setErrorIcon(field, R.color.red)
+                    } else if (!value.isDigitsOnly()) {
+                        field.setText("")
+                    } else if (value.toInt() in 30..180) {
+                        field.error = ResourcesHelper.getString(this, R.string.verify_scan_out_of_range_header)
+                        setErrorIcon(field, R.color.orange)
+                    } else {
+                        field.error = ResourcesHelper.getString(this, R.string.verify_scan_impossible_value)
+                        setErrorIcon(field, R.color.red)
+                    }
+                }
+            }
+
         }
         if (errorCount == 6 && !errorchecked) {
             errorchecked = true
@@ -1199,6 +1582,7 @@ class VerifyScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
         }
     }
 
+
     private fun validateTargetHomeBP(): Boolean {
         var valid = true
 
@@ -1259,6 +1643,133 @@ class VerifyScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
         return valid
     }
 
+    private fun setupValidation() {
+        sysBPFields.forEach { field ->
+            setupDynamicValidation(field, isSystolic = true)
+        }
+
+        diaBPFields.forEach { field ->
+            setupDynamicValidation(field, isSystolic = false)
+        }
+    }
+
+    private fun setupDynamicValidation(field: EditText, isSystolic: Boolean) {
+        field.setOnFocusChangeListener { _, hasFocus ->
+            if (!hasFocus) {
+                if (isSystolic) validateSysBPField(field)
+                else validateDiaBPField(field)
+            }
+        }
+
+        field.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+                if (isSystolic) validateSysBPField(field)
+                else validateDiaBPField(field)
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+        })
+    }
+
+    private fun validateSysBPField(field: EditText): Boolean {
+        val value = field.text.toString()
+
+        if (value.isEmpty() || value.length == 1 || value.length >= 4) {
+            field.error = ResourcesHelper.getString(this, R.string.verify_scan_empty_field)
+            setErrorIcon(field, R.color.red)
+            return false
+        }
+
+        if (!value.isDigitsOnly()) {
+            field.setText("")
+            return false
+        }
+
+        if (value.toInt() < 0) {
+            field.error = ResourcesHelper.getString(this, R.string.verify_scan_whole_number)
+            setErrorIcon(field, R.color.red)
+            return false
+        }
+
+        if (value.toInt() in 90..179) {
+            field.error = null
+            setErrorIcon(field, android.R.color.transparent)
+            return true
+        }
+
+        if (value.toInt() in 50..300) {
+            field.error = ResourcesHelper.getString(this, R.string.verify_scan_out_of_range_header)
+            setErrorIcon(field, R.color.orange)
+            return true
+        }
+
+        field.error = ResourcesHelper.getString(this, R.string.verify_scan_impossible_value)
+        setErrorIcon(field, R.color.red)
+        return false
+    }
+
+    private fun validateDiaBPField(field: EditText): Boolean {
+        val value = field.text.toString()
+
+        if (value.isEmpty() || value.length == 1 || value.length >= 4) {
+            field.error = ResourcesHelper.getString(this, R.string.verify_scan_empty_field)
+            setErrorIcon(field, R.color.red)
+            return false
+        }
+
+        if (!value.isDigitsOnly()) {
+            field.setText("")
+            return false
+        }
+
+        if (value.toInt() < 0) {
+            field.error = ResourcesHelper.getString(this, R.string.verify_scan_whole_number)
+            setErrorIcon(field, R.color.red)
+            return false
+        }
+
+        if (value.toInt() in 50..99) {
+            field.error = null
+            setErrorIcon(field, android.R.color.transparent)
+            return true
+        }
+
+        if (value.toInt() in 30..180) {
+            field.error = ResourcesHelper.getString(this, R.string.verify_scan_out_of_range_header)
+            setErrorIcon(field, R.color.orange)
+            return true
+        }
+
+        field.error = ResourcesHelper.getString(this, R.string.verify_scan_impossible_value)
+        setErrorIcon(field, R.color.red)
+        return false
+    }
+
+    private fun validateClinicBPFields(): Boolean {
+        var valid = true
+
+        if (binding.verifyClinicSys.text.isNullOrEmpty() || binding.verifyClinicDia.text.isNullOrEmpty()) {
+            valid = false
+            errorDialogBuilder(
+                this,
+                ResourcesHelper.getString(this, R.string.verify_scan_error_header),
+                ResourcesHelper.getString(this, R.string.verify_scan_error_body_clinic_bp)
+            )
+            scrollToClinicBP()
+        }
+
+        return valid
+    }
+
+    // auto scroll to clinic bp section
+    private fun scrollToClinicBP() {
+        binding.mainScrollView.post {
+            binding.mainScrollView.smoothScrollTo(0, binding.verifyClinicSys.top)
+        }
+    }
+
+
     private fun validateFields(): Boolean {
         var valid = true
 
@@ -1287,83 +1798,93 @@ class VerifyScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
         }
 
         if (!sevenDay) {
-            for (sysField in sysBPFields) {
-                if (sysField.text.isNullOrEmpty()) {
-                    valid = false
-                    sysField.error = ResourcesHelper.getString(this, R.string.verify_scan_empty_field)
-                } else if (!sysField.text!!.isDigitsOnly()) {
-                    valid = false
-                    sysField.error = ResourcesHelper.getString(this, R.string.verify_scan_whole_number)
-                } else if (sysField.text!!.toString().toInt() == -1) {
-                    valid = false
-                    sysField.error = ResourcesHelper.getString(this, R.string.verify_scan_abnormal_value)
-                } else if (sysField.text!!.length !in 2..3) {
-                    valid = false
-                    sysField.error = ResourcesHelper.getString(this, R.string.verify_scan_invalid_value)
-                } else if (sysField.text.toString().toInt() !in 50..220) {
-                    valid = false
-                    sysField.error = ResourcesHelper.getString(this, R.string.verify_scan_abnormal_value)
-                }
+            // Validate Systolic Fields
+            sysBPFields.forEach { field ->
+                if (field.error != null) valid = false
             }
 
-            for (diaField in diaBPFields) {
-                if (diaField.text.isNullOrEmpty()) {
-                    valid = false
-                    diaField.error = ResourcesHelper.getString(this, R.string.verify_scan_empty_field)
-                } else if (!diaField.text!!.isDigitsOnly()) {
-                    valid = false
-                    diaField.error = ResourcesHelper.getString(this, R.string.verify_scan_whole_number)
-                } else if (diaField.text!!.toString().toInt() == -1) {
-                    valid = false
-                    diaField.error = ResourcesHelper.getString(this, R.string.verify_scan_abnormal_value)
-                } else if (diaField.text!!.length !in 2..3) {
-                    valid = false
-                    diaField.error = ResourcesHelper.getString(this, R.string.verify_scan_invalid_value)
-                } else if (diaField.text.toString().toInt() !in 20..160) {
-                    valid = false
-                    diaField.error = ResourcesHelper.getString(this, R.string.verify_scan_abnormal_value)
-                }
-            }
-        } else {
-            // Validate sysBPFields for sevenDay = true
-            for (sysField in sysBPFields) {
-                val sysText = sysField.text!!.toString()
-                if (sysText.isEmpty()) {
-                    continue
-                } else if (!sysText.isDigitsOnly()) {
-                    valid = false
-                    sysField.error = ResourcesHelper.getString(this, R.string.verify_scan_whole_number)
-                } else if (sysText.toInt() == -1) {
-                    valid = false
-                    sysField.error = ResourcesHelper.getString(this, R.string.verify_scan_abnormal_value)
-                } else if (sysText.length !in 2..3) {
-                    valid = false
-                    sysField.error = ResourcesHelper.getString(this, R.string.verify_scan_invalid_value)
-                } else if (sysText.toInt() !in 50..220) {
-                    valid = false
-                    sysField.error = ResourcesHelper.getString(this, R.string.verify_scan_abnormal_value)
-                }
-            }
-
-            for (diaField in diaBPFields) {
-                val diaText = diaField.text!!.toString()
-                if (diaText.isEmpty()) {
-                    continue
-                } else if (!diaText.isDigitsOnly()) {
-                    valid = false
-                    diaField.error = ResourcesHelper.getString(this, R.string.verify_scan_whole_number)
-                } else if (diaText.toInt() == -1) {
-                    valid = false
-                    diaField.error = ResourcesHelper.getString(this, R.string.verify_scan_abnormal_value)
-                } else if (diaText.length !in 2..3) {
-                    valid = false
-                    diaField.error = ResourcesHelper.getString(this, R.string.verify_scan_invalid_value)
-                } else if (diaText.toInt() !in 20..160) {
-                    valid = false
-                    diaField.error = ResourcesHelper.getString(this, R.string.verify_scan_abnormal_value)
-                }
+            // Validate Diastolic Fields
+            diaBPFields.forEach { field ->
+                if (field.error != null) valid = false
             }
         }
+//            for (sysField in sysBPFields) {
+//                if (sysField.text.isNullOrEmpty()) {
+//                    valid = false
+//                    sysField.error = ResourcesHelper.getString(this, R.string.verify_scan_empty_field)
+//                } else if (!sysField.text!!.isDigitsOnly()) {
+//                    valid = false
+//                    sysField.error = ResourcesHelper.getString(this, R.string.verify_scan_whole_number)
+//                } else if (sysField.text!!.toString().toInt() == -1) {
+//                    valid = false
+//                    sysField.error = ResourcesHelper.getString(this, R.string.verify_scan_abnormal_value)
+//                } else if (sysField.text!!.length !in 2..3) {
+//                    valid = false
+//                    sysField.error = ResourcesHelper.getString(this, R.string.verify_scan_invalid_value)
+//                } else if (sysField.text.toString().toInt() !in 50..220) {
+//                    valid = false
+//                    sysField.error = ResourcesHelper.getString(this, R.string.verify_scan_abnormal_value)
+//                }
+//            }
+//
+//            for (diaField in diaBPFields) {
+//                if (diaField.text.isNullOrEmpty()) {
+//                    valid = false
+//                    diaField.error = ResourcesHelper.getString(this, R.string.verify_scan_empty_field)
+//                } else if (!diaField.text!!.isDigitsOnly()) {
+//                    valid = false
+//                    diaField.error = ResourcesHelper.getString(this, R.string.verify_scan_whole_number)
+//                } else if (diaField.text!!.toString().toInt() == -1) {
+//                    valid = false
+//                    diaField.error = ResourcesHelper.getString(this, R.string.verify_scan_abnormal_value)
+//                } else if (diaField.text!!.length !in 2..3) {
+//                    valid = false
+//                    diaField.error = ResourcesHelper.getString(this, R.string.verify_scan_invalid_value)
+//                } else if (diaField.text.toString().toInt() !in 20..160) {
+//                    valid = false
+//                    diaField.error = ResourcesHelper.getString(this, R.string.verify_scan_abnormal_value)
+//                }
+//            }
+//        } else {
+//            // Validate sysBPFields for sevenDay = true
+//            for (sysField in sysBPFields) {
+//                val sysText = sysField.text!!.toString()
+//                if (sysText.isEmpty()) {
+//                    continue
+//                } else if (!sysText.isDigitsOnly()) {
+//                    valid = false
+//                    sysField.error = ResourcesHelper.getString(this, R.string.verify_scan_whole_number)
+//                } else if (sysText.toInt() == -1) {
+//                    valid = false
+//                    sysField.error = ResourcesHelper.getString(this, R.string.verify_scan_abnormal_value)
+//                } else if (sysText.length !in 2..3) {
+//                    valid = false
+//                    sysField.error = ResourcesHelper.getString(this, R.string.verify_scan_invalid_value)
+//                } else if (sysText.toInt() !in 50..220) {
+//                    valid = false
+//                    sysField.error = ResourcesHelper.getString(this, R.string.verify_scan_abnormal_value)
+//                }
+//            }
+//
+//            for (diaField in diaBPFields) {
+//                val diaText = diaField.text!!.toString()
+//                if (diaText.isEmpty()) {
+//                    continue
+//                } else if (!diaText.isDigitsOnly()) {
+//                    valid = false
+//                    diaField.error = ResourcesHelper.getString(this, R.string.verify_scan_whole_number)
+//                } else if (diaText.toInt() == -1) {
+//                    valid = false
+//                    diaField.error = ResourcesHelper.getString(this, R.string.verify_scan_abnormal_value)
+//                } else if (diaText.length !in 2..3) {
+//                    valid = false
+//                    diaField.error = ResourcesHelper.getString(this, R.string.verify_scan_invalid_value)
+//                } else if (diaText.toInt() !in 20..160) {
+//                    valid = false
+//                    diaField.error = ResourcesHelper.getString(this, R.string.verify_scan_abnormal_value)
+//                }
+//            }
+//        }
 
         return valid
     }
@@ -2573,3 +3094,5 @@ class ModalBottomSheet(
         const val TAG = "ModalBottomSheet"
     }
 }
+
+

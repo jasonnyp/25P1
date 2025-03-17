@@ -9,8 +9,10 @@ import android.text.TextWatcher
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
+import androidx.activity.addCallback
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.auth.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -60,12 +62,18 @@ class EditProfileActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener 
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                startActivity(Intent(this@EditProfileActivity, ProfileActivity::class.java))
-                finish()
-            }
-        })
+//        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+//            override fun handleOnBackPressed() {
+//                startActivity(Intent(this@EditProfileActivity, ProfileActivity::class.java))
+//                finish()
+//            }
+//        })
+        // Handle back button
+        onBackPressedDispatcher.addCallback(this) {
+            showExitConfirmationDialog()
+        }
+
+
 
         // Upload photo
 //        binding.editPhotoIV.setOnClickListener { uploadPhoto() }
@@ -211,14 +219,24 @@ class EditProfileActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener 
         }
     }
 
+//    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+//        return when (item.itemId) {
+//            android.R.id.home -> {
+//                startActivity(Intent(this, ProfileActivity::class.java))
+//                finish()
+//                true
+//            }
+//
+//            else -> super.onOptionsItemSelected(item)
+//        }
+//    }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             android.R.id.home -> {
-                startActivity(Intent(this, ProfileActivity::class.java))
-                finish()
+                showExitConfirmationDialog()
                 true
             }
-
             else -> super.onOptionsItemSelected(item)
         }
     }
@@ -267,6 +285,28 @@ class EditProfileActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener 
 //
 //        return Bitmap.createBitmap(bitmap, cropW, cropH, newWidth, newHeight)
 //    }
+
+    private fun showExitConfirmationDialog() {
+        MaterialAlertDialogBuilder(this)
+            .setTitle(getString(R.string.app_name))
+            .setMessage(getString(R.string.pop_up_message))
+            .setNegativeButton(getString(R.string.no_dialog)) { dialog, _ ->
+                dialog.dismiss()
+            }
+            .setPositiveButton(getString(R.string.yes_dialog)) { _, _ ->
+                navigateToHome()
+            }
+            .show()
+    }
+
+    private fun navigateToHome() {
+        val intent = Intent(this, ProfileActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+        startActivity(intent)
+        finish()
+    }
+
+
 
     private fun validateFields(): Boolean {
         var valid = true

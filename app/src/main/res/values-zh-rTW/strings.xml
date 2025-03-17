@@ -71,6 +71,13 @@
     <string name="verify_scan_remove_row_header">移除行</string>
     <string name="verify_scan_remove_row_body">您要移除選中的行嗎？</string>
 
+    <!-- added new ones (17 march)-->
+    <string name="verify_scan_out_of_range_header">超出範圍</string>
+    <string name="verify_scan_impossible_value">數值不可能</string>
+    <string name="verify_scan_error_body_clinic_bp">請填寫診所血壓值。</string>
+    <string name="pop_up_message">您確定要返回主頁嗎？所有資料都將遺失。</string>
+
+
     <!-- ProfileActivity strings -->
     <string name="profile_gender_male">男</string>
     <string name="profile_gender_female">女</string>
