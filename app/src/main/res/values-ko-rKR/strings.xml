@@ -1,0 +1,399 @@
+<resources>
+
+    <!-- AndroidManifest.xml (Some of the strings are in different segments) -->
+    <string name="outcome_and_recommendation">결과 및 권장 사항</string>
+    <string name="verify_scan_results">스캔 결과 확인</string>
+
+    <!-- LoginActivity strings -->
+    <string name="good_morning">좋은 아침이에요!</string>
+    <string name="good_afternoon">좋은 오후에요!</string>
+    <string name="good_evening">좋은 저녁이에요!</string>
+    <string name="login_validate_staff">직원 ID는 비워둘 수 없습니다!</string>
+    <string name="login_validate_password">비밀번호는 비워둘 수 없습니다!</string>
+    <string name="login_success_header">로그인 성공</string>
+
+    <!-- SimpleDashboardActivity strings -->
+    <string name="dashboard_no_records_found">검색된 기록이 없습니다.</string>
+
+    <!-- ScanActivity strings -->
+    <string name="ocr_instructions">중요: 혈압 값(수축기/이완기)이 보이도록 해주세요. \n더 나은 인식을 위해 가까운 거리에서 사진을 촬영하세요. \n자동 자르기를 위해 필요한 제목: 수축기 &amp; 이완기.</string>
+    <string name="ocr_app_permissions_header">앱 권한 활성화</string>
+    <string name="ocr_app_permissions_body">OCR 기능을 사용하려면 카메라, 갤러리 및 외부 저장소에 대한 접근 권한을 허용해야 합니다.</string>
+    <string name="ocr_image_error_header">이미지 처리 오류</string>
+    <string name="ocr_image_error_body">오류로 인해 이미지를 처리할 수 없습니다.\n\n문제가 계속되면 다음 오류 코드와 함께 IT 지원팀에 문의하세요: %1$s</string>
+    <string name="ocr_text_error_header">처리할 내용 없음</string>
+
+    <string name="ocr_text_error_body">처리할 필기체나 텍스트를 찾을 수 없습니다. 팁: 이미지가 선명하고 값만 잘라낸 상태인지 확인하고 헤더(예: \'수축기\' 및 \'이완기\')는 제외합니다.</string>
+    <string name="resuming_scan">“일반 스캔”을 클릭하여 스캔을 추가하세요</string>
+
+    <!-- VerifyScanActivity.kt -->
+    <string name="verify_scan_update_target_home_header">목표 가정 혈압 업데이트</string>
+    <string name="verify_scan_update_target_home_body">환자의 목표 가정 혈압을 업데이트하시겠습니까?</string>
+    <string name="verify_scan_exit_target_home_header">변경 내용 삭제</string>
+    <string name="verify_scan_exit_target_home_body">입력한 목표 가정 혈압의 변경 내용을 삭제하시겠습니까?</string>
+    <string name="verify_scan_update_target_clinic_header">목표 클리닉 혈압 업데이트</string>
+    <string name="verify_scan_update_target_clinic_body">환자의 목표 클리닉 혈압을 업데이트하시겠습니까?</string>
+    <string name="verify_scan_exit_target_clinic_header">변경 내용 삭제</string>
+    <string name="verify_scan_exit_target_clinic_body">입력한 목표 클리닉 혈압의 변경 내용을 삭제하시겠습니까?</string>
+    <string name="verify_scan_update_data">혈압 목표 데이터를 업데이트 중</string>
+    <string name="verify_scan_update_data_caption">잠시만 기다려주세요…</string>
+    <string name="update">업데이트</string>
+    <string name="exit">종료</string>
+    <string name="verify_scan_no_update">변경된 내용이 없습니다</string>
+    <string name="verify_scan_no_update_caption">현재 혈압 목표 값과 동일하기 때문에 변경 사항이 없습니다</string>
+    <string name="ok">확인</string>
+    <string name="add_empty_column_left">왼쪽에 빈 열 추가</string>
+    <string name="add_empty_column_right">오른쪽에 빈 열 추가</string>
+    <string name="swap_values">수축기 및 이완기 값을 교환</string>
+    <string name="remove_row">행 삭제</string>
+    <string name="add_new_row">새 행 추가</string>
+    <string name="functionality">기능: </string>
+    <string name="verify_scan_rows">%1$d개의 기록이 감지되었습니다.\n\n총 기록 수: %2$d</string>
+    <string name="verify_scan_no_records">감지된 기록이 없습니다. 다시 스캔하거나 새 행을 추가하여 수동으로 입력하세요.</string>
+    <string name="verify_scan_inadequate_reading_header">측정값이 부족합니다</string>
+    <string name="verify_scan_inadequate_reading_body">기록을 더 스캔하시겠습니까?</string>
+    <string name="verify_scan_calculation_successful">계산이 성공적으로 저장되었습니다.</string>
+    <string name="verify_scan_saving_header">기록 저장 오류</string>
+    <string name="verify_scan_saving_body">앱에서 현재 기록을 저장하지 못했습니다.\n\n문제가 지속되면 다음 오류 코드와 함께 IT 지원팀에 문의하세요: %1$s</string>
+    <string name="verify_scan_error_header">오류가 감지됨</string>
+    <string name="verify_scan_error_body">계속하려면 모든 오류를 수정하세요.</string>
+    <string name="verify_scan_rescan_header">현재 기록 다시 스캔</string>
+    <string name="verify_scan_rescan_body">현재 기록을 다시 스캔하시겠습니까?\n\n(참고: 이전 스캔 기록은 저장됩니다)</string>
+    <string name="verify_scan_discard_header">진행 상황 삭제</string>
+    <string name="verify_scan_discard_body">모든 진행 상황을 삭제하고 다시 시작하시겠습니까?</string>
+    <string name="verify_scan_empty_field">필드가 비어 있습니다.</string>
+    <string name="verify_scan_whole_number">필드에는 정수만 포함되어야 합니다.</string>
+    <string name="verify_scan_valid_value">값은 %1$d보다 작거나 %2$d보다 클 수 없습니다.</string>
+    <string name="verify_scan_invalid_value">잘못된 값입니다.</string>
+    <string name="verify_scan_replace_value">값 교체</string>
+    <string name="verify_scan_abnormal_value">비정상적인 값입니다.</string>
+    <string name="verify_scan_erroneous_header">오류가 너무 많습니다</string>
+    <string name="verify_scan_erroneous_body">정확도를 높이기 위해 현재 기록을 다시 스캔하시겠습니까?\n\n(참고: 이전 스캔 기록은 저장됩니다)</string>
+    <string name="verify_scan_remove_row_header">행 삭제</string>
+    <string name="verify_scan_remove_row_body">선택한 행을 삭제하시겠습니까?</string>
+
+    <!-- added new ones (17 march) -->
+    <string name="verify_scan_out_of_range_header">범위를 벗어남</string>
+    <string name="verify_scan_impossible_value">불가능한 값</string>
+    <string name="verify_scan_error_body_clinic_bp">클리닉 혈압 값을 입력해 주세요.</string>
+    <string name="pop_up_message">홈 페이지로 돌아가시겠습니까?\n\n모든 데이터가 사라집니다.</string>
+    <string name="confirm_navigation">이동을 확인하시겠습니까?</string>
+
+    <!-- ProfileActivity strings -->
+    <string name="profile_gender_male">남성</string>
+    <string name="profile_gender_female">여성</string>
+    <string name="profile_retrieve_data">환자 데이터를 불러오는 중</string>
+    <string name="profile_retrieve_data_caption">잠시만 기다려 주세요…</string>
+    <string name="profile_document_error_header">환자 기록 가져오기 오류</string>
+    <string name="profile_document_error_body">환자 정보를 가져오는 중 문제가 발생했습니다.\n\n문제가 지속되면 다음 오류 코드를 포함하여 IT 지원팀에 문의하세요: %1$s</string>
+    <string name="profile_patient_weight">%1$s kg</string>
+    <string name="profile_patient_height">%1$s cm</string>
+    <string name="profile_edit_button">편집</string>
+    <string name="profile_delete_button">삭제</string>
+    <string name="delete_confirmation_title">프로필 삭제</string>
+    <string name="delete_confirmation_message">이 프로필을 삭제하시겠습니까?</string>
+    <string name="cancel">취소</string>
+    <string name="delete">삭제</string>
+    <string name="deleting">삭제 중</string>
+    <string name="please_wait">잠시만 기다려 주세요…</string>
+    <string name="patient_deleted_success">환자 프로필이 성공적으로 삭제되었습니다.</string>
+
+
+    <!-- RegistrationActivity strings -->
+    <string name="register_gender_male">남성</string>
+    <string name="register_gender_female">여성</string>
+    <string name="register_failed_suggestion">환자 ID를 자동으로 채울 수 없습니다</string>
+    <string name="register_field_verification">계속하려면 모든 오류를 수정해 주세요.</string>
+    <string name="profile_picture_info">다른 사진을 선택하려면 현재 사진을 탭하여 갤러리를 여세요.</string>
+    <string name="register_image_verification_header">사진이 업로드되지 않았습니다</string>
+    <string name="register_image_verification_body">계속하려면 환자의 사진을 업로드해 주세요.</string>
+    <string name="register_empty_field_verification">필드는 비워둘 수 없습니다</string>
+    <string name="register_empty_bp_verification">필드는 비워둘 수 없습니다. 기본값을 원하시면 %1$d 을(를) 입력하세요</string>
+    <string name="register_invalid_value_verification">유효하지 않은 값</string>
+    <string name="register_invalid_number_verification">숫자가 너무 크거나 작습니다</string>
+    <string name="register_loading_page">환자 ID가 자동 생성되는 동안 기다려 주세요.</string>
+    <string name="register_loading_dialog">환자가 등록되는 동안 기다려 주세요.</string>
+    <string name="register_exist_error_header">환자가 이미 등록되었습니다</string>
+    <string name="register_exist_error_body">대신 환자를 검색하시겠습니까?</string>
+    <string name="register_successful">%1$s 님이 시스템에 성공적으로 등록되었습니다.</string>
+
+    <!-- DiagnosePatient.kt -->
+    <string name="controlled_bp">조절된 혈압</string>
+    <string name="uncontrolled_bp">조절되지 않은 혈압</string>
+
+    <string name="well_controlled_hypertension">잘 조절된 고혈압</string>
+    <string name="white_coat_uncontrolled_hypertension">백의 고혈압</string>
+    <string name="masked_hypertension">가면 고혈압</string>
+    <string name="uncontrolled_hypertension">조절되지 않은 고혈압</string>
+
+    <string name="suboptimum">불충분</string>
+    <string name="well_controlled">잘 조절됨</string>
+    <string name="unknown_hypertension_status">알 수 없음</string>
+
+    <!-- RecommendationActivity.kt -->
+    <string name="insufficient_records">(평균 가정 혈압은 불충분한 측정값을 기반으로 계산되었습니다.)</string>
+    <string name="average_days_message">평균 가정 혈압은 %1$s일의 데이터를 사용하여 계산되었습니다.</string>
+    <string name="old_scan_records">(이 기록은 기록 수가 반영되기 전에 스캔되었습니다.)</string>
+    <string name="no_recommendations">권장 사항이 없습니다.\n</string>
+    <string name="well_controlled_bp_recommendation_medical">- 약물 복용을 강화하고 생활 습관을 유지하십시오. \n</string>
+    <string name="suboptimum_bp_recommendation_medical">- 약물 복용 여부를 평가하고 생활 습관 변화와 고혈압 약물의 증량을 고려하십시오.\n</string>
+
+    <!-- LanguageActivity.kt -->
+    <string name="language_current_error_header">현재 사용 중인 언어</string>
+    <string name="language_current_error_body">이것은 현재 앱 언어입니다. 다른 언어를 선택해 주세요.</string>
+    <string name="language_unsupported_header">현재 지원되지 않는 언어</string>
+    <string name="language_unsupported_body">이 언어 현지화는 진행 중입니다. 다른 언어를 선택해 주세요.</string>
+
+    <!-- SettingsActivity.kt -->
+    <string name="settings_logout_activity_header">로그아웃 확인</string>
+    <string name="settings_logout_activity_body">정말 로그아웃하시겠습니까?</string>
+    <string name="settings_contact_helpdesk">자세한 도움말은 6451–5115로 문의하십시오.</string>
+
+    <!-- MainActivity.kt -->
+    <string name="main_activity_patient_header">환자를 찾을 수 없습니다.</string>
+    <string name="main_activity_patient_body">환자의 정보가 정확히 입력되었는지 확인하십시오. 처음 방문이라면 등록을 진행해 주세요.</string>
+    <string name="main_activity_patient_validation">ID는 비워둘 수 없습니다</string>
+
+    <!-- Navigation drawer strings -->
+    <string name="home_title">홈</string>
+    <string name="patient_registration_title">환자 등록</string>
+    <string name="settings_title">설정</string>
+
+    <!-- Navigation bar strings -->
+    <string name="profile_title">프로필</string>
+    <string name="scan_title">스캔</string>
+    <string name="history_title">기록</string>
+    <string name="dashboard_title">대시보드</string>
+
+    <!-- Dialog strings -->
+    <string name="ok_dialog">확인</string>
+    <string name="yes_dialog">예</string>
+    <string name="no_dialog">아니요</string>
+    <string name="cancel_dialog">취소</string>
+    <string name="try_again_dialog">다시 시도</string>
+
+    <!-- ErrorHandling.kt strings -->
+    <string name="firebase_error_header">Firebase 연결 오류</string>
+    <string name="firebase_error_body">앱이 Firestore 데이터베이스와의 통신에 문제가 있습니다.\n\n문제가 지속되면 다음 오류 코드와 함께 IT 지원팀에 문의하십시오: %1$s</string>
+    <string name="firebase_error_return_to_main">메인으로 돌아가기</string>
+
+    <string name="reconnect_dialog_button">재연결</string>
+    <string name="reconnect_error_header">인터넷 연결 없음</string>
+    <string name="reconnect_error_body">인터넷에 연결되어 있지 않습니다. 많은 앱 기능이 인터넷 연결에 의존하며, 진행 중인 작업이 저장되지 않을 수 있습니다. \n\n문제가 지속되면 IT 헬프데스크에 문의하십시오.</string>
+
+    <string name="login_error_header">인증 실패</string>
+    <string name="login_error_body">입력한 직원 ID 또는 비밀번호가 기록과 일치하지 않습니다.\n\n(참고: 로그인 정보를 잊으신 경우 IT 헬프데스크에 문의하십시오.)</string>
+
+    <string name="patient_info_session_error_header">환자 ID를 찾을 수 없습니다</string>
+    <string name="patient_info_session_error_body">해당 환자 ID가 현재 세션에 없습니다.\n\nIT 헬프데스크에 문의하십시오.</string>
+
+    <string name="patient_history_not_found_error_header">환자 기록을 찾을 수 없음</string>
+    <string name="patient_history_not_found_error_body">해당 환자 기록을 표시할 수 없습니다.\n\n문제가 지속되면 다음 오류 코드와 함께 IT 지원팀에 문의하십시오: %1$s</string>
+
+    <!-- Patient error strings -->
+    <string name="patient_info_not_found">현재 세션에서 환자 정보를 찾을 수 없습니다. 다시 시도해 주세요.</string>
+    <string name="dialog_positive_ok">확인</string>
+    <string name="bp_stage">혈압 단계</string>
+    <string name="clinic_id">클리닉 ID</string>
+    <string name="date_format">yyyy년 MM월 dd일, HH:mm:ss</string>
+
+    <!-- activity_about.xml -->
+    <string name="enhance_about_info">ENHANCe는 종이 또는 디지털 다이어리에서 고혈압 기록을 캡처하고, 1차 진료 의사의 임상 결정을 지원하는 디지털 임상 의사결정 지원 도구입니다.</string>
+    <string name="enhance_about_purpose">이 도구는 대부분의 손글씨 혈압 값을 인식하기 위해 광학 문자 인식 기술을 통합하며, 자동으로 평균 혈압을 계산합니다. 이는 수동으로 읽고 계산하던 번거로운 과정을 대체하여 작업량과 인간 오류를 줄여줍니다.</string>
+    <string name="enhance_about_collab">다음과 협력:</string>
+    <string name="enhance_about_enhance">ENHANCe 로고</string>
+    <string name="enhance_about_singhealth">싱헬스 로고</string>
+    <string name="enhance_about_nyp">NYP 로고</string>
+    <string name="enhance_about_app_ver">앱 버전:</string>
+
+    <!-- activity_authentication.xml -->
+    <string name="enhance_auth_2fa">2단계 인증</string>
+    <string name="enhance_auth_2fa_body">등록된 휴대폰 번호로 전송된 코드를 입력하십시오.</string>
+    <string name="enhance_auth_code">코드</string>
+    <string name="enhance_auth_verify">확인</string>
+
+    <!-- activity_history.xml -->
+    <string name="enhance_history_past">과거 기록이 없습니다.</string>
+
+    <!-- activity_login.xml -->
+    <string name="enhance_login_icon_desc">ENHANCe 심볼</string>
+    <string name="enhance_login_staff_id">직원 ID</string>
+    <string name="enhance_login_password">비밀번호</string>
+    <string name="enhance_login_login">로그인</string>
+
+    <!-- activity_main.xml -->
+    <string name="enhance_main_welcome_message">ENHANCe에 오신 것을 환영합니다!</string>
+    <string name="enhance_main_register_patient">환자 등록</string>
+    <string name="enhance_main_existing_patient">기존 환자 검색:</string>
+    <string name="enhance_main_patient_id">환자 ID</string>
+    <string name="enhance_main_search_record">기록 검색</string>
+
+    <!-- activity_profile.xml -->
+    <string name="enhance_profile_legal_name">법적 이름</string>
+    <string name="enhance_profile_patient_id">환자 ID</string>
+    <string name="enhance_profile_dob">생년월일</string>
+    <string name="enhance_profile_gender">성별</string>
+    <string name="enhance_profile_weight">체중</string>
+    <string name="enhance_profile_height">신장</string>
+    <string name="enhance_profile_target_home_bp">가정 목표 혈압</string>
+    <string name="enhance_profile_target_clinic_bp">병원 목표 혈압</string>
+
+    <!-- activity_recommendation -->
+    <string name="enhance_recco_header">%1$s개의 스캔된 혈압 기록을 기반으로 한 권장 사항은 다음과 같습니다:</string>
+    <string name="enhance_recco_do">실천:</string>
+    <string name="enhance_recco_dont">하지 말 것:</string>
+    <string name="enhance_recco_target_home_bp"> 가정 목표 혈압</string>
+    <string name="enhance_recco_target_clinic_bp"> 병원 목표 혈압</string>
+    <string name="enhance_recco_average_home_bp"> 평균 가정 혈압</string>
+    <string name="enhance_recco_clinic_bp"> 병원 혈압</string>
+    <string name="enhance_recco_hypertension_status"> 고혈압 상태</string>
+    <string name="enhance_recco_recommendation">권장 사항</string>
+
+    <!-- activity_registration.xml -->
+    <string name="enhance_register_photo">사진</string>
+    <string name="enhance_register_photo_desc">사진 업로드</string>
+    <string name="enhance_register_upload_photo">갤러리에서 사진을 선택하려면 파일 업로드 아이콘을 탭하세요.</string>
+    <string name="enhance_register_particulars">환자 정보</string>
+    <string name="enhance_register_legal_name">법적 이름</string>
+    <string name="enhance_register_patient_id">환자 ID 번호</string>
+    <string name="enhance_register_dob">생년월일</string>
+    <string name="enhance_register_gender">성별</string>
+    <string name="enhance_register_target_home_bp">가정 목표 혈압</string>
+    <string name="enhance_register_target_clinic_bp">병원 목표 혈압</string>
+    <string name="enhance_register_target_sys">수축기 혈압</string>
+    <string name="enhance_register_target_dia">이완기 혈압</string>
+    <string name="enhance_register_health_info">건강 정보</string>
+    <string name="enhance_register_weight">체중</string>
+    <string name="enhance_register_height">신장</string>
+    <string name="enhance_register_button">등록</string>
+
+    <!-- activity_edit_patient.xml -->
+    <string name="enhance_edit_photo">사진 편집</string>
+    <string name="enhance_edit_photo_desc">사진 업로드</string>
+    <string name="enhance_edit_upload_photo">프로필 사진을 변경하려면 탭하세요</string>
+    <string name="enhance_edit_particulars">정보 수정</string>
+    <string name="enhance_edit_legal_name">법적 이름</string>
+    <string name="enhance_edit_patient_id">환자 ID</string>
+    <string name="enhance_edit_dob">생년월일</string>
+    <string name="enhance_edit_gender">성별</string>
+    <string name="enhance_clinic_id">클리닉 ID</string>
+    <string name="enhance_edit_clinic_id_mismatch">클리닉 ID 불일치</string>
+    <string name="enhance_edit_clinic_id_error">"클리닉 ID가 직원 프로필의 정보와 일치하지 않습니다. 관리자에게 문의하세요."</string>
+    <string name="enhance_edit_health_info">건강 정보 수정</string>
+    <string name="enhance_edit_weight">몸무게</string>
+    <string name="enhance_edit_height">키</string>
+    <string name="enhance_edit_target_home_bp">가정 혈압 목표</string>
+    <string name="enhance_edit_target_clinic_bp">클리닉 혈압 목표</string>
+    <string name="enhance_edit_target_sys">수축기 혈압</string>
+    <string name="enhance_edit_target_dia">이완기 혈압</string>
+    <string name="enhance_update_button">업데이트</string>
+    <string name="update_successful">프로필이 성공적으로 업데이트되었습니다</string>
+    <string name="loading_patient_data">환자 데이터를 불러오는 중…</string>
+    <string name="update_loading_dialog">프로필 업데이트 중…</string>
+    <string name="update_error_header">업데이트 오류</string>
+    <string name="update_error_body">프로필을 업데이트할 수 없습니다. 다시 시도해주세요.</string>
+
+    <!-- activity_scan.xml -->
+    <string name="enhance_scan_error_desc">오류</string>
+    <string name="enhance_scan_patient_id">환자 ID: </string>
+    <string name="enhance_scan_name">이름: </string>
+    <string name="enhance_general_scan">일반 스캔</string>
+    <string name="enhance_7_day_scan">7일 스캔</string>
+
+    <!-- activity_settings.xml -->
+    <string name="enhance_settings_account">계정</string>
+    <string name="enhance_settings_logout">로그아웃</string>
+    <string name="enhance_settings_help_support">도움말 및 지원</string>
+    <string name="enhance_settings_app">앱 설정</string>
+    <string name="enhance_settings_theme">테마</string>
+    <string name="enhance_settings_user_guide">사용자 가이드</string>
+    <string name="enhance_settings_language">언어 설정</string>
+    <string name="enhance_settings_contact_helpdesk">헬프데스크에 문의</string>
+    <string name="enhance_settings_about">ENHANCe 정보</string>
+    <string name="enhance_settings_terms_of_use">이용 약관</string>
+    <string name="enhance_settings_privacy_statement">개인정보 보호정책</string>
+    <string name="enhance_settings_report_vulnerability">취약점 신고</string>
+
+    <!-- activity_contact_helpdesk.xml -->
+    <string name="enhance_helpdesk">문의사항이나 도움이 필요하신 경우 아래의 담당자에게 문의하세요.</string>
+
+    <!-- activity_simple_dashboard.xml -->
+    <string name="enhance_s_dashboard_systolic_header">수축기 비교 차트</string>
+    <string name="enhance_s_dashboard_diastolic_header">이완기 비교 차트</string>
+    <string name="enhance_s_dashboard_sys_label">수축기 혈압</string>
+    <string name="enhance_s_dashboard_dia_label">이완기 혈압</string>
+    <string name="enhance_s_dashboard_sys_target_label">수축기 목표 혈압</string>
+    <string name="enhance_s_dashboard_dia_target_label">이완기 목표 혈압</string>
+    <string name="enhance_s_dashboard_print">인쇄</string>
+
+    <!-- activity_terms_of_use.xml -->
+    <string name="enhance_terms_header">이것은 이용 약관 화면입니다.</string>
+
+    <!-- activity_theme.xml -->
+    <string name="enhance_theme_light">라이트 (기본)</string>
+    <string name="enhance_theme_dark">다크</string>
+    <string name="enhance_theme_system">시스템 테마 사용</string>
+
+    <!-- activity_user_guide.xml -->
+    <string name="enhance_user_user_manual">사용자 설명서 소프트카피</string>
+    <string name="enhance_user_user_manual_body">위 아이콘을 클릭하여 사용자 설명서의 소프트카피를 다운로드할 수 있습니다.</string>
+    <string name="enhance_user_user_manual_file">ENHANCe 사용자 설명서</string>
+    <string name="enhance_user_user_guide">사용자 가이드</string>
+    <string name="enhance_user_patient"><![CDATA[환자 등록 및 검색]]></string>
+    <string name="enhance_user_patient_body">환자 ID, 가정 혈압 목표 및 클리닉 혈압 목표를 입력하여 새 환자를 등록하세요.\n\n이미 등록된 환자는 환자 ID를 사용하여 검색할 수 있습니다.</string>
+    <string name="enhance_user_scan">스캔 기록</string>
+
+
+    <string name="enhance_user_scan_body">스캐닝 옵션은 2가지입니다. 포맷되지 않은 BP 판독값의 경우 일반 스캔, 7일 차트 형식의 경우 7일 스캔. 기기 카메라를 사용하여 혈압(BP) 기록을 스캔하거나 갤러리에서 이미지를 선택합니다. 중요: 다음 부분에 대한 정확한 필기/텍스트 인식을 보장하려면 \'클리닉/오피스 BP\' 텍스트와 BP 판독값의 마지막 행이 프레임 안에 있는지 확인해야 합니다. 그러면 자동 자르기 상자가 나타나고 BP 판독값(수축기 및 이완기)의 두 열이 잘린 상자의 프레임 안에 있는지 확인해야 합니다.</string>
+    <string name="enhance_user_verify_scan">스캔 확인 - 점검</string>
+    <string name="enhance_user_verify_scan_body">알고리즘에 의해 12개 이상의 기록이 있는지 확인됩니다. 그렇지 않으면 다시 스캔하거나 분석을 진행하라는 메시지가 표시됩니다.\n\n오류가 6개를 초과하면 현재 기록을 다시 스캔하라는 메시지가 표시됩니다.</string>
+    <string name="enhance_user_edit">스캔 확인 - 값 수정</string>
+    <string name="enhance_user_edit_body">알고리즘에 의해 비정상/잘못된 것으로 판단된 BP 값에 대한 알림이 표시됩니다 (이유 포함).\n\n오류가 있는 경우 BP 값을 수정할 수 있습니다. 각 스캔된 기록의 오른쪽에 있는 5개의 버튼 중 하나를 사용하여 필요한 수정을 수행하세요.\n\n참고: 일반 스캔에서 현재 기록을 다시 스캔하면 이전 진행 사항을 제외한 현재 진행 사항이 삭제됩니다. 모든 혈압 값을 확인한 후 평균 계산을 클릭하여 계속 진행하세요.</string>
+    <string name="enhance_user_history">기록</string>
+    <string name="enhance_user_history_body">이전 기록된 평균 혈압 값, 측정된 날짜 및 시간, 가정 BP 목표, 클리닉 BP 목표를 확인할 수 있습니다. 각 상자를 클릭하면 각 방문의 결과 및 권장 사항을 확인할 수 있습니다.</string>
+    <string name="enhance_user_recommendation">결과 및 권장 사항</string>
+    <string name="enhance_user_recommendation_body">평균 계산 또는 기록 페이지의 개별 방문을 클릭하면 해당 방문의 결과 및 권장 사항을 확인할 수 있습니다.\n\n이 페이지에서는 평균 가정 BP, 클리닉 BP, 목표 BP, 고혈압 상태 진단 및 권장 조치를 확인할 수 있습니다.</string>
+    <string name="enhance_user_dashboard">대시보드</string>
+    <string name="enhance_user_dashboard_body">최근 3회의 수축기 및 이완기 차트를 통해 기록된 평균 BP 값과 각 목표 BP 값을 비교할 수 있습니다. 인쇄 버튼을 클릭하면 차트를 인쇄하거나 PDF로 저장할 수 있습니다.</string>
+    <string name="enhance_user_faq">자주 묻는 질문</string>
+    <string name="enhance_user_faq_body">Q. 스캔 기록 페이지에 어떻게 접근하나요?\n\n답: 하단 탐색 표시줄의 \'스캔 기록\'을 선택하기 전에 환자를 검색해야 합니다.\n\nQ. 텍스트 인식 정확도를 높이기 위해 어떤 부분을 이미지에 포함해야 하나요?\n\n답: 차트가 화면의 위쪽과 아래쪽을 채우도록 카메라를 정렬하세요.\n\nOCR이 자동 크롭을 하지 않는 경우, 이미지를 수직으로만 자르고 수축기 및 이완기 BP 값만 남기세요.</string>
+
+    <!-- activity_verify_scan.xml -->
+    <string name="enhance_verify_patient_id">환자 ID:</string>
+    <string name="enhance_verify_edit">편집</string>
+    <string name="enhance_verify_update">업데이트</string>
+    <string name="enhance_verify_exit">나가기</string>
+    <string name="enhance_verify_home_target_bp">가정용 목표 혈압:</string>
+    <string name="enhance_verify_clinic_target_bp">클리닉 목표 혈압:</string>
+    <string name="enhance_verify_clinic_bp">클리닉 혈압:</string>
+    <string name="enhance_verify_add_row">행 추가</string>
+    <string name="enhance_verify_more_options">추가 옵션</string>
+    <string name="enhance_verify_disclaimer">면책 조항: 필기체가 지저분하면 OCR이 제대로 작동하지 않을 수 있습니다. 더 정확한 가정용 평균 혈압을 위해 평균 계산 전에 잘못된 값을 확인하고 수정하세요.</string>
+    <string name="enhance_verify_calculate_bp">평균 혈압 계산</string>
+    <string name="update_bp_error_header">업데이트 오류</string>
+    <string name="update_bp_error_body">목표 혈압을 업데이트할 수 없습니다. 다시 시도해주세요.</string>
+
+    <!-- bottom_sheet_verify_scan.xml -->
+    <string name="enhance_verify_bottom_option">옵션 선택:</string>
+    <string name="enhance_verify_bottom_continue_scan">스캔 계속하기</string>
+    <string name="enhance_verify_bottom_rescan">현재 기록 다시 스캔</string>
+    <string name="enhance_verify_bottom_undo">실행 취소</string>
+    <string name="enhance_verify_bottom_discard">모든 진행 내용 삭제</string>
+
+    <!-- dashboard.xml -->
+    <string name="enhance_dashboard_reload">새로고침</string>
+
+    <!-- divider_old_new_record.xml -->
+    <string name="enhance_divider_old_new_current_scan_results">현재 스캔 결과:</string>
+
+    <!-- history_item.xml -->
+    <string name="enhance_history_item_avgbp">평균 가정용 혈압:</string>
+    <string name="enhance_history_item_clinicbp">클리닉 혈압:</string>
+    <string name="enhance_history_item_target_homebp">가정용 목표 혈압:</string>
+    <string name="enhance_history_item_target_clinicbp">클리닉 목표 혈압:</string>
+
+    <!-- row_bp_record.xml -->
+    <string name="enhance_row_bp_add_row">행 추가</string>
+    <string name="general_scan_description"><b>일반 스캔</b>: 7일 가정용 혈압 차트 이외의 출처에서 혈압 차트를 스캔할 때 사용합니다.</string>
+    <string name="seven_day_scan_description"><b>7일 스캔</b>: 7일 가정용 혈압 차트를 스캔할 때 사용합니다.</string>
+</resources>

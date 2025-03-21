@@ -1,0 +1,408 @@
+<resources>
+
+    <!-- AndroidManifest.xml (Some of the strings are in different segments) -->
+    <string name="outcome_and_recommendation">விளைவு மற்றும் பரிந்துரை</string>
+    <string name="verify_scan_results">ஸ்கேன் முடிவுகளை சரிபார்க்கவும்</string>
+
+    <!-- LoginActivity strings -->
+    <string name="good_morning">காலை வணக்கம்!</string>
+    <string name="good_afternoon">மதிய வணக்கம்!</string>
+    <string name="good_evening">நல்ல மாலை!</string>
+    <string name="login_validate_staff">பணியாளர் ஐடி காலியாக இருக்கக்கூடாது!</string>
+    <string name="login_validate_password">கடவுச்சொல் காலியாக இருக்கக்கூடாது!</string>
+    <string name="login_success_header">உள்நுழைவு வெற்றி</string>
+
+    <!-- SimpleDashboardActivity strings -->
+    <string name="dashboard_no_records_found">பதிவுகள் எதுவும் கிடைக்கவில்லை.</string>
+
+    <!-- ScanActivity strings -->
+    <string name="ocr_instructions">முக்கியம்:\nஇரத்த அழுத்த மதிப்புகள் (சிஸ்டாலிக்/டயஸ்டாலிக்) தெரியும்படி பார்த்துக் கொள்ளவும்.\nசிறந்த கண்டறிதலுக்கு நெருக்கமான தூரத்தில் படத்தை எடுக்கவும்.\nதானியங்கி க்ராப்பிங்கிற்கு தேவையான தலைப்புகள்: சிஸ்டாலிக் &amp; டயஸ்டாலிக்.</string>
+    <string name="ocr_app_permissions_header">பயன்பாட்டு அனுமதிகளை இயக்கவும்.</string>
+    <string name="ocr_app_permissions_body">OCR செயல்பாட்டைப் பயன்படுத்த, உங்கள் கேமரா, கேலரி மற்றும் வெளிப்புற சேமிப்பகத்திற்கான அணுகலை நீங்கள் அனுமதிக்க வேண்டும்.</string>
+    <string name="ocr_image_error_header">படத்தை செயலாக்குவதில் பிழை</string>
+    <string name="ocr_image_error_body">பிழையால் படத்தை செயலாக்க முடியவில்லை.\n\nசிக்கல் தொடர்ந்து இருந்தால், கீழ்காணும் பிழை குறியீட்டுடன் ஐடி ஆதரவை தொடர்புகொள்ளவும்: %1$s</string>
+    <string name="ocr_text_error_header">செயலாக்க எதுவும் இல்லை</string>
+    <string name="ocr_text_error_body">செயலாக்க எந்த கையெழுத்து அல்லது உரையையும் எங்களால் கண்டுபிடிக்க முடியவில்லை. குறிப்பு: படம் தெளிவாகவும், மதிப்புகளுக்கு மட்டும் செதுக்கப்பட்டதாகவும் இருப்பதை உறுதிசெய்து, எந்த தலைப்புகளையும் (\'சிஸ்டாலிக்\' மற்றும் \'டயஸ்டாலிக்\' போன்றவை) விலக்கவும்.</string>
+    <string name="resuming_scan">மேலும் ஸ்கேன்களைச் சேர்க்க “பொது ஸ்கேன்” என்பதைக் கிளிக் செய்யவும்.</string>
+
+    <!-- VerifyScanActivity.kt -->
+    <string name="verify_scan_update_target_home_header">டார்கெட் ஹோம் பிபியைப் புதுப்பிக்கவும்</string>
+    <string name="verify_scan_update_target_home_body">நோயாளியின் வீட்டு இரத்த அழுத்தத்தைப் புதுப்பிக்க விரும்புகிறீர்களா?</string>
+    <string name="verify_scan_exit_target_home_header">மாற்றங்களை நிராகரிக்கவும்</string>
+    <string name="verify_scan_exit_target_home_body">நீங்கள் இலக்கு வீட்டு BP-யில் செய்த எந்த மாற்றங்களையும் நிச்சயமாக நிராகரிக்க விரும்புகிறீர்களா?</string>
+    <string name="verify_scan_update_target_clinic_header">டார்கெட் ஹோம் பிபியைப் புதுப்பிக்கவும்</string>
+    <string name="verify_scan_update_target_clinic_body">நோயாளியின் கிளினிக் இலக்கு இரத்த அழுத்தத்தை புதுப்பிக்க விரும்புகிறீர்களா?</string>
+    <string name="verify_scan_exit_target_clinic_header">மாற்றங்களை நிராகரிக்கவும்</string>
+    <string name="verify_scan_exit_target_clinic_body">நீங்கள் செய்த கிளினிக் இலக்கு இரத்த அழுத்த மாற்றங்களை நிராகரிக்க விரும்புகிறீர்களா?</string>
+    <string name="verify_scan_update_data">இலக்கு இரத்த அழுத்தத் தரவுகளைப் புதுப்பிக்கிறது</string>
+    <string name="verify_scan_update_data_caption">தயவு செய்து ஒரு क्षणம் காத்திருக்கவும்…</string>
+    <string name="update">புதுப்பி</string>
+    <string name="exit">வெளியேறு</string>
+    <string name="verify_scan_no_update">எந்த மாற்றமும் செய்யப்படவில்லை</string>
+    <string name="verify_scan_no_update_caption">இது தற்போதைய இலக்கு BP மதிப்புகளுடன் ஒரே மாதிரியானது என்பதால்தான்</string>
+    <string name="ok">சரி</string>
+    <string name="add_empty_column_left">இடது பக்கத்தில் ஒரு காலியான நெடுவரிசையைச் சேர்க்கவும்</string>
+    <string name="add_empty_column_right">வலது பக்கத்தில் ஒரு காலியான நெடுவரிசையைச் சேர்க்கவும்</string>
+    <string name="swap_values">சிஸ்டாலிக் மற்றும் டயஸ்டாலிக் மதிப்புகளை மாற்றவும்</string>
+    <string name="remove_row">வரியை அகற்றவும்</string>
+    <string name="add_new_row">புதிய வரியைச் சேர்க்கவும்</string>
+    <string name="functionality">செயல்பாடு: </string>
+    <string name="verify_scan_rows">%1$d பதிவுகள் கண்டறியப்பட்டன.\n\nமொத்த பதிவுகள்: %2$d</string>
+    <string name="verify_scan_no_records">பதிவுகள் எதுவும் இல்லை. மீண்டும் ஸ்கேன் செய்யவும் அல்லது புதிய வரியைச் சேர்க்கவும்.</string>
+    <string name="verify_scan_inadequate_reading_header">போதிய வாசிப்புகள் இல்லை</string>
+    <string name="verify_scan_inadequate_reading_body">மேலும் பதிவுகளை ஸ்கேன் செய்ய விரும்புகிறீர்களா?</string>
+    <string name="verify_scan_calculation_successful">கணிப்பு வெற்றிகரமாக சேமிக்கப்பட்டது.</string>
+    <string name="verify_scan_saving_header">பதிவைச் சேமிக்க பிழை ஏற்பட்டது</string>
+    <string name="verify_scan_saving_body">தற்போதைய பதிவை செயலியில் சேமிக்க முடியவில்லை.\n\nசிக்கல் தொடர்ந்தால், பின்வரும் பிழை குறியீட்டுடன் ஐடி ஆதரவை தொடர்புகொள்ளவும்: %1$s</string>
+    <string name="verify_scan_error_header">பிழைகள் கண்டறியப்பட்டன</string>
+    <string name="verify_scan_error_body">தொடர்வதற்கு முன் அனைத்து பிழைகளையும் சரிசெய்யவும்.</string>
+    <string name="verify_scan_rescan_header">தற்போதைய பதிவுகளை மீண்டும் ஸ்கேன் செய்யவும்</string>
+    <string name="verify_scan_rescan_body">தற்போதைய பதிவுகளை மீண்டும் ஸ்கேன் செய்ய விரும்புகிறீர்களா?\n\n(குறிப்பு: உங்கள் முந்தைய ஸ்கேன் பதிவுகள் சேமிக்கப்படும்)</string>
+    <string name="verify_scan_discard_header">முன்னேற்றத்தை நிராகரிக்கவும்</string>
+    <string name="verify_scan_discard_body">முழு முன்னேற்றத்தையும் நிராகரித்து புதிதாகத் தொடங்க விரும்புகிறீர்களா?</string>
+    <string name="verify_scan_empty_field">புலம் காலியாக உள்ளது.</string>
+    <string name="verify_scan_whole_number">புலத்தில் முழு எண் மட்டுமே இருக்க வேண்டும்.</string>
+    <string name="verify_scan_valid_value">மதிப்பு %1$d க்கும் குறைவாகவோ அல்லது %2$d க்கும் அதிகமாகவோ இருக்கக்கூடாது.</string>
+    <string name="verify_scan_invalid_value">தவறான மதிப்பு.</string>
+    <string name="verify_scan_replace_value">மதிப்பை மாற்றவும்</string>
+    <string name="verify_scan_abnormal_value">அசாதாரண மதிப்பு.</string>
+    <string name="verify_scan_erroneous_header">அதிகப்படியான பிழைகள்</string>
+    <string name="verify_scan_erroneous_body">மேம்பட்ட துல்லியத்தைக் கிடைக்கும் வகையில் தற்போதைய பதிவுகளை மீண்டும் ஸ்கேன் செய்ய விரும்புகிறீர்களா?\n\n(குறிப்பு: உங்கள் முந்தைய ஸ்கேன் பதிவுகள் சேமிக்கப்படும்)</string>
+    <string name="verify_scan_remove_row_header">வரியை அகற்றவும்</string>
+    <string name="verify_scan_remove_row_body">தேர்ந்தெடுக்கப்பட்ட வரியை அகற்ற விரும்புகிறீர்களா?</string>
+
+    <!-- added new ones (17 march) -->
+    <string name="verify_scan_out_of_range_header">வட்டத்திற்கு வெளியே உள்ளது</string>
+    <string name="verify_scan_impossible_value">முடியாத மதிப்பு</string>
+    <string name="verify_scan_error_body_clinic_bp">தயவு செய்து கிளினிக் BP மதிப்புகளை நிரப்பவும்.</string>
+    <string name="pop_up_message">முகப்புப் பக்கத்திற்கு திரும்ப விரும்புகிறீர்களா? அனைத்து தரவுகளும் அழிக்கப்படும்.</string>
+    <string name="confirm_navigation">வழிசெலுத்தலை உறுதிப்படுத்தவா?</string>
+
+    <!-- ProfileActivity strings -->
+    <string name="profile_gender_male">ஆண்</string>
+    <string name="profile_gender_female">பெண்</string>
+    <string name="profile_retrieve_data">நோயாளி தரவுகளை மீட்டெடுக்கிறது</string>
+    <string name="profile_retrieve_data_caption">தயவு செய்து ஒரு क्षணம் காத்திருக்கவும்…</string>
+    <string name="profile_document_error_header">நோயாளி பதிவுகளைப் பெறும்போது பிழை ஏற்பட்டது</string>
+    <string name="profile_document_error_body">நோயாளி தகவல்களைப் பெறுவதில் ஏதோ தவறு ஏற்பட்டது.\n\nசிக்கல் தொடர்ந்தால், பின்வரும் பிழை குறியீட்டுடன் ஐடி ஆதரவை தொடர்புகொள்ளவும்: %1$s</string>
+    <string name="profile_patient_weight">%1$s கிலோ</string>
+    <string name="profile_patient_height">%1$s செ.மீ</string>
+    <string name="profile_edit_button">திருத்து</string>
+    <string name="profile_delete_button">அழி</string>
+    <string name="delete_confirmation_title">சுயவிவரத்தை அழிக்கவும்</string>
+    <string name="delete_confirmation_message">இந்த சுயவிவரத்தை அழிக்க விரும்புகிறீர்களா?</string>
+    <string name="cancel">ரத்து செய்</string>
+    <string name="delete">அழி</string>
+    <string name="deleting">அழிக்கிறது…</string>
+    <string name="please_wait">தயவு செய்து காத்திருக்கவும்…</string>
+    <string name="patient_deleted_success">நோயாளியின் சுயவிவரம் வெற்றிகரமாக அழிக்கப்பட்டது.</string>
+
+
+    <!-- RegistrationActivity strings -->
+    <string name="register_gender_male">ஆண்</string>
+    <string name="register_gender_female">பெண்</string>
+    <string name="register_failed_suggestion">நோயாளி ஐடியை தானாக நிரப்ப முடியவில்லை</string>
+    <string name="register_field_verification">தொடருவதற்கு முன் அனைத்து பிழைகளையும் சரிசெய்யவும்.</string>
+    <string name="profile_picture_info">மற்றொரு புகைப்படத்தைத் தேர்வுசெய்ய, தற்போதைய புகைப்படத்தைத் தட்டவும்.</string>
+    <string name="register_image_verification_header">புகைப்படம் பதிவேற்றப்படவில்லை</string>
+    <string name="register_image_verification_body">தொடருவதற்கு முன் நோயாளியின் புகைப்படத்தை பதிவேற்றவும்.</string>
+    <string name="register_empty_field_verification">இந்த புலம் காலியாக இருக்கக்கூடாது</string>
+    <string name="register_empty_bp_verification">புலம் காலியாக இருக்கக்கூடாது. இயல்புநிலை மதிப்பை விரும்பினால், %1$d ஐ உள்ளிடவும்</string>
+    <string name="register_invalid_value_verification">தவறான மதிப்பு</string>
+    <string name="register_invalid_number_verification">மதிப்பு மிகவும் அதிகமாகவோ அல்லது குறைவாகவோ உள்ளது</string>
+    <string name="register_loading_page">நோயாளியின் ஐடி தானாக உருவாக்கப்படும் வரை காத்திருக்கவும்.</string>
+    <string name="register_loading_dialog">நோயாளி பதிவுசெய்யப்படும் வரை காத்திருக்கவும்.</string>
+    <string name="register_exist_error_header">நோயாளி ஏற்கனவே பதிவாகிவிட்டார்</string>
+    <string name="register_exist_error_body">அந்த நோயாளியை தேட விரும்புகிறீர்களா?</string>
+    <string name="register_successful">%1$s வெற்றிகரமாக பதிவுசெய்யப்பட்டார்.</string>
+
+    <!-- DiagnosePatient.kt -->
+    <string name="controlled_bp">கட்டுப்பாடுள்ள இரத்த அழுத்தம்</string>
+    <string name="uncontrolled_bp">கட்டுப்பாடில்லா இரத்த அழுத்தம்</string>
+
+    <string name="well_controlled_hypertension">நன்கு கட்டுப்பட்ட உயர் இரத்த அழுத்தம்</string>
+    <string name="white_coat_uncontrolled_hypertension">வெள்ளை கோட் கட்டுப்பாடில்லா உயர் இரத்த அழுத்தம்</string>
+    <string name="masked_hypertension">மறைக்கப்பட்ட உயர் இரத்த அழுத்தம்</string>
+    <string name="uncontrolled_hypertension">கட்டுப்பாடில்லா உயர் இரத்த அழுத்தம்</string>
+
+    <string name="suboptimum">போதாத நிலை</string>
+    <string name="well_controlled">நன்கு கட்டுப்பட்டது</string>
+    <string name="unknown_hypertension_status">தெரியாதது</string>
+
+    <!-- RecommendationActivity.kt -->
+    <string name="insufficient_records">(மத்தியின வீட்டு BP போதிய வாசிப்புகளின் அடிப்படையில் கணக்கிடப்பட்டது.)</string>
+    <string name="average_days_message">மத்தியின வீட்டு BP பின்வரும் நாட்கள் %1$s அடிப்படையில் கணக்கிடப்பட்டது.</string>
+    <string name="old_scan_records">(இந்த பதிவு, பதிவுகள் எண்ணிக்கைக்கு முந்தைய ஸ்கேனில் உள்ளதாக இருக்கலாம்.)</string>
+    <string name="no_recommendations">பரிந்துரைகள் இல்லை.\n</string>
+    <string name="well_controlled_bp_recommendation_medical">- மருந்துகளை தொடர்ந்து உட்கொள்ள உறுதி செய்யவும், மற்றும் வாழ்க்கை முறைப் பராமரிப்பை தொடரவும்.\n</string>
+    <string name="suboptimum_bp_recommendation_medical">- மருந்துகள் கடைப்பிடிப்பை மதிப்பீடு செய்யவும், வாழ்க்கை முறை மாற்றங்களை பரிசீலிக்கவும் மற்றும் உயர் இரத்த அழுத்த மருந்துகளை மேம்படுத்தவும்.\n</string>
+
+    <!-- LanguageActivity.kt -->
+    <string name="language_current_error_header">தற்போதைய மொழி</string>
+    <string name="language_current_error_body">இது உங்கள் தற்போதைய பயன்பாட்டு மொழியாகும். வேறொரு மொழியைத் தேர்ந்தெடுக்கவும்.</string>
+    <string name="language_unsupported_header">மொழி ஆதரிக்கப்படவில்லை</string>
+    <string name="language_unsupported_body">இந்த மொழி மொழிபெயர்ப்பு தற்போது நடைபெற்று வருகிறது. வேறொரு மொழியைத் தேர்ந்தெடுக்கவும்.</string>
+
+    <!-- SettingsActivity.kt -->
+    <string name="settings_logout_activity_header">வெளியேறும் உறுதிப்படுத்தல்</string>
+    <string name="settings_logout_activity_body">வெளியேற விரும்புகிறீர்களா?</string>
+    <string name="settings_contact_helpdesk">மேலும் உதவிக்கு 6451–5115 ஐ தொடர்புகொள்ளவும்</string>
+
+    <!-- MainActivity.kt -->
+    <string name="main_activity_patient_header">நோயாளி கிடைக்கவில்லை.</string>
+    <string name="main_activity_patient_body">நோயாளியின் தகவல் சரியாக உள்ளிடப்பட்டுள்ளதா என்பதை உறுதிசெய்யவும். இது நோயாளியின் முதல் வருகையாக இருந்தால், தயவுசெய்து அவரை பதிவு செய்யவும்.</string>
+    <string name="main_activity_patient_validation">ஐடி காலியாக இருக்கக்கூடாது</string>
+
+    <!-- Navigation drawer strings -->
+    <string name="home_title">முகப்பு</string>
+    <string name="patient_registration_title">நோயாளி பதிவு</string>
+    <string name="settings_title">அமைப்புகள்</string>
+
+    <!-- Navigation bar strings -->
+    <string name="profile_title">சுயவிவரம்</string>
+    <string name="scan_title">ஸ்கேன்</string>
+    <string name="history_title">வரலாறு</string>
+    <string name="dashboard_title">டாஷ்போர்டு</string>
+
+    <!-- Dialog strings -->
+    <string name="ok_dialog">சரி</string>
+    <string name="yes_dialog">ஆம்</string>
+    <string name="no_dialog">இல்லை</string>
+    <string name="cancel_dialog">ரத்து செய்</string>
+    <string name="try_again_dialog">மீண்டும் முயற்சிக்கவும்</string>
+
+    <!-- ErrorHandling.kt strings -->
+    <string name="firebase_error_header">Firebase இணைப்பு பிழை</string>
+    <string name="firebase_error_body">பயன்பாடு Firestore தரவுத்தொகையுடன் தொடர்பு கொள்ள முடியவில்லை.\n\nசிக்கல் தொடர்ந்தால், பின்வரும் பிழை குறியீட்டுடன் ஐடி ஆதரவை தொடர்புகொள்ளவும்: %1$s</string>
+    <string name="firebase_error_return_to_main">முதன்மைக்கு திரும்பு</string>
+
+    <string name="reconnect_dialog_button">மீண்டும் இணை</string>
+    <string name="reconnect_error_header">இணைய இணைப்பு இல்லை</string>
+    <string name="reconnect_error_body">நீங்கள் இணையத்துடன் இணைக்கப்படவில்லை. பல பயன்பாட்டு அம்சங்கள் இணையத்தை நம்பியிருப்பதால், உங்கள் முன்னேற்றம் சேமிக்கப்படாமல் போகலாம்.\n\nசிக்கல் தொடர்ந்தால், IT உதவிக்கு தொடர்புகொள்ளவும்.</string>
+
+    <string name="login_error_header">அங்கீகார தோல்வி</string>
+    <string name="login_error_body">நீங்கள் வழங்கிய பணியாளர் ஐடி அல்லது கடவுச்சொல்லுடன் பொருந்தக்கூடிய பதிவுகள் எங்களிடம் இல்லை.\n\n(குறிப்பு: உங்கள் நுழைவு விவரங்களை மறந்துவிட்டால், IT உதவியை தொடர்புகொள்ளவும்.)</string>
+
+    <string name="patient_info_session_error_header">நோயாளி ஐடி கிடைக்கவில்லை</string>
+    <string name="patient_info_session_error_body">தெரிவிக்கப்பட்ட நோயாளி ஐடி தற்போதைய அமர்வில் இல்லை.\n\nதயவுசெய்து IT உதவியை தொடர்புகொள்ளவும்.</string>
+
+    <string name="patient_history_not_found_error_header">நோயாளியின் வரலாறு கிடைக்கவில்லை</string>
+    <string name="patient_history_not_found_error_body">தேர்ந்த நோயாளியின் வரலாற்றை காண்பிக்க முடியவில்லை.\n\nசிக்கல் தொடர்ந்தால், பின்வரும் பிழை குறியீட்டுடன் ஐடி ஆதரவை தொடர்புகொள்ளவும்: %1$s</string>
+
+    <!-- Patient error strings -->
+    <string name="patient_info_not_found">தற்போதைய அமர்வில் நோயாளி தகவல் கிடைக்கவில்லை. மீண்டும் முயற்சிக்கவும்.</string>
+    <string name="dialog_positive_ok">சரி</string>
+    <string name="bp_stage">இரத்த அழுத்த நிலை</string>
+    <string name="clinic_id">கிளினிக் ஐடி</string>
+    <string name="date_format">dd MMM yyyy, HH:mm:ss</string>
+
+    <!-- activity_about.xml -->
+    <string name="enhance_about_info">ENHANCe என்பது வீட்டு இரத்த அழுத்த பதிவுகளை கையாள உதவிக்குறிப்பு கருவியாகும், இது மருத்துவர் முடிவெடுப்பதில் உதவுகிறது.</string>
+    <string name="enhance_about_purpose">இது கை எழுத்து மற்றும் டிஜிட்டல் பதிவுகளில் இரத்த அழுத்த மதிப்புகளை அடையாளம் காண OCR தொழில்நுட்பத்தை பயன்படுத்துகிறது மற்றும் சராசரி BP ஐ தானாக கணக்கிடுகிறது. இது மனிதத் தவறுகளை குறைத்து செயல்திறனை அதிகரிக்கிறது.</string>
+    <string name="enhance_about_collab">இணைப்பாளராக:</string>
+    <string name="enhance_about_enhance">ENHANCe லோகோ</string>
+    <string name="enhance_about_singhealth">சிங்க்ஹெல்த் லோகோ</string>
+    <string name="enhance_about_nyp">NYP லோகோ</string>
+    <string name="enhance_about_app_ver">பயன்பாட்டு பதிப்பு:</string>
+
+    <!-- activity_authentication.xml -->
+    <string name="enhance_auth_2fa">இரட்டை உறுதிப்பத்திரம்</string>
+    <string name="enhance_auth_2fa_body">SMS மூலம் அனுப்பிய குறியீட்டை உள்ளிடவும்.</string>
+    <string name="enhance_auth_code">குறியீடு</string>
+    <string name="enhance_auth_verify">சரிபார்க்கவும்</string>
+
+    <!-- activity_history.xml -->
+    <string name="enhance_history_past">முந்தைய பதிவுகள் எதுவும் இல்லை.</string>
+
+    <!-- activity_language.xml -->
+
+    <!-- activity_login.xml -->
+    <string name="enhance_login_icon_desc">ENHANce சின்னம்</string>
+    <string name="enhance_login_staff_id">பணியாளர் ஐடி</string>
+    <string name="enhance_login_password">கடவுச்சொல்</string>
+    <string name="enhance_login_login">உள்நுழை</string>
+
+    <!-- activity_main.xml -->
+    <string name="enhance_main_welcome_message">ENHANCe-இற்கு வரவேற்கிறோம்!</string>
+    <string name="enhance_main_register_patient">நோயாளியை பதிவு செய்</string>
+    <string name="enhance_main_existing_patient">ஏற்கனவே உள்ள நோயாளியை தேடுக:</string>
+    <string name="enhance_main_patient_id">நோயாளர் ஐடி</string>
+    <string name="enhance_main_search_record">பதிவை தேடு</string>
+
+    <!-- activity_profile.xml -->
+    <string name="enhance_profile_legal_name">சட்டப்பூர்வ பெயர்</string>
+    <string name="enhance_profile_patient_id">நோயாளர் ஐடி</string>
+    <string name="enhance_profile_dob">பிறந்த தேதி</string>
+    <string name="enhance_profile_gender">பாலினம்</string>
+    <string name="enhance_profile_weight">எடை</string>
+    <string name="enhance_profile_height">உயரம்</string>
+    <string name="enhance_profile_target_home_bp">இலக்கு வீட்டு இரத்த அழுத்தம்</string>
+    <string name="enhance_profile_target_clinic_bp">இலக்கு கிளினிக் இரத்த அழுத்தம்</string>
+
+    <!-- activity_recommendation -->
+    <string name="enhance_recco_header">%1$s ஸ்கேன் செய்யப்பட்ட இரத்த அழுத்த பதிவுகளின் அடிப்படையில் பரிந்துரைகள்:</string>
+    <string name="enhance_recco_do">செய்:</string>
+    <string name="enhance_recco_dont">செய்யாதே:</string>
+    <string name="enhance_recco_target_home_bp"> இலக்கு வீட்டு இரத்த அழுத்தம்</string>
+    <string name="enhance_recco_target_clinic_bp"> இலக்கு கிளினிக் இரத்த அழுத்தம்</string>
+    <string name="enhance_recco_average_home_bp"> சராசரி வீட்டு இரத்த அழுத்தம்</string>
+    <string name="enhance_recco_clinic_bp"> கிளினிக் இரத்த அழுத்தம்</string>
+    <string name="enhance_recco_hypertension_status"> உயர் இரத்த அழுத்த நிலை</string>
+    <string name="enhance_recco_recommendation">பரிந்துரைகள்</string>
+
+    <!-- activity_registration.xml -->
+    <string name="enhance_register_photo">புகைப்படம்</string>
+    <string name="enhance_register_photo_desc">புகைப்படம் பதிவேற்று</string>
+    <string name="enhance_register_upload_photo">தற்போதைய புகைப்படத்தை தட்டச்சு செய்து புதிய புகைப்படம் தேர்வு செய்யவும்.</string>
+    <string name="enhance_register_particulars">நோயாளர் விவரங்கள்</string>
+    <string name="enhance_register_legal_name">சட்டப்பூர்வ பெயர்</string>
+    <string name="enhance_register_patient_id">நோயாளர் ஐடி எண்</string>
+    <string name="enhance_register_dob">பிறந்த தேதி</string>
+    <string name="enhance_register_gender">பாலினம்</string>
+    <string name="enhance_register_target_home_bp">இலக்கு வீட்டு இரத்த அழுத்தம்</string>
+    <string name="enhance_register_target_clinic_bp">இலக்கு கிளினிக் இரத்த அழுத்தம்</string>
+    <string name="enhance_register_target_sys">சிஸ்டாலிக் இரத்த அழுத்தம்</string>
+    <string name="enhance_register_target_dia">டயஸ்டாலிக் இரத்த அழுத்தம்</string>
+    <string name="enhance_register_health_info">சுகாதார தகவல்</string>
+    <string name="enhance_register_weight">எடை</string>
+    <string name="enhance_register_height">உயரம்</string>
+    <string name="enhance_register_button">பதிவு செய்</string>
+
+    <!-- activity_edit_patient.xml -->
+    <string name="enhance_edit_photo">புகைப்படத்தை திருத்து</string>
+    <string name="enhance_edit_photo_desc">புகைப்படத்தை பதிவேற்று</string>
+    <string name="enhance_edit_upload_photo">சுயவிவரப் புகைப்படத்தை மாற்ற தட்டவும்</string>
+    <string name="enhance_edit_particulars">தகவலைத் திருத்து</string>
+    <string name="enhance_edit_legal_name">சட்டப்பூர்வ பெயர்</string>
+    <string name="enhance_edit_patient_id">நோயாளர் ஐடி</string>
+    <string name="enhance_edit_dob">பிறந்த தேதி</string>
+    <string name="enhance_edit_gender">பாலினம்</string>
+    <string name="enhance_clinic_id">கிளினிக் ஐடி</string>
+    <string name="enhance_edit_clinic_id_mismatch">கிளினிக் ஐடி பொருந்தவில்லை</string>
+    <string name="enhance_edit_clinic_id_error">கிளினிக் ஐடி பணியாளரின் சுயவிவரத்தில் உள்ளதுடன் பொருந்தவில்லை. நிர்வாகியை தொடர்பு கொள்ளவும்.</string>
+    <string name="enhance_edit_health_info">சுகாதார தகவலைத் திருத்து</string>
+    <string name="enhance_edit_weight">எடை</string>
+    <string name="enhance_edit_height">உயரம்</string>
+    <string name="enhance_edit_target_home_bp">இலக்கு வீட்டு இரத்த அழுத்தம்</string>
+    <string name="enhance_edit_target_clinic_bp">இலக்கு கிளினிக் இரத்த அழுத்தம்</string>
+    <string name="enhance_edit_target_sys">சிஸ்டாலிக் இரத்த அழுத்தம்</string>
+    <string name="enhance_edit_target_dia">டயஸ்டாலிக் இரத்த அழுத்தம்</string>
+    <string name="enhance_update_button">புதுப்பிக்கவும்</string>
+    <string name="update_successful">சுயவிவரம் வெற்றிகரமாக புதுப்பிக்கப்பட்டது</string>
+    <string name="loading_patient_data">நோயாளர் தரவுகளை ஏற்றுகிறது…</string>
+    <string name="update_loading_dialog">சுயவிவரம் புதுப்பிக்கப்படுகிறது…</string>
+    <string name="update_error_header">புதுப்பிப்பு பிழை</string>
+    <string name="update_error_body">சுயவிவரத்தை புதுப்பிக்க முடியவில்லை. மீண்டும் முயற்சிக்கவும்.</string>
+
+    <!-- activity_scan.xml -->
+    <string name="enhance_scan_error_desc">பிழை</string>
+    <string name="enhance_scan_patient_id">நோயாளர் ஐடி: </string>
+    <string name="enhance_scan_name">பெயர்: </string>
+    <string name="enhance_general_scan">பொது ஸ்கேன்</string>
+    <string name="enhance_7_day_scan">7 நாள் ஸ்கேன்</string>
+
+    <!-- activity_settings.xml -->
+    <string name="enhance_settings_account">கணக்கு</string>
+    <string name="enhance_settings_logout">வெளியேறு</string>
+    <string name="enhance_settings_help_support">உதவி மற்றும் ஆதரவு</string>
+    <string name="enhance_settings_app">அப் அமைப்புகள்</string>
+    <string name="enhance_settings_theme">தீம்</string>
+    <string name="enhance_settings_user_guide">பயனர் வழிகாட்டி</string>
+    <string name="enhance_settings_language">மொழி விருப்பங்கள்</string>
+    <string name="enhance_settings_contact_helpdesk">உதவி மையத்தை தொடர்பு கொள்ளவும்</string>
+    <string name="enhance_settings_about">ENHANCe பற்றி</string>
+    <string name="enhance_settings_terms_of_use">பயன்பாட்டு விதிமுறைகள்</string>
+    <string name="enhance_settings_privacy_statement">தனியுரிமைக் குறிப்புரை</string>
+    <string name="enhance_settings_report_vulnerability">பாதுகாப்பு குறைபாட்டை புகாரளிக்கவும்</string>
+
+    <!-- activity_contact_helpdesk.xml -->
+    <string name="enhance_helpdesk">வினாக்கள் அல்லது உதவிக்காக, கீழ்காணும் நபர்களை தொடர்பு கொள்ளவும்.</string>
+
+    <!-- activity_simple_dashboard.xml -->
+    <string name="enhance_s_dashboard_systolic_header">சிஸ்டாலிக் ஒப்பீட்டு வரைபடம்</string>
+    <string name="enhance_s_dashboard_diastolic_header">டயஸ்டாலிக் ஒப்பீட்டு வரைபடம்</string>
+    <string name="enhance_s_dashboard_sys_label">சிஸ்டாலிக் BP</string>
+    <string name="enhance_s_dashboard_dia_label">டயஸ்டாலிக் BP</string>
+    <string name="enhance_s_dashboard_sys_target_label">இலக்கு சிஸ்டாலிக் BP</string>
+    <string name="enhance_s_dashboard_dia_target_label">இலக்கு டயஸ்டாலிக் BP</string>
+    <string name="enhance_s_dashboard_print">அச்சிடு</string>
+
+    <!-- activity_terms_of_use.xml -->
+    <string name="enhance_terms_header">இது பயன்பாட்டு விதிமுறைகள் செயல்பாடு.</string>
+
+    <!-- activity_theme.xml -->
+    <string name="enhance_theme_light">ஒளி (இயல்புநிலை)</string>
+    <string name="enhance_theme_dark">இருள்</string>
+    <string name="enhance_theme_system">கணினி தீமைப் பயன்படுத்து</string>
+
+    <!-- activity_user_guide.xml -->
+    <string name="enhance_user_user_manual">பயனர் கையேடு மென்மையான நகல்</string>
+    <string name="enhance_user_user_manual_body">மேலே உள்ள ஐகானை கிளிக் செய்து பயனர் கையேட்டின் மென்மையான நகலை பதிவிறக்கம் செய்யலாம்.</string>
+    <string name="enhance_user_user_manual_file">ENHANCe பயனர் கையேடு</string>
+    <string name="enhance_user_user_guide">பயனர் வழிகாட்டி</string>
+    <string name="enhance_user_patient"><![CDATA[நோயாளர் பதிவு மற்றும் தேடல்]]></string>
+    <string name="enhance_user_patient_body">புதிய நோயாளியை பதிவு செய்ய, அவரது நோயாளர் ஐடி, இலக்கு வீட்டு BP மற்றும் கிளினிக் BP ஐ உள்ளிடவும்.\n\nபதிவான நோயாளிகளை, அவர்களின் நோயாளர் ஐடியைப் பயன்படுத்தி தேடலாம்.</string>
+    <string name="enhance_user_scan">ஸ்கேன் பதிவுகள்</string>
+
+    <string name="enhance_user_scan_body"><![CDATA[
+2 ஸ்கேனிங் விருப்பங்கள் உள்ளன. வடிவமைக்கப்படாத இரத்த அழுத்த அளவீடுகளுக்கு பொது ஸ்கேன் மற்றும் 7-நாள் விளக்கப்பட வடிவத்திற்கு 7 நாள் ஸ்கேன். சாதன கேமராவைப் பயன்படுத்தி இரத்த அழுத்த (BP) பதிவுகளை ஸ்கேன் செய்யவும் அல்லது கேலரியில் இருந்து ஒரு படத்தைத் தேர்ந்தெடுக்கவும்.
+
+முக்கியமானது: அடுத்த பகுதிக்கான துல்லியமான கையெழுத்து/உரை அங்கீகாரத்தை உறுதிசெய்ய, &quot;மருத்துவமனை/அலுவலக இரத்த அழுத்தம்&quot;
+ உரை மற்றும் இரத்த அழுத்த அளவீடுகளின் கடைசி வரிசை சட்டகத்திற்குள் இருப்பதை உறுதிசெய்ய வேண்டும்.
+
+பின்னர் தானியங்கி-செதுக்கும் பெட்டி தோன்றும், மேலும் இரத்த அழுத்த அளவீடுகளின் இரண்டு நெடுவரிசைகளும் (சிஸ்டாலிக் & டயஸ்டாலிக்) செதுக்கப்பட்ட பெட்டியின் சட்டகத்திற்குள் இருப்பதை உறுதிசெய்ய வேண்டும்.
+]]></string>
+
+
+    <string name="enhance_user_verify_scan">ஸ்கேன் சரிபார்க்கவும் - சரிபார்ப்பு</string>
+    <string name="enhance_user_verify_scan_body">அல்காரிதம் 12 க்கும் மேற்பட்ட பதிவுகள் உள்ளனவாக உறுதி செய்யும். இல்லையெனில், மீண்டும் ஸ்கேன் செய்யவோ, பகுப்பாய்வுடன் தொடரவோ விருப்பம் வழங்கப்படும்.\n\nபதிவுகளின் பிழைகள் ஆறு கடந்தால், மீண்டும் ஸ்கேன் செய்ய அல்காரிதம் அறிவுறுத்தும்.</string>
+    <string name="enhance_user_edit">ஸ்கேன் சரிபார்ப்பு - மதிப்புகளை திருத்து</string>
+    <string name="enhance_user_edit_body">அல்காரிதம் தவறானவையாகக் கருதும் BP மதிப்புகள் குறித்த எச்சரிக்கைகள் வழங்கப்படும்.\n\nபிழைகளை நீக்க, மதிப்புகளை திருத்தலாம். ஒவ்வொரு பதிவிற்கும் வலது பக்கத்தில் உள்ள 5 பொத்தான்களில் எதையாவது பயன்படுத்தி திருத்தலாம்.\n\nகுறிப்பு: தற்போது உள்ள பதிவுகளை மீண்டும் ஸ்கேன் செய்யும்போது, தற்போதைய முன்னேற்றம், முந்தைய முன்னேற்றம் தவிர, நீக்கப்படும்.</string>
+    <string name="enhance_user_history">வரலாறு</string>
+    <string name="enhance_user_history_body">முந்தைய சராசரி BP மதிப்புகள், எப்போது எடுக்கப்பட்டது, இலக்கு வீட்டு மற்றும் கிளினிக் BP ஆகியவற்றை காணலாம். ஒவ்வொரு பெட்டியில் கிளிக் செய்வதன் மூலம், அந்தச் சந்திப்பின் முடிவுகள் மற்றும் பரிந்துரைகளை காணலாம்.</string>
+    <string name="enhance_user_recommendation">முடிவுகள் மற்றும் பரிந்துரைகள்</string>
+    <string name="enhance_user_recommendation_body">சராசரி கணக்கீட்டை கிளிக் செய்த பிறகு அல்லது வரலாறு பக்கத்தில் தனிப்பட்ட சந்திப்பைத் தேர்ந்தெடுத்து முடிவுகள் மற்றும் பரிந்துரைகளை காணலாம்.\n\nஇந்தப் பக்கம் சராசரி வீட்டு BP, கிளினிக் BP, இலக்கு வீட்டு மற்றும் கிளினிக் BP, உயர் BP நிலை மற்றும் பரிந்துரைக்கப்பட்ட நடவடிக்கைகள் ஆகியவற்றை காண அனுமதிக்கும்.</string>
+    <string name="enhance_user_dashboard">டாஷ்போர்டு</string>
+    <string name="enhance_user_dashboard_body">கடைசி 3 சந்திப்புகளின் சிஸ்டாலிக் மற்றும் டயஸ்டாலிக் வரைபடங்களைப் பார்த்து சராசரி மதிப்புகளுடன் இலக்கு மதிப்புகளை ஒப்பிடலாம். அச்சிடு பொத்தானைக் கிளிக் செய்வதன் மூலம் PDF-ஆக சேமிக்கலாம் அல்லது அச்சிடலாம்.</string>
+    <string name="enhance_user_faq">அடிக்கடி கேட்கப்படும் கேள்விகள்</string>
+    <string name="enhance_user_faq_body">Q. ஸ்கேன் பதிவு பக்கத்தை எப்படிச் செல்லலாம்?\n\nANS: நோயாளியை முதலில் தேடி, கீழே உள்ள \'Scan Record\' பட்டனைத் தேர்ந்தெடுக்க வேண்டும்.\n\nQ. மிக உயர்ந்த எழுத்து/அடையாள அங்கீகார துல்லியத்திற்கு படம் எதை அடக்க வேண்டும்?\n\nANS: உங்கள் கேமராவை அட்டவணை மட்டுமே முழுமையாக மேல் மற்றும் கீழ் பகுதியை நிரப்பும் வகையில் ஒத்திசைக்கவும்.\n\nOCR தானாக குறைக்கவில்லை என்றால், படம் வெர்டிகலாக மட்டுமே குறைக்கவும், சிஸ்டாலிக் மற்றும் டயஸ்டாலிக் மதிப்புகளை மட்டும் விட்டு மற்றதை நீக்கவும்.</string>
+
+    <!-- activity_verify_scan.xml -->
+    <string name="enhance_verify_patient_id">நோயாளர் ஐடி:</string>
+    <string name="enhance_verify_edit">திருத்து</string>
+    <string name="enhance_verify_update">புதுப்பிக்கவும்</string>
+    <string name="enhance_verify_exit">வெளியேறு</string>
+    <string name="enhance_verify_home_target_bp">இலக்கு வீட்டு இரத்த அழுத்தம்:</string>
+    <string name="enhance_verify_clinic_target_bp">இலக்கு கிளினிக் இரத்த அழுத்தம்:</string>
+    <string name="enhance_verify_clinic_bp">கிளினிக் இரத்த அழுத்தம்:</string>
+    <string name="enhance_verify_add_row">ஒரு வரிசையைச் சேர்க்கவும்</string>
+    <string name="enhance_verify_more_options">மேலும் விருப்பங்கள்</string>
+    <string name="enhance_verify_disclaimer">அறிவுறுத்தல்: கை எழுத்து தெளிவாக இல்லையெனில், OCR சரியாக வேலை செய்யக்கூடாது. \n\nசராசரி வீட்டு இரத்த அழுத்த மதிப்பை உறுதி செய்ய, கணக்கீட்டிற்கு முன்னர் தவறான மதிப்புகளை சரிபார்த்து திருத்தவும்.</string>
+    <string name="enhance_verify_calculate_bp">சராசரி இரத்த அழுத்தத்தை கணக்கிடு</string>
+    <string name="update_bp_error_header">புதுப்பிப்பு பிழை</string>
+    <string name="update_bp_error_body">இலக்கு இரத்த அழுத்தத்தை புதுப்பிக்க முடியவில்லை. தயவுசெய்து மீண்டும் முயற்சிக்கவும்.</string>
+
+    <!-- bottom_sheet_verify_scan.xml -->
+    <string name="enhance_verify_bottom_option">விருப்பத்தை தேர்ந்தெடுக்கவும்:</string>
+    <string name="enhance_verify_bottom_continue_scan">ஸ்கேனிங் தொடரவும்</string>
+    <string name="enhance_verify_bottom_rescan">தற்போதைய பதிவுகளை மீண்டும் ஸ்கேன் செய்யவும்</string>
+    <string name="enhance_verify_bottom_undo">செயலை மீளமை</string>
+    <string name="enhance_verify_bottom_discard">அனைத்து முன்னேற்றத்தையும் நீக்கு</string>
+
+    <!-- dashboard.xml -->
+    <string name="enhance_dashboard_reload">மீளேற்று</string>
+
+    <!-- divider_old_new_record.xml -->
+    <string name="enhance_divider_old_new_current_scan_results">தற்போதைய ஸ்கேன் முடிவுகள்:</string>
+
+    <!-- history_item.xml -->
+    <string name="enhance_history_item_avgbp">சராசரி வீட்டு இரத்த அழுத்தம்:</string>
+    <string name="enhance_history_item_clinicbp">கிளினிக் இரத்த அழுத்தம்:</string>
+    <string name="enhance_history_item_target_homebp">இலக்கு வீட்டு இரத்த அழுத்தம்:</string>
+    <string name="enhance_history_item_target_clinicbp">இலக்கு கிளினிக் இரத்த அழுத்தம்:</string>
+
+    <!-- row_bp_record.xml -->
+    <string name="enhance_row_bp_add_row">ஒரு வரிசையைச் சேர்க்கவும்</string>
+    <string name="general_scan_description"><b>பொது ஸ்கேன்</b>: 7 நாள் வீட்டு இரத்த அழுத்தம் அட்டவணையிலல்லாத ஆதாரங்களிலிருந்து ஸ்கேன் செய்ய.</string>
+    <string name="seven_day_scan_description"><b>7 நாள் ஸ்கேன்</b>: 7 நாள் வீட்டு இரத்த அழுத்தம் அட்டவணையிலிருந்து ஸ்கேன் செய்ய.</string>
+</resources>

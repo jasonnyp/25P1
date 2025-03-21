@@ -23,7 +23,7 @@
     <string name="ocr_image_error_header">Error processing image</string>
     <string name="ocr_image_error_body">The image cannot be processed due to an error.\n\nContact IT support with the following error code if issue persists: %1$s</string>
     <string name="ocr_text_error_header">Nothing to process</string>
-    <string name="ocr_text_error_body">We couldn\'t find any handwriting or text to process.\n\nTip: Ensure the image is clear and cropped to only the values, and exclude any headers (such as \'Systolic\' and \'Diastolic\').</string>
+    <string name="ocr_text_error_body">We couldn\'t find any handwriting or text to process.  Tip: Ensure the image is clear and cropped to only the values, and exclude any headers (such as \'Systolic\' and \'Diastolic\').</string>
     <string name="resuming_scan">Click on “General Scan” to add more scans</string>
 
     <!-- VerifyScanActivity.kt -->
@@ -63,7 +63,7 @@
     <string name="verify_scan_discard_body">Do you want to discard all progress and start over?</string>
     <string name="verify_scan_empty_field">Field is empty.</string>
     <string name="verify_scan_whole_number">Field must only contain whole number.</string>
-    <string name="verify_scan_valid_value">Value cannot be below %1d or above %2d.</string>
+    <string name="verify_scan_valid_value">Value cannot be below %1$d or above %2$d.</string>
     <string name="verify_scan_invalid_value">Invalid value.</string>
     <string name="verify_scan_replace_value">Replace the value</string>
     <string name="verify_scan_abnormal_value">Abnormal value.</string>
@@ -77,6 +77,7 @@
     <string name="verify_scan_impossible_value">Impossible Value</string>
     <string name="verify_scan_error_body_clinic_bp">Please fill in Clinic BP values.</string>
     <string name="pop_up_message">Are you sure you want to go back to the Home Page? All data will be lost.</string>
+    <string name="confirm_navigation">Confirm Navigation?</string>
 
     <!-- ProfileActivity strings -->
     <string name="profile_gender_male">MALE</string>
@@ -220,10 +221,10 @@
     <string name="enhance_language_chinese_simplified" translatable="false">简体中文</string>
     <string name="enhance_language_chinese_traditional" translatable="false">繁體中文</string>
     <string name="enhance_language_malay" translatable="false">Bahasa Melayu</string>
-    <string name="enhance_language_tamil" translatable="false">தமிழ் [Currently Unsupported]</string>
+    <string name="enhance_language_tamil" translatable="false">தமிழ்</string>
     <string name="enhance_language_thai" translatable="false">ไทย [Currently Unsupported]</string>
     <string name="enhance_language_vietnamese" translatable="false">Tiếng Việt [Currently Unsupported]</string>
-    <string name="enhance_language_korean" translatable="false">한국어 [Currently Unsupported]</string>
+    <string name="enhance_language_korean" translatable="false">한국어</string>
     <string name="enhance_language_japanese" translatable="false">日本語 [Currently Unsupported]</string>
     <string name="enhance_language_arrow" translatable="false">Arrow</string>
 
@@ -363,7 +364,7 @@
     <string name="enhance_user_patient"><![CDATA[Patient Registration & Search]]></string>
     <string name="enhance_user_patient_body">Register a new patient by entering their patient ID, target home BP and target clinic BP.\n\nFor registered patients, simply search for them using his/her patient ID</string>
     <string name="enhance_user_scan">Scan Records</string>
-    <string name="enhance_user_scan_body">There are 2 scanning options. General Scan for unformatted BP readings and 7 Day Scan for the 7-day chart format. Scan blood pressure (BP) records using the device camera, or select an image from gallery. \n\nIMPORTANT: \nTo ensure accurate handwriting/text recognition for the next part, you MUST ensure that the \'Clinic/Office BP\' text and the last row of BP readings are within the frame. \n\nThe auto-crop box will then appear afterwards and you MUST ensure that both columns of BP readings (systolic &amp; diastolic), are within the cropped box\'s frame.</string>
+    <string name="enhance_user_scan_body">There are 2 scanning options. General Scan for unformatted BP readings and 7 Day Scan for the 7-day chart format. Scan blood pressure (BP) records using the device camera, or select an image from gallery.   IMPORTANT:  To ensure accurate handwriting/text recognition for the next part, you MUST ensure that the \'Clinic/Office BP\' text and the last row of BP readings are within the frame.   The auto-crop box will then appear afterwards and you MUST ensure that both columns of BP readings (systolic &amp; diastolic), are within the cropped box\'s frame.</string>
     <string name="enhance_user_verify_scan">Verify Scan - Check</string>
     <string name="enhance_user_verify_scan_body">Checks by the algorithm confirms for the presence of more than 12 records. Otherwise, it will prompt you to either scan again or proceed with the analysis.\n\nThe algorithm will also prompt you to rescan the current record should it exceed six errors the system.</string>
     <string name="enhance_user_edit">Verify Scan - Edit Values</string>

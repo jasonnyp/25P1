@@ -60,6 +60,14 @@ class LanguageActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
         binding.enhanceMalay.setOnClickListener {
              languageBuilder(this, curLanguage, "ms", "MY")
         }
+
+        binding.enhanceTamil.setOnClickListener {
+            languageBuilder(this, curLanguage, "ta", "SG")
+        }
+
+        binding.enhanceKorean.setOnClickListener {
+            languageBuilder(this, curLanguage, "ko", "KR")
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

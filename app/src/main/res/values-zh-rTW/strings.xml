@@ -76,6 +76,7 @@
     <string name="verify_scan_impossible_value">數值不可能</string>
     <string name="verify_scan_error_body_clinic_bp">請填寫診所血壓值。</string>
     <string name="pop_up_message">您確定要返回主頁嗎？所有資料都將遺失。</string>
+    <string name="confirm_navigation">確認導航？</string>
 
 
     <!-- ProfileActivity strings -->
@@ -367,7 +368,7 @@
     <string name="enhance_history_item_target_homebp">家庭血壓目標：</string>
     <string name="enhance_history_item_target_clinicbp">診所血壓目標：</string>
 
-    <string name="verify_scan_valid_value">值不能低於 %1d 或高於 %2d。</string>
+    <string name="verify_scan_valid_value">值不能低於 %1$d 或高於 %2$d。</string>
 
     <string name="enhance_user_recommendation">結果與建議</string>
     <string name="enhance_user_recommendation_body">您可以在點擊「計算平均值」或歷史頁面中的個別訪問後查看訪問的結果和建議。\n\n此頁面將允許您查看平均居家血壓、診所血壓、目標居家和診所血壓、高血壓狀態診斷以及診斷後建議採取的步驟。</string>

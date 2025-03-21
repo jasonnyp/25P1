@@ -71,6 +71,7 @@
     <string name="verify_scan_impossible_value">Nilai yang mustahil</string>
     <string name="verify_scan_error_body_clinic_bp">Sila isikan nilai BP Klinik.</string>
     <string name="pop_up_message">Adakah anda pasti mahu kembali ke Halaman Utama? Semua data akan hilang.</string>
+    <string name="confirm_navigation">Sahkan Navigasi?</string>
 
 
     <string name="profile_gender_male">LELAKI</string>
@@ -353,7 +354,7 @@
     <string name="enhance_user_faq">Soalan Lazim</string>
     <string name="enhance_user_faq_body">S. Bagaimana untuk mengakses halaman rekod imbasan?\n\nJ: Anda perlu mencari pesakit sebelum anda boleh memilih \'Rekod Imbasan\' di bar navigasi bawah.\n\nS. Bahagian manakah imej yang perlu disimpan untuk ketepatan pengesanan tulisan tangan/teks maksimum?\n\nJ: Selaraskan kamera anda supaya hanya carta mengisi bahagian atas dan bawah skrin untuk ketepatan terbaik.\n\nSekiranya OCR tidak memotong secara automatik, cuba hanya memotong imej SECARA VERTIKAL dan tinggalkan hanya nilai BP sistolik dan diastolik dalam imej yang dipotong.</string>
 
-    <string name="verify_scan_valid_value">Nilai tidak boleh kurang daripada %1d atau lebih daripada %2d.</string>
+    <string name="verify_scan_valid_value">Nilai tidak boleh kurang daripada %1$d atau lebih daripada %2$d.</string>
     <string name="general_scan_description">Imbasan Umum: Untuk mengimbas carta BP daripada sumber selain daripada carta BP rumah 7 hari.</string>
     <string name="seven_day_scan_description">" Imbasan 7 Hari: Untuk mengimbas carta BP dari carta BP rumah 7 hari."</string>
 

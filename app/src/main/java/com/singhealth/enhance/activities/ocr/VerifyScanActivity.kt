@@ -757,7 +757,7 @@ class VerifyScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
 
     // if clinic bp values empty
     private fun showExitConfirmationDialog() {
-        val title = SpannableString("Confirm Navigation?").apply {
+        val title = SpannableString(getString(R.string.confirm_navigation)).apply {
             setSpan(StyleSpan(Typeface.BOLD), 0, length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
             setSpan(ForegroundColorSpan(Color.RED), 0, length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
         }
