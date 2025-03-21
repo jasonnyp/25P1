@@ -56,7 +56,7 @@
     <string name="verify_scan_saving_header">Error saving record</string>
     <string name="verify_scan_saving_body">The app wasn\'t able to save the current record.\n\nIf the issue persists, contact IT support with the following error code: %1$s</string>
     <string name="verify_scan_error_header">Error(s) detected</string>
-    <string name="verify_scan_error_body">Correct all errors before continuing.</string> <!-- this is for the error popup on point 6 when sys/dia has errors-->
+    <string name="verify_scan_error_body">Correct all errors before continuing.</string> <!-- this is for the error popup when sys/dia has errors-->
     <string name="verify_scan_rescan_header">Rescan current records</string>
     <string name="verify_scan_rescan_body">Do you want to rescan the current records?\n\n(note: your previously scanned records will be saved)</string>
     <string name="verify_scan_discard_header">Discard progress</string>
@@ -68,7 +68,7 @@
     <string name="verify_scan_replace_value">Replace the value</string>
     <string name="verify_scan_abnormal_value">Abnormal value.</string>
     <string name="verify_scan_erroneous_header">Too many erroneous results</string>
-    <string name="verify_scan_erroneous_body">Do you want to rescan the current records to achieve a better accuracy?\n\n(note: your previously scanned records will be saved)</string>
+    <string name="verify_scan_erroneous_body">Do you want to rescan the current records to achieve a better accuracy?\n\n(Note: your previously scanned records will be saved)</string>
     <string name="verify_scan_remove_row_header">Remove row</string>
     <string name="verify_scan_remove_row_body">Do you want to remove the selected row?</string>
 

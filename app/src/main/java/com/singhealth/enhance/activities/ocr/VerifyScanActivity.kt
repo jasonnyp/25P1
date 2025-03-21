@@ -4,11 +4,18 @@ import android.annotation.SuppressLint
 import android.app.ProgressDialog
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.Typeface
 import android.os.Bundle
 import android.os.Handler
+import android.util.Log
 import android.os.Looper
 import android.text.Editable
+import android.text.Spannable
+import android.text.SpannableString
 import android.text.TextWatcher
+import android.text.style.ForegroundColorSpan
+import android.text.style.StyleSpan
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
@@ -90,8 +97,8 @@ class VerifyScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
     private var sysBPListHistory: MutableList<String> = mutableListOf()
     private var diaBPListHistory: MutableList<String> = mutableListOf()
 
-    private val sysBPFields = mutableListOf<TextInputEditText>()
-    private val diaBPFields = mutableListOf<TextInputEditText>()
+    private var sysBPFields = mutableListOf<TextInputEditText>()
+    private var diaBPFields = mutableListOf<TextInputEditText>()
 
     private var totalSysBP = 0
     private var totalDiaBP = 0
@@ -109,6 +116,9 @@ class VerifyScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
     private val typingDelayHandler = Handler(Looper.getMainLooper())
     private var typingRunnable: Runnable? = null
 
+    private var shouldCheckErrors = false
+    private var errorChecked = false // Global variable to track red errors
+
     // Used for Session Timeout
     override fun onUserInteraction() {
         super.onUserInteraction()
@@ -123,14 +133,10 @@ class VerifyScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         binding = ActivityVerifyScanBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        setupValidation()
-
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-
 //        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
 //            override fun handleOnBackPressed() {
 //                startActivity(Intent(this@VerifyScanActivity, ScanActivity::class.java))
@@ -472,102 +478,103 @@ class VerifyScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
 
         // Calculate and save average BP, home BP and clinic BP targets, then display outcome and recommendation (separate activity)
         binding.calculateAvgBPBtn.setOnClickListener {
-            if (!validateClinicBPFields()) {
+            shouldCheckErrors = true
+
+            postScanValidation() // Always re-validate all fields
+
+            Log.d("DEBUG_CALC_BP", "Calculate Average BP Clicked! errorChecked: $errorChecked")
+
+            if (errorChecked) {
+                Log.d("DEBUG_CALC_BP", "Blocking calculation due to RED errors.")
+                shouldCheckErrors = false
                 return@setOnClickListener
             }
 
-            if (validateFields()) {
-                getBPTarget()
-                val filteredSysBPList = sysBPList.filter { it.isNotBlank() && it != "-2" }
-                val filteredDiaBPList = diaBPList.filter { it.isNotBlank() && it != "-2" }
-                val maxFilteredRows = maxOf(filteredSysBPList.size, filteredDiaBPList.size)
-                val maxHistoryRows = maxOf(sysBPListHistory.size, diaBPListHistory.size)
-                val finalRows = maxHistoryRows + maxFilteredRows
-                val visit: HashMap<String, *>
-                if (sevenDay) {
-                    calcSevenDayAvgBP()
-                } else {
-                    calcAvgBP()
-                }
-                clinicSysBP = binding.verifyClinicSys.text.toString().toInt()
-                clinicDiaBP = binding.verifyClinicDia.text.toString().toInt()
-
-                // TODO: Save record into database
-                if (validDayIndices.isNotEmpty()) {
-                    visit = hashMapOf(
-                        "date" to LocalDateTime.now()
-                            .format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")),
-                        "homeSysBPTarget" to homeSysBPTarget,
-                        "homeDiaBPTarget" to homeDiaBPTarget,
-                        "clinicSysBPTarget" to clinicSysBPTarget,
-                        "clinicDiaBPTarget" to clinicDiaBPTarget,
-                        "averageSysBP" to avgSysBP,
-                        "averageDiaBP" to avgDiaBP,
-                        "clinicSysBP" to clinicSysBP,
-                        "clinicDiaBP" to clinicDiaBP,
-                        "scanRecordCount" to finalRows,
-                        "validDayIndices" to validDayIndices.distinct().reversed(),
-                        "sevenDay" to sevenDay  // Add the sevenDay field here
-                    )
-                } else{
-                    visit = hashMapOf(
-                        "date" to LocalDateTime.now()
-                            .format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")),
-                        "homeSysBPTarget" to homeSysBPTarget,
-                        "homeDiaBPTarget" to homeDiaBPTarget,
-                        "clinicSysBPTarget" to clinicSysBPTarget,
-                        "clinicDiaBPTarget" to clinicDiaBPTarget,
-                        "averageSysBP" to avgSysBP,
-                        "averageDiaBP" to avgDiaBP,
-                        "clinicSysBP" to clinicSysBP,
-                        "clinicDiaBP" to clinicDiaBP,
-                        "scanRecordCount" to finalRows,
-                        "sevenDay" to sevenDay  // Add the sevenDay field here
-                    )
-                }
-
-                db.collection("patients").document(patientID).collection("visits").add(visit)
-                    .addOnSuccessListener {
-                        Toast.makeText(
-                            this,
-                            ResourcesHelper.getString(
-                                this,
-                                R.string.verify_scan_calculation_successful
-                            ),
-                            Toast.LENGTH_SHORT
-                        )
-                            .show()
-
-                        val bundle = Bundle()
-
-                        bundle.putInt("avgSysBP", avgSysBP)
-                        bundle.putInt("avgDiaBP", avgDiaBP)
-                        bundle.putInt("clinicSysBP", clinicSysBP)
-                        bundle.putInt("clinicDiaBP", clinicDiaBP)
-                        bundle.putInt("scanRecordCount", finalRows)
-                        bundle.putString("Source", "Scan")
-                        bundle.putBoolean("sevenDay", sevenDay)  // Pass sevenDay to the next activity
-
-                        val recommendationIntent = Intent(this, RecommendationActivity::class.java)
-
-                        recommendationIntent.putExtras(bundle)
-
-                        startActivity(recommendationIntent)
-                    }
-                    .addOnFailureListener { e ->
-                        errorDialogBuilder(
-                            this,
-                            ResourcesHelper.getString(this, R.string.verify_scan_saving_header),
-                            ResourcesHelper.getString(this, R.string.verify_scan_saving_body, e)
-                        )
-                    }
-            } else {
+            if (!validateClinicBPFields()) {
+                Log.d("DEBUG_CALC_BP", "Clinic BP fields are empty.")
                 errorDialogBuilder(
                     this,
                     ResourcesHelper.getString(this, R.string.verify_scan_error_header),
-                    ResourcesHelper.getString(this, R.string.verify_scan_error_body)
+                    ResourcesHelper.getString(this, R.string.verify_scan_error_body_clinic_bp)
                 )
+                shouldCheckErrors = false
+                return@setOnClickListener
             }
+
+            Log.d("DEBUG_CALC_BP", "Proceeding with BP Calculation.")
+
+            getBPTarget()
+            val filteredSysBPList = sysBPList.filter { it.isNotBlank() && it != "-2" }
+            val filteredDiaBPList = diaBPList.filter { it.isNotBlank() && it != "-2" }
+            val maxFilteredRows = maxOf(filteredSysBPList.size, filteredDiaBPList.size)
+            val maxHistoryRows = maxOf(sysBPListHistory.size, diaBPListHistory.size)
+            val finalRows = maxHistoryRows + maxFilteredRows
+            val visit: HashMap<String, *>
+
+            if (sevenDay) {
+                calcSevenDayAvgBP()
+            } else {
+                calcAvgBP()
+            }
+
+            clinicSysBP = binding.verifyClinicSys.text.toString().toInt()
+            clinicDiaBP = binding.verifyClinicDia.text.toString().toInt()
+
+            // Save record into database
+            visit = hashMapOf(
+                "date" to LocalDateTime.now()
+                    .format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")),
+                "homeSysBPTarget" to homeSysBPTarget,
+                "homeDiaBPTarget" to homeDiaBPTarget,
+                "clinicSysBPTarget" to clinicSysBPTarget,
+                "clinicDiaBPTarget" to clinicDiaBPTarget,
+                "averageSysBP" to avgSysBP,
+                "averageDiaBP" to avgDiaBP,
+                "clinicSysBP" to clinicSysBP,
+                "clinicDiaBP" to clinicDiaBP,
+                "scanRecordCount" to finalRows,
+                "validDayIndices" to validDayIndices.distinct().reversed(),
+                "sevenDay" to sevenDay
+            )
+
+            db.collection("patients").document(patientID).collection("visits").add(visit)
+                .addOnSuccessListener {
+                    Toast.makeText(
+                        this,
+                        ResourcesHelper.getString(this, R.string.verify_scan_calculation_successful),
+                        Toast.LENGTH_SHORT
+                    ).show()
+
+                    val bundle = Bundle().apply {
+                        putInt("avgSysBP", avgSysBP)
+                        putInt("avgDiaBP", avgDiaBP)
+                        putInt("clinicSysBP", clinicSysBP)
+                        putInt("clinicDiaBP", clinicDiaBP)
+                        putInt("scanRecordCount", finalRows)
+                        putString("Source", "Scan")
+                        putBoolean("sevenDay", sevenDay)
+                    }
+
+                    val recommendationIntent = Intent(this, RecommendationActivity::class.java)
+                    recommendationIntent.putExtras(bundle)
+                    startActivity(recommendationIntent)
+                }
+                .addOnFailureListener { e ->
+                    errorDialogBuilder(
+                        this,
+                        ResourcesHelper.getString(this, R.string.verify_scan_saving_header),
+                        ResourcesHelper.getString(this, R.string.verify_scan_saving_body, e)
+                    )
+                }
+//            }
+//                else {
+//                errorDialogBuilder(
+//                    this,
+//                    ResourcesHelper.getString(this, R.string.verify_scan_error_header),
+//                    ResourcesHelper.getString(this, R.string.verify_scan_error_body)
+//                )
+//            }
+            shouldCheckErrors = false
         }
 
         binding.homeTargetSys.addTextChangedListener(object : TextWatcher {
@@ -575,7 +582,7 @@ class VerifyScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 val input = s?.toString()?.toIntOrNull()
-                if (input != null && input in 50..220) {
+                if (input != null && input in 90..179) {
                     // Valid range for verifyClinicSys (91 to 209) <- Outdated values from last batch, copied verifyclinic as reference, change/remove if needed
                     setError(binding.homeTargetSysBox, null)
                 } else {
@@ -585,8 +592,8 @@ class VerifyScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
                         ResourcesHelper.getString(
                             this@VerifyScanActivity,
                             R.string.verify_scan_valid_value,
-                            50,
-                            220
+                            90,
+                            179
                         )
                     )
                 }
@@ -600,7 +607,7 @@ class VerifyScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 val input = s?.toString()?.toIntOrNull()
-                if (input != null && input in 20..160) {
+                if (input != null && input in 50..99) {
                     // Valid range for verifyClinicDia (61 to 119) <- Outdated values from last batch, copied verifyclinic as reference, change/remove if needed
                     setError(binding.homeTargetDiaBox, null)
                 } else {
@@ -610,8 +617,8 @@ class VerifyScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
                         ResourcesHelper.getString(
                             this@VerifyScanActivity,
                             R.string.verify_scan_valid_value,
-                            20,
-                            160
+                            50,
+                            99
                         )
                     )
                 }
@@ -625,7 +632,7 @@ class VerifyScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 val input = s?.toString()?.toIntOrNull()
-                if (input != null && input in 50..220) {
+                if (input != null && input in 90..179) {
                     // Valid range for verifyClinicSys (91 to 209) <- Outdated values from last batch, copied verifyclinic as reference, change/remove if needed
                     setError(binding.clinicTargetSysBox, null)
                 } else {
@@ -635,8 +642,8 @@ class VerifyScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
                         ResourcesHelper.getString(
                             this@VerifyScanActivity,
                             R.string.verify_scan_valid_value,
-                            50,
-                            220
+                            90,
+                            179
                         )
                     )
                 }
@@ -650,7 +657,7 @@ class VerifyScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 val input = s?.toString()?.toIntOrNull()
-                if (input != null && input in 20..160) {
+                if (input != null && input in 50..99) {
                     // Valid range for verifyClinicDia (61 to 119) <- Outdated values from last batch, copied verifyclinic as reference, change/remove if needed
                     setError(binding.clinicTargetDiaBox, null)
                 } else {
@@ -660,8 +667,8 @@ class VerifyScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
                         ResourcesHelper.getString(
                             this@VerifyScanActivity,
                             R.string.verify_scan_valid_value,
-                            20,
-                            160
+                            50,
+                            99
                         )
                     )
                 }
@@ -675,7 +682,7 @@ class VerifyScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 val input = s?.toString()?.toIntOrNull()
-                if (input != null && input in 50..220) {
+                if (input != null && input in 90..179) {
                     // Valid range for verifyClinicSys (91 to 209) <- Outdated values from last batch, change/remove if needed
                     setError(binding.verifyClinicSysBox, null)
                 } else {
@@ -685,8 +692,8 @@ class VerifyScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
                         ResourcesHelper.getString(
                             this@VerifyScanActivity,
                             R.string.verify_scan_valid_value,
-                            50,
-                            220
+                            90,
+                            179
                         )
                     )
                 }
@@ -700,7 +707,7 @@ class VerifyScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 val input = s?.toString()?.toIntOrNull()
-                if (input != null && input in 20..160) {
+                if (input != null && input in 50..99) {
                     // Valid range for verifyClinicDia (61 to 119) <- Outdated values from last batch, change/remove if needed
                     setError(binding.verifyClinicDiaBox, null)
                 } else {
@@ -710,8 +717,8 @@ class VerifyScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
                         ResourcesHelper.getString(
                             this@VerifyScanActivity,
                             R.string.verify_scan_valid_value,
-                            20,
-                            160
+                            50,
+                            99
                         )
                     )
                 }
@@ -721,6 +728,7 @@ class VerifyScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
 
 
         })
+        setupValidation()
 
         progressDialog.dismiss()
     }
@@ -747,9 +755,15 @@ class VerifyScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
         }
     }
 
+    // if clinic bp values empty
     private fun showExitConfirmationDialog() {
+        val title = SpannableString("Confirm Navigation?").apply {
+            setSpan(StyleSpan(Typeface.BOLD), 0, length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+            setSpan(ForegroundColorSpan(Color.RED), 0, length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+        }
+
         MaterialAlertDialogBuilder(this)
-            .setTitle(getString(R.string.app_name))
+            .setTitle(title)
             .setMessage(getString(R.string.pop_up_message))
             .setPositiveButton(getString(R.string.yes_dialog)) { _, _ ->
                 navigateToHome()
@@ -973,6 +987,8 @@ class VerifyScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
                 addRow(sysBPList[i], diaBPList[i])
             }
         }
+
+        setupValidation()
         postScanValidation()
         println("sysBPList after adding updating scans: $sysBPList")
         println("diaBPList after adding updating scans: $diaBPList")
@@ -1238,7 +1254,13 @@ class VerifyScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
 //                .show()
 //        }
 //    }
-    private fun setErrorIcon(field: EditText, colorResId: Int) {
+
+    private fun setErrorIcon(field: EditText?, colorResId: Int) {
+        if (field == null) {
+            Log.e("DEBUG_ERROR_CHECK", "Attempted to set error icon on null field.")
+            return
+        }
+
         val drawable = ContextCompat.getDrawable(this, R.drawable.ic_error)?.mutate()
         drawable?.setTint(ContextCompat.getColor(this, colorResId))
 
@@ -1250,7 +1272,39 @@ class VerifyScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
 
         // Invalidate view to force UI refresh
         field.invalidate()
+
+        val fieldHint = try {
+            field.hint ?: "no_hint"
+        } catch (e: Exception) {
+            "unknown_field"
+        }
+
+        Log.d("DEBUG_ERROR_CHECK", "Field: ${field.hint}, Color: ${resources.getResourceEntryName(colorResId)}")
+
+        if (colorResId == R.color.red) {
+            errorChecked = true
+            Log.d("DEBUG_ERROR_CHECK", "Set errorChecked to TRUE due to RED error.")
+        } else {
+            // Always reset `errorChecked` if no more red errors exist
+            val anyRedErrors = sysBPFields.any {
+                it.error != null && (
+                        it.error.toString().contains("empty field", true) ||
+                                it.error.toString().contains("impossible value", true) ||
+                                it.error.toString().contains("invalid input", true)
+                        )
+            } || diaBPFields.any {
+                it.error != null && (
+                        it.error.toString().contains("empty field", true) ||
+                                it.error.toString().contains("impossible value", true) ||
+                                it.error.toString().contains("invalid input", true)
+                        )
+            }
+
+            errorChecked = anyRedErrors
+            Log.d("DEBUG_ERROR_CHECK", "Rechecked all fields. Final errorChecked: $errorChecked")
+        }
     }
+
 
     private fun clearError(field: EditText) {
         field.error = null
@@ -1258,7 +1312,11 @@ class VerifyScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
     }
 
     private fun postScanValidation() {
+        errorChecked = false
+
         var errorCount = 0
+        var orangeErrorCount = 0
+
         if (sevenDay) {
             println("sysBPlist size is ${sysBPList.size}")
             println("sysBPFields size is ${sysBPFields.size}")
@@ -1287,6 +1345,7 @@ class VerifyScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
                     sysBPFields[i].error = null
                 } else if (value.toInt() in 50..300) {
                     // Out-of-range but acceptable, color-coded orange
+                    orangeErrorCount++
                     sysBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_out_of_range_header)
                     setErrorIcon(sysBPFields[i], R.color.orange)
                 } else {
@@ -1321,6 +1380,7 @@ class VerifyScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
                     diaBPFields[i].error = null
                 } else if (value.toInt() in 30..180) {
                     // Out-of-range but acceptable, color-coded orange
+                    orangeErrorCount++
                     diaBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_out_of_range_header)
                     setErrorIcon(diaBPFields[i], R.color.orange)
                 } else {
@@ -1331,7 +1391,7 @@ class VerifyScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
                 }
             }
 
-        } else { // need to chnage this
+        } else { // gerneral scan
             if (sysBPListHistory.isEmpty() && diaBPListHistory.isEmpty()) {
                 // Outdated values, could refer to guidelines if there is a need to change systolic and diastolic values
                 // With reference from MOH clinical practice guidelines 1/2017 @ https://www.moh.gov.sg/docs/librariesprovider4/guidelines/cpg_hypertension-booklet---nov-2017.pdf
@@ -1359,6 +1419,7 @@ class VerifyScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
                         sysBPFields[i].error = null
                     } else if (value.toInt() in 50..300) {
                         // Out-of-range but acceptable, color-coded orange
+                        orangeErrorCount++
                         sysBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_out_of_range_header)
                         setErrorIcon(sysBPFields[i], R.color.orange)
                     } else {
@@ -1393,6 +1454,7 @@ class VerifyScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
                         diaBPFields[i].error = null
                     } else if (value.toInt() in 30..180) {
                         // Out-of-range but acceptable, color-coded orange
+                        orangeErrorCount++
                         diaBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_out_of_range_header)
                         setErrorIcon(diaBPFields[i], R.color.orange)
                     } else {
@@ -1406,7 +1468,10 @@ class VerifyScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
             else {
                 // Validate current sysBPFields
                 for (i in 0 until sysBPList.size) {
-                    val field = sysBPFields[i + sysBPListHistory.size]
+                    val index = i + sysBPListHistory.size
+                    if (index >= sysBPFields.size) continue
+                    val field = sysBPFields[index]
+                    Log.d("DEBUG_VALIDATION", "Checking sysBPFields index: $index of size ${sysBPFields.size}")
                     val value = field.text.toString()
 
                     if (value.isEmpty() || value.length == 1 || value.length >= 4) {
@@ -1423,6 +1488,7 @@ class VerifyScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
                         field.error = null
                         setErrorIcon(field, android.R.color.transparent)
                     } else if (value.toInt() in 50..300) {
+                        orangeErrorCount++
                         field.error = ResourcesHelper.getString(this, R.string.verify_scan_out_of_range_header)
                         setErrorIcon(field, R.color.orange)
                     } else {
@@ -1434,7 +1500,9 @@ class VerifyScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
 
                 // Validate current diaBPFields
                 for (i in 0 until diaBPList.size) {
-                    val field = diaBPFields[i + diaBPListHistory.size]
+                    val index = i + diaBPListHistory.size
+                    if (index >= diaBPFields.size) continue
+                    val field = diaBPFields[index]
                     val value = field.text.toString()
 
                     if (value.isEmpty() || value.length == 1 || value.length >= 4) {
@@ -1451,6 +1519,7 @@ class VerifyScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
                         field.error = null
                         setErrorIcon(field, android.R.color.transparent)
                     } else if (value.toInt() in 30..180) {
+                        orangeErrorCount++
                         field.error = ResourcesHelper.getString(this, R.string.verify_scan_out_of_range_header)
                         setErrorIcon(field, R.color.orange)
                     } else {
@@ -1490,6 +1559,7 @@ class VerifyScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
                     } else if (!value.isDigitsOnly()) {
                         field.setText("")
                     } else if (value.toInt() in 30..180) {
+                        orangeErrorCount++
                         field.error = ResourcesHelper.getString(this, R.string.verify_scan_out_of_range_header)
                         setErrorIcon(field, R.color.orange)
                     } else {
@@ -1500,75 +1570,122 @@ class VerifyScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
             }
 
         }
-        if (errorCount == 6 && !errorchecked) {
-            errorchecked = true
-            MaterialAlertDialogBuilder(this)
-                .setIcon(R.drawable.ic_error)
-                .setTitle(ResourcesHelper.getString(this, R.string.verify_scan_erroneous_header))
-                .setMessage(ResourcesHelper.getString(this, R.string.verify_scan_erroneous_body))
-                .setNegativeButton(
-                    ResourcesHelper.getString(
-                        this,
-                        R.string.no_dialog
+
+        // Recheck for red errors after validation
+        errorChecked = errorCount > 0
+        Log.d("DEBUG_POST_VALIDATION", "Final errorChecked State: $errorChecked (Red Count: $errorCount, Orange Count: $orangeErrorCount)")
+
+        // If NO red errors remain, make sure to reset errorChecked
+        if (errorCount == 0) {
+            errorChecked = false
+            Log.d("DEBUG_POST_VALIDATION", "All errors cleared. Setting errorChecked = false.")
+        }
+
+        // Handling error prompts
+        if (shouldCheckErrors) {
+
+            if (errorCount >= 6) {
+                // Too many errors - suggest rescan
+                errorChecked = true
+                MaterialAlertDialogBuilder(this)
+                    .setIcon(R.drawable.ic_error)
+                    .setTitle(
+                        ResourcesHelper.getString(
+                            this,
+                            R.string.verify_scan_erroneous_header
+                        )
                     )
-                ) { dialog, _ -> dialog.dismiss() }
-                .setPositiveButton(ResourcesHelper.getString(this, R.string.yes_dialog)) { _, _ ->
-                    val scanIntent = Intent(this, ScanActivity::class.java)
+                    .setMessage(
+                        ResourcesHelper.getString(
+                            this,
+                            R.string.verify_scan_erroneous_body
+                        )
+                    )
+                    .setNegativeButton(
+                        ResourcesHelper.getString(
+                            this,
+                            R.string.no_dialog
+                        )
+                    ) { dialog, _ -> dialog.dismiss() }
+                    .setPositiveButton(
+                        ResourcesHelper.getString(
+                            this,
+                            R.string.yes_dialog
+                        )
+                    ) { _, _ ->
+                        val scanIntent = Intent(this, ScanActivity::class.java)
 
-                    binding.verifyHomeTargetSys?.let {
-                        scanIntent.putExtra(
-                            "homeSysBPTarget",
-                            binding.verifyHomeTargetSys.text.toString()
-                        )
-                    }
-                    binding.verifyHomeTargetDia?.let {
-                        scanIntent.putExtra(
-                            "homeDiaBPTarget",
-                            binding.verifyHomeTargetDia.text.toString()
-                        )
-                    }
-                    binding.verifyClinicTargetSys?.let {
-                        scanIntent.putExtra(
-                            "clinicSysBPTarget",
-                            binding.verifyClinicTargetSys.text.toString()
-                        )
-                    }
-                    binding.verifyClinicTargetDia?.let {
-                        scanIntent.putExtra(
-                            "clinicDiaBPTarget",
-                            binding.verifyClinicTargetDia.text.toString()
-                        )
-                    }
-                    binding.verifyClinicSys?.let {
-                        scanIntent.putExtra(
-                            "clinicSysBP",
-                            binding.verifyClinicSys.text.toString()
-                        )
-                    }
-                    binding.verifyClinicDia?.let {
-                        scanIntent.putExtra(
-                            "clinicDiaBP",
-                            binding.verifyClinicDia.text.toString()
-                        )
-                    }
+                        binding.verifyHomeTargetSys?.let {
+                            scanIntent.putExtra(
+                                "homeSysBPTarget",
+                                binding.verifyHomeTargetSys.text.toString()
+                            )
+                        }
+                        binding.verifyHomeTargetDia?.let {
+                            scanIntent.putExtra(
+                                "homeDiaBPTarget",
+                                binding.verifyHomeTargetDia.text.toString()
+                            )
+                        }
+                        binding.verifyClinicTargetSys?.let {
+                            scanIntent.putExtra(
+                                "clinicSysBPTarget",
+                                binding.verifyClinicTargetSys.text.toString()
+                            )
+                        }
+                        binding.verifyClinicTargetDia?.let {
+                            scanIntent.putExtra(
+                                "clinicDiaBPTarget",
+                                binding.verifyClinicTargetDia.text.toString()
+                            )
+                        }
+                        binding.verifyClinicSys?.let {
+                            scanIntent.putExtra(
+                                "clinicSysBP",
+                                binding.verifyClinicSys.text.toString()
+                            )
+                        }
+                        binding.verifyClinicDia?.let {
+                            scanIntent.putExtra(
+                                "clinicDiaBP",
+                                binding.verifyClinicDia.text.toString()
+                            )
+                        }
 
-                    if (!sysBPListHistory.isNullOrEmpty()) {
-                        scanIntent.putStringArrayListExtra(
-                            "sysBPListHistory",
-                            ArrayList(sysBPListHistory)
-                        )
-                    }
-                    if (!diaBPListHistory.isNullOrEmpty()) {
-                        scanIntent.putStringArrayListExtra(
-                            "diaBPListHistory",
-                            ArrayList(diaBPListHistory)
-                        )
-                    }
+                        if (!sysBPListHistory.isNullOrEmpty()) {
+                            scanIntent.putStringArrayListExtra(
+                                "sysBPListHistory",
+                                ArrayList(sysBPListHistory)
+                            )
+                        }
+                        if (!diaBPListHistory.isNullOrEmpty()) {
+                            scanIntent.putStringArrayListExtra(
+                                "diaBPListHistory",
+                                ArrayList(diaBPListHistory)
+                            )
+                        }
 
-                    startActivity(scanIntent)
-                    finish()
-                }
-                .show()
+                        startActivity(scanIntent)
+                        finish()
+                    }
+                    .show()
+            } else if (errorCount > 0) {
+                // Some red errors exist - block calculation
+                errorChecked = true
+                MaterialAlertDialogBuilder(this)
+                    .setIcon(R.drawable.ic_error)
+                    .setTitle(ResourcesHelper.getString(this, R.string.verify_scan_error_header))
+                    .setMessage(ResourcesHelper.getString(this, R.string.verify_scan_error_body))
+                    .setPositiveButton(
+                        ResourcesHelper.getString(
+                            this,
+                            R.string.ok_dialog
+                        )
+                    ) { dialog, _ ->
+                        dialog.dismiss()
+                    }
+                    .show()
+            }
         }
     }
 
@@ -1643,28 +1760,139 @@ class VerifyScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
         return valid
     }
 
+    private fun createTextWatcher(field: EditText, isSystolic: Boolean): TextWatcher {
+        return object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+
+            override fun afterTextChanged(s: Editable?) {
+                val value = s.toString()
+                if (isSystolic) {
+                    validateSysBPField(field, value)
+                } else {
+                    validateDiaBPField(field, value)
+                }
+            }
+        }
+    }
+
+
     private fun setupValidation() {
+
         sysBPFields.forEach { field ->
+            field.addTextChangedListener(object : TextWatcher {
+                override fun afterTextChanged(s: Editable?) {
+                    val rawValue = s?.toString()?.trim() ?: "" // Get the user input
+                    val validatedValue = validateBPValue(rawValue) // Run validateBPValue() first
+
+                    if (validatedValue.isNotEmpty()) {
+                        Log.d("DEBUG_SYS_BP", "Typed: $rawValue, Validated: $validatedValue")
+                        validateSysBPField(field, validatedValue)
+                    } else {
+                        field.error = ResourcesHelper.getString(this@VerifyScanActivity, R.string.verify_scan_empty_field)
+                        setErrorIcon(field, R.color.red)
+                    }
+
+                    // After validating each field:
+                    val hasRedErrors = sysBPFields.any {
+                        it.error != null && (
+                                it.error.toString().contains("empty field", true) ||
+                                        it.error.toString().contains("impossible value", true) ||
+                                        it.error.toString().contains("invalid input", true)
+                                )
+                    } || diaBPFields.any {
+                        it.error != null && (
+                                it.error.toString().contains("empty field", true) ||
+                                        it.error.toString().contains("impossible value", true) ||
+                                        it.error.toString().contains("invalid input", true)
+                                )
+                    }
+
+                    errorChecked = hasRedErrors
+                    Log.d("DEBUG_LIVE_VALIDATION", "Live update: errorChecked = $errorChecked")
+
+                }
+
+                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+                override fun onTextChanged(s: CharSequence?, nstart: Int, before: Int, count: Int) {}
+            })
             setupDynamicValidation(field, isSystolic = true)
         }
 
         diaBPFields.forEach { field ->
+            field.addTextChangedListener(object : TextWatcher {
+                override fun afterTextChanged(s: Editable?) {
+                    val rawValue = s?.toString()?.trim() ?: "" // Get the user input
+                    val validatedValue = validateBPValue(rawValue) // Run validateBPValue() first
+
+                    if (validatedValue.isNotEmpty()) {
+                        validateDiaBPField(field, validatedValue) // Now validate diastolic value
+                    } else {
+                        field.error = ResourcesHelper.getString(this@VerifyScanActivity, R.string.verify_scan_empty_field)
+                        setErrorIcon(field, R.color.red)
+                    }
+
+                    // After validating each field:
+                    val hasRedErrors = sysBPFields.any {
+                        it.error != null && (
+                                it.error.toString().contains("empty field", true) ||
+                                        it.error.toString().contains("impossible value", true) ||
+                                        it.error.toString().contains("invalid input", true)
+                                )
+                    } || diaBPFields.any {
+                        it.error != null && (
+                                it.error.toString().contains("empty field", true) ||
+                                        it.error.toString().contains("impossible value", true) ||
+                                        it.error.toString().contains("invalid input", true)
+                                )
+                    }
+
+                    errorChecked = hasRedErrors
+                    Log.d("DEBUG_LIVE_VALIDATION", "Live update: errorChecked = $errorChecked")
+
+                }
+
+                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+            })
             setupDynamicValidation(field, isSystolic = false)
         }
     }
 
+
     private fun setupDynamicValidation(field: EditText, isSystolic: Boolean) {
         field.setOnFocusChangeListener { _, hasFocus ->
             if (!hasFocus) {
-                if (isSystolic) validateSysBPField(field)
-                else validateDiaBPField(field)
+                val value = field.text.toString() // Extract the input value
+                if (isSystolic) validateSysBPField(field, value)
+                else validateDiaBPField(field, value)
             }
         }
 
         field.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
-                if (isSystolic) validateSysBPField(field)
-                else validateDiaBPField(field)
+                val value = field.text.toString().trim() // Trim spaces
+
+                if (value.isEmpty()) {
+                    field.error = ResourcesHelper.getString(this@VerifyScanActivity, R.string.verify_scan_empty_field)
+                    setErrorIcon(field, R.color.red)
+                    return
+                }
+
+                if (!value.all { it.isDigit() }) { // Ensure only digits
+                    field.setText("")
+                    return
+                }
+
+                val intValue = value.toIntOrNull() ?: return
+
+                if (isSystolic) {
+                    validateSysBPField(field, intValue.toString())
+                } else {
+                    validateDiaBPField(field, intValue.toString())
+                }
             }
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
@@ -1672,8 +1900,8 @@ class VerifyScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
         })
     }
 
-    private fun validateSysBPField(field: EditText): Boolean {
-        val value = field.text.toString()
+    private fun validateSysBPField(field: EditText, value: String): Boolean {
+        Log.d("DEBUG_VALIDATE_SYS", "Validating Systolic: $value")
 
         if (value.isEmpty() || value.length == 1 || value.length >= 4) {
             field.error = ResourcesHelper.getString(this, R.string.verify_scan_empty_field)
@@ -1681,76 +1909,124 @@ class VerifyScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
             return false
         }
 
-        if (!value.isDigitsOnly()) {
+        if (!value.all { it.isDigit() }) { // Alternative to isDigitsOnly()
             field.setText("")
             return false
         }
 
-        if (value.toInt() < 0) {
-            field.error = ResourcesHelper.getString(this, R.string.verify_scan_whole_number)
-            setErrorIcon(field, R.color.red)
-            return false
-        }
+        val intValue = value.toIntOrNull() ?: return false
 
-        if (value.toInt() in 90..179) {
-            field.error = null
-            setErrorIcon(field, android.R.color.transparent)
-            return true
+        return when {
+            intValue < 0 -> {
+                field.error = ResourcesHelper.getString(this, R.string.verify_scan_whole_number)
+                setErrorIcon(field, R.color.red)
+                false
+            }
+            intValue in 90..179 -> {
+                field.error = null
+                setErrorIcon(field, android.R.color.transparent)
+                true
+            }
+            intValue in 50..300 -> {
+                field.error = ResourcesHelper.getString(this, R.string.verify_scan_out_of_range_header)
+                setErrorIcon(field, R.color.orange)
+                true
+            }
+            else -> {
+                field.error = ResourcesHelper.getString(this, R.string.verify_scan_impossible_value)
+                setErrorIcon(field, R.color.red)
+                false
+            }
         }
-
-        if (value.toInt() in 50..300) {
-            field.error = ResourcesHelper.getString(this, R.string.verify_scan_out_of_range_header)
-            setErrorIcon(field, R.color.orange)
-            return true
-        }
-
-        field.error = ResourcesHelper.getString(this, R.string.verify_scan_impossible_value)
-        setErrorIcon(field, R.color.red)
-        return false
     }
 
-    private fun validateDiaBPField(field: EditText): Boolean {
-        val value = field.text.toString()
-
+    private fun validateDiaBPField(field: EditText, value: String): Boolean {
         if (value.isEmpty() || value.length == 1 || value.length >= 4) {
             field.error = ResourcesHelper.getString(this, R.string.verify_scan_empty_field)
             setErrorIcon(field, R.color.red)
             return false
         }
 
-        if (!value.isDigitsOnly()) {
+        if (!value.all { it.isDigit() }) {
             field.setText("")
             return false
         }
 
-        if (value.toInt() < 0) {
-            field.error = ResourcesHelper.getString(this, R.string.verify_scan_whole_number)
-            setErrorIcon(field, R.color.red)
-            return false
-        }
+        val intValue = value.toIntOrNull() ?: return false
 
-        if (value.toInt() in 50..99) {
-            field.error = null
-            setErrorIcon(field, android.R.color.transparent)
-            return true
+        return when {
+            intValue < 0 -> {
+                field.error = ResourcesHelper.getString(this, R.string.verify_scan_whole_number)
+                setErrorIcon(field, R.color.red)
+                false
+            }
+            intValue in 50..99 -> {
+                field.error = null
+                setErrorIcon(field, android.R.color.transparent)
+                true
+            }
+            intValue in 30..180 -> {
+                field.error = ResourcesHelper.getString(this, R.string.verify_scan_out_of_range_header)
+                setErrorIcon(field, R.color.orange)
+                true
+            }
+            else -> {
+                field.error = ResourcesHelper.getString(this, R.string.verify_scan_impossible_value)
+                setErrorIcon(field, R.color.red)
+                false
+            }
         }
-
-        if (value.toInt() in 30..180) {
-            field.error = ResourcesHelper.getString(this, R.string.verify_scan_out_of_range_header)
-            setErrorIcon(field, R.color.orange)
-            return true
-        }
-
-        field.error = ResourcesHelper.getString(this, R.string.verify_scan_impossible_value)
-        setErrorIcon(field, R.color.red)
-        return false
     }
 
     private fun validateClinicBPFields(): Boolean {
         var valid = true
 
-        if (binding.verifyClinicSys.text.isNullOrEmpty() || binding.verifyClinicDia.text.isNullOrEmpty()) {
+        // Validate Systolic BP
+        val sysText = binding.verifyClinicSys.text?.toString()?.trim()
+        if (sysText.isNullOrEmpty()) {
             valid = false
+            binding.verifyClinicSys.error = ResourcesHelper.getString(this, R.string.verify_scan_empty_field)
+            setErrorIcon(binding.verifyClinicSys, R.color.red)
+        } else if (!sysText.isDigitsOnly()) {
+            valid = false
+            binding.verifyClinicSys.error = ResourcesHelper.getString(this, R.string.verify_scan_whole_number)
+            setErrorIcon(binding.verifyClinicSys, R.color.red)
+        } else {
+            val sysValue = sysText.toInt()
+            if (sysValue !in 90..179) {
+                valid = false
+                binding.verifyClinicSys.error = ResourcesHelper.getString(this, R.string.verify_scan_abnormal_value)
+                setErrorIcon(binding.verifyClinicSys, R.color.orange)
+            } else {
+                binding.verifyClinicSys.error = null
+                setErrorIcon(binding.verifyClinicSys, android.R.color.transparent)
+            }
+        }
+
+        // Validate Diastolic BP
+        val diaText = binding.verifyClinicDia.text?.toString()?.trim()
+        if (diaText.isNullOrEmpty()) {
+            valid = false
+            binding.verifyClinicDia.error = ResourcesHelper.getString(this, R.string.verify_scan_empty_field)
+            setErrorIcon(binding.verifyClinicDia, R.color.red)
+        } else if (!diaText.isDigitsOnly()) {
+            valid = false
+            binding.verifyClinicDia.error = ResourcesHelper.getString(this, R.string.verify_scan_whole_number)
+            setErrorIcon(binding.verifyClinicDia, R.color.red)
+        } else {
+            val diaValue = diaText.toInt()
+            if (diaValue !in 50..99) {
+                valid = false
+                binding.verifyClinicDia.error = ResourcesHelper.getString(this, R.string.verify_scan_abnormal_value)
+                setErrorIcon(binding.verifyClinicDia, R.color.orange)
+            } else {
+                binding.verifyClinicDia.error = null
+                setErrorIcon(binding.verifyClinicDia, android.R.color.transparent)
+            }
+        }
+
+        // Show error dialog if invalid
+        if (!valid) {
             errorDialogBuilder(
                 this,
                 ResourcesHelper.getString(this, R.string.verify_scan_error_header),
@@ -1762,6 +2038,8 @@ class VerifyScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
         return valid
     }
 
+
+
     // auto scroll to clinic bp section
     private fun scrollToClinicBP() {
         binding.mainScrollView.post {
@@ -1769,126 +2047,126 @@ class VerifyScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
         }
     }
 
-
-    private fun validateFields(): Boolean {
-        var valid = true
-
-        // Validate sysBPFields for verifyClinicSys
-        if (binding.verifyClinicSys.text.isNullOrEmpty()) {
-            valid = false
-            binding.verifyClinicSys.error = ResourcesHelper.getString(this, R.string.verify_scan_empty_field)
-        } else if (!binding.verifyClinicSys.text!!.isDigitsOnly()) {
-            valid = false
-            binding.verifyClinicSys.error = ResourcesHelper.getString(this, R.string.verify_scan_whole_number)
-        } else if (binding.verifyClinicSys.text.toString().toInt() !in 50..220) {
-            valid = false
-            binding.verifyClinicSys.error = ResourcesHelper.getString(this, R.string.verify_scan_abnormal_value)
-        }
-
-        // Validate diaBPFields for verifyClinicDia
-        if (binding.verifyClinicDia.text.isNullOrEmpty()) {
-            valid = false
-            binding.verifyClinicDia.error = ResourcesHelper.getString(this, R.string.verify_scan_empty_field)
-        } else if (!binding.verifyClinicDia.text!!.isDigitsOnly()) {
-            valid = false
-            binding.verifyClinicDia.error = ResourcesHelper.getString(this, R.string.verify_scan_whole_number)
-        } else if (binding.verifyClinicDia.text.toString().toInt() !in 20..160) {
-            valid = false
-            binding.verifyClinicDia.error = ResourcesHelper.getString(this, R.string.verify_scan_abnormal_value)
-        }
-
-        if (!sevenDay) {
-            // Validate Systolic Fields
-            sysBPFields.forEach { field ->
-                if (field.error != null) valid = false
-            }
-
-            // Validate Diastolic Fields
-            diaBPFields.forEach { field ->
-                if (field.error != null) valid = false
-            }
-        }
-//            for (sysField in sysBPFields) {
-//                if (sysField.text.isNullOrEmpty()) {
-//                    valid = false
-//                    sysField.error = ResourcesHelper.getString(this, R.string.verify_scan_empty_field)
-//                } else if (!sysField.text!!.isDigitsOnly()) {
-//                    valid = false
-//                    sysField.error = ResourcesHelper.getString(this, R.string.verify_scan_whole_number)
-//                } else if (sysField.text!!.toString().toInt() == -1) {
-//                    valid = false
-//                    sysField.error = ResourcesHelper.getString(this, R.string.verify_scan_abnormal_value)
-//                } else if (sysField.text!!.length !in 2..3) {
-//                    valid = false
-//                    sysField.error = ResourcesHelper.getString(this, R.string.verify_scan_invalid_value)
-//                } else if (sysField.text.toString().toInt() !in 50..220) {
-//                    valid = false
-//                    sysField.error = ResourcesHelper.getString(this, R.string.verify_scan_abnormal_value)
-//                }
+//
+//    private fun validateFields(): Boolean {
+//        if (!shouldCheckErrors) return true
+//        var valid = true
+//
+//        // Validate sysBPFields for verifyClinicSys
+//        if (binding.verifyClinicSys.text.isNullOrEmpty()) {
+//            valid = false
+//            binding.verifyClinicSys.error = ResourcesHelper.getString(this, R.string.verify_scan_empty_field)
+//        } else if (!binding.verifyClinicSys.text!!.isDigitsOnly()) {
+//            valid = false
+//            binding.verifyClinicSys.error = ResourcesHelper.getString(this, R.string.verify_scan_whole_number)
+//        } else if (binding.verifyClinicSys.text.toString().toInt() !in 90..179) {
+//            valid = false
+//            binding.verifyClinicSys.error = ResourcesHelper.getString(this, R.string.verify_scan_abnormal_value)
+//        }
+//
+//        // Validate diaBPFields for verifyClinicDia
+//        if (binding.verifyClinicDia.text.isNullOrEmpty()) {
+//            valid = false
+//            binding.verifyClinicDia.error = ResourcesHelper.getString(this, R.string.verify_scan_empty_field)
+//        } else if (!binding.verifyClinicDia.text!!.isDigitsOnly()) {
+//            valid = false
+//            binding.verifyClinicDia.error = ResourcesHelper.getString(this, R.string.verify_scan_whole_number)
+//        } else if (binding.verifyClinicDia.text.toString().toInt() !in 50..99) {
+//            valid = false
+//            binding.verifyClinicDia.error = ResourcesHelper.getString(this, R.string.verify_scan_abnormal_value)
+//        }
+//
+//        if (!sevenDay) {
+//            // Validate Systolic Fields
+//            sysBPFields.forEach { field ->
+//                if (field.error != null) valid = false
 //            }
 //
-//            for (diaField in diaBPFields) {
-//                if (diaField.text.isNullOrEmpty()) {
-//                    valid = false
-//                    diaField.error = ResourcesHelper.getString(this, R.string.verify_scan_empty_field)
-//                } else if (!diaField.text!!.isDigitsOnly()) {
-//                    valid = false
-//                    diaField.error = ResourcesHelper.getString(this, R.string.verify_scan_whole_number)
-//                } else if (diaField.text!!.toString().toInt() == -1) {
-//                    valid = false
-//                    diaField.error = ResourcesHelper.getString(this, R.string.verify_scan_abnormal_value)
-//                } else if (diaField.text!!.length !in 2..3) {
-//                    valid = false
-//                    diaField.error = ResourcesHelper.getString(this, R.string.verify_scan_invalid_value)
-//                } else if (diaField.text.toString().toInt() !in 20..160) {
-//                    valid = false
-//                    diaField.error = ResourcesHelper.getString(this, R.string.verify_scan_abnormal_value)
-//                }
-//            }
-//        } else {
-//            // Validate sysBPFields for sevenDay = true
-//            for (sysField in sysBPFields) {
-//                val sysText = sysField.text!!.toString()
-//                if (sysText.isEmpty()) {
-//                    continue
-//                } else if (!sysText.isDigitsOnly()) {
-//                    valid = false
-//                    sysField.error = ResourcesHelper.getString(this, R.string.verify_scan_whole_number)
-//                } else if (sysText.toInt() == -1) {
-//                    valid = false
-//                    sysField.error = ResourcesHelper.getString(this, R.string.verify_scan_abnormal_value)
-//                } else if (sysText.length !in 2..3) {
-//                    valid = false
-//                    sysField.error = ResourcesHelper.getString(this, R.string.verify_scan_invalid_value)
-//                } else if (sysText.toInt() !in 50..220) {
-//                    valid = false
-//                    sysField.error = ResourcesHelper.getString(this, R.string.verify_scan_abnormal_value)
-//                }
-//            }
-//
-//            for (diaField in diaBPFields) {
-//                val diaText = diaField.text!!.toString()
-//                if (diaText.isEmpty()) {
-//                    continue
-//                } else if (!diaText.isDigitsOnly()) {
-//                    valid = false
-//                    diaField.error = ResourcesHelper.getString(this, R.string.verify_scan_whole_number)
-//                } else if (diaText.toInt() == -1) {
-//                    valid = false
-//                    diaField.error = ResourcesHelper.getString(this, R.string.verify_scan_abnormal_value)
-//                } else if (diaText.length !in 2..3) {
-//                    valid = false
-//                    diaField.error = ResourcesHelper.getString(this, R.string.verify_scan_invalid_value)
-//                } else if (diaText.toInt() !in 20..160) {
-//                    valid = false
-//                    diaField.error = ResourcesHelper.getString(this, R.string.verify_scan_abnormal_value)
-//                }
+//            // Validate Diastolic Fields
+//            diaBPFields.forEach { field ->
+//                if (field.error != null) valid = false
 //            }
 //        }
-
-        return valid
-    }
-
+////            for (sysField in sysBPFields) {
+////                if (sysField.text.isNullOrEmpty()) {
+////                    valid = false
+////                    sysField.error = ResourcesHelper.getString(this, R.string.verify_scan_empty_field)
+////                } else if (!sysField.text!!.isDigitsOnly()) {
+////                    valid = false
+////                    sysField.error = ResourcesHelper.getString(this, R.string.verify_scan_whole_number)
+////                } else if (sysField.text!!.toString().toInt() == -1) {
+////                    valid = false
+////                    sysField.error = ResourcesHelper.getString(this, R.string.verify_scan_abnormal_value)
+////                } else if (sysField.text!!.length !in 2..3) {
+////                    valid = false
+////                    sysField.error = ResourcesHelper.getString(this, R.string.verify_scan_invalid_value)
+////                } else if (sysField.text.toString().toInt() !in 50..220) {
+////                    valid = false
+////                    sysField.error = ResourcesHelper.getString(this, R.string.verify_scan_abnormal_value)
+////                }
+////            }
+////
+////            for (diaField in diaBPFields) {
+////                if (diaField.text.isNullOrEmpty()) {
+////                    valid = false
+////                    diaField.error = ResourcesHelper.getString(this, R.string.verify_scan_empty_field)
+////                } else if (!diaField.text!!.isDigitsOnly()) {
+////                    valid = false
+////                    diaField.error = ResourcesHelper.getString(this, R.string.verify_scan_whole_number)
+////                } else if (diaField.text!!.toString().toInt() == -1) {
+////                    valid = false
+////                    diaField.error = ResourcesHelper.getString(this, R.string.verify_scan_abnormal_value)
+////                } else if (diaField.text!!.length !in 2..3) {
+////                    valid = false
+////                    diaField.error = ResourcesHelper.getString(this, R.string.verify_scan_invalid_value)
+////                } else if (diaField.text.toString().toInt() !in 20..160) {
+////                    valid = false
+////                    diaField.error = ResourcesHelper.getString(this, R.string.verify_scan_abnormal_value)
+////                }
+////            }
+////        } else {
+////            // Validate sysBPFields for sevenDay = true
+////            for (sysField in sysBPFields) {
+////                val sysText = sysField.text!!.toString()
+////                if (sysText.isEmpty()) {
+////                    continue
+////                } else if (!sysText.isDigitsOnly()) {
+////                    valid = false
+////                    sysField.error = ResourcesHelper.getString(this, R.string.verify_scan_whole_number)
+////                } else if (sysText.toInt() == -1) {
+////                    valid = false
+////                    sysField.error = ResourcesHelper.getString(this, R.string.verify_scan_abnormal_value)
+////                } else if (sysText.length !in 2..3) {
+////                    valid = false
+////                    sysField.error = ResourcesHelper.getString(this, R.string.verify_scan_invalid_value)
+////                } else if (sysText.toInt() !in 50..220) {
+////                    valid = false
+////                    sysField.error = ResourcesHelper.getString(this, R.string.verify_scan_abnormal_value)
+////                }
+////            }
+////
+////            for (diaField in diaBPFields) {
+////                val diaText = diaField.text!!.toString()
+////                if (diaText.isEmpty()) {
+////                    continue
+////                } else if (!diaText.isDigitsOnly()) {
+////                    valid = false
+////                    diaField.error = ResourcesHelper.getString(this, R.string.verify_scan_whole_number)
+////                } else if (diaText.toInt() == -1) {
+////                    valid = false
+////                    diaField.error = ResourcesHelper.getString(this, R.string.verify_scan_abnormal_value)
+////                } else if (diaText.length !in 2..3) {
+////                    valid = false
+////                    diaField.error = ResourcesHelper.getString(this, R.string.verify_scan_invalid_value)
+////                } else if (diaText.toInt() !in 20..160) {
+////                    valid = false
+////                    diaField.error = ResourcesHelper.getString(this, R.string.verify_scan_abnormal_value)
+////                }
+////            }
+////        }
+//
+//        return valid
+//    }
 
     private fun getBPTarget() {
         homeSysBPTarget = if (binding.verifyHomeTargetSys.text.toString().isEmpty()) {
