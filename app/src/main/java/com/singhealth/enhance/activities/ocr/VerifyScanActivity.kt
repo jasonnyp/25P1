@@ -1324,10 +1324,14 @@ class VerifyScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
             for (i in 0 until sysBPFields.size) {
                 val value = sysBPFields[i].text.toString()
 
-                if (value.isEmpty() || value.length == 1 || value.length >= 4) {
+                if (value.isEmpty() || value.length >= 4) {
                     // Mark as empty with an error, color-coded red
                     errorCount += 1
                     sysBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_empty_field)
+                    setErrorIcon(sysBPFields[i], R.color.red)
+                } else if (value.length == 1) {
+                    errorCount += 1
+                    sysBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_impossible_value)
                     setErrorIcon(sysBPFields[i], R.color.red)
                 } else if (!value.isDigitsOnly()) {
                     // Invalid characters like abc, !@#, set as blank
@@ -1359,10 +1363,14 @@ class VerifyScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
             for (i in 0 until diaBPFields.size) {
                 val value = diaBPFields[i].text.toString()
 
-                if (value.isEmpty() || value.length == 1 || value.length >= 4) {
+                if (value.isEmpty() || value.length >= 4) {
                     // Mark as empty with an error, color-coded red
                     errorCount += 1
                     diaBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_empty_field)
+                    setErrorIcon(diaBPFields[i], R.color.red)
+                } else if (value.length == 1) {
+                    errorCount += 1
+                    diaBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_impossible_value)
                     setErrorIcon(diaBPFields[i], R.color.red)
                 } else if (!value.isDigitsOnly()) {
                     // Invalid characters like abc, !@#, set as blank
@@ -1391,17 +1399,21 @@ class VerifyScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
                 }
             }
 
-        } else { // gerneral scan
+        } else { // general scan
             if (sysBPListHistory.isEmpty() && diaBPListHistory.isEmpty()) {
                 // Outdated values, could refer to guidelines if there is a need to change systolic and diastolic values
                 // With reference from MOH clinical practice guidelines 1/2017 @ https://www.moh.gov.sg/docs/librariesprovider4/guidelines/cpg_hypertension-booklet---nov-2017.pdf
                 for (i in 0 until sysBPList.size) {
                     val value = sysBPFields[i].text.toString()
 
-                    if (value.isEmpty() || value.length == 1 || value.length >= 4) {
+                    if (value.isEmpty() || value.length >= 4) {
                         // Mark as empty with an error, color-coded red
                         errorCount += 1
                         sysBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_empty_field)
+                        setErrorIcon(sysBPFields[i], R.color.red)
+                    } else if (value.length == 1) {
+                        errorCount += 1
+                        sysBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_impossible_value)
                         setErrorIcon(sysBPFields[i], R.color.red)
                     } else if (!value.isDigitsOnly()) {
                         // Invalid characters like abc, !@#, set as blank
@@ -1433,10 +1445,14 @@ class VerifyScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
                 for (i in 0 until diaBPList.size) {
                     val value = diaBPFields[i].text.toString()
 
-                    if (value.isEmpty() || value.length == 1 || value.length >= 4) {
+                    if (value.isEmpty() || value.length >= 4) {
                         // Mark as empty with an error, color-coded red
                         errorCount += 1
                         diaBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_empty_field)
+                        setErrorIcon(diaBPFields[i], R.color.red)
+                    } else if (value.length == 1) {
+                        errorCount += 1
+                        diaBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_impossible_value)
                         setErrorIcon(diaBPFields[i], R.color.red)
                     } else if (!value.isDigitsOnly()) {
                         // Invalid characters like abc, !@#, set as blank
@@ -1474,9 +1490,14 @@ class VerifyScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
                     Log.d("DEBUG_VALIDATION", "Checking sysBPFields index: $index of size ${sysBPFields.size}")
                     val value = field.text.toString()
 
-                    if (value.isEmpty() || value.length == 1 || value.length >= 4) {
+                    if (value.isEmpty() || value.length >= 4) {
+                        // Mark as empty with an error, color-coded red
                         errorCount += 1
                         field.error = ResourcesHelper.getString(this, R.string.verify_scan_empty_field)
+                        setErrorIcon(field, R.color.red)
+                    } else if (value.length == 1) {
+                        errorCount += 1
+                        field.error = ResourcesHelper.getString(this, R.string.verify_scan_impossible_value)
                         setErrorIcon(field, R.color.red)
                     } else if (!value.isDigitsOnly()) {
                         field.setText("")
@@ -1505,9 +1526,14 @@ class VerifyScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
                     val field = diaBPFields[index]
                     val value = field.text.toString()
 
-                    if (value.isEmpty() || value.length == 1 || value.length >= 4) {
+                    if (value.isEmpty() || value.length >= 4) {
+                        // Mark as empty with an error, color-coded red
                         errorCount += 1
                         field.error = ResourcesHelper.getString(this, R.string.verify_scan_empty_field)
+                        setErrorIcon(field, R.color.red)
+                    } else if (value.length == 1) {
+                        errorCount += 1
+                        field.error = ResourcesHelper.getString(this, R.string.verify_scan_impossible_value)
                         setErrorIcon(field, R.color.red)
                     } else if (!value.isDigitsOnly()) {
                         field.setText("")
@@ -1533,8 +1559,14 @@ class VerifyScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
                 sysBPFields.take(sysBPListHistory.size).forEach { field ->
                     val value = field.text.toString()
 
-                    if (value.isEmpty() || value.length == 1 || value.length >= 4) {
+                    if (value.isEmpty() || value.length >= 4) {
+                        // Mark as empty with an error, color-coded red
+                        errorCount += 1
                         field.error = ResourcesHelper.getString(this, R.string.verify_scan_empty_field)
+                        setErrorIcon(field, R.color.red)
+                    } else if (value.length == 1) {
+                        errorCount += 1
+                        field.error = ResourcesHelper.getString(this, R.string.verify_scan_impossible_value)
                         setErrorIcon(field, R.color.red)
                     } else if (!value.isDigitsOnly()) {
                         field.setText("")
@@ -1553,8 +1585,14 @@ class VerifyScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
                 diaBPFields.take(diaBPListHistory.size).forEach { field ->
                     val value = field.text.toString()
 
-                    if (value.isEmpty() || value.length == 1 || value.length >= 4) {
+                    if (value.isEmpty() || value.length >= 4) {
+                        // Mark as empty with an error, color-coded red
+                        errorCount += 1
                         field.error = ResourcesHelper.getString(this, R.string.verify_scan_empty_field)
+                        setErrorIcon(field, R.color.red)
+                    } else if (value.length == 1) {
+                        errorCount += 1
+                        field.error = ResourcesHelper.getString(this, R.string.verify_scan_impossible_value)
                         setErrorIcon(field, R.color.red)
                     } else if (!value.isDigitsOnly()) {
                         field.setText("")
@@ -1669,25 +1707,60 @@ class VerifyScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
                         finish()
                     }
                     .show()
-            } else if (errorCount > 0) {
-                // Some red errors exist - block calculation
+            }
+            // If clinic BP fields are empty (after scan), show alert first
+            if (binding.verifyClinicSys.text.isNullOrBlank() || binding.verifyClinicDia.text.isNullOrBlank()) {
+                errorChecked = true
+                MaterialAlertDialogBuilder(this)
+                    .setIcon(R.drawable.ic_error)
+                    .setTitle(ResourcesHelper.getString(this, R.string.verify_scan_error_header))
+                    .setMessage(ResourcesHelper.getString(this, R.string.verify_scan_error_body_clinic_bp))
+                    .setPositiveButton(ResourcesHelper.getString(this, R.string.ok_dialog)) { dialog, _ ->
+                        dialog.dismiss()
+                    }
+                    .show()
+                return
+            }
+
+            // THEN check for other red errors
+            else if (errorCount > 0) {
                 errorChecked = true
                 MaterialAlertDialogBuilder(this)
                     .setIcon(R.drawable.ic_error)
                     .setTitle(ResourcesHelper.getString(this, R.string.verify_scan_error_header))
                     .setMessage(ResourcesHelper.getString(this, R.string.verify_scan_error_body))
-                    .setPositiveButton(
-                        ResourcesHelper.getString(
-                            this,
-                            R.string.ok_dialog
-                        )
-                    ) { dialog, _ ->
+                    .setPositiveButton(ResourcesHelper.getString(this, R.string.ok_dialog)) { dialog, _ ->
                         dialog.dismiss()
+                        scrollToFirstError()
                     }
                     .show()
             }
         }
     }
+
+    private fun scrollToFirstError() {
+        val firstErrorField = (sysBPFields + diaBPFields).firstOrNull { field ->
+            field.error != null &&
+                    (
+                            field.error.toString().contains("empty field", true) ||
+                                    field.error.toString().contains("impossible value", true) ||
+                                    field.error.toString().contains("invalid input", true)
+                            )
+        }
+
+        firstErrorField?.let { field ->
+            // Focus to the field
+            field.requestFocus()
+
+            // Scroll to it smoothly
+            binding.mainScrollView.post {
+                binding.mainScrollView.smoothScrollTo(0, field.top)
+            }
+
+            Log.d("SCROLL_TO_ERROR", "Scrolled to: ${field.hint}")
+        }
+    }
+
 
     private fun setError(inputLayout: TextInputLayout, message: String?) {
         if (message != null) {
@@ -1903,8 +1976,12 @@ class VerifyScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
     private fun validateSysBPField(field: EditText, value: String): Boolean {
         Log.d("DEBUG_VALIDATE_SYS", "Validating Systolic: $value")
 
-        if (value.isEmpty() || value.length == 1 || value.length >= 4) {
+        if (value.isEmpty() || value.length >= 4) {
             field.error = ResourcesHelper.getString(this, R.string.verify_scan_empty_field)
+            setErrorIcon(field, R.color.red)
+            return false
+        } else if (value.length == 1) {
+            field.error = ResourcesHelper.getString(this, R.string.verify_scan_impossible_value)
             setErrorIcon(field, R.color.red)
             return false
         }
@@ -1941,8 +2018,12 @@ class VerifyScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
     }
 
     private fun validateDiaBPField(field: EditText, value: String): Boolean {
-        if (value.isEmpty() || value.length == 1 || value.length >= 4) {
+        if (value.isEmpty() || value.length >= 4) {
             field.error = ResourcesHelper.getString(this, R.string.verify_scan_empty_field)
+            setErrorIcon(field, R.color.red)
+            return false
+        } else if (value.length == 1) {
+            field.error = ResourcesHelper.getString(this, R.string.verify_scan_impossible_value)
             setErrorIcon(field, R.color.red)
             return false
         }

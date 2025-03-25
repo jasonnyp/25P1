@@ -3,9 +3,15 @@ package com.singhealth.enhance.activities.patient
 import android.annotation.SuppressLint
 import android.app.ProgressDialog
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.Typeface
 import android.os.Bundle
 import android.text.Editable
+import android.text.Spannable
+import android.text.SpannableString
 import android.text.TextWatcher
+import android.text.style.ForegroundColorSpan
+import android.text.style.StyleSpan
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
@@ -287,8 +293,13 @@ class EditProfileActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener 
 //    }
 
     private fun showExitConfirmationDialog() {
+        val title = SpannableString(getString(R.string.confirm_navigation)).apply {
+            setSpan(StyleSpan(Typeface.BOLD), 0, length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+            setSpan(ForegroundColorSpan(Color.RED), 0, length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+        }
+
         MaterialAlertDialogBuilder(this)
-            .setTitle(getString(R.string.app_name))
+            .setTitle(title)
             .setMessage(getString(R.string.pop_up_message))
             .setNegativeButton(getString(R.string.no_dialog)) { dialog, _ ->
                 dialog.dismiss()

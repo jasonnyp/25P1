@@ -18,6 +18,7 @@ import android.print.pdf.PrintedPdfDocument
 import android.text.Layout
 import android.text.StaticLayout
 import android.text.TextPaint
+import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
@@ -186,8 +187,15 @@ class SimpleDashboardActivity : AppCompatActivity() {
                     val dateTimeString = document.get("date") as? String
                     val dateTime = LocalDateTime.parse(dateTimeString, inputDateFormatter)
                     val dateTimeFormatted = dateTime.format(outputDateFormatter)
+
+                    // making changes here since dashboard crashed
                     val avgSysBP = document.get("averageSysBP") as? Long
                     val avgDiaBP = document.get("averageDiaBP") as? Long
+                    if (avgSysBP == null || avgDiaBP == null) {
+                        Log.e("DASHBOARD", "Missing averageSysBP or averageDiaBP in document: ${document.id}")
+                        continue
+                    }
+
                     val homeSysBPTarget = document.get("homeSysBPTarget") as? Long
                     val homeDiaBPTarget = document.get("homeDiaBPTarget") as? Long
                     val clinicSysBPTarget = document.get("clinicSysBPTarget") as? Long
@@ -227,7 +235,14 @@ class SimpleDashboardActivity : AppCompatActivity() {
                     println("Sorted History $sortedHistory")
                     println("Sorted History 1st" + sortedHistory[0])
                     println("Sorted History 1st SYS DATA" + sortedHistory[0].avgSysBP)
-                    avgBP = "${sortedHistory[0].avgSysBP}/${sortedHistory[0].avgDiaBP}"
+
+                    // making changes due to dashboard crash
+//                    avgBP = "${sortedHistory[0].avgSysBP}/${sortedHistory[0].avgDiaBP}"
+                    val sys = sortedHistory[0].avgSysBP ?: 0L
+                    val dia = sortedHistory[0].avgDiaBP ?: 0L
+                    avgBP = "$sys/$dia"
+
+
                     dateTime = "${sortedHistory[0].date}"
 
                     bpHypertensionStatus = hypertensionStatus(
@@ -261,7 +276,9 @@ class SimpleDashboardActivity : AppCompatActivity() {
         val systolicEntries = ArrayList<Entry>()
         val systolicTargetEntries = ArrayList<Entry>()
 
-        val inputDateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault())
+        // seconds included here: causing crash
+//        val inputDateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault())
+        val inputDateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm", Locale.getDefault())
         val outputDateFormat = SimpleDateFormat("dd/MM/yy", Locale.getDefault())
         val limitedHistory = sortedHistory
             .sortedBy { historyData -> inputDateFormat.parse(historyData.date.toString()) }
