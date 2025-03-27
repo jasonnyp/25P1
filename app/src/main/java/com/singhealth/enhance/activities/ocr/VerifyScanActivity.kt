@@ -16,6 +16,7 @@ import android.text.SpannableString
 import android.text.TextWatcher
 import android.text.style.ForegroundColorSpan
 import android.text.style.StyleSpan
+import android.text.style.RelativeSizeSpan
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
@@ -24,6 +25,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.ScrollView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
@@ -116,6 +118,8 @@ class VerifyScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
     private val typingDelayHandler = Handler(Looper.getMainLooper())
     private var typingRunnable: Runnable? = null
 
+    private var userChoseToEdit = false
+    private var allowBypassErrors = false
     private var shouldCheckErrors = false
     private var errorChecked = false // Global variable to track red errors
 
@@ -476,105 +480,50 @@ class VerifyScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
             showExitClinicBPTargetConfirmationDialog()
         }
 
+
         // Calculate and save average BP, home BP and clinic BP targets, then display outcome and recommendation (separate activity)
         binding.calculateAvgBPBtn.setOnClickListener {
-            shouldCheckErrors = true
-
-            postScanValidation() // Always re-validate all fields
-
-            Log.d("DEBUG_CALC_BP", "Calculate Average BP Clicked! errorChecked: $errorChecked")
-
-            if (errorChecked) {
-                Log.d("DEBUG_CALC_BP", "Blocking calculation due to RED errors.")
-                shouldCheckErrors = false
-                return@setOnClickListener
-            }
-
-            if (!validateClinicBPFields()) {
-                Log.d("DEBUG_CALC_BP", "Clinic BP fields are empty.")
-                errorDialogBuilder(
-                    this,
-                    ResourcesHelper.getString(this, R.string.verify_scan_error_header),
-                    ResourcesHelper.getString(this, R.string.verify_scan_error_body_clinic_bp)
-                )
-                shouldCheckErrors = false
-                return@setOnClickListener
-            }
-
-            Log.d("DEBUG_CALC_BP", "Proceeding with BP Calculation.")
-
-            getBPTarget()
-            val filteredSysBPList = sysBPList.filter { it.isNotBlank() && it != "-2" }
-            val filteredDiaBPList = diaBPList.filter { it.isNotBlank() && it != "-2" }
-            val maxFilteredRows = maxOf(filteredSysBPList.size, filteredDiaBPList.size)
-            val maxHistoryRows = maxOf(sysBPListHistory.size, diaBPListHistory.size)
-            val finalRows = maxHistoryRows + maxFilteredRows
-            val visit: HashMap<String, *>
-
-            if (sevenDay) {
-                calcSevenDayAvgBP()
-            } else {
-                calcAvgBP()
-            }
-
-            clinicSysBP = binding.verifyClinicSys.text.toString().toInt()
-            clinicDiaBP = binding.verifyClinicDia.text.toString().toInt()
-
-            // Save record into database
-            visit = hashMapOf(
-                "date" to LocalDateTime.now()
-                    .format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")),
-                "homeSysBPTarget" to homeSysBPTarget,
-                "homeDiaBPTarget" to homeDiaBPTarget,
-                "clinicSysBPTarget" to clinicSysBPTarget,
-                "clinicDiaBPTarget" to clinicDiaBPTarget,
-                "averageSysBP" to avgSysBP,
-                "averageDiaBP" to avgDiaBP,
-                "clinicSysBP" to clinicSysBP,
-                "clinicDiaBP" to clinicDiaBP,
-                "scanRecordCount" to finalRows,
-                "validDayIndices" to validDayIndices.distinct().reversed(),
-                "sevenDay" to sevenDay
-            )
-
-            db.collection("patients").document(patientID).collection("visits").add(visit)
-                .addOnSuccessListener {
-                    Toast.makeText(
-                        this,
-                        ResourcesHelper.getString(this, R.string.verify_scan_calculation_successful),
-                        Toast.LENGTH_SHORT
-                    ).show()
-
-                    val bundle = Bundle().apply {
-                        putInt("avgSysBP", avgSysBP)
-                        putInt("avgDiaBP", avgDiaBP)
-                        putInt("clinicSysBP", clinicSysBP)
-                        putInt("clinicDiaBP", clinicDiaBP)
-                        putInt("scanRecordCount", finalRows)
-                        putString("Source", "Scan")
-                        putBoolean("sevenDay", sevenDay)
-                    }
-
-                    val recommendationIntent = Intent(this, RecommendationActivity::class.java)
-                    recommendationIntent.putExtras(bundle)
-                    startActivity(recommendationIntent)
-                }
-                .addOnFailureListener { e ->
-                    errorDialogBuilder(
-                        this,
-                        ResourcesHelper.getString(this, R.string.verify_scan_saving_header),
-                        ResourcesHelper.getString(this, R.string.verify_scan_saving_body, e)
-                    )
-                }
-//            }
-//                else {
-//                errorDialogBuilder(
-//                    this,
-//                    ResourcesHelper.getString(this, R.string.verify_scan_error_header),
-//                    ResourcesHelper.getString(this, R.string.verify_scan_error_body)
-//                )
-//            }
             shouldCheckErrors = false
+            errorChecked = false
+
+            val hasRedSysDiaErrors = (sysBPFields + diaBPFields).any {
+                it.error?.toString()?.let { msg ->
+                    msg.contains("Field is empty", true) ||
+                            msg.contains("Impossible Value", true) ||
+                            msg.contains("Invalid input", true)
+                } == true
+            }
+
+            val boldLargeEditPrompt = SpannableString(
+                ResourcesHelper.getString(this, R.string.verify_scan_error_body)
+            ).apply {
+                setSpan(StyleSpan(Typeface.BOLD), 0, length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+                setSpan(RelativeSizeSpan(1.15f), 0, length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+            }
+
+            if (hasRedSysDiaErrors && !allowBypassErrors) {
+                MaterialAlertDialogBuilder(this)
+                    .setIcon(R.drawable.ic_error)
+                    .setMessage(boldLargeEditPrompt)
+                    .setNegativeButton(ResourcesHelper.getString(this, R.string.yes_dialog)) { dialog, _ ->
+                        userChoseToEdit = true
+                        allowBypassErrors = false
+                        dialog.dismiss()
+                    }
+                    .setPositiveButton(ResourcesHelper.getString(this, R.string.no_dialog)) { _, _ ->
+                        userChoseToEdit = false
+                        allowBypassErrors = true
+                        shouldCheckErrors = true
+                        postScanValidation()        // ✅ Now runs here
+                        proceedToBPValidation()
+                    }
+                    .show()
+                return@setOnClickListener
+            }
+
+            shouldCheckErrors = true
+            postScanValidation()
+            proceedToBPValidation()
         }
 
         binding.homeTargetSys.addTextChangedListener(object : TextWatcher {
@@ -745,6 +694,143 @@ class VerifyScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
 //        }
 //    }
 
+    private fun proceedToBPValidation() {
+        // 🚫 Prevent validation if user chose to edit
+        if (userChoseToEdit) {
+            userChoseToEdit = false  // reset for next click
+            return
+        }
+
+        // Reset flag to prevent loops
+        shouldCheckErrors = false
+
+        val clinicSys = binding.verifyClinicSys.text?.toString()
+        val clinicDia = binding.verifyClinicDia.text?.toString()
+
+        val clinicSysEmpty = clinicSys.isNullOrBlank()
+        val clinicDiaEmpty = clinicDia.isNullOrBlank()
+
+
+        if (clinicSysEmpty || clinicDiaEmpty) {
+            if (clinicSysEmpty) {
+                binding.verifyClinicSys.error = ResourcesHelper.getString(this, R.string.verify_scan_empty_field)
+                setErrorIcon(binding.verifyClinicSys, R.color.red)
+            }
+            if (clinicDiaEmpty) {
+                binding.verifyClinicDia.error = ResourcesHelper.getString(this, R.string.verify_scan_empty_field)
+                setErrorIcon(binding.verifyClinicDia, R.color.red)
+            }
+
+//            errorDialogBuilder(
+//                this,
+//                ResourcesHelper.getString(this, R.string.verify_scan_error_header),
+//                ResourcesHelper.getString(this, R.string.verify_scan_error_body_clinic_bp)
+//            )
+            val largeClinicBPMsg = SpannableString(
+                ResourcesHelper.getString(this, R.string.verify_scan_error_body_clinic_bp)
+            ).apply {
+                setSpan(StyleSpan(Typeface.BOLD), 0, length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+                setSpan(RelativeSizeSpan(1.15f), 0, length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+            }
+
+            MaterialAlertDialogBuilder(this)
+                .setIcon(R.drawable.ic_error)
+                .setMessage(largeClinicBPMsg)
+                .setPositiveButton(ResourcesHelper.getString(this, R.string.ok_dialog)) { dialog, _ -> dialog.dismiss() }
+                .show()
+
+            scrollToClinicBP()
+            return
+        }
+
+        // 🟢 Success: Safe to calculate now
+        allowBypassErrors = false
+        shouldCheckErrors = false
+        errorChecked = false
+
+        Log.d("DEBUG_CALC_BP", "Proceeding with BP Calculation.")
+
+        getBPTarget()
+        val filteredSysBPList = sysBPList.filter { it.isNotBlank() && it != "-2" }
+        val filteredDiaBPList = diaBPList.filter { it.isNotBlank() && it != "-2" }
+        val maxFilteredRows = maxOf(filteredSysBPList.size, filteredDiaBPList.size)
+        val maxHistoryRows = maxOf(sysBPListHistory.size, diaBPListHistory.size)
+        val finalRows = maxHistoryRows + maxFilteredRows
+        val visit: HashMap<String, *>
+
+        sysBPList.clear()
+        diaBPList.clear()
+
+        for (field in sysBPFields) {
+            sysBPList.add(field.text?.toString() ?: "")
+        }
+        for (field in diaBPFields) {
+            diaBPList.add(field.text?.toString() ?: "")
+        }
+
+        if (sevenDay) {
+            calcSevenDayAvgBP()
+        } else {
+            calcAvgBP()
+        }
+
+        if (!validateClinicBPFields()) {
+            allowBypassErrors = false
+            shouldCheckErrors = false
+            return
+        }
+
+        clinicSysBP = binding.verifyClinicSys.text.toString().toInt()
+        clinicDiaBP = binding.verifyClinicDia.text.toString().toInt()
+
+        // Save record into database
+        visit = hashMapOf(
+            "date" to LocalDateTime.now()
+                .format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")),
+            "homeSysBPTarget" to homeSysBPTarget,
+            "homeDiaBPTarget" to homeDiaBPTarget,
+            "clinicSysBPTarget" to clinicSysBPTarget,
+            "clinicDiaBPTarget" to clinicDiaBPTarget,
+            "averageSysBP" to avgSysBP,
+            "averageDiaBP" to avgDiaBP,
+            "clinicSysBP" to clinicSysBP,
+            "clinicDiaBP" to clinicDiaBP,
+            "scanRecordCount" to finalRows,
+            "validDayIndices" to validDayIndices.distinct().reversed(),
+            "sevenDay" to sevenDay
+        )
+
+        db.collection("patients").document(patientID).collection("visits").add(visit)
+            .addOnSuccessListener {
+                Toast.makeText(
+                    this,
+                    ResourcesHelper.getString(this, R.string.verify_scan_calculation_successful),
+                    Toast.LENGTH_SHORT
+                ).show()
+
+                val bundle = Bundle().apply {
+                    putInt("avgSysBP", avgSysBP)
+                    putInt("avgDiaBP", avgDiaBP)
+                    putInt("clinicSysBP", clinicSysBP)
+                    putInt("clinicDiaBP", clinicDiaBP)
+                    putInt("scanRecordCount", finalRows)
+                    putString("Source", "Scan")
+                    putBoolean("sevenDay", sevenDay)
+                }
+
+                val recommendationIntent = Intent(this, RecommendationActivity::class.java)
+                recommendationIntent.putExtras(bundle)
+                startActivity(recommendationIntent)
+            }
+            .addOnFailureListener { e ->
+                errorDialogBuilder(
+                    this,
+                    ResourcesHelper.getString(this, R.string.verify_scan_saving_header),
+                    ResourcesHelper.getString(this, R.string.verify_scan_saving_body, e)
+                )
+            }
+    }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             android.R.id.home -> {
@@ -759,7 +845,7 @@ class VerifyScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
     private fun showExitConfirmationDialog() {
         val title = SpannableString(getString(R.string.confirm_navigation)).apply {
             setSpan(StyleSpan(Typeface.BOLD), 0, length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-            setSpan(ForegroundColorSpan(Color.RED), 0, length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+            setSpan(ForegroundColorSpan(Color.BLACK), 0, length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
         }
 
         MaterialAlertDialogBuilder(this)
@@ -775,7 +861,7 @@ class VerifyScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
     }
 
     private fun navigateToHome() {
-        val intent = Intent(this, MainActivity::class.java)
+        val intent = Intent(this, ScanActivity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
         startActivity(intent)
         finish()
@@ -1619,148 +1705,36 @@ class VerifyScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
             Log.d("DEBUG_POST_VALIDATION", "All errors cleared. Setting errorChecked = false.")
         }
 
-        // Handling error prompts
-        if (shouldCheckErrors) {
-
-            if (errorCount >= 6) {
-                // Too many errors - suggest rescan
-                errorChecked = true
-                MaterialAlertDialogBuilder(this)
-                    .setIcon(R.drawable.ic_error)
-                    .setTitle(
-                        ResourcesHelper.getString(
-                            this,
-                            R.string.verify_scan_erroneous_header
-                        )
-                    )
-                    .setMessage(
-                        ResourcesHelper.getString(
-                            this,
-                            R.string.verify_scan_erroneous_body
-                        )
-                    )
-                    .setNegativeButton(
-                        ResourcesHelper.getString(
-                            this,
-                            R.string.no_dialog
-                        )
-                    ) { dialog, _ -> dialog.dismiss() }
-                    .setPositiveButton(
-                        ResourcesHelper.getString(
-                            this,
-                            R.string.yes_dialog
-                        )
-                    ) { _, _ ->
-                        val scanIntent = Intent(this, ScanActivity::class.java)
-
-                        binding.verifyHomeTargetSys?.let {
-                            scanIntent.putExtra(
-                                "homeSysBPTarget",
-                                binding.verifyHomeTargetSys.text.toString()
-                            )
-                        }
-                        binding.verifyHomeTargetDia?.let {
-                            scanIntent.putExtra(
-                                "homeDiaBPTarget",
-                                binding.verifyHomeTargetDia.text.toString()
-                            )
-                        }
-                        binding.verifyClinicTargetSys?.let {
-                            scanIntent.putExtra(
-                                "clinicSysBPTarget",
-                                binding.verifyClinicTargetSys.text.toString()
-                            )
-                        }
-                        binding.verifyClinicTargetDia?.let {
-                            scanIntent.putExtra(
-                                "clinicDiaBPTarget",
-                                binding.verifyClinicTargetDia.text.toString()
-                            )
-                        }
-                        binding.verifyClinicSys?.let {
-                            scanIntent.putExtra(
-                                "clinicSysBP",
-                                binding.verifyClinicSys.text.toString()
-                            )
-                        }
-                        binding.verifyClinicDia?.let {
-                            scanIntent.putExtra(
-                                "clinicDiaBP",
-                                binding.verifyClinicDia.text.toString()
-                            )
-                        }
-
-                        if (!sysBPListHistory.isNullOrEmpty()) {
-                            scanIntent.putStringArrayListExtra(
-                                "sysBPListHistory",
-                                ArrayList(sysBPListHistory)
-                            )
-                        }
-                        if (!diaBPListHistory.isNullOrEmpty()) {
-                            scanIntent.putStringArrayListExtra(
-                                "diaBPListHistory",
-                                ArrayList(diaBPListHistory)
-                            )
-                        }
-
-                        startActivity(scanIntent)
-                        finish()
-                    }
-                    .show()
-            }
-            // If clinic BP fields are empty (after scan), show alert first
-            if (binding.verifyClinicSys.text.isNullOrBlank() || binding.verifyClinicDia.text.isNullOrBlank()) {
-                errorChecked = true
-                MaterialAlertDialogBuilder(this)
-                    .setIcon(R.drawable.ic_error)
-                    .setTitle(ResourcesHelper.getString(this, R.string.verify_scan_error_header))
-                    .setMessage(ResourcesHelper.getString(this, R.string.verify_scan_error_body_clinic_bp))
-                    .setPositiveButton(ResourcesHelper.getString(this, R.string.ok_dialog)) { dialog, _ ->
-                        dialog.dismiss()
-                    }
-                    .show()
-                return
-            }
-
-            // THEN check for other red errors
-            else if (errorCount > 0) {
-                errorChecked = true
-                MaterialAlertDialogBuilder(this)
-                    .setIcon(R.drawable.ic_error)
-                    .setTitle(ResourcesHelper.getString(this, R.string.verify_scan_error_header))
-                    .setMessage(ResourcesHelper.getString(this, R.string.verify_scan_error_body))
-                    .setPositiveButton(ResourcesHelper.getString(this, R.string.ok_dialog)) { dialog, _ ->
-                        dialog.dismiss()
-                        scrollToFirstError()
-                    }
-                    .show()
-            }
-        }
     }
 
-    private fun scrollToFirstError() {
-        val firstErrorField = (sysBPFields + diaBPFields).firstOrNull { field ->
-            field.error != null &&
-                    (
-                            field.error.toString().contains("empty field", true) ||
-                                    field.error.toString().contains("impossible value", true) ||
-                                    field.error.toString().contains("invalid input", true)
-                            )
+    private fun scrollToFirstRedSysDiaField() {
+        val firstRedField = (sysBPFields + diaBPFields).firstOrNull { field ->
+            field.error?.toString()?.let {
+                it.contains("Field is empty", true) ||
+                        it.contains("Impossible Value", true) ||
+                        it.contains("Invalid input", true)
+            } == true
         }
 
-        firstErrorField?.let { field ->
-            // Focus to the field
+        firstRedField?.let { field ->
             field.requestFocus()
 
-            // Scroll to it smoothly
-            binding.mainScrollView.post {
-                binding.mainScrollView.smoothScrollTo(0, field.top)
-            }
+            // Post after layout draw to ensure accurate scrolling
+            binding.mainScrollView.postDelayed({
+                val fieldLocation = IntArray(2)
+                field.getLocationInWindow(fieldLocation)
 
-            Log.d("SCROLL_TO_ERROR", "Scrolled to: ${field.hint}")
+                val scrollViewLocation = IntArray(2)
+                binding.mainScrollView.getLocationInWindow(scrollViewLocation)
+
+                val relativeTop = fieldLocation[1] - scrollViewLocation[1]
+                val scrollTarget = relativeTop - binding.mainScrollView.height / 3
+
+                binding.mainScrollView.smoothScrollBy(0, scrollTarget)
+                Log.d("SCROLL_FIX", "Scrolled to: ${field.hint}, Y=$scrollTarget")
+            }, 200) // Delay to wait for dialog/layout to render
         }
     }
-
 
     private fun setError(inputLayout: TextInputLayout, message: String?) {
         if (message != null) {

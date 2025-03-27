@@ -51,7 +51,9 @@
     <string name="verify_scan_saving_header">Ralat menyimpan rekod</string>
     <string name="verify_scan_saving_body">Aplikasi tidak dapat menyimpan rekod semasa. \n\nJika masalah berterusan, sila hubungi sokongan IT dengan kod ralat berikut: %1$s</string>
     <string name="verify_scan_error_header">Ralat dikesan</string>
-    <string name="verify_scan_error_body">Betulkan semua ralat sebelum meneruskan.</string>
+
+    <string name="verify_scan_error_body">Adakah anda ingin mengedit nilai Sistolik/Diastolik?</string> <!-- this is for the error popup when sys/dia has errors, if user clicked no, proceed to calculate-->
+
     <string name="verify_scan_rescan_header">Imbas semula rekod semasa</string>
     <string name="verify_scan_rescan_body">Adakah anda ingin mengimbas semula rekod semasa? \n\n(nota: rekod yang telah diimbas sebelum ini akan disimpan)</string>
     <string name="verify_scan_discard_header">Buang kemajuan</string>
@@ -69,7 +71,7 @@
     <!-- added new ones (17 march)-->
     <string name="verify_scan_out_of_range_header">Di luar jangkauan</string>
     <string name="verify_scan_impossible_value">Nilai yang mustahil</string>
-    <string name="verify_scan_error_body_clinic_bp">Sila isikan nilai BP Klinik.</string>
+    <string name="verify_scan_error_body_clinic_bp">Sila isi dan sahkan nilai BP Klinik.</string>
     <string name="pop_up_message">Adakah anda pasti mahu kembali ke Halaman Utama? Semua data akan hilang.</string>
     <string name="confirm_navigation">Sahkan Navigasi?</string>
 

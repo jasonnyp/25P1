@@ -8,6 +8,7 @@ import android.text.TextWatcher
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.appcompat.content.res.AppCompatResources
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -37,8 +38,33 @@ class LoginActivity : AppCompatActivity() {
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        binding.passwordTIL.endIconDrawable =
+            AppCompatResources.getDrawable(this, R.drawable.ic_visibility_off)
+
         setGreeting()
         //setupDefaultAccount()
+
+        var passwordVisible = false
+
+        binding.passwordTIL.setEndIconOnClickListener {
+            passwordVisible = !passwordVisible
+
+            if (passwordVisible) {
+                binding.passwordTIET.inputType =
+                    android.text.InputType.TYPE_CLASS_TEXT or android.text.InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
+                binding.passwordTIL.endIconDrawable =
+                    AppCompatResources.getDrawable(this, R.drawable.ic_visibility)
+            } else {
+                binding.passwordTIET.inputType =
+                    android.text.InputType.TYPE_CLASS_TEXT or android.text.InputType.TYPE_TEXT_VARIATION_PASSWORD
+                binding.passwordTIL.endIconDrawable =
+                    AppCompatResources.getDrawable(this, R.drawable.ic_visibility_off)
+            }
+
+            // Keep cursor at end
+            binding.passwordTIET.setSelection(binding.passwordTIET.text?.length ?: 0)
+        }
+
 
         binding.staffIDTIET.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}

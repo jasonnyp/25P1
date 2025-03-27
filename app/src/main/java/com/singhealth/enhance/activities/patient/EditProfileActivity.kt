@@ -295,7 +295,7 @@ class EditProfileActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener 
     private fun showExitConfirmationDialog() {
         val title = SpannableString(getString(R.string.confirm_navigation)).apply {
             setSpan(StyleSpan(Typeface.BOLD), 0, length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-            setSpan(ForegroundColorSpan(Color.RED), 0, length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+            setSpan(ForegroundColorSpan(Color.BLACK), 0, length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
         }
 
         MaterialAlertDialogBuilder(this)

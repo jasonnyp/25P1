@@ -49,7 +49,7 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/enhance_login_staff_id"
                     app:errorEnabled="true"
-                    app:errorIconDrawable="@drawable/ic_error" >
+                    app:errorIconDrawable="@drawable/ic_error">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/staffIDTIET"
@@ -65,7 +65,9 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/enhance_login_password"
                     app:errorEnabled="true"
-                    app:errorIconDrawable="@drawable/ic_error">
+                    app:errorIconDrawable="@drawable/ic_error"
+                    app:endIconMode="custom"
+                    app:endIconDrawable="@drawable/ic_visibility_off">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/passwordTIET"

@@ -55,7 +55,9 @@
     <string name="verify_scan_saving_header">பதிவைச் சேமிக்க பிழை ஏற்பட்டது</string>
     <string name="verify_scan_saving_body">தற்போதைய பதிவை செயலியில் சேமிக்க முடியவில்லை.\n\nசிக்கல் தொடர்ந்தால், பின்வரும் பிழை குறியீட்டுடன் ஐடி ஆதரவை தொடர்புகொள்ளவும்: %1$s</string>
     <string name="verify_scan_error_header">பிழைகள் கண்டறியப்பட்டன</string>
-    <string name="verify_scan_error_body">தொடர்வதற்கு முன் அனைத்து பிழைகளையும் சரிசெய்யவும்.</string>
+
+    <string name="verify_scan_error_body">சிஸ்டாலிக்/டயஸ்டாலிக் மதிப்புகளைத் திருத்த விரும்புகிறீர்களா?</string> <!-- this is for the error popup when sys/dia has errors, if user clicked no, proceed to calculate-->
+
     <string name="verify_scan_rescan_header">தற்போதைய பதிவுகளை மீண்டும் ஸ்கேன் செய்யவும்</string>
     <string name="verify_scan_rescan_body">தற்போதைய பதிவுகளை மீண்டும் ஸ்கேன் செய்ய விரும்புகிறீர்களா?\n\n(குறிப்பு: உங்கள் முந்தைய ஸ்கேன் பதிவுகள் சேமிக்கப்படும்)</string>
     <string name="verify_scan_discard_header">முன்னேற்றத்தை நிராகரிக்கவும்</string>
@@ -74,7 +76,7 @@
     <!-- added new ones (17 march) -->
     <string name="verify_scan_out_of_range_header">வட்டத்திற்கு வெளியே உள்ளது</string>
     <string name="verify_scan_impossible_value">முடியாத மதிப்பு</string>
-    <string name="verify_scan_error_body_clinic_bp">தயவு செய்து கிளினிக் BP மதிப்புகளை நிரப்பவும்.</string>
+    <string name="verify_scan_error_body_clinic_bp">தயவுசெய்து கிளினிக் இரத்த அழுத்த மதிப்புகளை நிரப்பி சரிபார்க்கவும்.</string>
     <string name="pop_up_message">முகப்புப் பக்கத்திற்கு திரும்ப விரும்புகிறீர்களா? அனைத்து தரவுகளும் அழிக்கப்படும்.</string>
     <string name="confirm_navigation">வழிசெலுத்தலை உறுதிப்படுத்தவா?</string>
 
