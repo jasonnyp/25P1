@@ -17,6 +17,7 @@
     <!-- Other Colours-->
     <color name="black">#000</color>
     <color name="light_grey">#d9d9d6</color>
+    <color name="gray_medium">#9E9E9E</color>
     <color name="white">#FFF</color>
     <color name="yellow">#d6d318</color>
 

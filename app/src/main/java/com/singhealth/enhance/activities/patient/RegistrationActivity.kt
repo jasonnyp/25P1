@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.MenuItem
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
@@ -166,6 +167,41 @@ class RegistrationActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener
 //
 //            override fun afterTextChanged(s: Editable?) {}
 //        })
+
+        // adding radio buttons (23 april 2025)
+        binding.bpTargetRadioGroup.setOnCheckedChangeListener { _, checkedId ->
+            when (checkedId) {
+                R.id.bpOption1 -> {
+                    binding.manualBpLayout.visibility = View.GONE
+                    binding.registerHomeSysInput.setText("130")
+                    binding.registerHomeDiaInput.setText("80")
+                    binding.registerClinicSysInput.setText("130")
+                    binding.registerClinicDiaInput.setText("80")
+                }
+                R.id.bpOption2 -> {
+                    binding.manualBpLayout.visibility = View.GONE
+                    binding.registerHomeSysInput.setText("135")
+                    binding.registerHomeDiaInput.setText("85")
+                    binding.registerClinicSysInput.setText("140")
+                    binding.registerClinicDiaInput.setText("90")
+                }
+                R.id.bpOption3 -> {
+                    binding.manualBpLayout.visibility = View.GONE
+                    binding.registerHomeSysInput.setText("150")
+                    binding.registerHomeDiaInput.setText("90")
+                    binding.registerClinicSysInput.setText("150")
+                    binding.registerClinicDiaInput.setText("90")
+                }
+                R.id.bpManualOption -> {
+                    binding.manualBpLayout.visibility = View.VISIBLE
+                    binding.registerHomeSysInput.setText("")
+                    binding.registerHomeDiaInput.setText("")
+                    binding.registerClinicSysInput.setText("")
+                    binding.registerClinicDiaInput.setText("")
+                }
+            }
+        }
+
 
         binding.idTIET.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
@@ -332,6 +368,45 @@ class RegistrationActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener
             valid = false
             binding.idTIL.error = getString(R.string.register_empty_field_verification)
         }
+
+        // added radio buttons (23 april 2025)
+        // Only validate manual input if 'Enter manually' is selected
+        val manualSelected = binding.bpManualOption.isChecked
+
+        if (manualSelected) {
+            if (binding.registerHomeSysInput.text.isNullOrEmpty()) {
+                valid = false
+                binding.registerHomeSys.error = getString(R.string.register_empty_bp_verification, 135)
+            } else if (binding.registerHomeSysInput.text.toString().toIntOrNull() !in 0..200) {
+                valid = false
+                binding.registerHomeSys.error = getString(R.string.register_invalid_number_verification)
+            }
+
+            if (binding.registerHomeDiaInput.text.isNullOrEmpty()) {
+                valid = false
+                binding.registerHomeDia.error = getString(R.string.register_empty_bp_verification, 85)
+            } else if (binding.registerHomeDiaInput.text.toString().toIntOrNull() !in 0..200) {
+                valid = false
+                binding.registerHomeDia.error = getString(R.string.register_invalid_number_verification)
+            }
+
+            if (binding.registerClinicSysInput.text.isNullOrEmpty()) {
+                valid = false
+                binding.registerClinicSys.error = getString(R.string.register_empty_bp_verification, 135)
+            } else if (binding.registerClinicSysInput.text.toString().toIntOrNull() !in 0..200) {
+                valid = false
+                binding.registerClinicSys.error = getString(R.string.register_invalid_number_verification)
+            }
+
+            if (binding.registerClinicDiaInput.text.isNullOrEmpty()) {
+                valid = false
+                binding.registerClinicDia.error = getString(R.string.register_empty_bp_verification, 85)
+            } else if (binding.registerClinicDiaInput.text.toString().toIntOrNull() !in 0..200) {
+                valid = false
+                binding.registerClinicDia.error = getString(R.string.register_invalid_number_verification)
+            }
+        }
+
 
 //        if (binding.dateOfBirthTIET.text.isNullOrEmpty()) {
 //            valid = false
