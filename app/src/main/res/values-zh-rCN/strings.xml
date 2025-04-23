@@ -27,6 +27,12 @@
     <string name="resuming_scan">点击“常规扫描”以添加更多扫描</string>
 
     <!-- VerifyScanActivity.kt -->
+    <string name="verify_scan_update_target_all_header">更新目标家庭和诊所血压</string>
+    <string name="verify_scan_update_target_all_body">您确定要更新患者的目标家庭和诊所血压吗？</string>
+
+    <string name="verify_scan_exit_target_all_header">丢弃更改</string>
+    <string name="verify_scan_exit_target_all_body">您确定要放弃对目标家庭和诊所血压所做的任何更改吗？</string>
+
     <string name="verify_scan_update_target_home_header">更新目标家庭血压</string>
     <string name="verify_scan_update_target_home_body">您确定要更新目标血压家庭患者吗？</string>
     <string name="verify_scan_exit_target_home_header">丢弃更改</string>

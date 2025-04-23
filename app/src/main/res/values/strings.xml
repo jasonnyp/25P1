@@ -27,6 +27,12 @@
     <string name="resuming_scan">Click on “General Scan” to add more scans</string>
 
     <!-- VerifyScanActivity.kt -->
+    <string name="verify_scan_update_target_all_header">Update Target Home and Clinic BP</string>
+    <string name="verify_scan_update_target_all_body">Are you sure you want to update the patient\'s target home and clinic BP?</string>
+
+    <string name="verify_scan_exit_target_all_header">Discard Changes</string>
+    <string name="verify_scan_exit_target_all_body">Are you sure you want to discard any changes to the target home and clinic BP you made?</string>
+
     <string name="verify_scan_update_target_home_header">Update Target Home BP</string>
     <string name="verify_scan_update_target_home_body">Are you sure you want to update the patient\'s target home BP?</string>
     <string name="verify_scan_exit_target_home_header">Discard Changes</string>

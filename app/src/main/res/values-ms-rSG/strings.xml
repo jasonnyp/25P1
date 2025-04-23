@@ -22,6 +22,13 @@
     <string name="ocr_text_error_body">Kami tidak dapat mencari tulisan tangan atau teks untuk diproses.\n\nPetua: Pastikan imej jelas dan dipotong hanya kepada nilai, dan tidak termasuk tajuk (seperti \'Sistolik\' dan \'Diastolik\').</string>
     <string name="resuming_scan">Menyambung imbasan</string>
 
+
+    <string name="verify_scan_update_target_all_header">Kemas kini Target Rumah dan Klinik BP</string>
+    <string name="verify_scan_update_target_all_body">Adakah anda pasti mahu mengemas kini BP rumah dan klinik sasaran pesakit?</string>
+
+    <string name="verify_scan_exit_target_all_header">Buang Perubahan</string>
+    <string name="verify_scan_exit_target_all_body">Adakah anda pasti mahu membuang sebarang perubahan pada BP rumah dan klinik sasaran yang anda buat?</string>
+
     <string name="verify_scan_update_target_home_header">Kemas kini Sasaran BP Rumah</string>
     <string name="verify_scan_update_target_home_body">Adakah anda pasti ingin mengemas kini BP sasaran rumah pesakit?</string>
     <string name="verify_scan_exit_target_home_header">Buang Perubahan</string>

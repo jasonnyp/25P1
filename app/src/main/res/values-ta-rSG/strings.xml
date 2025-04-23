@@ -26,6 +26,12 @@
     <string name="resuming_scan">மேலும் ஸ்கேன்களைச் சேர்க்க “பொது ஸ்கேன்” என்பதைக் கிளிக் செய்யவும்.</string>
 
     <!-- VerifyScanActivity.kt -->
+    <string name="verify_scan_update_target_all_header">டார்கெட் ஹோம் மற்றும் கிளினிக் இரத்த அழுத்தத்தைப் புதுப்பிக்கவும்.</string>
+    <string name="verify_scan_update_target_all_body">நோயாளியின் இலக்கு வீடு மற்றும் மருத்துவமனை இரத்த அழுத்தத்தை நீங்கள் நிச்சயமாகப் புதுப்பிக்க விரும்புகிறீர்களா?</string>
+
+    <string name="verify_scan_exit_target_all_header">மாற்றங்களை நிராகரிக்கவும்</string>
+    <string name="verify_scan_exit_target_all_body">நீங்கள் இலக்கு வீட்டு மற்றும் மருத்துவமனை இரத்த அழுத்தத்தில் செய்த மாற்றங்களை நிச்சயமாக நிராகரிக்க விரும்புகிறீர்களா?</string>
+
     <string name="verify_scan_update_target_home_header">டார்கெட் ஹோம் பிபியைப் புதுப்பிக்கவும்</string>
     <string name="verify_scan_update_target_home_body">நோயாளியின் வீட்டு இரத்த அழுத்தத்தைப் புதுப்பிக்க விரும்புகிறீர்களா?</string>
     <string name="verify_scan_exit_target_home_header">மாற்றங்களை நிராகரிக்கவும்</string>

@@ -463,7 +463,7 @@ class VerifyScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
         }
 
         // Edit button for target clinic BP to show fields and hide edit button
-       binding.editClinicBPLayout.setOnClickListener {
+        binding.editClinicBPLayout.setOnClickListener {
             binding.editClinicBPLayout.visibility = View.GONE
             binding.verifyEditClinicBPTarget.visibility = View.VISIBLE
             binding.verifyEditClinicBPTextFields.visibility = View.VISIBLE
@@ -2352,130 +2352,130 @@ class VerifyScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
         println("Day Readings Status: $dayReadingsStatus")
         println("Number of Valid Consecutive Days: ${validConsecutiveDays.count()}")
 
-       if (validConsecutiveDays.size >= 3) {
+        if (validConsecutiveDays.size >= 3) {
 
-           val filteredSysBPList = mutableListOf<String>()
-           val filteredDiaBPList = mutableListOf<String>()
+            val filteredSysBPList = mutableListOf<String>()
+            val filteredDiaBPList = mutableListOf<String>()
 
-           for (day in validConsecutiveDays) {
-               if (day.isNotEmpty()) {
-                   val (morningSysBP1, morningDiaBP1) = day[0]
-                   val (morningSysBP2, morningDiaBP2) = day[1]
-                   val (eveningSysBP1, eveningDiaBP1) = day[2]
-                   val (eveningSysBP2, eveningDiaBP2) = day[3]
+            for (day in validConsecutiveDays) {
+                if (day.isNotEmpty()) {
+                    val (morningSysBP1, morningDiaBP1) = day[0]
+                    val (morningSysBP2, morningDiaBP2) = day[1]
+                    val (eveningSysBP1, eveningDiaBP1) = day[2]
+                    val (eveningSysBP2, eveningDiaBP2) = day[3]
 
-                   println("Processing Day Readings:")
-                   println("Morning Readings: $morningSysBP1, $morningDiaBP1; $morningSysBP2, $morningDiaBP2")
-                   println("Evening Readings: $eveningSysBP1, $eveningDiaBP1; $eveningSysBP2, $eveningDiaBP2")
+                    println("Processing Day Readings:")
+                    println("Morning Readings: $morningSysBP1, $morningDiaBP1; $morningSysBP2, $morningDiaBP2")
+                    println("Evening Readings: $eveningSysBP1, $eveningDiaBP1; $eveningSysBP2, $eveningDiaBP2")
 
-                   val chosenMorningSysBP =
-                       if (morningSysBP1.toIntOrNull() ?: 0 >= targetHomeSysBP.toInt() || morningDiaBP1.toIntOrNull() ?: 0 >= targetHomeDiaBP.toInt()) {
-                           morningSysBP2
-                       } else {
-                           morningSysBP1
-                       }
-                   val chosenMorningDiaBP =
-                       if (morningSysBP1.toIntOrNull() ?: 0 >= targetHomeSysBP.toInt() || morningDiaBP1.toIntOrNull() ?: 0 >= targetHomeDiaBP.toInt()) {
-                           morningDiaBP2
-                       } else {
-                           morningDiaBP1
-                       }
+                    val chosenMorningSysBP =
+                        if (morningSysBP1.toIntOrNull() ?: 0 >= targetHomeSysBP.toInt() || morningDiaBP1.toIntOrNull() ?: 0 >= targetHomeDiaBP.toInt()) {
+                            morningSysBP2
+                        } else {
+                            morningSysBP1
+                        }
+                    val chosenMorningDiaBP =
+                        if (morningSysBP1.toIntOrNull() ?: 0 >= targetHomeSysBP.toInt() || morningDiaBP1.toIntOrNull() ?: 0 >= targetHomeDiaBP.toInt()) {
+                            morningDiaBP2
+                        } else {
+                            morningDiaBP1
+                        }
 
-                   val chosenEveningSysBP =
-                       if (eveningSysBP1.toIntOrNull() ?: 0 >= targetHomeSysBP.toInt() || eveningDiaBP1.toIntOrNull() ?: 0 >= targetHomeDiaBP.toInt()) {
-                           eveningSysBP2
-                       } else {
-                           eveningSysBP1
-                       }
-                   val chosenEveningDiaBP =
-                       if (eveningSysBP1.toIntOrNull() ?: 0 >= targetHomeSysBP.toInt() || eveningDiaBP1.toIntOrNull() ?: 0 >= targetHomeDiaBP.toInt()) {
-                           eveningDiaBP2
-                       } else {
-                           eveningDiaBP1
-                       }
+                    val chosenEveningSysBP =
+                        if (eveningSysBP1.toIntOrNull() ?: 0 >= targetHomeSysBP.toInt() || eveningDiaBP1.toIntOrNull() ?: 0 >= targetHomeDiaBP.toInt()) {
+                            eveningSysBP2
+                        } else {
+                            eveningSysBP1
+                        }
+                    val chosenEveningDiaBP =
+                        if (eveningSysBP1.toIntOrNull() ?: 0 >= targetHomeSysBP.toInt() || eveningDiaBP1.toIntOrNull() ?: 0 >= targetHomeDiaBP.toInt()) {
+                            eveningDiaBP2
+                        } else {
+                            eveningDiaBP1
+                        }
 
-                   filteredSysBPList.add(chosenMorningSysBP)
-                   filteredDiaBPList.add(chosenMorningDiaBP)
-                   filteredSysBPList.add(chosenEveningSysBP)
-                   filteredDiaBPList.add(chosenEveningDiaBP)
+                    filteredSysBPList.add(chosenMorningSysBP)
+                    filteredDiaBPList.add(chosenMorningDiaBP)
+                    filteredSysBPList.add(chosenEveningSysBP)
+                    filteredDiaBPList.add(chosenEveningDiaBP)
 
-                   println("Chosen Morning Readings: $chosenMorningSysBP, $chosenMorningDiaBP")
-                   println("Chosen Evening Readings: $chosenEveningSysBP, $chosenEveningDiaBP")
-               }
-           }
+                    println("Chosen Morning Readings: $chosenMorningSysBP, $chosenMorningDiaBP")
+                    println("Chosen Evening Readings: $chosenEveningSysBP, $chosenEveningDiaBP")
+                }
+            }
 
-           val finalSysBPList = filteredSysBPList.toMutableList()
-           val finalDiaBPList = filteredDiaBPList.toMutableList()
+            val finalSysBPList = filteredSysBPList.toMutableList()
+            val finalDiaBPList = filteredDiaBPList.toMutableList()
 
-           println("Final SysBPList: $finalSysBPList")
-           println("Final DiaBPList: $finalDiaBPList")
+            println("Final SysBPList: $finalSysBPList")
+            println("Final DiaBPList: $finalDiaBPList")
 
-           sysBPList = finalSysBPList
-           diaBPList = finalDiaBPList
+            sysBPList = finalSysBPList
+            diaBPList = finalDiaBPList
 
-           totalSysBP = 0
-           totalDiaBP = 0
+            totalSysBP = 0
+            totalDiaBP = 0
 
-           for (field in finalSysBPList) {
-               totalSysBP += field.toInt()
-           }
+            for (field in finalSysBPList) {
+                totalSysBP += field.toInt()
+            }
 
-           for (field in finalDiaBPList) {
-               totalDiaBP += field.toInt()
-           }
+            for (field in finalDiaBPList) {
+                totalDiaBP += field.toInt()
+            }
 
-           avgSysBP = (totalSysBP.toFloat() / finalSysBPList.size).roundToInt()
-           avgDiaBP = (totalDiaBP.toFloat() / finalDiaBPList.size).roundToInt()
+            avgSysBP = (totalSysBP.toFloat() / finalSysBPList.size).roundToInt()
+            avgDiaBP = (totalDiaBP.toFloat() / finalDiaBPList.size).roundToInt()
 
-           println("Days used for average calculation: ${validDayIndices.distinct().joinToString(", ")}")
-       }
-       else if (validConsecutiveDays.size < 3) {
+            println("Days used for average calculation: ${validDayIndices.distinct().joinToString(", ")}")
+        }
+        else if (validConsecutiveDays.size < 3) {
 
-           val SysBPList = mutableListOf<String>()
-           val DiaBPList = mutableListOf<String>()
+            val SysBPList = mutableListOf<String>()
+            val DiaBPList = mutableListOf<String>()
 
-           for (day in dayReadings) {
-               if (day.isNotEmpty()) {
-                   val (morningSysBP1, morningDiaBP1) = day[0]
-                   val (morningSysBP2, morningDiaBP2) = day[1]
-                   val (eveningSysBP1, eveningDiaBP1) = day[2]
-                   val (eveningSysBP2, eveningDiaBP2) = day[3]
+            for (day in dayReadings) {
+                if (day.isNotEmpty()) {
+                    val (morningSysBP1, morningDiaBP1) = day[0]
+                    val (morningSysBP2, morningDiaBP2) = day[1]
+                    val (eveningSysBP1, eveningDiaBP1) = day[2]
+                    val (eveningSysBP2, eveningDiaBP2) = day[3]
 
-                   SysBPList.add(morningSysBP1)
-                   SysBPList.add(morningSysBP2)
-                   SysBPList.add(eveningSysBP1)
-                   SysBPList.add(eveningSysBP2)
+                    SysBPList.add(morningSysBP1)
+                    SysBPList.add(morningSysBP2)
+                    SysBPList.add(eveningSysBP1)
+                    SysBPList.add(eveningSysBP2)
 
-                   DiaBPList.add(morningDiaBP1)
-                   DiaBPList.add(morningDiaBP2)
-                   DiaBPList.add(eveningDiaBP1)
-                   DiaBPList.add(eveningDiaBP2)
-               }
-           }
+                    DiaBPList.add(morningDiaBP1)
+                    DiaBPList.add(morningDiaBP2)
+                    DiaBPList.add(eveningDiaBP1)
+                    DiaBPList.add(eveningDiaBP2)
+                }
+            }
 
-           for (day in incompleteDayReadings) {
-               for ((sysBP, diaBP) in day) {
-                   SysBPList.add(sysBP)
-                   DiaBPList.add(diaBP)
-               }
-           }
+            for (day in incompleteDayReadings) {
+                for ((sysBP, diaBP) in day) {
+                    SysBPList.add(sysBP)
+                    DiaBPList.add(diaBP)
+                }
+            }
 
-           totalSysBP = 0
-           totalDiaBP = 0
+            totalSysBP = 0
+            totalDiaBP = 0
 
-           for (field in SysBPList) {
-               totalSysBP += field.toInt()
-           }
+            for (field in SysBPList) {
+                totalSysBP += field.toInt()
+            }
 
-           for (field in DiaBPList) {
-               totalDiaBP += field.toInt()
-           }
+            for (field in DiaBPList) {
+                totalDiaBP += field.toInt()
+            }
 
-           avgSysBP = (totalSysBP.toFloat() / SysBPList.size).roundToInt()
-           avgDiaBP = (totalDiaBP.toFloat() / DiaBPList.size).roundToInt()
+            avgSysBP = (totalSysBP.toFloat() / SysBPList.size).roundToInt()
+            avgDiaBP = (totalDiaBP.toFloat() / DiaBPList.size).roundToInt()
 
-           println("Days used for average calculation: ${validDayIndices.distinct().joinToString(", ")}")
-       }
+            println("Days used for average calculation: ${validDayIndices.distinct().joinToString(", ")}")
+        }
     }
 
     private fun sevenDayCheck() {
@@ -2721,11 +2721,11 @@ class VerifyScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
                 // Runnable is to help with undo as it would give before user time to finish typing the number before saving state for undo
                 // If user tries to go to 1 but change too slow like 180 and then remove 0 and stays at 18 for 1000ms before going to 1, will save 18 and not 180
                 // Goal is to save value before they tried to change so above would be worse if delay is faster
-                    typingRunnable?.let { typingDelayHandler.removeCallbacks(it) }
-                    typingRunnable = Runnable {
-                        sysUndoState = true
-                    }
-                    typingDelayHandler.postDelayed(typingRunnable!!, 1000)
+                typingRunnable?.let { typingDelayHandler.removeCallbacks(it) }
+                typingRunnable = Runnable {
+                    sysUndoState = true
+                }
+                typingDelayHandler.postDelayed(typingRunnable!!, 1000)
                 // 500ms delay - recommended by older batches could be shorter but might affect it saving before fully typing, I recommend 1000
                 // Longer delay or shorter which one better? - Note: won't affect if user just change this box and then go to another, below only affects if retype
                 // If too fast, affects saving value before finish typing, if too slow, might not even saved the multiple retype value if they choose to come back and type before the delay
@@ -2765,11 +2765,11 @@ class VerifyScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
             }
 
             override fun afterTextChanged(s: Editable?) {
-                    typingRunnable?.let { typingDelayHandler.removeCallbacks(it) }
-                    typingRunnable = Runnable {
-                        diaUndoState = true
-                    }
-                    typingDelayHandler.postDelayed(typingRunnable!!, 1000)
+                typingRunnable?.let { typingDelayHandler.removeCallbacks(it) }
+                typingRunnable = Runnable {
+                    diaUndoState = true
+                }
+                typingDelayHandler.postDelayed(typingRunnable!!, 1000)
             }
         })
 
@@ -3158,7 +3158,7 @@ class VerifyScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
                         if (binding.homeTargetSys.text.toString().toInt() != homeSysBPTarget || binding.homeTargetDia.text.toString().toInt() != homeDiaBPTarget) {
                             // Update db to store recent target home BP
                             val data = hashMapOf("targetHomeSys" to AESEncryption().encrypt(binding.homeTargetSys.text.toString()),
-                                                "targetHomeDia" to AESEncryption().encrypt(binding.homeTargetDia.text.toString()),)
+                                "targetHomeDia" to AESEncryption().encrypt(binding.homeTargetDia.text.toString()),)
                             docRef.set(data, SetOptions.merge())
 
                             // Updates UI to hide options and show view
@@ -3427,5 +3427,3 @@ class ModalBottomSheet(
         const val TAG = "ModalBottomSheet"
     }
 }
-
-
