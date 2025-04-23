@@ -275,19 +275,7 @@
                 android:padding="8dp"
                 android:text="@string/enhance_recco_recommendation" />
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/medical_upper_bg"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:textColor="@color/text_black_white"
-                android:text="@string/enhance_recco_do"
-                android:padding="10sp"
-                android:layout_marginTop="20sp"
-                android:layout_marginStart="16sp"
-                android:layout_marginEnd="16sp"
-                />
+
             <TextView
                 android:id="@+id/recommendationDo"
                 android:layout_width="match_parent"

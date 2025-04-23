@@ -190,7 +190,7 @@ class ProfileActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
                         .addOnSuccessListener { documents ->
                             // For new patients with no records, set the BP Stage as N/A
                             if (documents.isEmpty) {
-                                binding.bpStage.text = "N/A"
+                                binding.bpStage.text = "Not yet determined"
                             } else {
                                 // Call sorting function to sort previous visits
                                 val sortedArr = sortPatientVisits(documents)

@@ -997,64 +997,64 @@ class ScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
 
         // Smart Algorithm
         // commented out swapping of values (17 march)
-//        var i = 0
-//        while (i < numbers.size) {
-//            val systolic = numbers.getOrNull(i)
-//            val diastolic = numbers.getOrNull(i + 1)
-//
-//            if (systolic != null && diastolic != null) {
-//                if (systolic.toIntOrNull() != null && diastolic.toIntOrNull() != null){
-//                    if (systolic.toInt() in 50..220 && diastolic.toInt() in 20..160) {
-//                        if (diastolic.toInt() > systolic.toInt()) {
-//                            correctedNumbers.add(diastolic)
-//                            correctedNumbers.add(systolic)
-//                        } else {
-//                            correctedNumbers.add(systolic)
-//                            correctedNumbers.add(diastolic)
-//                        }
-//                    } else if (systolic.toInt() in 20..160 && diastolic.toInt() in 50..220) {
-//                        correctedNumbers.add(diastolic)
-//                        correctedNumbers.add(systolic)
-//                    } else {
-//                        correctedNumbers.add(systolic)
-//                        correctedNumbers.add(diastolic)
-//                    }
-//                }
-//                else{
-//                    correctedNumbers.add(systolic)
-//                    correctedNumbers.add(diastolic)
-//                }
-//            } else if (systolic != null) {
-//                correctedNumbers.add(systolic)
-//                correctedNumbers.add("-1")
-//            } else if (diastolic != null) {
-//                correctedNumbers.add("-1")
-//                correctedNumbers.add(diastolic)
-//            }
-//
-//            i += 2
-//        }
-
-        // Process the numbers without swapping
         var i = 0
         while (i < numbers.size) {
             val systolic = numbers.getOrNull(i)
             val diastolic = numbers.getOrNull(i + 1)
 
-            if (systolic != null) {
+            if (systolic != null && diastolic != null) {
+                if (systolic.toIntOrNull() != null && diastolic.toIntOrNull() != null){
+                    if (systolic.toInt() in 50..220 && diastolic.toInt() in 20..160) {
+                        if (diastolic.toInt() > systolic.toInt()) {
+                            correctedNumbers.add(diastolic)
+                            correctedNumbers.add(systolic)
+                        } else {
+                            correctedNumbers.add(systolic)
+                            correctedNumbers.add(diastolic)
+                        }
+                    } else if (systolic.toInt() in 20..160 && diastolic.toInt() in 50..220) {
+                        correctedNumbers.add(diastolic)
+                        correctedNumbers.add(systolic)
+                    } else {
+                        correctedNumbers.add(systolic)
+                        correctedNumbers.add(diastolic)
+                    }
+                }
+                else{
+                    correctedNumbers.add(systolic)
+                    correctedNumbers.add(diastolic)
+                }
+            } else if (systolic != null) {
                 correctedNumbers.add(systolic)
-            } else {
                 correctedNumbers.add("-1")
-            }
-
-            if (diastolic != null) {
+            } else if (diastolic != null) {
+                correctedNumbers.add("-1")
                 correctedNumbers.add(diastolic)
-            } else {
-                correctedNumbers.add("-1")
             }
 
             i += 2
         }
+
+//        // Process the numbers without swapping
+//        var i = 0
+//        while (i < numbers.size) {
+//            val systolic = numbers.getOrNull(i)
+//            val diastolic = numbers.getOrNull(i + 1)
+//
+//            if (systolic != null) {
+//                correctedNumbers.add(systolic)
+//            } else {
+//                correctedNumbers.add("-1")
+//            }
+//
+//            if (diastolic != null) {
+//                correctedNumbers.add(diastolic)
+//            } else {
+//                correctedNumbers.add("-1")
+//            }
+//
+//            i += 2
+//        }
 
         // "Dumb Algorithm" Remove algorithm on top
 //        correctedNumbers = numbers.toMutableList()
