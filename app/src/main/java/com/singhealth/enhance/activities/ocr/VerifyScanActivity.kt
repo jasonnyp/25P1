@@ -230,15 +230,22 @@ class VerifyScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
                                 .toInt()
                     }
 
-                    binding.verifyHomeTargetSys.text = homeSysBPTarget.toString()
-                    binding.verifyHomeTargetDia.text = homeDiaBPTarget.toString()
+                    binding.homeTargetSys.setText(homeSysBPTarget.toString())
+                    binding.homeTargetDia.setText(homeDiaBPTarget.toString())
+
+//                    binding.verifyHomeTargetSys.text = homeSysBPTarget.toString()
+//                    binding.verifyHomeTargetDia.text = homeDiaBPTarget.toString()
                     binding.homeBPTargetTV.text = String.format(
                         "%s / %s",
                         homeSysBPTarget.toString(),
                         homeDiaBPTarget.toString()
                     )
-                    binding.verifyClinicTargetSys.text = clinicSysBPTarget.toString()
-                    binding.verifyClinicTargetDia.text = clinicDiaBPTarget.toString()
+
+                    binding.clinicTargetSys.setText(clinicSysBPTarget.toString())
+                    binding.clinicTargetDia.setText(clinicDiaBPTarget.toString())
+
+//                    binding.verifyClinicTargetSys.text = clinicSysBPTarget.toString()
+//                    binding.verifyClinicTargetDia.text = clinicDiaBPTarget.toString()
                     binding.clinicBPTargetTV.text = String.format(
                         "%s / %s",
                         clinicSysBPTarget.toString(),
@@ -253,17 +260,30 @@ class VerifyScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
         // Retrieve previous data
         if (scanBundle != null) {
             if (scanBundle.containsKey("homeSysBPTarget")) {
-                binding.verifyHomeTargetSys.text = scanBundle.getString("homeSysBPTarget")
+                binding.homeTargetSys.setText(scanBundle.getString("homeSysBPTarget"))
             }
             if (scanBundle.containsKey("homeDiaBPTarget")) {
-                binding.verifyHomeTargetDia.text = scanBundle.getString("homeDiaBPTarget")
+                binding.homeTargetDia.setText(scanBundle.getString("homeDiaBPTarget"))
             }
             if (scanBundle.containsKey("clinicSysBPTarget")) {
-                binding.verifyClinicTargetSys.text = scanBundle.getString("clinicSysBPTarget")
+                binding.clinicTargetSys.setText(scanBundle.getString("clinicSysBPTarget"))
             }
             if (scanBundle.containsKey("clinicDiaBPTarget")) {
-                binding.verifyClinicTargetDia.text = scanBundle.getString("clinicDiaBPTarget")
+                binding.clinicTargetDia.setText(scanBundle.getString("clinicDiaBPTarget"))
             }
+
+//            if (scanBundle.containsKey("homeSysBPTarget")) {
+//                binding.verifyHomeTargetSys.text = scanBundle.getString("homeSysBPTarget")
+//            }
+//            if (scanBundle.containsKey("homeDiaBPTarget")) {
+//                binding.verifyHomeTargetDia.text = scanBundle.getString("homeDiaBPTarget")
+//            }
+//            if (scanBundle.containsKey("clinicSysBPTarget")) {
+//                binding.verifyClinicTargetSys.text = scanBundle.getString("clinicSysBPTarget")
+//            }
+//            if (scanBundle.containsKey("clinicDiaBPTarget")) {
+//                binding.verifyClinicTargetDia.text = scanBundle.getString("clinicDiaBPTarget")
+//            }
             if (scanBundle.containsKey("clinicSysBP")) {
                 binding.verifyClinicSys.setText(scanBundle.getString("clinicSysBP"))
             }
@@ -444,41 +464,71 @@ class VerifyScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
             modalBottomSheet.show(supportFragmentManager, ModalBottomSheet.TAG)
         }
 
-        // Edit button for target home BP to show fields and hide edit button
-        binding.editHomeBPLayout.setOnClickListener {
-            binding.editHomeBPLayout.visibility = View.GONE
-            binding.verifyEditHomeBPTarget.visibility = View.VISIBLE
-            binding.verifyEditHomeBPTextFields.visibility = View.VISIBLE
+        // Single Edit button for all target BP fields
+        binding.editAllBPButton.setOnClickListener {
+            binding.editAllBPButton.visibility = View.GONE
+            binding.updateAllBPButton.visibility = View.VISIBLE
+            binding.exitAllBPButton.visibility = View.VISIBLE
+
             binding.homeBPTargetTV.visibility = View.GONE
+            binding.clinicBPTargetTV.visibility = View.GONE
+
+            // Show edit fields and hide display text for both home and clinic
+            binding.verifyEditHomeBPTextFields.visibility = View.VISIBLE
+            binding.verifyEditClinicBPTextFields.visibility = View.VISIBLE
+
+            // Set current values in edit fields
             binding.homeTargetSys.setText(homeSysBPTarget.toString())
             binding.homeTargetDia.setText(homeDiaBPTarget.toString())
-        }
-
-        binding.verifyEditHomeSave.setOnClickListener {
-            showUpdateHomeBPTargetConfirmationDialog()
-        }
-
-        binding.verifyEditHomeExit.setOnClickListener {
-            showExitHomeBPTargetConfirmationDialog()
-        }
-
-        // Edit button for target clinic BP to show fields and hide edit button
-        binding.editClinicBPLayout.setOnClickListener {
-            binding.editClinicBPLayout.visibility = View.GONE
-            binding.verifyEditClinicBPTarget.visibility = View.VISIBLE
-            binding.verifyEditClinicBPTextFields.visibility = View.VISIBLE
-            binding.clinicBPTargetTV.visibility = View.GONE
             binding.clinicTargetSys.setText(clinicSysBPTarget.toString())
             binding.clinicTargetDia.setText(clinicDiaBPTarget.toString())
         }
 
-        binding.verifyEditClinicSave.setOnClickListener {
-            showUpdateClinicBPTargetConfirmationDialog()
+        // Update button for all target BP fields
+        binding.updateAllBPButton.setOnClickListener {
+            showUpdateBPTargetConfirmationDialog()
         }
 
-        binding.verifyEditClinicExit.setOnClickListener {
-            showExitClinicBPTargetConfirmationDialog()
+        // Exit button for all target BP fields
+        binding.exitAllBPButton.setOnClickListener {
+            showExitBPTargetConfirmationDialog()
         }
+
+//        // Edit button for target home BP to show fields and hide edit button
+//        binding.editHomeBPLayout.setOnClickListener {
+//            binding.editHomeBPLayout.visibility = View.GONE
+//            binding.verifyEditHomeBPTarget.visibility = View.VISIBLE
+//            binding.verifyEditHomeBPTextFields.visibility = View.VISIBLE
+//            binding.homeBPTargetTV.visibility = View.GONE
+//            binding.homeTargetSys.setText(homeSysBPTarget.toString())
+//            binding.homeTargetDia.setText(homeDiaBPTarget.toString())
+//        }
+//
+//        binding.verifyEditHomeSave.setOnClickListener {
+//            showUpdateHomeBPTargetConfirmationDialog()
+//        }
+//
+//        binding.verifyEditHomeExit.setOnClickListener {
+//            showExitHomeBPTargetConfirmationDialog()
+//        }
+//
+//        // Edit button for target clinic BP to show fields and hide edit button
+//        binding.editClinicBPLayout.setOnClickListener {
+//            binding.editClinicBPLayout.visibility = View.GONE
+//            binding.verifyEditClinicBPTarget.visibility = View.VISIBLE
+//            binding.verifyEditClinicBPTextFields.visibility = View.VISIBLE
+//            binding.clinicBPTargetTV.visibility = View.GONE
+//            binding.clinicTargetSys.setText(clinicSysBPTarget.toString())
+//            binding.clinicTargetDia.setText(clinicDiaBPTarget.toString())
+//        }
+//
+//        binding.verifyEditClinicSave.setOnClickListener {
+//            showUpdateClinicBPTargetConfirmationDialog()
+//        }
+//
+//        binding.verifyEditClinicExit.setOnClickListener {
+//            showExitClinicBPTargetConfirmationDialog()
+//        }
 
 
         // Calculate and save average BP, home BP and clinic BP targets, then display outcome and recommendation (separate activity)
@@ -881,18 +931,24 @@ class VerifyScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
 
         val scanIntent = Intent(this, ScanActivity::class.java)
 
-        binding.verifyHomeTargetSys.let {
-            scanIntent.putExtra("homeSysBPTarget", binding.verifyHomeTargetSys.text.toString())
-        }
-        binding.verifyHomeTargetDia.let {
-            scanIntent.putExtra("homeDiaBPTarget", binding.verifyHomeTargetDia.text.toString())
-        }
-        binding.verifyClinicTargetSys?.let {
-            scanIntent.putExtra("clinicSysBPTarget", binding.verifyClinicTargetSys.text.toString())
-        }
-        binding.verifyClinicTargetDia?.let {
-            scanIntent.putExtra("clinicDiaBPTarget", binding.verifyClinicTargetDia.text.toString())
-        }
+        scanIntent.putExtra("homeSysBPTarget", binding.homeTargetSys.text.toString())
+        scanIntent.putExtra("homeDiaBPTarget", binding.homeTargetDia.text.toString())
+        scanIntent.putExtra("clinicSysBPTarget", binding.clinicTargetSys.text.toString())
+        scanIntent.putExtra("clinicDiaBPTarget", binding.clinicTargetDia.text.toString())
+
+
+//        binding.verifyHomeTargetSys.let {
+//            scanIntent.putExtra("homeSysBPTarget", binding.verifyHomeTargetSys.text.toString())
+//        }
+//        binding.verifyHomeTargetDia.let {
+//            scanIntent.putExtra("homeDiaBPTarget", binding.verifyHomeTargetDia.text.toString())
+//        }
+//        binding.verifyClinicTargetSys?.let {
+//            scanIntent.putExtra("clinicSysBPTarget", binding.verifyClinicTargetSys.text.toString())
+//        }
+//        binding.verifyClinicTargetDia?.let {
+//            scanIntent.putExtra("clinicDiaBPTarget", binding.verifyClinicTargetDia.text.toString())
+//        }
         binding.verifyClinicSys?.let {
             scanIntent.putExtra("clinicSysBP", binding.verifyClinicSys.text.toString())
         }
@@ -926,30 +982,35 @@ class VerifyScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
             .setPositiveButton(ResourcesHelper.getString(this, R.string.yes_dialog)) { _, _ ->
                 val scanIntent = Intent(this, ScanActivity::class.java)
 
-                binding.verifyHomeTargetSys?.let {
-                    scanIntent.putExtra(
-                        "homeSysBPTarget",
-                        binding.verifyHomeTargetSys.text.toString()
-                    )
-                }
-                binding.verifyHomeTargetDia?.let {
-                    scanIntent.putExtra(
-                        "homeDiaBPTarget",
-                        binding.verifyHomeTargetDia.text.toString()
-                    )
-                }
-                binding.verifyClinicTargetSys?.let {
-                    scanIntent.putExtra(
-                        "clinicSysBPTarget",
-                        binding.verifyClinicTargetSys.text.toString()
-                    )
-                }
-                binding.verifyClinicTargetDia?.let {
-                    scanIntent.putExtra(
-                        "clinicDiaBPTarget",
-                        binding.verifyClinicTargetDia.text.toString()
-                    )
-                }
+                scanIntent.putExtra("homeSysBPTarget", binding.homeTargetSys.text.toString())
+                scanIntent.putExtra("homeDiaBPTarget", binding.homeTargetDia.text.toString())
+                scanIntent.putExtra("clinicSysBPTarget", binding.clinicTargetSys.text.toString())
+                scanIntent.putExtra("clinicDiaBPTarget", binding.clinicTargetDia.text.toString())
+
+//                binding.verifyHomeTargetSys?.let {
+//                    scanIntent.putExtra(
+//                        "homeSysBPTarget",
+//                        binding.verifyHomeTargetSys.text.toString()
+//                    )
+//                }
+//                binding.verifyHomeTargetDia?.let {
+//                    scanIntent.putExtra(
+//                        "homeDiaBPTarget",
+//                        binding.verifyHomeTargetDia.text.toString()
+//                    )
+//                }
+//                binding.verifyClinicTargetSys?.let {
+//                    scanIntent.putExtra(
+//                        "clinicSysBPTarget",
+//                        binding.verifyClinicTargetSys.text.toString()
+//                    )
+//                }
+//                binding.verifyClinicTargetDia?.let {
+//                    scanIntent.putExtra(
+//                        "clinicDiaBPTarget",
+//                        binding.verifyClinicTargetDia.text.toString()
+//                    )
+//                }
                 binding.verifyClinicSys?.let {
                     if (binding.verifyClinicSys.text.toString() != "") {
                         scanIntent.putExtra(
@@ -2224,29 +2285,35 @@ class VerifyScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
 //    }
 
     private fun getBPTarget() {
-        homeSysBPTarget = if (binding.verifyHomeTargetSys.text.toString().isEmpty()) {
-            0
-        } else {
-            binding.verifyHomeTargetSys.text.toString().toInt()
-        }
+        homeSysBPTarget = binding.homeTargetSys.text.toString().toIntOrNull() ?: 0
+        homeDiaBPTarget = binding.homeTargetDia.text.toString().toIntOrNull() ?: 0
+        clinicSysBPTarget = binding.clinicTargetSys.text.toString().toIntOrNull() ?: 0
+        clinicDiaBPTarget = binding.clinicTargetDia.text.toString().toIntOrNull() ?: 0
 
-        homeDiaBPTarget = if (binding.verifyHomeTargetDia.text.toString().isEmpty()) {
-            0
-        } else {
-            binding.verifyHomeTargetDia.text.toString().toInt()
-        }
 
-        clinicSysBPTarget = if (binding.verifyClinicTargetSys.text.toString().isEmpty()) {
-            0
-        } else {
-            binding.verifyClinicTargetSys.text.toString().toInt()
-        }
-
-        clinicDiaBPTarget = if (binding.verifyClinicTargetDia.text.toString().isEmpty()) {
-            0
-        } else {
-            binding.verifyClinicTargetDia.text.toString().toInt()
-        }
+//        homeSysBPTarget = if (binding.verifyHomeTargetSys.text.toString().isEmpty()) {
+//            0
+//        } else {
+//            binding.verifyHomeTargetSys.text.toString().toInt()
+//        }
+//
+//        homeDiaBPTarget = if (binding.verifyHomeTargetDia.text.toString().isEmpty()) {
+//            0
+//        } else {
+//            binding.verifyHomeTargetDia.text.toString().toInt()
+//        }
+//
+//        clinicSysBPTarget = if (binding.verifyClinicTargetSys.text.toString().isEmpty()) {
+//            0
+//        } else {
+//            binding.verifyClinicTargetSys.text.toString().toInt()
+//        }
+//
+//        clinicDiaBPTarget = if (binding.verifyClinicTargetDia.text.toString().isEmpty()) {
+//            0
+//        } else {
+//            binding.verifyClinicTargetDia.text.toString().toInt()
+//        }
     }
 
     private fun calcAvgBP() {
@@ -3143,9 +3210,37 @@ class VerifyScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
         binding.rowBPRecordLL.addView(dividerOldNewRecordLayout)
     }
 
-    // Update the home BP target
-    private fun updateHomeBP() {
-        if (validateTargetHomeBP()) {
+    // new functionality
+    private fun showUpdateBPTargetConfirmationDialog() {
+        MaterialAlertDialogBuilder(this)
+            .setTitle(getString(R.string.verify_scan_update_target_all_header))
+            .setMessage(getString(R.string.verify_scan_update_target_all_body))
+            .setNegativeButton(getString(R.string.cancel)) { dialog, _ ->
+                dialog.dismiss()
+            }
+            .setPositiveButton(getString(R.string.update)) { dialog, _ ->
+                dialog.dismiss()
+                updateAllBPTargets()
+            }
+            .show()
+    }
+
+    private fun showExitBPTargetConfirmationDialog() {
+        MaterialAlertDialogBuilder(this)
+            .setTitle(getString(R.string.verify_scan_exit_target_all_header))
+            .setMessage(getString(R.string.verify_scan_exit_target_all_body))
+            .setNegativeButton(getString(R.string.cancel)) { dialog, _ ->
+                dialog.dismiss()
+            }
+            .setPositiveButton(getString(R.string.exit)) { dialog, _ ->
+                dialog.dismiss()
+                discardChangesAllBP()
+            }
+            .show()
+    }
+
+    private fun updateAllBPTargets() {
+        if (validateAllBPTargets()) {
             progressDialog.setTitle(getString(R.string.verify_scan_update_data))
             progressDialog.setMessage(getString(R.string.verify_scan_update_data_caption))
             progressDialog.show()
@@ -3155,58 +3250,76 @@ class VerifyScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
             docRef.get()
                 .addOnSuccessListener { document ->
                     if (document.exists()) {
-                        if (binding.homeTargetSys.text.toString().toInt() != homeSysBPTarget || binding.homeTargetDia.text.toString().toInt() != homeDiaBPTarget) {
-                            // Update db to store recent target home BP
-                            val data = hashMapOf("targetHomeSys" to AESEncryption().encrypt(binding.homeTargetSys.text.toString()),
-                                "targetHomeDia" to AESEncryption().encrypt(binding.homeTargetDia.text.toString()),)
-                            docRef.set(data, SetOptions.merge())
+                        val newHomeSys = binding.homeTargetSys.text.toString().toInt()
+                        val newHomeDia = binding.homeTargetDia.text.toString().toInt()
+                        val newClinicSys = binding.clinicTargetSys.text.toString().toInt()
+                        val newClinicDia = binding.clinicTargetDia.text.toString().toInt()
 
-                            // Updates UI to hide options and show view
-                            binding.editHomeBPLayout.visibility = View.VISIBLE
-                            binding.verifyEditHomeBPTarget.visibility = View.GONE
-                            binding.verifyEditHomeBPTextFields.visibility = View.GONE
-                            binding.homeBPTargetTV.visibility = View.VISIBLE
+                        if (newHomeSys != homeSysBPTarget || newHomeDia != homeDiaBPTarget ||
+                            newClinicSys != clinicSysBPTarget || newClinicDia != clinicDiaBPTarget) {
 
-                            // Updates components
-                            homeSysBPTarget = binding.homeTargetSys.text.toString().toInt()
-                            homeDiaBPTarget = binding.homeTargetDia.text.toString().toInt()
-
-                            // Updates UI to show updated value
-                            binding.verifyHomeTargetSys.text = homeSysBPTarget.toString()
-                            binding.verifyHomeTargetDia.text = homeDiaBPTarget.toString()
-
-                            // Updates hidden view to save data into firebase when clicked on 7 day calc
-                            binding.homeBPTargetTV.text = String.format(
-                                "%s / %s",
-                                homeSysBPTarget.toString(),
-                                homeDiaBPTarget.toString()
+                            val data = hashMapOf(
+                                "targetHomeSys" to AESEncryption().encrypt(newHomeSys.toString()),
+                                "targetHomeDia" to AESEncryption().encrypt(newHomeDia.toString()),
+                                "targetClinicSys" to AESEncryption().encrypt(newClinicSys.toString()),
+                                "targetClinicDia" to AESEncryption().encrypt(newClinicDia.toString())
                             )
 
-                            // Updates the values used for comparison in 7 day calc
-                            targetHomeSysBP = homeSysBPTarget.toString()
-                            targetHomeDiaBP = homeDiaBPTarget.toString()
+                            docRef.set(data, SetOptions.merge())
+                                .addOnSuccessListener {
+                                    // Update UI
+                                    binding.editAllBPButton.visibility = View.VISIBLE
+                                    binding.updateAllBPButton.visibility = View.GONE
+                                    binding.exitAllBPButton.visibility = View.GONE
+                                    binding.verifyEditHomeBPTextFields.visibility = View.GONE
+                                    binding.verifyEditClinicBPTextFields.visibility = View.GONE
+                                    binding.homeBPTargetTV.visibility = View.VISIBLE
+                                    binding.clinicBPTargetTV.visibility = View.VISIBLE
 
-                            // Updates the values stored in secured shared preferences
-                            SecureSharedPreferences.getSharedPreferences(applicationContext)
-                                .edit()
-                                .putString("targetHomeSysBP", targetHomeSysBP)
-                                .putString("targetHomeDiaBP", targetHomeDiaBP)
-                                .apply()
+                                    // Update variables
+                                    homeSysBPTarget = newHomeSys
+                                    homeDiaBPTarget = newHomeDia
+                                    clinicSysBPTarget = newClinicSys
+                                    clinicDiaBPTarget = newClinicDia
 
-                            progressDialog.dismiss()
-                        }
-                        else{
-                            binding.editHomeBPLayout.visibility = View.VISIBLE
-                            binding.verifyEditHomeBPTarget.visibility = View.GONE
-                            binding.verifyEditHomeBPTextFields.visibility = View.GONE
-                            binding.homeBPTargetTV.visibility = View.VISIBLE
+                                    // Update displayed values
+                                    binding.homeBPTargetTV.text = String.format(
+                                        "%s / %s",
+                                        homeSysBPTarget.toString(),
+                                        homeDiaBPTarget.toString()
+                                    )
+
+                                    binding.clinicBPTargetTV.text = String.format(
+                                        "%s / %s",
+                                        clinicSysBPTarget.toString(),
+                                        clinicDiaBPTarget.toString()
+                                    )
+
+                                    // Update shared prefs
+                                    SecureSharedPreferences.getSharedPreferences(applicationContext)
+                                        .edit()
+                                        .putString("targetHomeSysBP", homeSysBPTarget.toString())
+                                        .putString("targetHomeDiaBP", homeDiaBPTarget.toString())
+                                        .putString("targetClinicSysBP", clinicSysBPTarget.toString())
+                                        .putString("targetClinicDiaBP", clinicDiaBPTarget.toString())
+                                        .apply()
+
+                                    progressDialog.dismiss()
+                                }
+                                .addOnFailureListener { e ->
+                                    progressDialog.dismiss()
+                                    firebaseErrorDialog(this, e, docRef)
+                                }
+                        } else {
                             progressDialog.dismiss()
                             noChangesToBPTarget()
                         }
-                    }
-                    else{
+                    } else {
                         progressDialog.dismiss()
-                        errorDialogBuilder(this, getString(R.string.update_bp_error_header), getString(R.string.update_bp_error_body), MainActivity::class.java)
+                        errorDialogBuilder(this,
+                            getString(R.string.update_bp_error_header),
+                            getString(R.string.update_bp_error_body),
+                            MainActivity::class.java)
                     }
                 }
                 .addOnFailureListener { e ->
@@ -3216,148 +3329,289 @@ class VerifyScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
         }
     }
 
-    // Update the clinic BP target
-    private fun updateClinicBP(){
-        if (validateTargetClinicBP()) {
-            progressDialog.setTitle(getString(R.string.verify_scan_update_data))
-            progressDialog.setMessage(getString(R.string.verify_scan_update_data_caption))
-            progressDialog.show()
+    private fun discardChangesAllBP() {
+        binding.editAllBPButton.visibility = View.VISIBLE
+        binding.updateAllBPButton.visibility = View.GONE
+        binding.exitAllBPButton.visibility = View.GONE
 
-            val docRef = db.collection("patients").document(patientID)
-
-            docRef.get()
-                .addOnSuccessListener { document ->
-                    if (document.exists()) {
-                        if (binding.clinicTargetSys.text.toString().toInt() != clinicSysBPTarget || binding.clinicTargetDia.text.toString().toInt() != clinicDiaBPTarget) {
-                            // Update db to store recent target home BP
-                            val data = hashMapOf("targetClinicSys" to AESEncryption().encrypt(binding.clinicTargetSys.text.toString()),
-                                "targetClinicDia" to AESEncryption().encrypt(binding.clinicTargetDia.text.toString()),)
-                            docRef.set(data, SetOptions.merge())
-
-                            binding.editClinicBPLayout.visibility = View.VISIBLE
-                            binding.verifyEditClinicBPTarget.visibility = View.GONE
-                            binding.verifyEditClinicBPTextFields.visibility = View.GONE
-                            binding.clinicBPTargetTV.visibility = View.VISIBLE
-
-                            clinicSysBPTarget = binding.clinicTargetSys.text.toString().toInt()
-                            clinicDiaBPTarget = binding.clinicTargetDia.text.toString().toInt()
-
-                            binding.verifyClinicTargetSys.text = clinicSysBPTarget.toString()
-                            binding.verifyClinicTargetDia.text = clinicDiaBPTarget.toString()
-
-                            binding.clinicBPTargetTV.text = String.format(
-                                "%s / %s",
-                                clinicSysBPTarget.toString(),
-                                clinicDiaBPTarget.toString()
-                            )
-
-                            targetClinicSysBP = clinicSysBPTarget.toString()
-                            targetClinicDiaBP = clinicDiaBPTarget.toString()
-
-                            SecureSharedPreferences.getSharedPreferences(applicationContext)
-                                .edit()
-                                .putString("targetClinicSysBP", targetClinicSysBP)
-                                .putString("targetClinicDiaBP", targetClinicDiaBP)
-                                .apply()
-
-                            progressDialog.dismiss()
-                        }
-                        else{
-                            binding.editClinicBPLayout.visibility = View.VISIBLE
-                            binding.verifyEditClinicBPTarget.visibility = View.GONE
-                            binding.verifyEditClinicBPTextFields.visibility = View.GONE
-                            binding.clinicBPTargetTV.visibility = View.VISIBLE
-                            progressDialog.dismiss()
-                            noChangesToBPTarget()
-                        }
-                    }
-                    else{
-                        progressDialog.dismiss()
-                        errorDialogBuilder(this, getString(R.string.update_bp_error_header), getString(R.string.update_bp_error_body), MainActivity::class.java)
-                    }
-                }
-                .addOnFailureListener { e ->
-                    progressDialog.dismiss()
-                    firebaseErrorDialog(this, e, docRef)
-                }
-        }
-    }
-
-    // Discard home BP changes from editing
-    private fun discardChangesHomeBP() {
-        binding.editHomeBPLayout.visibility = View.VISIBLE
-        binding.verifyEditHomeBPTarget.visibility = View.GONE
         binding.verifyEditHomeBPTextFields.visibility = View.GONE
-        binding.homeBPTargetTV.visibility = View.VISIBLE
-    }
-
-    // Discard clinic BP changes from editing
-    private fun discardChangesClinicBP() {
-        binding.editClinicBPLayout.visibility = View.VISIBLE
-        binding.verifyEditClinicBPTarget.visibility = View.GONE
         binding.verifyEditClinicBPTextFields.visibility = View.GONE
+
+        binding.homeBPTargetTV.visibility = View.VISIBLE
         binding.clinicBPTargetTV.visibility = View.VISIBLE
     }
 
-    // Method to show the home BP target update confirmation dialog
-    private fun showUpdateHomeBPTargetConfirmationDialog() {
-        MaterialAlertDialogBuilder(this)
-            .setTitle(getString(R.string.verify_scan_update_target_home_header))
-            .setMessage(getString(R.string.verify_scan_update_target_home_body))
-            .setNegativeButton(getString(R.string.cancel)) { dialog, _ ->
-                dialog.dismiss()
-            }
-            .setPositiveButton(getString(R.string.update)) { dialog, _ ->
-                dialog.dismiss()
-                updateHomeBP()
-            }
-            .show()
+    private fun validateAllBPTargets(): Boolean {
+        var valid = true
+
+        // Validate home sys
+        if (binding.homeTargetSys.text.isNullOrEmpty()) {
+            valid = false
+            binding.homeTargetSys.error = getString(R.string.verify_scan_empty_field)
+        } else if (!binding.homeTargetSys.text!!.isDigitsOnly()) {
+            valid = false
+            binding.homeTargetSys.error = getString(R.string.verify_scan_whole_number)
+        } else if (binding.homeTargetSys.text.toString().toInt() !in 90..179) {
+            valid = false
+            binding.homeTargetSys.error = getString(R.string.verify_scan_abnormal_value)
+        }
+
+        // Validate home dia
+        if (binding.homeTargetDia.text.isNullOrEmpty()) {
+            valid = false
+            binding.homeTargetDia.error = getString(R.string.verify_scan_empty_field)
+        } else if (!binding.homeTargetDia.text!!.isDigitsOnly()) {
+            valid = false
+            binding.homeTargetDia.error = getString(R.string.verify_scan_whole_number)
+        } else if (binding.homeTargetDia.text.toString().toInt() !in 50..99) {
+            valid = false
+            binding.homeTargetDia.error = getString(R.string.verify_scan_abnormal_value)
+        }
+
+        // Validate clinic sys
+        if (binding.clinicTargetSys.text.isNullOrEmpty()) {
+            valid = false
+            binding.clinicTargetSys.error = getString(R.string.verify_scan_empty_field)
+        } else if (!binding.clinicTargetSys.text!!.isDigitsOnly()) {
+            valid = false
+            binding.clinicTargetSys.error = getString(R.string.verify_scan_whole_number)
+        } else if (binding.clinicTargetSys.text.toString().toInt() !in 90..179) {
+            valid = false
+            binding.clinicTargetSys.error = getString(R.string.verify_scan_abnormal_value)
+        }
+
+        // Validate clinic dia
+        if (binding.clinicTargetDia.text.isNullOrEmpty()) {
+            valid = false
+            binding.clinicTargetDia.error = getString(R.string.verify_scan_empty_field)
+        } else if (!binding.clinicTargetDia.text!!.isDigitsOnly()) {
+            valid = false
+            binding.clinicTargetDia.error = getString(R.string.verify_scan_whole_number)
+        } else if (binding.clinicTargetDia.text.toString().toInt() !in 50..99) {
+            valid = false
+            binding.clinicTargetDia.error = getString(R.string.verify_scan_abnormal_value)
+        }
+
+        return valid
     }
 
-    // Method to show the home BP target exit confirmation dialog
-    private fun showExitHomeBPTargetConfirmationDialog() {
-        MaterialAlertDialogBuilder(this)
-            .setTitle(getString(R.string.verify_scan_exit_target_home_header))
-            .setMessage(getString(R.string.verify_scan_exit_target_home_body))
-            .setNegativeButton(getString(R.string.cancel)) { dialog, _ ->
-                dialog.dismiss()
-            }
-            .setPositiveButton(getString(R.string.exit)) { dialog, _ ->
-                dialog.dismiss()
-                discardChangesHomeBP()
-            }
-            .show()
-    }
 
-    // Method to show the clinic BP target update confirmation dialog
-    private fun showUpdateClinicBPTargetConfirmationDialog() {
-        MaterialAlertDialogBuilder(this)
-            .setTitle(getString(R.string.verify_scan_update_target_clinic_header))
-            .setMessage(getString(R.string.verify_scan_update_target_clinic_body))
-            .setNegativeButton(getString(R.string.cancel)) { dialog, _ ->
-                dialog.dismiss()
-            }
-            .setPositiveButton(getString(R.string.update)) { dialog, _ ->
-                dialog.dismiss()
-                updateClinicBP()
-            }
-            .show()
-    }
-
-    // Method to show the clinic BP target exit confirmation dialog
-    private fun showExitClinicBPTargetConfirmationDialog() {
-        MaterialAlertDialogBuilder(this)
-            .setTitle(getString(R.string.verify_scan_exit_target_clinic_header))
-            .setMessage(getString(R.string.verify_scan_exit_target_clinic_body))
-            .setNegativeButton(getString(R.string.cancel)) { dialog, _ ->
-                dialog.dismiss()
-            }
-            .setPositiveButton(getString(R.string.exit)) { dialog, _ ->
-                dialog.dismiss()
-                discardChangesClinicBP()
-            }
-            .show()
-    }
+    // commented out
+//    // Update the home BP target
+//    private fun updateHomeBP() {
+//        if (validateTargetHomeBP()) {
+//            progressDialog.setTitle(getString(R.string.verify_scan_update_data))
+//            progressDialog.setMessage(getString(R.string.verify_scan_update_data_caption))
+//            progressDialog.show()
+//
+//            val docRef = db.collection("patients").document(patientID)
+//
+//            docRef.get()
+//                .addOnSuccessListener { document ->
+//                    if (document.exists()) {
+//                        if (binding.homeTargetSys.text.toString().toInt() != homeSysBPTarget || binding.homeTargetDia.text.toString().toInt() != homeDiaBPTarget) {
+//                            // Update db to store recent target home BP
+//                            val data = hashMapOf("targetHomeSys" to AESEncryption().encrypt(binding.homeTargetSys.text.toString()),
+//                                "targetHomeDia" to AESEncryption().encrypt(binding.homeTargetDia.text.toString()),)
+//                            docRef.set(data, SetOptions.merge())
+//
+//                            // Updates UI to hide options and show view
+//                            binding.editHomeBPLayout.visibility = View.VISIBLE
+//                            binding.verifyEditHomeBPTarget.visibility = View.GONE
+//                            binding.verifyEditHomeBPTextFields.visibility = View.GONE
+//                            binding.homeBPTargetTV.visibility = View.VISIBLE
+//
+//                            // Updates components
+//                            homeSysBPTarget = binding.homeTargetSys.text.toString().toInt()
+//                            homeDiaBPTarget = binding.homeTargetDia.text.toString().toInt()
+//
+//                            // Updates UI to show updated value
+//                            binding.verifyHomeTargetSys.text = homeSysBPTarget.toString()
+//                            binding.verifyHomeTargetDia.text = homeDiaBPTarget.toString()
+//
+//                            // Updates hidden view to save data into firebase when clicked on 7 day calc
+//                            binding.homeBPTargetTV.text = String.format(
+//                                "%s / %s",
+//                                homeSysBPTarget.toString(),
+//                                homeDiaBPTarget.toString()
+//                            )
+//
+//                            // Updates the values used for comparison in 7 day calc
+//                            targetHomeSysBP = homeSysBPTarget.toString()
+//                            targetHomeDiaBP = homeDiaBPTarget.toString()
+//
+//                            // Updates the values stored in secured shared preferences
+//                            SecureSharedPreferences.getSharedPreferences(applicationContext)
+//                                .edit()
+//                                .putString("targetHomeSysBP", targetHomeSysBP)
+//                                .putString("targetHomeDiaBP", targetHomeDiaBP)
+//                                .apply()
+//
+//                            progressDialog.dismiss()
+//                        }
+//                        else{
+//                            binding.editHomeBPLayout.visibility = View.VISIBLE
+//                            binding.verifyEditHomeBPTarget.visibility = View.GONE
+//                            binding.verifyEditHomeBPTextFields.visibility = View.GONE
+//                            binding.homeBPTargetTV.visibility = View.VISIBLE
+//                            progressDialog.dismiss()
+//                            noChangesToBPTarget()
+//                        }
+//                    }
+//                    else{
+//                        progressDialog.dismiss()
+//                        errorDialogBuilder(this, getString(R.string.update_bp_error_header), getString(R.string.update_bp_error_body), MainActivity::class.java)
+//                    }
+//                }
+//                .addOnFailureListener { e ->
+//                    progressDialog.dismiss()
+//                    firebaseErrorDialog(this, e, docRef)
+//                }
+//        }
+//    }
+//
+//    // Update the clinic BP target
+//    private fun updateClinicBP(){
+//        if (validateTargetClinicBP()) {
+//            progressDialog.setTitle(getString(R.string.verify_scan_update_data))
+//            progressDialog.setMessage(getString(R.string.verify_scan_update_data_caption))
+//            progressDialog.show()
+//
+//            val docRef = db.collection("patients").document(patientID)
+//
+//            docRef.get()
+//                .addOnSuccessListener { document ->
+//                    if (document.exists()) {
+//                        if (binding.clinicTargetSys.text.toString().toInt() != clinicSysBPTarget || binding.clinicTargetDia.text.toString().toInt() != clinicDiaBPTarget) {
+//                            // Update db to store recent target home BP
+//                            val data = hashMapOf("targetClinicSys" to AESEncryption().encrypt(binding.clinicTargetSys.text.toString()),
+//                                "targetClinicDia" to AESEncryption().encrypt(binding.clinicTargetDia.text.toString()),)
+//                            docRef.set(data, SetOptions.merge())
+//
+//                            binding.editClinicBPLayout.visibility = View.VISIBLE
+//                            binding.verifyEditClinicBPTarget.visibility = View.GONE
+//                            binding.verifyEditClinicBPTextFields.visibility = View.GONE
+//                            binding.clinicBPTargetTV.visibility = View.VISIBLE
+//
+//                            clinicSysBPTarget = binding.clinicTargetSys.text.toString().toInt()
+//                            clinicDiaBPTarget = binding.clinicTargetDia.text.toString().toInt()
+//
+//                            binding.verifyClinicTargetSys.text = clinicSysBPTarget.toString()
+//                            binding.verifyClinicTargetDia.text = clinicDiaBPTarget.toString()
+//
+//                            binding.clinicBPTargetTV.text = String.format(
+//                                "%s / %s",
+//                                clinicSysBPTarget.toString(),
+//                                clinicDiaBPTarget.toString()
+//                            )
+//
+//                            targetClinicSysBP = clinicSysBPTarget.toString()
+//                            targetClinicDiaBP = clinicDiaBPTarget.toString()
+//
+//                            SecureSharedPreferences.getSharedPreferences(applicationContext)
+//                                .edit()
+//                                .putString("targetClinicSysBP", targetClinicSysBP)
+//                                .putString("targetClinicDiaBP", targetClinicDiaBP)
+//                                .apply()
+//
+//                            progressDialog.dismiss()
+//                        }
+//                        else{
+//                            binding.editClinicBPLayout.visibility = View.VISIBLE
+//                            binding.verifyEditClinicBPTarget.visibility = View.GONE
+//                            binding.verifyEditClinicBPTextFields.visibility = View.GONE
+//                            binding.clinicBPTargetTV.visibility = View.VISIBLE
+//                            progressDialog.dismiss()
+//                            noChangesToBPTarget()
+//                        }
+//                    }
+//                    else{
+//                        progressDialog.dismiss()
+//                        errorDialogBuilder(this, getString(R.string.update_bp_error_header), getString(R.string.update_bp_error_body), MainActivity::class.java)
+//                    }
+//                }
+//                .addOnFailureListener { e ->
+//                    progressDialog.dismiss()
+//                    firebaseErrorDialog(this, e, docRef)
+//                }
+//        }
+//    }
+//
+//    // Discard home BP changes from editing
+//    private fun discardChangesHomeBP() {
+//        binding.editHomeBPLayout.visibility = View.VISIBLE
+//        binding.verifyEditHomeBPTarget.visibility = View.GONE
+//        binding.verifyEditHomeBPTextFields.visibility = View.GONE
+//        binding.homeBPTargetTV.visibility = View.VISIBLE
+//    }
+//
+//    // Discard clinic BP changes from editing
+//    private fun discardChangesClinicBP() {
+//        binding.editClinicBPLayout.visibility = View.VISIBLE
+//        binding.verifyEditClinicBPTarget.visibility = View.GONE
+//        binding.verifyEditClinicBPTextFields.visibility = View.GONE
+//        binding.clinicBPTargetTV.visibility = View.VISIBLE
+//    }
+//
+//    // Method to show the home BP target update confirmation dialog
+//    private fun showUpdateHomeBPTargetConfirmationDialog() {
+//        MaterialAlertDialogBuilder(this)
+//            .setTitle(getString(R.string.verify_scan_update_target_home_header))
+//            .setMessage(getString(R.string.verify_scan_update_target_home_body))
+//            .setNegativeButton(getString(R.string.cancel)) { dialog, _ ->
+//                dialog.dismiss()
+//            }
+//            .setPositiveButton(getString(R.string.update)) { dialog, _ ->
+//                dialog.dismiss()
+//                updateHomeBP()
+//            }
+//            .show()
+//    }
+//
+//    // Method to show the home BP target exit confirmation dialog
+//    private fun showExitHomeBPTargetConfirmationDialog() {
+//        MaterialAlertDialogBuilder(this)
+//            .setTitle(getString(R.string.verify_scan_exit_target_home_header))
+//            .setMessage(getString(R.string.verify_scan_exit_target_home_body))
+//            .setNegativeButton(getString(R.string.cancel)) { dialog, _ ->
+//                dialog.dismiss()
+//            }
+//            .setPositiveButton(getString(R.string.exit)) { dialog, _ ->
+//                dialog.dismiss()
+//                discardChangesHomeBP()
+//            }
+//            .show()
+//    }
+//
+//    // Method to show the clinic BP target update confirmation dialog
+//    private fun showUpdateClinicBPTargetConfirmationDialog() {
+//        MaterialAlertDialogBuilder(this)
+//            .setTitle(getString(R.string.verify_scan_update_target_clinic_header))
+//            .setMessage(getString(R.string.verify_scan_update_target_clinic_body))
+//            .setNegativeButton(getString(R.string.cancel)) { dialog, _ ->
+//                dialog.dismiss()
+//            }
+//            .setPositiveButton(getString(R.string.update)) { dialog, _ ->
+//                dialog.dismiss()
+//                updateClinicBP()
+//            }
+//            .show()
+//    }
+//
+//    // Method to show the clinic BP target exit confirmation dialog
+//    private fun showExitClinicBPTargetConfirmationDialog() {
+//        MaterialAlertDialogBuilder(this)
+//            .setTitle(getString(R.string.verify_scan_exit_target_clinic_header))
+//            .setMessage(getString(R.string.verify_scan_exit_target_clinic_body))
+//            .setNegativeButton(getString(R.string.cancel)) { dialog, _ ->
+//                dialog.dismiss()
+//            }
+//            .setPositiveButton(getString(R.string.exit)) { dialog, _ ->
+//                dialog.dismiss()
+//                discardChangesClinicBP()
+//            }
+//            .show()
+//    }
 
     // Method to show no updates were made dialog
     private fun noChangesToBPTarget() {

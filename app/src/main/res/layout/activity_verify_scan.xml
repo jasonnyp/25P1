@@ -70,88 +70,88 @@
                             android:textAppearance="?attr/textAppearanceBodyMedium"
                             android:textSize="16sp" />
 
-                        <LinearLayout
-                            android:id="@+id/editHomeBPLayout"
-                            android:layout_height="wrap_content"
-                            android:layout_width="wrap_content"
-                            android:layout_marginEnd="8dp"
-                            android:layout_alignParentEnd="true"
-                            android:gravity="center_horizontal"
-                            android:orientation="horizontal"
-                            android:visibility="visible">
+<!--                        <LinearLayout-->
+<!--                            android:id="@+id/editHomeBPLayout"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:layout_width="wrap_content"-->
+<!--                            android:layout_marginEnd="8dp"-->
+<!--                            android:layout_alignParentEnd="true"-->
+<!--                            android:gravity="center_horizontal"-->
+<!--                            android:orientation="horizontal"-->
+<!--                            android:visibility="visible">-->
 
-                            <ImageView
-                                android:layout_marginEnd="6dp"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:src="@drawable/ic_edit_target_values"
-                                android:contentDescription="@string/enhance_verify_edit"/>
+<!--                            <ImageView-->
+<!--                                android:layout_marginEnd="6dp"-->
+<!--                                android:layout_width="wrap_content"-->
+<!--                                android:layout_height="wrap_content"-->
+<!--                                android:src="@drawable/ic_edit_target_values"-->
+<!--                                android:contentDescription="@string/enhance_verify_edit"/>-->
 
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/enhance_verify_edit"
-                                android:textAppearance="?attr/textAppearanceBodyMedium"
-                                android:textSize="16sp"/>
+<!--                            <TextView-->
+<!--                                android:layout_width="wrap_content"-->
+<!--                                android:layout_height="wrap_content"-->
+<!--                                android:text="@string/enhance_verify_edit"-->
+<!--                                android:textAppearance="?attr/textAppearanceBodyMedium"-->
+<!--                                android:textSize="16sp"/>-->
 
-                        </LinearLayout>
+<!--                        </LinearLayout>-->
 
-                        <LinearLayout
-                            android:id="@+id/verifyEditHomeBPTarget"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:layout_alignParentEnd="true"
-                            android:visibility="gone"
-                            >
+<!--                        <LinearLayout-->
+<!--                            android:id="@+id/verifyEditHomeBPTarget"-->
+<!--                            android:layout_width="wrap_content"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:orientation="horizontal"-->
+<!--                            android:layout_alignParentEnd="true"-->
+<!--                            android:visibility="gone"-->
+<!--                            >-->
 
-                            <LinearLayout
-                                android:id="@+id/verifyEditHomeSave"
-                                android:layout_height="wrap_content"
-                                android:layout_width="wrap_content"
-                                android:layout_marginEnd="8dp">
+<!--                            <LinearLayout-->
+<!--                                android:id="@+id/verifyEditHomeSave"-->
+<!--                                android:layout_height="wrap_content"-->
+<!--                                android:layout_width="wrap_content"-->
+<!--                                android:layout_marginEnd="8dp">-->
 
-                                <ImageView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="match_parent"
-                                    app:tint="@color/black"
-                                    android:layout_marginEnd="2dp"
-                                    android:src="@drawable/ic_save"
-                                    android:contentDescription="@string/enhance_verify_update"/>
+<!--                                <ImageView-->
+<!--                                    android:layout_width="wrap_content"-->
+<!--                                    android:layout_height="match_parent"-->
+<!--                                    app:tint="@color/black"-->
+<!--                                    android:layout_marginEnd="2dp"-->
+<!--                                    android:src="@drawable/ic_save"-->
+<!--                                    android:contentDescription="@string/enhance_verify_update"/>-->
 
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="@string/enhance_verify_update"
-                                    android:textAppearance="?attr/textAppearanceBodyMedium"
-                                    android:textSize="16sp"/>
+<!--                                <TextView-->
+<!--                                    android:layout_width="wrap_content"-->
+<!--                                    android:layout_height="wrap_content"-->
+<!--                                    android:text="@string/enhance_verify_update"-->
+<!--                                    android:textAppearance="?attr/textAppearanceBodyMedium"-->
+<!--                                    android:textSize="16sp"/>-->
 
-                            </LinearLayout>
+<!--                            </LinearLayout>-->
 
-                            <LinearLayout
-                                android:id="@+id/verifyEditHomeExit"
-                                android:layout_height="wrap_content"
-                                android:layout_width="wrap_content"
-                                android:layout_marginEnd="8dp">
+<!--                            <LinearLayout-->
+<!--                                android:id="@+id/verifyEditHomeExit"-->
+<!--                                android:layout_height="wrap_content"-->
+<!--                                android:layout_width="wrap_content"-->
+<!--                                android:layout_marginEnd="8dp">-->
 
-                                <ImageView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    app:tint="@color/black"
-                                    android:layout_marginEnd="2dp"
-                                    android:src="@drawable/ic_logout"
-                                    android:contentDescription="@string/enhance_verify_exit"/>
+<!--                                <ImageView-->
+<!--                                    android:layout_width="wrap_content"-->
+<!--                                    android:layout_height="wrap_content"-->
+<!--                                    app:tint="@color/black"-->
+<!--                                    android:layout_marginEnd="2dp"-->
+<!--                                    android:src="@drawable/ic_logout"-->
+<!--                                    android:contentDescription="@string/enhance_verify_exit"/>-->
 
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="match_parent"
-                                    android:text="@string/enhance_verify_exit"
-                                    android:textAppearance="?attr/textAppearanceBodyMedium"
-                                    android:textSize="16sp" />
+<!--                                <TextView-->
+<!--                                    android:layout_width="wrap_content"-->
+<!--                                    android:layout_height="match_parent"-->
+<!--                                    android:text="@string/enhance_verify_exit"-->
+<!--                                    android:textAppearance="?attr/textAppearanceBodyMedium"-->
+<!--                                    android:textSize="16sp" />-->
 
-                            </LinearLayout>
+<!--                            </LinearLayout>-->
 
-                        </LinearLayout>
+<!--                        </LinearLayout>-->
 
                     </RelativeLayout>
 
@@ -295,86 +295,86 @@
                             android:textAppearance="?attr/textAppearanceBodyMedium"
                             android:textSize="16sp" />
 
-                        <LinearLayout
-                            android:id="@+id/editClinicBPLayout"
-                            android:layout_height="wrap_content"
-                            android:layout_width="wrap_content"
-                            android:gravity="center_horizontal"
-                            android:layout_marginEnd="8dp"
-                            android:layout_alignParentEnd="true"
-                            android:visibility="visible">
+<!--                        <LinearLayout-->
+<!--                            android:id="@+id/editClinicBPLayout"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:layout_width="wrap_content"-->
+<!--                            android:gravity="center_horizontal"-->
+<!--                            android:layout_marginEnd="8dp"-->
+<!--                            android:layout_alignParentEnd="true"-->
+<!--                            android:visibility="visible">-->
 
-                            <ImageView
-                                android:layout_marginEnd="6dp"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:src="@drawable/ic_edit_target_values"
-                                android:contentDescription="@string/enhance_verify_edit"/>
+<!--                            <ImageView-->
+<!--                                android:layout_marginEnd="6dp"-->
+<!--                                android:layout_width="wrap_content"-->
+<!--                                android:layout_height="wrap_content"-->
+<!--                                android:src="@drawable/ic_edit_target_values"-->
+<!--                                android:contentDescription="@string/enhance_verify_edit"/>-->
 
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/enhance_verify_edit"
-                                android:textAppearance="?attr/textAppearanceBodyMedium"
-                                android:textSize="16sp" />
+<!--                            <TextView-->
+<!--                                android:layout_width="wrap_content"-->
+<!--                                android:layout_height="wrap_content"-->
+<!--                                android:text="@string/enhance_verify_edit"-->
+<!--                                android:textAppearance="?attr/textAppearanceBodyMedium"-->
+<!--                                android:textSize="16sp" />-->
 
-                        </LinearLayout>
+<!--                        </LinearLayout>-->
 
-                        <LinearLayout
-                            android:id="@+id/verifyEditClinicBPTarget"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentEnd="true"
-                            android:visibility="gone">
+<!--                        <LinearLayout-->
+<!--                            android:id="@+id/verifyEditClinicBPTarget"-->
+<!--                            android:layout_width="wrap_content"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:layout_alignParentEnd="true"-->
+<!--                            android:visibility="gone">-->
 
-                            <LinearLayout
-                                android:id="@+id/verifyEditClinicSave"
-                                android:layout_height="wrap_content"
-                                android:layout_width="wrap_content"
-                                android:layout_marginEnd="8dp">
+<!--                            <LinearLayout-->
+<!--                                android:id="@+id/verifyEditClinicSave"-->
+<!--                                android:layout_height="wrap_content"-->
+<!--                                android:layout_width="wrap_content"-->
+<!--                                android:layout_marginEnd="8dp">-->
 
-                                <ImageView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="match_parent"
-                                    app:tint="@color/black"
-                                    android:layout_marginEnd="2dp"
-                                    android:src="@drawable/ic_save"
-                                    android:contentDescription="@string/enhance_verify_update"/>
+<!--                                <ImageView-->
+<!--                                    android:layout_width="wrap_content"-->
+<!--                                    android:layout_height="match_parent"-->
+<!--                                    app:tint="@color/black"-->
+<!--                                    android:layout_marginEnd="2dp"-->
+<!--                                    android:src="@drawable/ic_save"-->
+<!--                                    android:contentDescription="@string/enhance_verify_update"/>-->
 
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="@string/enhance_verify_update"
-                                    android:textAppearance="?attr/textAppearanceBodyMedium"
-                                    android:textSize="16sp"/>
+<!--                                <TextView-->
+<!--                                    android:layout_width="wrap_content"-->
+<!--                                    android:layout_height="wrap_content"-->
+<!--                                    android:text="@string/enhance_verify_update"-->
+<!--                                    android:textAppearance="?attr/textAppearanceBodyMedium"-->
+<!--                                    android:textSize="16sp"/>-->
 
-                            </LinearLayout>
+<!--                            </LinearLayout>-->
 
-                            <LinearLayout
-                                android:id="@+id/verifyEditClinicExit"
-                                android:layout_height="wrap_content"
-                                android:layout_width="wrap_content"
-                                android:layout_marginEnd="8dp">
+<!--                            <LinearLayout-->
+<!--                                android:id="@+id/verifyEditClinicExit"-->
+<!--                                android:layout_height="wrap_content"-->
+<!--                                android:layout_width="wrap_content"-->
+<!--                                android:layout_marginEnd="8dp">-->
 
-                                <ImageView
-                                    android:id="@+id/editClientBPIV"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    app:tint="@color/black"
-                                    android:layout_marginEnd="2dp"
-                                    android:src="@drawable/ic_logout"
-                                    android:contentDescription="@string/enhance_verify_exit"/>
+<!--                                <ImageView-->
+<!--                                    android:id="@+id/editClientBPIV"-->
+<!--                                    android:layout_width="wrap_content"-->
+<!--                                    android:layout_height="wrap_content"-->
+<!--                                    app:tint="@color/black"-->
+<!--                                    android:layout_marginEnd="2dp"-->
+<!--                                    android:src="@drawable/ic_logout"-->
+<!--                                    android:contentDescription="@string/enhance_verify_exit"/>-->
 
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="@string/enhance_verify_exit"
-                                    android:textAppearance="?attr/textAppearanceBodyMedium"
-                                    android:textSize="16sp"/>
+<!--                                <TextView-->
+<!--                                    android:layout_width="wrap_content"-->
+<!--                                    android:layout_height="wrap_content"-->
+<!--                                    android:text="@string/enhance_verify_exit"-->
+<!--                                    android:textAppearance="?attr/textAppearanceBodyMedium"-->
+<!--                                    android:textSize="16sp"/>-->
 
-                            </LinearLayout>
+<!--                            </LinearLayout>-->
 
-                        </LinearLayout>
+<!--                        </LinearLayout>-->
 
                     </RelativeLayout>
 
@@ -497,6 +497,50 @@
                         </LinearLayout>
                     </LinearLayout>
                 </RelativeLayout>
+
+                <!-- edit button, update and exit -->
+                <LinearLayout
+                    android:id="@+id/homeBPButtonsLL"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginTop="12dp"
+                    android:gravity="center_horizontal"
+                    android:visibility="visible">
+
+                    <Button
+                        android:id="@+id/editAllBPButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/enhance_verify_edit"
+                        android:backgroundTint="@color/primary_button_color"
+                        android:textColor="@color/white"
+                        android:textSize="16sp"
+                        android:layout_marginBottom="8dp"/>
+
+                    <Button
+                        android:id="@+id/updateAllBPButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/enhance_verify_update"
+                        android:backgroundTint="@color/primary_button_color"
+                        android:textColor="@color/white"
+                        android:textSize="16sp"
+                        android:layout_marginBottom="8dp"
+                        android:visibility="gone"/>
+
+                    <Button
+                        android:id="@+id/exitAllBPButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        style="?attr/materialButtonOutlinedStyle"
+                        android:text="@string/enhance_verify_exit"
+                        android:backgroundTint="@color/white"
+                        android:textColor="@color/primary_button_color"
+                        android:textSize="16sp"
+                        android:visibility="gone"/>
+                </LinearLayout>
+
 
                 <TextView
                     android:layout_width="wrap_content"
