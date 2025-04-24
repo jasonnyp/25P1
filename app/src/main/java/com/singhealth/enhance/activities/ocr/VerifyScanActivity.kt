@@ -1702,24 +1702,17 @@ class VerifyScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
                     }
                 }
 
-                // Historical Data Validation (without incrementing errorCount)
+                // Historical Data Validation (visual only, no error flag unless clearly invalid)
                 sysBPFields.take(sysBPListHistory.size).forEach { field ->
                     val value = field.text.toString()
-
-                    if (value.isEmpty() || value.length >= 4) {
-                        // Mark as empty with an error, color-coded red
-                        errorCount += 1
+                    if (value.isBlank()) {
                         field.error = ResourcesHelper.getString(this, R.string.verify_scan_empty_field)
-                        setErrorIcon(field, R.color.red)
-                    } else if (value.length == 1) {
-                        errorCount += 1
-                        field.error = ResourcesHelper.getString(this, R.string.verify_scan_impossible_value)
                         setErrorIcon(field, R.color.red)
                     } else if (!value.isDigitsOnly()) {
                         field.setText("")
-                    } else if (value.toInt() < 0) {
-                        field.error = ResourcesHelper.getString(this, R.string.verify_scan_whole_number)
-                        setErrorIcon(field, R.color.red)
+                    } else if (value.toInt() in 90..179) {
+                        field.error = null
+                        setErrorIcon(field, android.R.color.transparent)
                     } else if (value.toInt() in 50..300) {
                         field.error = ResourcesHelper.getString(this, R.string.verify_scan_out_of_range_header)
                         setErrorIcon(field, R.color.orange)
@@ -1727,24 +1720,43 @@ class VerifyScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
                         field.error = ResourcesHelper.getString(this, R.string.verify_scan_impossible_value)
                         setErrorIcon(field, R.color.red)
                     }
+
+
+//                    if (value.isEmpty() || value.length >= 4) {
+//                        // Mark as empty with an error, color-coded red
+//                        errorCount += 1
+//                        field.error = ResourcesHelper.getString(this, R.string.verify_scan_empty_field)
+//                        setErrorIcon(field, R.color.red)
+//                    } else if (value.length == 1) {
+//                        errorCount += 1
+//                        field.error = ResourcesHelper.getString(this, R.string.verify_scan_impossible_value)
+//                        setErrorIcon(field, R.color.red)
+//                    } else if (!value.isDigitsOnly()) {
+//                        field.setText("")
+//                    } else if (value.toInt() < 0) {
+//                        field.error = ResourcesHelper.getString(this, R.string.verify_scan_whole_number)
+//                        setErrorIcon(field, R.color.red)
+//                    } else if (value.toInt() in 50..300) {
+//                        field.error = ResourcesHelper.getString(this, R.string.verify_scan_out_of_range_header)
+//                        setErrorIcon(field, R.color.orange)
+//                    } else {
+//                        field.error = ResourcesHelper.getString(this, R.string.verify_scan_impossible_value)
+//                        setErrorIcon(field, R.color.red)
+//                    }
                 }
 
                 diaBPFields.take(diaBPListHistory.size).forEach { field ->
                     val value = field.text.toString()
 
-                    if (value.isEmpty() || value.length >= 4) {
-                        // Mark as empty with an error, color-coded red
-                        errorCount += 1
+                    if (value.isBlank()) {
                         field.error = ResourcesHelper.getString(this, R.string.verify_scan_empty_field)
                         setErrorIcon(field, R.color.red)
-                    } else if (value.length == 1) {
-                        errorCount += 1
-                        field.error = ResourcesHelper.getString(this, R.string.verify_scan_impossible_value)
-                        setErrorIcon(field, R.color.red)
-                    } else if (!value.isDigitsOnly()) {
+                    } else if (!value.all { it.isDigit() }) {
                         field.setText("")
+                    } else if (value.toInt() in 50..99) {
+                        field.error = null
+                        setErrorIcon(field, android.R.color.transparent)
                     } else if (value.toInt() in 30..180) {
-                        orangeErrorCount++
                         field.error = ResourcesHelper.getString(this, R.string.verify_scan_out_of_range_header)
                         setErrorIcon(field, R.color.orange)
                     } else {
@@ -1752,6 +1764,31 @@ class VerifyScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
                         setErrorIcon(field, R.color.red)
                     }
                 }
+
+
+//                diaBPFields.take(diaBPListHistory.size).forEach { field ->
+//                    val value = field.text.toString()
+//
+//                    if (value.isEmpty() || value.length >= 4) {
+//                        // Mark as empty with an error, color-coded red
+//                        errorCount += 1
+//                        field.error = ResourcesHelper.getString(this, R.string.verify_scan_empty_field)
+//                        setErrorIcon(field, R.color.red)
+//                    } else if (value.length == 1) {
+//                        errorCount += 1
+//                        field.error = ResourcesHelper.getString(this, R.string.verify_scan_impossible_value)
+//                        setErrorIcon(field, R.color.red)
+//                    } else if (!value.isDigitsOnly()) {
+//                        field.setText("")
+//                    } else if (value.toInt() in 30..180) {
+//                        orangeErrorCount++
+//                        field.error = ResourcesHelper.getString(this, R.string.verify_scan_out_of_range_header)
+//                        setErrorIcon(field, R.color.orange)
+//                    } else {
+//                        field.error = ResourcesHelper.getString(this, R.string.verify_scan_impossible_value)
+//                        setErrorIcon(field, R.color.red)
+//                    }
+//                }
             }
 
         }
