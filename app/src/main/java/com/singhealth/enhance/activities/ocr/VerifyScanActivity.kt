@@ -1654,6 +1654,7 @@ class VerifyScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
                         setErrorIcon(field, R.color.red)
                     } else if (value.toInt() in 90..179) {
                         field.error = null
+                        setErrorIcon(field, android.R.color.transparent)
                     } else if (value.toInt() in 50..300) {
                         orangeErrorCount++
                         field.error = ResourcesHelper.getString(this, R.string.verify_scan_out_of_range_header)
@@ -1689,6 +1690,7 @@ class VerifyScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
                         setErrorIcon(field, R.color.red)
                     } else if (value.toInt() in 50..99) {
                         field.error = null
+                        setErrorIcon(field, android.R.color.transparent)
                     } else if (value.toInt() in 30..180) {
                         orangeErrorCount++
                         field.error = ResourcesHelper.getString(this, R.string.verify_scan_out_of_range_header)
@@ -1710,6 +1712,7 @@ class VerifyScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
                         field.setText("")
                     } else if (value.toInt() in 90..179) {
                         field.error = null
+                        setErrorIcon(field, android.R.color.transparent)
                     } else if (value.toInt() in 50..300) {
                         field.error = ResourcesHelper.getString(this, R.string.verify_scan_out_of_range_header)
                         setErrorIcon(field, R.color.orange)
@@ -1752,6 +1755,7 @@ class VerifyScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
                         field.setText("")
                     } else if (value.toInt() in 50..99) {
                         field.error = null
+                        setErrorIcon(field, android.R.color.transparent)
                     } else if (value.toInt() in 30..180) {
                         field.error = ResourcesHelper.getString(this, R.string.verify_scan_out_of_range_header)
                         setErrorIcon(field, R.color.orange)
@@ -2069,6 +2073,7 @@ class VerifyScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
             }
             intValue in 90..179 -> {
                 field.error = null
+                setErrorIcon(field, android.R.color.transparent)
                 true
             }
             intValue in 50..300 -> {
@@ -2110,6 +2115,7 @@ class VerifyScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
             }
             intValue in 50..99 -> {
                 field.error = null
+                setErrorIcon(field, android.R.color.transparent)
                 true
             }
             intValue in 30..180 -> {
@@ -2146,6 +2152,7 @@ class VerifyScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
                 setErrorIcon(binding.verifyClinicSys, R.color.orange)
             } else {
                 binding.verifyClinicSys.error = null
+                setErrorIcon(binding.verifyClinicSys, android.R.color.transparent)
             }
         }
 
@@ -2167,6 +2174,7 @@ class VerifyScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
                 setErrorIcon(binding.verifyClinicDia, R.color.orange)
             } else {
                 binding.verifyClinicDia.error = null
+                setErrorIcon(binding.verifyClinicDia, android.R.color.transparent)
             }
         }
 
