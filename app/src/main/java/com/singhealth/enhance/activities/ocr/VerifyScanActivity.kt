@@ -1458,6 +1458,15 @@ class VerifyScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
         field.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null)
     }
 
+    private fun resetFieldToOriginalState(field: EditText) {
+        field.error = null
+        field.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null)
+        field.compoundDrawablePadding = 0
+        field.invalidate()
+        field.requestLayout()
+    }
+
+
     private fun postScanValidation() {
         errorChecked = false
 
@@ -1493,7 +1502,7 @@ class VerifyScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
                     sysBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_abnormal_value)
                 } else if (value.toInt() in 90..179) {
                     // Normal range, no error
-                    sysBPFields[i].error = null
+                    resetFieldToOriginalState(sysBPFields[i])
                 } else if (value.toInt() in 50..300) {
                     // Out-of-range but acceptable, color-coded orange
                     orangeErrorCount++
@@ -1532,7 +1541,7 @@ class VerifyScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
                     diaBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_abnormal_value)
                 } else if (value.toInt() in 50..99) {
                     // Normal range, no error
-                    diaBPFields[i].error = null
+                    resetFieldToOriginalState(diaBPFields[i])
                 } else if (value.toInt() in 30..180) {
                     // Out-of-range but acceptable, color-coded orange
                     orangeErrorCount++
@@ -1575,7 +1584,7 @@ class VerifyScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
                         sysBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_abnormal_value)
                     } else if (value.toInt() in 90..179) {
                         // Normal range, no error
-                        sysBPFields[i].error = null
+                        resetFieldToOriginalState(sysBPFields[i])
                     } else if (value.toInt() in 50..300) {
                         // Out-of-range but acceptable, color-coded orange
                         orangeErrorCount++
@@ -1614,7 +1623,7 @@ class VerifyScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
                         diaBPFields[i].error = ResourcesHelper.getString(this, R.string.verify_scan_abnormal_value)
                     } else if (value.toInt() in 50..99) {
                         // Normal range, no error
-                        diaBPFields[i].error = null
+                        resetFieldToOriginalState(diaBPFields[i])
                     } else if (value.toInt() in 30..180) {
                         // Out-of-range but acceptable, color-coded orange
                         orangeErrorCount++
@@ -1653,8 +1662,7 @@ class VerifyScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
                         field.error = ResourcesHelper.getString(this, R.string.verify_scan_whole_number)
                         setErrorIcon(field, R.color.red)
                     } else if (value.toInt() in 90..179) {
-                        field.error = null
-                        setErrorIcon(field, android.R.color.transparent)
+                        resetFieldToOriginalState(sysBPFields[i])
                     } else if (value.toInt() in 50..300) {
                         orangeErrorCount++
                         field.error = ResourcesHelper.getString(this, R.string.verify_scan_out_of_range_header)
@@ -1689,8 +1697,7 @@ class VerifyScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
                         field.error = ResourcesHelper.getString(this, R.string.verify_scan_whole_number)
                         setErrorIcon(field, R.color.red)
                     } else if (value.toInt() in 50..99) {
-                        field.error = null
-                        setErrorIcon(field, android.R.color.transparent)
+                        resetFieldToOriginalState(field)
                     } else if (value.toInt() in 30..180) {
                         orangeErrorCount++
                         field.error = ResourcesHelper.getString(this, R.string.verify_scan_out_of_range_header)
@@ -1711,8 +1718,7 @@ class VerifyScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
                     } else if (!value.isDigitsOnly()) {
                         field.setText("")
                     } else if (value.toInt() in 90..179) {
-                        field.error = null
-                        setErrorIcon(field, android.R.color.transparent)
+                        resetFieldToOriginalState(field)
                     } else if (value.toInt() in 50..300) {
                         field.error = ResourcesHelper.getString(this, R.string.verify_scan_out_of_range_header)
                         setErrorIcon(field, R.color.orange)
@@ -1754,8 +1760,7 @@ class VerifyScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
                     } else if (!value.all { it.isDigit() }) {
                         field.setText("")
                     } else if (value.toInt() in 50..99) {
-                        field.error = null
-                        setErrorIcon(field, android.R.color.transparent)
+                        resetFieldToOriginalState(field)
                     } else if (value.toInt() in 30..180) {
                         field.error = ResourcesHelper.getString(this, R.string.verify_scan_out_of_range_header)
                         setErrorIcon(field, R.color.orange)
@@ -2072,8 +2077,7 @@ class VerifyScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
                 false
             }
             intValue in 90..179 -> {
-                field.error = null
-                setErrorIcon(field, android.R.color.transparent)
+                resetFieldToOriginalState(field)
                 true
             }
             intValue in 50..300 -> {
@@ -2114,8 +2118,7 @@ class VerifyScanActivity : AppCompatActivity(), LogOutTimerUtil.LogOutListener {
                 false
             }
             intValue in 50..99 -> {
-                field.error = null
-                setErrorIcon(field, android.R.color.transparent)
+                resetFieldToOriginalState(field)
                 true
             }
             intValue in 30..180 -> {
